@@ -13,4 +13,13 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
+    $router->resource('/category', 'CategoryController')->names('category');
+    $router->resource('/records', 'RecordsController')->names('records');
+    $router->resource('/meterial', 'MeterialController')->names('meterial');
+    $router->resource('/programs', 'ProgramController')->names('program');
+
+
+    $router->resource('/template', 'TemplateController')->names('template');
+    $router->resource('/template/programs', 'TemplateProgramsController')->names('template.programs');
+
 });

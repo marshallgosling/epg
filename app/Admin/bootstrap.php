@@ -19,3 +19,13 @@
  */
 
 Encore\Admin\Form::forget(['map', 'editor']);
+
+Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
+
+    $form->disableEditingCheck();
+
+    $form->disableCreatingCheck();
+
+    $form->disableViewCheck();
+    
+});

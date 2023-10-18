@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Laravel-admin',
+    'name' => 'EPG Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>Laravel</b> admin',
+    'logo' => '<b>EPG</b> Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>La</b>',
+    'logo-mini' => '<b>EA</b>',
 
     /*
     |--------------------------------------------------------------------------
@@ -275,7 +275,7 @@ return [
     |    "skin-red", "skin-red-light", "skin-black", "skin-black-light".
     |
     */
-    'skin' => env('ADMIN_SKIN', 'skin-blue-light'),
+    'skin' => env('ADMIN_SKIN', 'skin-black-light'),
 
     /*
     |--------------------------------------------------------------------------
@@ -289,7 +289,7 @@ return [
     | "sidebar-mini".
     |
     */
-    'layout' => ['sidebar-mini', 'sidebar-collapse'],
+    'layout' => ["sidebar-mini"],
 
     /*
     |--------------------------------------------------------------------------
@@ -310,7 +310,7 @@ return [
     | each page
     |
     */
-    'show_version' => true,
+    'show_version' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -320,7 +320,7 @@ return [
     | Whether to display the environment at the footer of each page
     |
     */
-    'show_environment' => true,
+    'show_environment' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -338,7 +338,7 @@ return [
     |
     | Whether enable default breadcrumb for every page content.
     */
-    'enable_default_breadcrumb' => true,
+    'enable_default_breadcrumb' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -359,7 +359,7 @@ return [
     | Enable/Disable sidebar menu search
     |--------------------------------------------------------------------------
     */
-    'enable_menu_search' => true,
+    'enable_menu_search' => false,
 
     /*
     |--------------------------------------------------------------------------
