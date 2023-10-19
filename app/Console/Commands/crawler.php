@@ -130,11 +130,13 @@ class crawler extends Command
     
                 foreach($data as &$p)
                 {
-                    $this->info("find Program Detail {$p['uuid']}");
+                    //$this->info("find Program Detail {$p['uuid']}");
                     $meta = $this->crawler->getProgramDetails($p['uuid']);
     
-                    if(!$meta) continue;
-                    
+                    if(!$meta) {
+                        $this->error("Errors at getting Program Detail {$p['uuid']}");
+                        continue;
+                    }
                     $p = array_merge($p, $meta);
                     $p['id'] = $id;
                     $id --;
