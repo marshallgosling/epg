@@ -8,6 +8,8 @@ use App\Models\Program;
 use App\Models\Spider\CnvSpider;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Nette\Utils\FileSystem;
 
 class generateTool extends Command
 {
@@ -63,9 +65,45 @@ class generateTool extends Command
             
             $data = $spider->getPrograms(0, 100);
 
-            $meterials = array_reverse($data);
+            //$meterials = array_reverse($data);
+            $raw = [];
 
-            Program::insert($meterials);
+            foreach($data as &$p)
+            {
+                echo "find Program Detail {$p['uuid']}\n";
+                $meta = $spider->getProgramDetails($p['uuid']);
+
+                echo "update Mete {$p['unique_no']}:".json_encode($meta)."\n";
+                Program::where('unique_no', $p['unique_no'])->update($meta);
+
+                $p['meta'] = $meta;
+            }
+
+            Storage::disk('data')->put('samples.js', json_encode($data));
+
+            //print_r($data);
+
+            //Program::insert($meterials);
+
+        }
+    }
+
+    private function getProgramDetail($uuid)
+    {
+        $spider = new CnvSpider();
+        $r = $spider->login('18001799001@163.com', '123QWE#canxin');
+
+        if($r) {
+            echo "find Program Details\n";
+            $data = $spider->getProgramDetails($uuid);
+            
+            //$data = $spider->getPrograms(0, 100);
+
+            //$meterials = array_reverse($data);
+
+            print_r($data);
+
+            //Program::insert($meterials);
 
         }
     }

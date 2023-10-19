@@ -80,6 +80,19 @@ class CnvSpider
         return $items;
     }
 
+    public function getProgramDetails($uuid)
+    {
+        $response = $this->client->request('GET', 'https://www.maoch.cn/CnvProgram/Programs/Edit/'.$uuid, [
+                'cookies'=>$this->jar
+            ]);
+        
+
+        $body = $response->getBody();
+        //$this->parseRequestToken($body);
+        $items = $this->parseProgramDetail($body);
+        return $items;
+    }
+
     public function getMeterials($page=1, $lines=25)
     {
         if($this->validtoken == '') {          
@@ -118,6 +131,10 @@ class CnvSpider
 
         $items = [];
         $total = count($v);
+
+        $m = preg_match_all('/\/CnvProgram\/Programs\/Edit\/([\w-]+)/', $table, $matches);
+        $uuids = $matches[1];
+        $n = 0;
         for($i=0;$i<$total;$i+=11) {
 
             $items[] = [
@@ -131,11 +148,53 @@ class CnvSpider
                 'co_artist' => trim((string)$v[$i+8]),
                 'product_date' => trim((string)$v[$i+9]),
                 'air_date' => trim((string)$v[$i+10]),
+                'uuid' => $uuids[$n]
             ];
             
+            $n ++;
         }
 
         return $items;
+    }
+
+    private function parseProgramDetail($body)
+    {
+        $cate = substr($body, strpos($body, '<h4>类别</h4>'));
+        $cate = substr($cate, 0, strpos($cate, '</table>'));
+
+        //print($cate);
+        
+        $m = preg_match_all('/<td\sstyle=\"width:150px\">[\s]+(.*)[\s]+<\/td>[\s]+/', $cate, $matches);
+        $items = $matches[1]; 
+
+        //print_r($items);
+        $categories = [];
+        $mood = '';
+        $energy = '';
+        $tempo = '';
+        $gender = '';
+        $genre = '';
+
+        $total = count($items);
+        $data = [];
+        for($i=0;$i<$total;$i+=2)
+        {
+            $k = trim($items[$i]);
+            $value = trim($items[$i+1]);
+            $v = preg_replace('/<a\shref=\"(.*)\">(.*)<\/a>/', "$2", $value);
+            //$data[] = [$type=>$value];
+            if($k == 'CNV') $categories[] = $v;
+            if($k == 'Energy') $energy = $v;
+            if($k == 'Mood') $mood = $v;
+            if($k == 'SexGroup') $gender = $v;
+            if($k == 'SongStyle') $genre = $v;
+            if($k == 'Tempo') $tempo = $v;
+        }
+
+        $category = implode(',', $categories);
+
+        return compact('category', 'energy', 'mood', 'gender', 'tempo', 'genre');
+
     }
 
     /*

@@ -34,6 +34,7 @@ class CreateProgram extends Migration
             $table->string('air_date', 20)->default('')->comment('首播日期')->nullable();
             $table->string('product_date', 20)->default('')->comment('制作完成日期')->nullable();
             $table->string('comment', 128)->default('')->comment('备注')->nullable();
+            //$table->string('uuid', 128)->nullable();
             
             $table->timestamps();
         });
