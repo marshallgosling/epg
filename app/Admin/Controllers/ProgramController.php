@@ -51,9 +51,9 @@ class ProgramController extends AdminController
         });
         
         //$grid->column('album', __('Album'));
-        $grid->column('comment', __('Comment'))->display(function ($comment) {
+        $grid->column('album', __('Album'))->display(function ($album) {
             
-            return $comment.'<br /><span class="label label-default">'.__('Album').': '.$this->album.'</span>';
+            return $album.'<br /><span class="label label-default">'.__('Comment').': '.$this->comment.'</span>';
         });    
         /*$grid->column('gender', __('Gender'));
         $grid->column('mood', __('Mood'));
@@ -73,6 +73,19 @@ class ProgramController extends AdminController
 
         //$grid->column('created_at', __('Created at'));
         //$grid->column('updated_at', __('Updated at'));
+
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+        
+            // 在这里添加字段过滤器
+            $filter->like('name', __('Name'));
+            $filter->like('artist', __('Artist'));
+            $filter->equal('unique_no', __('Unique_no'));
+            $filter->like('category', __('Category'))->select(Category::getFormattedCategories());
+        
+        });
 
         return $grid;
     }
@@ -133,7 +146,7 @@ class ProgramController extends AdminController
         $form->text('co_artist', __('Co artist'));
         $form->text('duration', __('Duration'));
         $form->text('company', __('Company'));
-        
+
         $form->divider(__('TagsInfo'));
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
         

@@ -118,9 +118,9 @@ class crawler extends Command
         if($this->login()) {
             $this->info("crawl Programs");
             $data = $this->crawler->getPrograms(1);
-            $id = 19000;
+            $id = 11200;
             $size = 200;
-            $page = 5;
+            $page = 44;
             $total = 0;
             while(true) {
                 $this->info("Start at Page: $page, Total: $total");
