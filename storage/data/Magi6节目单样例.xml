@@ -1,0 +1,429 @@
+
+<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<PgmItem>
+	<PgmDate>2023-09-08</PgmDate> <!--(必填) 节目单日期-->
+	<ChannelName>测试频道</ChannelName> <!--(必填) 频道名称-->
+	<PgmClass>白天档</PgmClass> <!--(必填) 节目单时段 如白天，晚上，全天-->
+	<ListType>0</ListType> <!--节目单类型(默认给0) 0.合并广告播出频道节目单；1.广告单，2.未合并广告播出频道节目单；3.播后节目单-->
+	<Version>1</Version> <!--节目单版本号(默认给1)-->
+	<Count>7</Count> <!--节目单条目数-->
+	<ItemList> <!--节目单条目-->
+		<PlayType>1</PlayType> <!--(必填) 播出类型 0-顺延 1-定时 2-手动 3-逆推 4-随切 5-跳过 6-保持 -->
+		<StartTime>1080000</StartTime> <!--(必填) 开始时间 去掉当前日期的一个时间(帧数) -->
+		<SystemTime>2023-09-08 12:00:00</SystemTime> <!--(必填) 开始时间 -->
+		<Insert>0</Insert> <!--(必填) 插播类型 0-无插播 1-确定长度插播 2-不定长度插播 3-跟随上条节目 -->
+		<Length>15000</Length> <!--(必填) 节目设定时长 -->
+		<Offset>0</Offset> <!--节目入点 -->
+		<ChSignal>0</ChSignal> <!--(必填) 信号源序号 -->
+		<ChSignalEx>0</ChSignalEx> <!--B类源序号 -->
+		<DevType>0</DevType> <!--(必填) 节目设备类型 0-硬盘 1-外来信号 2-录像机 3-播放器 -->
+		<DevId>0</DevId> <!--设备编号 -->
+		<Name>10分钟（带时码）</Name> <!--(必填) 节目名称 -->
+		<Name2/> <!--节目别名 -->
+		<TapeID/> <!--磁带号 -->
+		<BillType>0908新建</BillType> <!--(必填) 串联单类型 格式：mmdd类型-->
+		<ProgType>电视剧</ProgType> <!--(必填) 节目类型-->
+		<Memo/> <!--(必填) 备注 -->
+		<PlayedTask/> <!--字幕 -->
+		<LimitOffset>0</LimitOffset> <!--节目实际入点 -->
+		<LimitLen>15000</LimitLen> <!--(必填) 节目实际长度 -->
+		<AdvType>0</AdvType> <!--(必填) 广告类型 0.普通节目 1-广告 -->
+		<ID>{D343D0B0-8EAB-4BB9-8EA7-94D1AACFCD6D}</ID>  <!--(必填) 节目唯一Id -->
+		<Pid>{D343D0B0-8EAB-4BB9-8EA7-94D1AACFCD6D}</Pid>  <!--(必填) 节目单唯一Id -->
+		<Status>0</Status> <!--状态 -->
+		<Modify>0</Modify> <!--播控修改字段 -->
+		<First>0</First> <!--是否为开播条 -->
+		<PgmDate>45177</PgmDate> <!--(必填) 播放日期(与StartTime可以组成一个完整的播放日)-->
+		<ColumnName/> <!--栏目名称 -->
+		<Category/> <!--节目类别 -->
+		<ProductDepartment/> <!--制作部门 -->
+		<Origin/> <!--来源 -->
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType> <!--(必填) 信源名称-->
+		<ClipsCount>1</ClipsCount> <!--子素材数量-->
+		<ClipsItem>
+			<FileName>UH82CDAW</FileName> <!--素材文件名称-->
+			<Name>10分钟（带时码）</Name> <!--(必填) 素材名称-->
+			<Id>3130b7d6d6d3a3a8da9ece0067d79ce0163a8243584a186f</Id> <!--素材Id-->
+			<LimitOffset>0</LimitOffset> <!--素材实际入点-->
+			<LimitDuration>15000</LimitDuration> <!--素材实际长度-->
+			<Offset>0</Offset>	<!--(必填) 素材设置入点-->
+			<Duration>15000</Duration> <!--(必填) 素材设置长度-->
+			<Status>0</Status> <!--素材状态-->
+			<MediaType>856719368</MediaType> <!--素材文件类型-->
+			<FileId>39558469870453787</FileId> <!--素材文件Id-->
+			<AreaStatus>25556860</AreaStatus> <!--素材存储区标识-->
+			<Code/> <!--素材外来Id-->
+			<ClipFileCount>1</ClipFileCount> <!--素材文件数量-->
+			<ClipFile>
+				<AreaId>2</AreaId> <!--存储区标识-->
+				<FileSize>3885854500</FileSize> <!--文件大小-->
+				<MD5>1c45e54500dc7af257636b816ebb5435</MD5> <!--文件MD5值-->
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+	<ItemList>
+		<PlayType>0</PlayType>
+		<StartTime>1095000</StartTime>
+		<SystemTime>2023-09-08 12:10:00</SystemTime>
+		<Insert>0</Insert>
+		<Length>750</Length>
+		<Offset>0</Offset>
+		<ChSignal>0</ChSignal>
+		<ChSignalEx>0</ChSignalEx>
+		<DevType>0</DevType>
+		<DevId>0</DevId>
+		<Name>素材30秒</Name>
+		<Name2/>
+		<TapeID/>
+		<BillType>0908新建</BillType>
+		<ProgType>宣传片</ProgType>
+		<Memo/>
+		<PlayedTask/>
+		<LimitOffset>0</LimitOffset>
+		<LimitLen>750</LimitLen>
+		<AdvType>0</AdvType>
+		<ID>{11550555-3E6F-42AA-B1C9-11698A76A6F3}</ID>
+		<Pid>{11550555-3E6F-42AA-B1C9-11698A76A6F3}</Pid>
+		<Status>0</Status>
+		<Modify>0</Modify>
+		<First>0</First>
+		<PgmDate>45177</PgmDate>
+		<ColumnName/>
+		<Category/>
+		<ProductDepartment/>
+		<Origin/>
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType>
+		<ClipsCount>1</ClipsCount>
+		<ClipsItem>
+			<FileName>UICRZBKO</FileName>
+			<Name>素材30秒</Name>
+			<Id>cbd8b2c43330c3ebf97be78fdbaf2c9a0987f5927aa186de</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>750</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>750</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>8486981133538426878</FileId>
+			<AreaStatus>1976001274</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>96302176</FileSize>
+				<MD5>9fd85c0872ce0d50d59bb3f6791d9861</MD5>
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+	<ItemList>
+		<PlayType>0</PlayType>
+		<StartTime>1095750</StartTime>
+		<SystemTime>2023-09-08 12:10:30</SystemTime>
+		<Insert>0</Insert>
+		<Length>375</Length>
+		<Offset>0</Offset>
+		<ChSignal>0</ChSignal>
+		<ChSignalEx>0</ChSignalEx>
+		<DevType>0</DevType>
+		<DevId>0</DevId>
+		<Name>素材15秒</Name>
+		<Name2/>
+		<TapeID/>
+		<BillType>0908新建</BillType>
+		<ProgType>宣传片</ProgType>
+		<Memo/>
+		<PlayedTask/>
+		<LimitOffset>0</LimitOffset>
+		<LimitLen>375</LimitLen>
+		<AdvType>0</AdvType>
+		<ID>{00432343-E4B0-47CD-9BEF-8DDC86556B95}</ID>
+		<Pid>{00432343-E4B0-47CD-9BEF-8DDC86556B95}</Pid>
+		<Status>0</Status>
+		<Modify>0</Modify>
+		<First>0</First>
+		<PgmDate>45177</PgmDate>
+		<ColumnName/>
+		<Category/>
+		<ProductDepartment/>
+		<Origin/>
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType>
+		<ClipsCount>1</ClipsCount>
+		<ClipsItem>
+			<FileName>UIL9FFBS</FileName>
+			<Name>素材15秒</Name>
+			<Id>cbd8b2c43135c3ebc1ffb13ea69020f39b5c8725ba62d300</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>375</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>375</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>-8330535760</FileId>
+			<AreaStatus>1976003921</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>49021512</FileSize>
+				<MD5>926b4072c7f2ca5cb77bc9200adf2f88</MD5>
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+	<ItemList>
+		<PlayType>0</PlayType>
+		<StartTime>1096125</StartTime>
+		<SystemTime>2023-09-08 12:10:45</SystemTime>
+		<Insert>0</Insert>
+		<Length>1500</Length>
+		<Offset>0</Offset>
+		<ChSignal>0</ChSignal>
+		<ChSignalEx>0</ChSignalEx>
+		<DevType>0</DevType>
+		<DevId>0</DevId>
+		<Name>广告1</Name>
+		<Name2/>
+		<TapeID/>
+		<BillType>0908新建</BillType>
+		<ProgType>广告</ProgType>
+		<Memo/>
+		<PlayedTask/>
+		<LimitOffset>0</LimitOffset>
+		<LimitLen>1500</LimitLen>
+		<AdvType>0</AdvType>
+		<ID>{6FAD938A-2617-4CEF-89C6-8C4A514B981A}</ID>
+		<Pid>{6FAD938A-2617-4CEF-89C6-8C4A514B981A}</Pid>
+		<Status>0</Status>
+		<Modify>0</Modify>
+		<First>0</First>
+		<PgmDate>45177</PgmDate>
+		<ColumnName>技术部</ColumnName>
+		<Category/>
+		<ProductDepartment/>
+		<Origin/>
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType>
+		<ClipsCount>3</ClipsCount>
+		<ClipsItem>
+			<FileName>R4SRO9CO</FileName>
+			<Name>广告15s</Name>
+			<Id>b9e3b8e6313573701cd4ec5512b17c264747d546b8c4f580</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>375</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>375</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>8486981133538426878</FileId>
+			<AreaStatus>1976001274</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>49021512</FileSize>
+				<MD5>e8f294c764aa986c36c3d8a2b3fbcb12</MD5>
+			</ClipFile>
+		</ClipsItem>
+		<ClipsItem>
+			<FileName>UICRZBKO</FileName>
+			<Name>素材30秒</Name>
+			<Id>cbd8b2c43330c3ebf97be78fdbaf2c9a0987f5927aa186de</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>750</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>750</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>109767991272389312</FileId>
+			<AreaStatus>25557284</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>96302176</FileSize>
+				<MD5>9fd85c0872ce0d50d59bb3f6791d9861</MD5>
+			</ClipFile>
+		</ClipsItem>
+		<ClipsItem>
+			<FileName>UIL9FFBS</FileName>
+			<Name>素材15秒</Name>
+			<Id>cbd8b2c43135c3ebc1ffb13ea69020f39b5c8725ba62d300</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>375</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>375</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>109767991272389312</FileId>
+			<AreaStatus>25557284</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>49021512</FileSize>
+				<MD5>926b4072c7f2ca5cb77bc9200adf2f88</MD5>
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+	<ItemList>
+		<PlayType>1</PlayType>
+		<StartTime>1097625</StartTime>
+		<SystemTime>2023-09-08 12:11:45</SystemTime>
+		<Insert>0</Insert>
+		<Length>7500</Length>
+		<Offset>0</Offset>
+		<ChSignal>3</ChSignal>
+		<ChSignalEx>0</ChSignalEx>
+		<DevType>1</DevType>
+		<DevId>0</DevId>
+		<Name>手动添加</Name>
+		<Name2/>
+		<TapeID>*</TapeID>
+		<BillType>0908新建</BillType>
+		<ProgType/>
+		<Memo/>
+		<PlayedTask/>
+		<LimitOffset>0</LimitOffset>
+		<LimitLen>7500</LimitLen>
+		<AdvType>0</AdvType>
+		<ID>{E6DBD00C-613E-48D3-988A-3517B3190709}</ID>
+		<Pid>{E6DBD00C-613E-48D3-988A-3517B3190709}</Pid>
+		<Status>0</Status>
+		<Modify>0</Modify>
+		<First>0</First>
+		<PgmDate>45177</PgmDate>
+		<ColumnName/>
+		<Category/>
+		<ProductDepartment/>
+		<Origin/>
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>一级信号1</sDevType>
+		<ClipsCount>0</ClipsCount>
+	</ItemList>
+	<ItemList>
+		<PlayType>0</PlayType>
+		<StartTime>1105125</StartTime>
+		<SystemTime>2023-09-08 12:16:45</SystemTime>
+		<Insert>0</Insert>
+		<Length>1125</Length>
+		<Offset>0</Offset>
+		<ChSignal>0</ChSignal>
+		<ChSignalEx>0</ChSignalEx>
+		<DevType>0</DevType>
+		<DevId>0</DevId>
+		<Name>音频反相32</Name>
+		<Name2/>
+		<TapeID/>
+		<BillType>0908新建</BillType>
+		<ProgType>电视剧</ProgType>
+		<Memo/>
+		<PlayedTask/>
+		<LimitOffset>0</LimitOffset>
+		<LimitLen>1125</LimitLen>
+		<AdvType>0</AdvType>
+		<ID>{81E920E6-5F35-43EB-9D22-698B8ABB5CD3}</ID>
+		<Pid>{81E920E6-5F35-43EB-9D22-698B8ABB5CD3}</Pid>
+		<Status>0</Status>
+		<Modify>0</Modify>
+		<First>0</First>
+		<PgmDate>45177</PgmDate>
+		<ColumnName>技术部</ColumnName>
+		<Category/>
+		<ProductDepartment/>
+		<Origin/>
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType>
+		<ClipsCount>1</ClipsCount>
+		<ClipsItem>
+			<FileName>YWI0QZZC</FileName>
+			<Name>音频反相32</Name>
+			<Id>d2f4c6b5b7b4cfe004918aff317a869b3dfcb8f1feca2712</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>1125</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>1125</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>8486872494316678377</FileId>
+			<AreaStatus>0</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>207588460</FileSize>
+				<MD5>2bb95fc1c5c2ebfb256d05a5bcbaa7e1</MD5>
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+	<ItemList>
+		<PlayType>0</PlayType>
+		<StartTime>1106250</StartTime>
+		<SystemTime>2023-09-08 12:17:30</SystemTime>
+		<Insert>0</Insert>
+		<Length>2250</Length>
+		<Offset>0</Offset>
+		<ChSignal>0</ChSignal>
+		<ChSignalEx>0</ChSignalEx>
+		<DevType>0</DevType>
+		<DevId>0</DevId>
+		<Name>22短版天气预报-软审不可以拖动</Name>
+		<Name2/>
+		<TapeID/>
+		<BillType>0908新建</BillType>
+		<ProgType>电视剧</ProgType>
+		<Memo/>
+		<PlayedTask/>
+		<LimitOffset>0</LimitOffset>
+		<LimitLen>2250</LimitLen>
+		<AdvType>0</AdvType>
+		<ID>{F50811F4-C2DE-4C1F-8073-9069913B2AC1}</ID>
+		<Pid>{F50811F4-C2DE-4C1F-8073-9069913B2AC1}</Pid>
+		<Status>0</Status>
+		<Modify>0</Modify>
+		<First>0</First>
+		<PgmDate>45177</PgmDate>
+		<ColumnName>技术部</ColumnName>
+		<Category/>
+		<ProductDepartment/>
+		<Origin/>
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType>
+		<ClipsCount>1</ClipsCount>
+		<ClipsItem>
+			<FileName>EJSH4H48</FileName>
+			<Name>22短版天气预报-软审不可以拖动</Name>
+			<Id>3232b6ccb0e6ccec1d8dfc4d13032d6d4675a5249637d2b5</Id>
+			<LimitOffset>0</LimitOffset>
+			<LimitDuration>2250</LimitDuration>
+			<Offset>0</Offset>
+			<Duration>2250</Duration>
+			<Status>0</Status>
+			<MediaType>856719368</MediaType>
+			<FileId>8486872494316678377</FileId>
+			<AreaStatus>0</AreaStatus>
+			<Code/>
+			<ClipFileCount>1</ClipFileCount>
+			<ClipFile>
+				<AreaId>2</AreaId>
+				<FileSize>676206652</FileSize>
+				<MD5>71f7413d816ecc17efc2fb35a3b24b45</MD5>
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+</PgmItem>

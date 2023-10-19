@@ -119,7 +119,7 @@ class crawler extends Command
             $this->info("crawl Programs");
             $data = $this->crawler->getPrograms(1);
             $id = 20000;
-            $size = 1000;
+            $size = 200;
             $page = 0;
             $total = 0;
             while(true) {
