@@ -9,7 +9,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class MeterialController extends AdminController
+class MaterialController extends AdminController
 {
     /**
      * Title for current resource.
