@@ -100,9 +100,10 @@ class crawler extends Command
                 $this->info("batch insert Material to DB");
 
                 Material::insert($data);
+                $total += count($data);
 
                 if(count($data) < $size) break;
-                $total += count($data);
+                
                 $page ++;
             }
 
@@ -142,8 +143,8 @@ class crawler extends Command
                 $this->info("batch insert Program to DB");
                     
                 Program::insert($data);
-    
-                
+          
+                $total += count($data);
                 $page ++;
 
                 if(count($data) < $size) break;
