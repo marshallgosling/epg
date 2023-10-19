@@ -89,7 +89,16 @@ class CnvSpider
         
         $code = $response->getStatusCode();
 
-        if($code != '200') return false;
+        if($code != '200') 
+        {
+            $category = '';
+            $mood = '';
+            $energy = '';
+            $tempo = '';
+            $gender = '';
+            $genre = '';
+            return compact('category', 'energy', 'mood', 'gender', 'tempo', 'genre');
+        }
        
         $body = $response->getBody();
         //$this->parseRequestToken($body);

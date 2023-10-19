@@ -118,9 +118,9 @@ class crawler extends Command
         if($this->login()) {
             $this->info("crawl Programs");
             $data = $this->crawler->getPrograms(1);
-            $id = 20000;
+            $id = 19200;
             $size = 200;
-            $page = 0;
+            $page = 4;
             $total = 0;
             while(true) {
                 $this->info("Start at Page: $page, Total: $total");
@@ -136,10 +136,10 @@ class crawler extends Command
 
                     $meta = $this->crawler->getProgramDetails($p['uuid']);
                     
-                    if(!$meta) {
+                    /*if(!$meta) {
                         $this->error("Errors at getting Program Detail {$p['uuid']}");
                         continue;
-                    }
+                    }*/
                     $p = array_merge($p, $meta); 
                     
                 }
