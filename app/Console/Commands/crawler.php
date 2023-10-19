@@ -54,6 +54,16 @@ class crawler extends Command
         if($url == 'material') {
             $this->getMaterials();
         }
+
+        if($url == 'cleanProgram') {
+            Program::truncate();
+            $this->info("clean Program data");
+        }
+
+        if($url == 'cleanMaterial') {
+            Material::truncate();
+            $this->info("clean Material data");
+        }
         
         return 0;
     }
