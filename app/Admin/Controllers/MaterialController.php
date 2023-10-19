@@ -44,6 +44,19 @@ class MaterialController extends AdminController
         $grid->actions(function ($actions) {
             $actions->disableView();
         });
+
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+        
+            // 在这里添加字段过滤器
+            $filter->like('name', __('Name'));
+            $filter->equal('unique_no', __('Unique_no'));
+            $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
+        
+        });
+        
         return $grid;
     }
 
