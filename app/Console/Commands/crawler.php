@@ -85,7 +85,7 @@ class crawler extends Command
             $total = 0;
             while(true) {
                 $this->info("Start at Page: $page, Total: $total");
-                $data = $this->crawler->getMeterials(0, $size);
+                $data = $this->crawler->getMeterials($page, $size);
 
                 if(count($data) == 0) break;
     
@@ -138,7 +138,7 @@ class crawler extends Command
                 }
 
                 Storage::disk('data')->put("program{$page}.js", json_encode($data));
-                
+
                 $this->info("batch insert Program to DB");
                     
                 Program::insert($data);
