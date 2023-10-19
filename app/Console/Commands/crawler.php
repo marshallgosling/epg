@@ -95,11 +95,11 @@ class crawler extends Command
                     $id --;
                 }
 
+                Storage::disk('data')->put("material{$page}.js", json_encode($data));
+
                 $this->info("batch insert Material to DB");
 
                 Material::insert($data);
-
-                Storage::disk('data')->put("material{$page}.js", json_encode($data));
 
                 if(count($data) < $size) break;
                 $total += count($data);
@@ -137,11 +137,13 @@ class crawler extends Command
                     $id --;
                 }
 
+                Storage::disk('data')->put("program{$page}.js", json_encode($data));
+                
                 $this->info("batch insert Program to DB");
                     
                 Program::insert($data);
     
-                Storage::disk('data')->put("program{$page}.js", json_encode($data));
+                
                 $page ++;
 
                 if(count($data) < $size) break;
