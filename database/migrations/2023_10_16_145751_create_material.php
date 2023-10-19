@@ -22,6 +22,7 @@ class CreateMaterial extends Migration
             $table->unsignedInteger('size')->default(0)->comment('文件长度');
             $table->unsignedInteger('frames')->default(0)->comment('帧数');
             $table->string('comment',200)->nullable()->comment('注释');
+            $table->string('uuid', 128)->nullable();
             $table->timestamps();
         });
     }

@@ -132,18 +132,21 @@ class ProgramController extends AdminController
         $form->text('artist', __('Artist'));
         $form->text('co_artist', __('Co artist'));
         $form->text('duration', __('Duration'));
-
+        $form->text('company', __('Company'));
+        
         $form->divider(__('TagsInfo'));
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
-        $form->select('gender', __('Gender'))->options(Category::getCategories('sex'));
+        
         $form->select('mood', __('Mood'))->options(Category::getCategories('mood'));
         $form->select('energy', __('Energy'))->options(Category::getCategories('energy'));
         $form->select('tempo', __('Tempo'))->options(Category::getCategories('tempo'));    
-        $form->select('genre', __('Genre'))->options(Category::getCategories());;
+        $form->text('gender', __('Gender'));
+
+        $form->text('genre', __('Genre'));
         $form->text('lang', __('Lang'));
         $form->text('author', __('Author'));
         $form->text('lyrics', __('Lyrics'));
-        $form->text('company', __('Company'));
+        
         
 
         return $form;
