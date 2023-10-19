@@ -131,15 +131,17 @@ class crawler extends Command
                 foreach($data as &$p)
                 {
                     //$this->info("find Program Detail {$p['uuid']}");
+                    $p['id'] = $id;
+                    $id --;
+
                     $meta = $this->crawler->getProgramDetails($p['uuid']);
-    
+                    
                     if(!$meta) {
                         $this->error("Errors at getting Program Detail {$p['uuid']}");
                         continue;
                     }
-                    $p = array_merge($p, $meta);
-                    $p['id'] = $id;
-                    $id --;
+                    $p = array_merge($p, $meta); 
+                    
                 }
 
                 Storage::disk('data')->put("program{$page}.js", json_encode($data));

@@ -15,7 +15,7 @@ class CreateProgram extends Migration
     {
         Schema::create('program', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50)->default('');
+            $table->string('name', 255)->default('');
             $table->string('unique_no', 20)->default('')->comment('编号');
             $table->string('category', 128)->default('')->comment('类别');
             $table->string('album', 80)->default('')->comment('专辑')->nullable();
