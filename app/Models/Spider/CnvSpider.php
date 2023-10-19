@@ -243,12 +243,12 @@ class CnvSpider
         $items = [];
         foreach($name as $idx=>$v) {
             $items[] = [
-                'name' => $v,
-                'comment' => $comment[$idx],
-                'unique_no' => $no[$idx],
+                'name' => trim($v),
+                'comment' => trim($comment[$idx]),
+                'unique_no' => trim($no[$idx]),
                 'category' => array_search(trim($category[$idx]), $this->categories),
-                'duration' => $duration[$idx],
-                'frames' => $frames[$idx]
+                'duration' => trim($duration[$idx]),
+                'frames' => trim($frames[$idx])
             ];
         }
 
