@@ -133,6 +133,8 @@ class crawler extends Command
                     $this->info("find Program Detail {$p['uuid']}");
                     $meta = $this->crawler->getProgramDetails($p['uuid']);
     
+                    if(!$meta) continue;
+                    
                     $p = array_merge($p, $meta);
                     $p['id'] = $id;
                     $id --;

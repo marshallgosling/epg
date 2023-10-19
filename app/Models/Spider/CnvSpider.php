@@ -59,7 +59,7 @@ class CnvSpider
     {
         if($this->validtoken == '') {          
             $response = $this->client->request('GET', 'https://www.maoch.cn/CnvProgram/Programs', [
-                'cookies'=>$this->jar
+                'cookies'=>$this->jar,
             ]);
         }
         else {
@@ -82,11 +82,15 @@ class CnvSpider
 
     public function getProgramDetails($uuid)
     {
-        $response = $this->client->request('GET', 'https://www.maoch.cn/CnvProgram/Programs/Edit/'.$uuid, [
-                'cookies'=>$this->jar
+       $response = $this->client->request('GET', 'https://www.maoch.cn/CnvProgram/Programs/Edit/'.$uuid, [
+                'cookies'=>$this->jar,
+                'http_errors'=>false
             ]);
         
+        $code = $response->getStatusCode();
 
+        if($code != '200') return false;
+       
         $body = $response->getBody();
         //$this->parseRequestToken($body);
         $items = $this->parseProgramDetail($body);
