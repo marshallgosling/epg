@@ -55,6 +55,19 @@ class CnvSpider
         return true;
     }
 
+    public function getTemplate($uuid)
+    {
+        $response = $this->client->request('GET', 'https://www.maoch.cn/CnvProgram/Play/Details/'.$uuid, [
+            'cookies'=>$this->jar,
+            'http_errors'=>false
+        ]);
+
+        $body = $response->getBody();
+
+        $items = $this->parseTemplate($body);
+        return $items;
+    }
+
     public function getPrograms($page=1, $lines=25)
     {
         if($this->validtoken == '') {          
@@ -168,6 +181,18 @@ class CnvSpider
         }
 
         return $items;
+    }
+
+    private function parseTemplate($body)
+    {
+        $m = preg_match_all('/<td>[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $matches);
+        $items = $matches[1];
+        $total = count($items);
+        $data = [];
+        for($i=0;$i<$total;$i+=11)
+        {
+
+        }
     }
 
     private function parseProgramDetail($body)

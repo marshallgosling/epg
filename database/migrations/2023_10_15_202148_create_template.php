@@ -17,11 +17,12 @@ class CreateTemplate extends Migration
         Schema::create('template', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->default('')->comment('模版编号名称');
-            $table->unsignedSmallInteger("type")->default(0)->comment('普通模版为0，特殊模版对应所在星期的数字');
-            $table->unsignedTinyInteger("status")->default(0)->comment("1为使用中，0为未使用，9为删除");
+            $table->unsignedSmallInteger("schedule")->default(0)->comment('普通模版为0，特殊模版对应所在星期的数字');
             $table->string('start_at', 6)->default('')->comment("开始时间");
             $table->string('end_at', 6)->default('')->comment('结束时间');
-            $table->string('summary', 255)->default('')->comment('模版说明');
+            $table->string('duration', 50)->default('')->comment('结束时间');
+            $table->unsignedInteger('version')->default(0)->comment('版本号');
+            $table->string('comment', 255)->default('')->comment('模版说明')->nullable();
             $table->timestamps();
         });
 
@@ -29,12 +30,10 @@ class CreateTemplate extends Migration
         Schema::create('template_programs', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->default('')->comment('名称');
-            $table->string("unique_id")->default('')->comment('节目ID');
-            //$table->string('start_at', 6)->default('')->comment("开始时间");
-            //$table->string('end_at', 6)->default('')->comment('结束时间');
-            //$table->
+            $table->string("category", 20)->default('')->comment('栏目分类');
+            $table->string('type', 20)->default('')->comment("类型");
             $table->unsignedInteger('template_id')->default(0);
-            $table->unsignedInteger('order_no')->default(0)->comment('排序');
+            $table->unsignedInteger('order_no')->default(0)->comment('排序号');
             $table->timestamps();
         });
 

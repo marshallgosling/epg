@@ -23,7 +23,7 @@ class crawler extends Command
      *
      * @var string
      */
-    protected $description = "Maoch.com Crawler \n Support Program and Materials\n";
+    protected $description = "Maoch.com Crawler Support Program and Materials";
     
     protected $crawler;
 

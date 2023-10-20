@@ -15,7 +15,7 @@ class TemplateController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Template';
+    protected $title = '模版';
 
     /**
      * Make a grid builder.
