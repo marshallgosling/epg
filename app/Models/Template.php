@@ -18,11 +18,12 @@ class Template extends Model
     protected $fillable = [
         'id',
         'name',
-        'type',
+        'schedule',
         'start_at',
         'end_at',
-        'status',
-        'summary'
+        'duration',
+        'group_id',
+        'comment'
     ];
 
     protected $casts = [

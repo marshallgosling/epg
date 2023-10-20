@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Category;
+use App\Models\Template;
 use App\Models\Material;
 use App\Models\Program;
 use App\Models\Spider\CnvSpider;
@@ -16,14 +16,14 @@ class crawler extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:crawler {url?}';
+    protected $signature = 'tools:crawler {url?} {uuid?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Maoch.com Crawler Support Program and Materials";
+    protected $description = "Maoch.com Crawler Support Program Template and Materials";
     
     protected $crawler;
 
@@ -46,6 +46,7 @@ class crawler extends Command
     public function handle()
     {
         $url = $this->argument('url');
+        $uuid = $this->argument('uuid') ?? "880159c-6265-4899-a4b3-adba2f18a3d1";
 
         if($url == 'program') {
             $this->getPrograms();
@@ -64,6 +65,15 @@ class crawler extends Command
             Material::truncate();
             $this->info("clean Material data");
         }
+
+        if($url == 'cleanTemplate') {
+            Template::truncate();
+            $this->info("clean Template data");
+        }
+
+        if($url == "template") {
+            $this->getTemplate($uuid);
+        }
         
         return 0;
     }
@@ -72,6 +82,18 @@ class crawler extends Command
     private function login()
     {
         return $this->crawler->login('18001799001@163.com', '123QWE#canxin');
+    }
+
+    private function getTemplate($uuid='')
+    {
+        if($this->login()) {
+            $this->info("crawl Template");
+            $data = $this->crawler->getTemplate($uuid);
+
+            Template::insert($data);
+
+            $this->info("Batch insert success.");
+        }
     }
 
     private function getMaterials()

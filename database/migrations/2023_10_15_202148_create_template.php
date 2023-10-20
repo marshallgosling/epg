@@ -20,8 +20,9 @@ class CreateTemplate extends Migration
             $table->unsignedSmallInteger("schedule")->default(0)->comment('普通模版为0，特殊模版对应所在星期的数字');
             $table->string('start_at', 6)->default('')->comment("开始时间");
             $table->string('end_at', 6)->default('')->comment('结束时间');
-            $table->string('duration', 50)->default('')->comment('结束时间');
+            $table->string('duration', 50)->default('')->comment('预估时长');
             $table->unsignedInteger('version')->default(0)->comment('版本号');
+            $table->string('group_id', 10)->default('')->comment("分组号")->nullable();
             $table->string('comment', 255)->default('')->comment('模版说明')->nullable();
             $table->timestamps();
         });

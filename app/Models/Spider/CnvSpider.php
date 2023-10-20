@@ -185,14 +185,30 @@ class CnvSpider
 
     private function parseTemplate($body)
     {
+        $m = preg_match_all('/\/CnvProgram\/Column\/Edit\/([\w-]+)/', $body, $matches);
+        $uuids = $matches[1];
+        $n = 0;
+
         $m = preg_match_all('/<td>[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $matches);
         $items = $matches[1];
         $total = count($items);
         $data = [];
-        for($i=0;$i<$total;$i+=11)
+        for($i=0;$i<$total;$i+=10)
         {
-
+            
+            $data[] = [
+                "name" => trim($items[$i]),
+                "start_at" => substr(trim($items[$i+1]), 10),
+                "end_at" => substr(trim($items[$i+2]), 10),
+                "duration" => trim($items[$i+5]),
+                "version" => 1,
+                "schedule" => 0,
+                "comment" => trim($uuids[$n])
+            ];
+            $n ++;
         }
+
+        return $data;
     }
 
     private function parseProgramDetail($body)
