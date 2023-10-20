@@ -18,6 +18,11 @@
  *
  */
 
+
+Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
+    $grid->disableExport();
+});
+
 Encore\Admin\Form::forget(['map', 'editor']);
 
 Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
