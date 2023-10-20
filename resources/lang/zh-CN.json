@@ -19,7 +19,7 @@
     "Company"       : "唱片公司",
     "Co artist"     : "其他歌手",
     "Artist"        : "歌手",
-    "Air date"      : "首播日期",
+    "Air date"      : "播出日期",
     "Product date"  : "制作完成日",
     "Gender"        : "性别组",
     "Mood"          : "情绪",
@@ -30,6 +30,12 @@
     "Author"        : "作曲",
     "Lyrics"        : "作词",
     "Version"       : "版本号",
+    "Reviewer"      : "审核人",
+    "Audit status"  : "审核状态",
+    "Uuid"          : "UUID",
+    "Status"        : "状态",
+    "Distribution date":"发单时间",
+    "Audit date"    : "审核时间",
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息"
 }

@@ -17,7 +17,7 @@ Route::group([
     $router->resource('/records', 'RecordsController')->names('records');
     $router->resource('/material', 'MaterialController')->names('material');
     $router->resource('/programs', 'ProgramController')->names('program');
-
+    $router->resource('/channel', 'ChannelController')->names('channel');
 
     $router->resource('/template', 'TemplateController')->names('template');
     $router->resource('/template/programs', 'TemplateProgramsController')->names('template.programs');
