@@ -91,16 +91,16 @@ class ChannelController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->text('name', __('Name'))->default('channelv');
-        $form->text('uuid', __('Uuid'))->default((string) Str::uuid());
-        $form->date('air_date', __('Air date'));
-        
-        $form->select('status', __('Status'))->options(Channel::STATUS);
-        $form->text('comment', __('Comment'));
-        $form->text('version', __('Version'));
+        $form->text('name', __('Name'))->default('channelv')->required();
+        $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
+        $form->date('air_date', __('Air date'))->required();      
+        $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
+        $form->text('version', __('Version'))->required();
         $form->text('reviewer', __('Reviewer'));
-        $form->text('audit_status', __('Audit status'))->using(Channel::AUDIT);
+        $form->radio('audit_status', __('Audit status'))->using(Channel::AUDIT)->required();
         $form->date('audit_date', __('Audit date'));
+        $form->text('comment', __('Comment'));
+
         $form->date('distribution_date', __('Distribution date'));
 
         return $form;
