@@ -34,7 +34,7 @@ class ChannelController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
-        $grid->column('audit_status', __('Audit status'));
+        $grid->column('audit_status', __('Audit status'))->using(Channel::AUDIT)->label(['info','success','danger']);;
         /*$grid->column('audit_date', __('Audit date'));
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'));
@@ -73,7 +73,7 @@ class ChannelController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Audit status'));
+        $show->field('audit_status', __('Audit status'))->using(Channel::AUDIT);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -99,7 +99,7 @@ class ChannelController extends AdminController
         $form->text('comment', __('Comment'));
         $form->text('version', __('Version'));
         $form->text('reviewer', __('Reviewer'));
-        $form->text('audit_status', __('Audit status'));
+        $form->text('audit_status', __('Audit status'))->using(Channel::AUDIT);
         $form->date('audit_date', __('Audit date'));
         $form->date('distribution_date', __('Distribution date'));
 

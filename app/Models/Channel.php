@@ -10,6 +10,7 @@ class Channel extends Model
     use HasFactory;
 
     public const STATUS = ['正常', '下线'];
+    public const AUDIT = ['未审核', '通过', '不通过'];
 
     protected $table = 'channel';
 
