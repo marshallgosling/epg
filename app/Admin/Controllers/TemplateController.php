@@ -28,13 +28,24 @@ class TemplateController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
-        $grid->column('type', __('Type'));
-        $grid->column('status', __('Status'));
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
-        $grid->column('summary', __('Summary'));
-        $grid->column('created_at', __('Created at'));
+        $grid->column('duration', __('Duration'));
+        $grid->column('schedule', __('Schedule'));
+        $grid->column('group_id', __('Group'));
+        
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+        
+            // 在这里添加字段过滤器
+            $filter->like('name', __('Name'));
+            $filter->equal('group_id', __('Group'))->select(Template::GROUPS);
+        
+        });
 
         return $grid;
     }
