@@ -18,7 +18,7 @@ class CreateProgram extends Migration
             $table->string('name', 255)->default('');
             $table->string('unique_no', 20)->default('')->comment('编号');
             $table->string('category', 128)->default('')->comment('类别');
-            $table->string('album', 80)->default('')->comment('专辑')->nullable();
+            $table->string('album', 200)->default('')->comment('专辑')->nullable();
             $table->string('artist', 128)->default('')->comment('表演者')->nullable();
             $table->string('co_artist', 128)->default('')->comment('联合创作')->nullable();
             $table->string('gender', 50)->default('')->comment('性别')->nullable();
@@ -34,7 +34,7 @@ class CreateProgram extends Migration
             $table->string('air_date', 20)->default('')->comment('首播日期')->nullable();
             $table->string('product_date', 20)->default('')->comment('制作完成日期')->nullable();
             $table->string('comment', 128)->default('')->comment('备注')->nullable();
-            $table->string('uuid', 128)->nullable();
+            $table->string('uuid', 50)->nullable();
             
             $table->timestamps();
         });

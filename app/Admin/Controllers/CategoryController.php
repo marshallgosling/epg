@@ -35,6 +35,18 @@ class CategoryController extends AdminController
         $grid->column('type', __('CategoryType'))->using(Category::TYPES);
         $grid->column('duration', __('Duration'));
 
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+        
+            // 在这里添加字段过滤器
+            $filter->like('name', __('Name'));
+            $filter->equal('unique_no', __('Unique_no'));
+            $filter->equal('type', __('CategoryType'))->select(Category::TYPES);
+        
+        });
+
         return $grid;
     }
 
