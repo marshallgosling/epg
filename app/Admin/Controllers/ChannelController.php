@@ -96,6 +96,8 @@ class ChannelController extends AdminController
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
         $form->text('version', __('Version'))->default('1')->required();
+
+        $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
         $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
         $form->date('audit_date', __('Audit date'));

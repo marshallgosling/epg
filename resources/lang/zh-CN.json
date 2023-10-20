@@ -37,5 +37,6 @@
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "BasicInfo": "基础信息",
-    "TagsInfo": "标签信息"
+    "TagsInfo": "标签信息",
+    "AuditInfo": "审核信息"
 }
