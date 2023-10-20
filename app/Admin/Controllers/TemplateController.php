@@ -35,7 +35,7 @@ class TemplateController extends AdminController
         $grid->column('end_at', __('End at'));
         $grid->column('duration', __('Duration'));
         $grid->column('schedule', __('Schedule'));
-        $grid->column('group_id', __('Group'));
+        $grid->column('group_id', __('Group'))->using(Template::GROUPS);
         
         $grid->column('updated_at', __('Updated at'));
 
