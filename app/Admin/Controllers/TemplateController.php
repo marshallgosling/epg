@@ -26,8 +26,11 @@ class TemplateController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->column('id', __('Id'));
+        //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
+        $grid->column('version', __('Version'))->display(function($version) {
+            return '<span class="label label-default">'.$version.'</span>';
+        });
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
         $grid->column('duration', __('Duration'));

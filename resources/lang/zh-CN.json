@@ -29,6 +29,7 @@
     "Genre"         : "风格",
     "Author"        : "作曲",
     "Lyrics"        : "作词",
+    "Version"       : "版本号",
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息"
 }
