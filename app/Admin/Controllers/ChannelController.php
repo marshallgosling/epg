@@ -95,9 +95,9 @@ class ChannelController extends AdminController
         $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
-        $form->text('version', __('Version'))->required();
+        $form->text('version', __('Version'))->default('1')->required();
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Audit status'))->using(Channel::AUDIT)->required();
+        $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
         $form->date('audit_date', __('Audit date'));
         $form->text('comment', __('Comment'));
 
