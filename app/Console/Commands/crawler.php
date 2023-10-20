@@ -74,8 +74,48 @@ class crawler extends Command
         if($url == "template") {
             $this->getTemplate($uuid);
         }
+
+        if($url == "daily") {
+            $this->daily();
+        }
         
         return 0;
+    }
+
+    private function daily()
+    {
+        if($this->login()) {
+            $this->info("crawl Materials");
+            $data = $this->crawler->getMeterials(1);
+            $data = array_reverse($data);
+
+            foreach($data as $item) {
+                if (Material::where('unique_no', $item['unique_no'])->exists()) {
+                    continue;
+                }
+
+                $this->info("find new Material: ".$item['unique_no']);
+                Material::insert([$item]);
+            }         
+
+            $this->info("crawl Programs");
+            $data = $this->crawler->getPrograms(1);
+
+            $data = array_reverse($data);
+
+            foreach($data as $p) {
+                if (Program::where('unique_no', $p['unique_no'])->exists()) {
+                    continue;
+                }
+
+                $this->info("find new Program: ".$p['unique_no']);
+                $meta = $this->crawler->getProgramDetails($p['uuid']);
+                $p = array_merge($p, $meta);
+
+                Program::insert([$p]);
+            }
+
+        }
     }
 
 
