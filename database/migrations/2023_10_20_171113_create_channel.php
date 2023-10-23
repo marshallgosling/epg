@@ -16,7 +16,7 @@ class CreateChannel extends Migration
         Schema::create('channel', function (Blueprint $table) {
             $table->id();
             $table->string('uuid', 50)->unique()->comment("Guid");
-            $table->timestamp('air_date', 20)->comment("具体播出日期时间");
+            $table->date('air_date')->comment("具体播出日期时间");
             $table->string('name', 50)->comment("频道名");
             $table->unsignedSmallInteger('status')->default(0)->comment("节目单状态");
             $table->string('comment', 255)->comment("备注")->nullable();
