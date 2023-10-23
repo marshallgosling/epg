@@ -47,7 +47,7 @@ class ChannelProgramsController extends AdminController
             $filter->disableIdFilter();
         
             // 在这里添加字段过滤器
-            $filter->equal('channel_id', __('air_date'))->select(Channel::orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
+            $filter->equal('channel_id', __('Air date'))->select(Channel::orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
             
         });
 

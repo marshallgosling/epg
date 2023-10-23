@@ -50,7 +50,7 @@ class ChannelController extends AdminController
         
             // 在这里添加字段过滤器
             $filter->equal('uuid', __('Uuid'));
-            $filter->date('air_date', __('air_date'));
+            $filter->date('air_date', __('Air date'));
             
         });
 
