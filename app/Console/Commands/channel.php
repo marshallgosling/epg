@@ -56,8 +56,8 @@ class channel extends Command
         foreach($templates as $t) {
             $c = new ChannelPrograms();
             $c->name = $t->name;
-            $c->schedule_start_at = $channel->air_date.' '.$t->start_at;
-            $c->schedule_end_at = $channel->air_date.' '.$t->end_at;
+            $c->schedule_start_at = $t->start_at;
+            $c->schedule_end_at = $t->end_at;
             $c->channel_id = $channel->id;
             $c->start_at = $channel->air_date.' '.$t->start_at;
             $c->duration = '0';
