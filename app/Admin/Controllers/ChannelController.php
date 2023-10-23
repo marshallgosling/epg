@@ -27,7 +27,9 @@ class ChannelController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->column('uuid', __('Uuid'));
+        $grid->column('uuid', __('Uuid'))->display(function($uuid) {
+            return '<a href="channel/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+        });
         $grid->column('air_date', __('Air date'));
         //$grid->column('name', __('Name'));
         $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['success','danger']);

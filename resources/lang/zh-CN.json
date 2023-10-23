@@ -36,6 +36,8 @@
     "Status"        : "状态",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
+    "Schedule start at": "计划开始时间",
+    "Schedule end at" : "计划结束时间",
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息",
     "AuditInfo": "审核信息"
