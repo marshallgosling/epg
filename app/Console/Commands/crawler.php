@@ -88,6 +88,7 @@ class crawler extends Command
             $this->info("crawl Materials");
             $data = $this->crawler->getMeterials(1);
             $data = array_reverse($data);
+            $newdata = false;
 
             foreach($data as $item) {
                 if (Material::where('unique_no', $item['unique_no'])->exists()) {
@@ -96,7 +97,11 @@ class crawler extends Command
 
                 $this->info("find new Material: ".$item['unique_no']);
                 Material::insert([$item]);
-            }         
+                $newdata = true;
+            }
+
+            if(!$newdata) $this->warn("no material found.");
+            $newdata = false;
 
             $this->info("crawl Programs");
             $data = $this->crawler->getPrograms(1);
@@ -113,7 +118,10 @@ class crawler extends Command
                 $p = array_merge($p, $meta);
 
                 Program::insert([$p]);
+                $newdata = true;
             }
+
+            if(!$newdata) $this->warn("no program found.");
 
         }
     }

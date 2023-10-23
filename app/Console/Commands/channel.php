@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\Channel as ModelsChannel;
+use App\Models\ChannelPrograms;
+use App\Models\Template;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+
+class channel extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'tools:channel {group} {uuid}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Create channel programs using template.';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $group = $this->argument('group') ?? "";
+        $uuid = $this->argument('uuid') ?? "";
+
+        $templates = Template::where('group_id', $group)->lazy();
+
+        $channel = ModelsChannel::where('uuid', $uuid)->first();
+
+        if(!$channel) {
+            $this->error("Channel $uuid is null");
+            return 0;
+        }
+
+        foreach($templates as $t) {
+            $c = new ChannelPrograms();
+            $c->name = $t->name;
+            $c->schedule_start_at = $channel->air_date->format('Y-m-d').' '.$t->start_at;
+            $c->schedule_end_at = $channel->air_date->format('Y-m-d').' '.$t->end_at;
+            $c->channel_id = $channel->id;
+            $c->start_at = strtotime($channel->air_date->format('Y-m-d').' '.$t->start_at);
+            $c->duration = '0';
+            $c->version = '1';
+            $c->save();
+        }
+
+        return 0;
+    }
+}
