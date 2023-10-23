@@ -59,7 +59,7 @@ class channel extends Command
             $c->schedule_start_at = $channel->air_date.' '.$t->start_at;
             $c->schedule_end_at = $channel->air_date.' '.$t->end_at;
             $c->channel_id = $channel->id;
-            $c->start_at = strtotime($channel->air_date.' '.$t->start_at);
+            $c->start_at = $channel->air_date.' '.$t->start_at;
             $c->duration = '0';
             $c->version = '1';
             $c->save();

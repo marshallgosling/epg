@@ -16,8 +16,8 @@ class CreateChannelProgram extends Migration
         Schema::create('channel_program', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->default('')->comment('节目名称');
-            $table->string('schedule_start_at', 6)->default('')->comment("计划开始时间");
-            $table->string('schedule_end_at', 6)->default('')->comment('计划结束时间');
+            $table->string('schedule_start_at', 22)->default('')->comment("计划开始时间");
+            $table->string('schedule_end_at', 22)->default('')->comment('计划结束时间');
             $table->timestamp('start_at')->comment("开始时间")->nullable();
             $table->timestamp('end_at')->comment('结束时间')->nullable();
             $table->string('duration', 50)->default('')->comment('时长');
