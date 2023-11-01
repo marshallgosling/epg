@@ -125,5 +125,9 @@ class generateTool extends Command
 
         }
     }
+    
 
+    private $data = <<<DATA
+    ddd;
+    DATA;
 }

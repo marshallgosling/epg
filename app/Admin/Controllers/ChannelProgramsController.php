@@ -16,7 +16,14 @@ class ChannelProgramsController extends AdminController
      *
      * @var string
      */
-    protected $title = 'ChannelPrograms';
+    protected $title = 'Channel【V】编单';
+
+    protected $description = [
+        'index'  => "每日节目编单具体编排数据，可以编辑及排序",
+//        'show'   => 'Show',
+//        'edit'   => 'Edit',
+//        'create' => 'Create',
+];
 
     /**
      * Make a grid builder.
