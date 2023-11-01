@@ -129,7 +129,9 @@ class crawler extends Command
 
     private function login()
     {
-        return $this->crawler->login('18001799001@163.com', '123QWE#canxin');
+        $username = config('maoch_username') ?? '18001799001@163.com';
+        $password = config('maoch_password') ?? '123QWE#canxin';
+        return $this->crawler->login($username, $password);
     }
 
     private function getTemplate($uuid='')
