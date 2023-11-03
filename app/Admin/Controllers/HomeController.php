@@ -14,13 +14,13 @@ class HomeController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->title('编单系统概览')
-            ->description('查看、管理频道编单内容及节目素材管理')
+            ->title('欢迎使用编单及节目管理系统')
+            ->description('查看、管理频道编单及节目内容和素材管理')
             ->row(HomeController::title())
             ->row(function (Row $row) {
 
                 $row->column(8, function (Column $column) {
-                    $column->append(HomeController::programs());
+                    $column->append(HomeController::charts());
                 });
 
                 $row->column(4, function (Column $column) {
@@ -31,7 +31,7 @@ class HomeController extends Controller
             });
     }
 
-    public static function programs()
+    public static function charts()
     {
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
@@ -48,10 +48,16 @@ class HomeController extends Controller
     data: {
       labels: ['周一', '周二', '周三', '周四', '周五', '周六'],
       datasets: [{
-        label: '更新内容',
+        label: '更新节目',
         data: [12, 19, 3, 5, 2, 3],
         borderWidth: 1
-      }]
+      },
+        {
+            label: '更新素材',
+            data: [10, 13, 9, 10, 6, 8],
+            borderWidth: 1,
+            type: 'bar'
+        }]
     },
     options: {
       scales: {
@@ -85,7 +91,7 @@ HTML;
             'ChannelV' => admin_url('/channelv'),
             '模版库' => admin_url('/template'),
         ];
-        return view('admin.dashboard', ['title'=>'欢迎使用编单及节目管理系统', 'links'=>$links]);
+        return view('admin.dashboard', ['title'=>'', 'links'=>$links]);
     }
 
     public static function environment()
