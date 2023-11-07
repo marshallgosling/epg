@@ -52,6 +52,8 @@
 
     "Replicate Success message" : "复制记录成功。",
     "BatchReplicate Success message" : "批量复制记录成功。",
+    "Generator start success message." : "生成节目单任务发起成功。",
+    "Generator start failed message." : "生成节目单任务发起失败。",
     
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息",

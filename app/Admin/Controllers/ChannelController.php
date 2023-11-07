@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Channel\Generator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -49,6 +50,10 @@ class ChannelController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
         */
+
+        $grid->actions(function ($actions) {
+            $actions->add(new Generator);
+        });
 
         $grid->filter(function($filter){
 
