@@ -45,7 +45,7 @@ class channel extends Command
         $group = $this->argument('group') ?? "";
         $uuid = $this->argument('uuid') ?? "";
 
-        $templates = Template::where('group_id', $group)->lazy();
+        $templates = Template::with('programs')->where('group_id', $group)->lazy();
 
         $channel = ModelsChannel::where('uuid', $uuid)->first();
 

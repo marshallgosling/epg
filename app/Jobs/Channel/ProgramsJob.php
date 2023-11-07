@@ -21,6 +21,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
     // Channel UUID;
     private $uuid;
+    private $group = 'default';
 
     /**
      * Create a new job instance.
@@ -44,17 +45,17 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $templates = Template::where('group_id', 'default')->lazy();
+        $templates = Template::with('programs')->where('group_id', $this->group)->lazy();
 
         $channel = Channel::where('uuid', $this->uuid)->first();
 
         if(!$channel) {
-            $this->error("Channel {$this->uuid} is null.");
+            $this->error("Channel is null.");
             return 0;
         }
 
         if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-            $this->error("Channel {$this->uuid} 's programs exist.");
+            $this->error("Programs exist.");
             return 0;
         }
 
@@ -87,7 +88,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $channel->status = Channel::STATUS_NORMAL;
         $channel->save();
 
-        $this->info("Generate channel {$this->uuid} programs succeed.");
+        $this->info("Generate programs date: {$channel->air_date} succeed. ");
     }
 
     private function error($msg, $enterspace="\n")

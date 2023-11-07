@@ -9,7 +9,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\MessageBag;
 class ChannelController extends AdminController
 {
     /**
@@ -34,6 +34,8 @@ class ChannelController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Channel());
+
+        $grid->model()->orderBy('air_date');
 
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="channel/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
@@ -119,6 +121,34 @@ class ChannelController extends AdminController
 
         $form->date('distribution_date', __('Distribution date'));
 
+        $form->saving(function(Form $form) {
+
+            if($form->isCreating()) {
+                $error = new MessageBag([
+                    'title'   => '创建节目单失败',
+                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                ]);
+    
+                if(Channel::where('air_date', $form->air_date)->exist())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+
+            if($form->isEditing()) {
+                $error = new MessageBag([
+                    'title'   => '修改节目单失败',
+                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                ]);
+    
+                if(Channel::where('air_date', $form->air_date)->andWhere('id','<>',$form->model()->id)->exist())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+            
+        });
+        
         return $form;
     }
 }
