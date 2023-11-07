@@ -129,7 +129,7 @@ class ChannelController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
     
-                if(Channel::where('air_date', $form->air_date)->exist())
+                if(Channel::where('air_date', $form->air_date)->exists())
                 {
                     return back()->with(compact('error'));
                 }
@@ -141,14 +141,14 @@ class ChannelController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
     
-                if(Channel::where('air_date', $form->air_date)->andWhere('id','<>',$form->model()->id)->exist())
+                if(Channel::where('air_date', $form->air_date)->andWhere('id','<>',$form->model()->id)->exists())
                 {
                     return back()->with(compact('error'));
                 }
             }
             
         });
-        
+
         return $form;
     }
 }
