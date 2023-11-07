@@ -32,7 +32,7 @@ class CreateTemplate extends Migration
             $table->id();
             $table->string('name', 50)->default('')->comment('名称');
             $table->string("category", 20)->default('')->comment('栏目分类');
-            $table->string('type', 20)->default('')->comment("类型");
+            $table->json('data')->default('')->comment("数据")->nullable();
             $table->unsignedInteger('template_id')->default(0);
             $table->unsignedInteger('order_no')->default(0)->comment('排序号');
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Channel as ModelsChannel;
 use App\Models\ChannelPrograms;
+use App\Models\Program;
 use App\Models\Template;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -60,8 +61,22 @@ class channel extends Command
             $c->schedule_end_at = $t->end_at;
             $c->channel_id = $channel->id;
             $c->start_at = $channel->air_date.' '.$t->start_at;
-            $c->duration = '0';
+            $c->duration = 0;
             $c->version = '1';
+            
+            $data = [];
+            $programs = $t->programs();
+            foreach($programs as $p) {
+                $c = $p->category;
+                $item = Program::findOneOrderByRandom($c[0]);
+
+                if($item) {
+                    $data[] = $item->toArray();
+                    $c->duration += (int)$item->duration;
+                }
+            }
+            $c->data = $data;
+
             $c->save();
         }
 

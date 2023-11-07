@@ -19,6 +19,7 @@ class TemplatePrograms extends Model
         'id',
         'name',
         'category',
+        'data',
         'template_id',
         'order_no',
     ];
@@ -26,7 +27,7 @@ class TemplatePrograms extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s',
         'updated_at' => 'datetime:Y-m-d h:i:s',
-        
+        'data' => 'array'
     ];
 
     public function getCategoryAttribute($value)

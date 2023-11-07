@@ -48,8 +48,17 @@ class generateTool extends Command
         //$m = preg_match('/value=\"([\w\-]+)\" \/>/', $s, $match);
 
         //Meterial::truncate();
+        $arr = ['B1','C1','RK','IDOL','B1','B1','B1','B1'];
 
-        $this->getPrograms();
+        //foreach($arr as $c) {
+        for($i=0;$i<10000;$i++) {
+            $item = Program::findOneOrderByRandom('B1');
+            $this->info("id: {$item->id} {$item->name} ");
+        }
+
+        echo 'B1: '.Program::getTotal('B1');
+        
+        //$this->getPrograms();
 
         return 0;
     }

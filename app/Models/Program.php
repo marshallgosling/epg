@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Program extends Model
 {
@@ -31,5 +32,22 @@ class Program extends Model
     public function setCategoryAttribute($value)
     {
         $this->attributes['category'] = implode(',', $value);
+    }
+
+    private static $cache = [];
+
+    public static function findOneOrderByRandom($key)
+    {
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('id')->where('category','like',"%$key%")->pluck('id')->toArray();
+
+        self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
+        $id = Arr::random(self::$cache[$key]);
+        self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
+
+        return Program::where('id', $id)->first();
+    }
+
+    public static function getTotal($key) {
+        return Arr::exists(self::$cache, $key) ? count(self::$cache[$key]) : 0;
     }
 }
