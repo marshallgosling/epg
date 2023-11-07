@@ -38,7 +38,8 @@
     "Audit date"    : "审核时间",
     "Schedule start at": "计划开始时间",
     "Schedule end at" : "计划结束时间",
-
+    "Order no" : "排序",
+    "Template" : "模版名称",
     "ChannelController" : "Channel【V】节目单",
     "ChannelIndexDesc" : "查看和编辑每日节目单数据",
 
@@ -49,6 +50,9 @@
     "ChannelProgramController" : "Channel【V】编单",
     "ChannelProgramIndexDesc" : "每日节目编单具体编排数据，可以编辑及排序",
 
+    "Replicate Success message" : "复制记录成功。",
+    "BatchReplicate Success message" : "批量复制记录成功。",
+    
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息",
     "AuditInfo": "审核信息"

@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Template\BatchReplicate;
+use App\Admin\Actions\Template\Replicate;
 use App\Models\Category;
 use App\Models\Template;
 use App\Models\TemplatePrograms;
@@ -49,6 +51,14 @@ class TemplateProgramsController extends AdminController
             // 在这里添加字段过滤器
             $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
             
+        });
+
+        $grid->actions(function ($actions) {
+            $actions->add(new Replicate);
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchReplicate);
         });
 
         return $grid;

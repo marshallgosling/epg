@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class TemplateController extends AdminController
 {
@@ -27,8 +28,23 @@ class TemplateController extends AdminController
     {
         $grid = new Grid(new Template());
 
+        $grid->model()->with('programs');
         //$grid->column('id', __('Id'));
-        $grid->column('name', __('Name'));
+        $grid->column('name', __('Name'))->expand(function ($model) {
+            $programs = $model->programs()->take(10)->get()->map(function ($program) {  
+                return $program->only(['id', 'name', 'category', 'order_no', 'created_at']);
+            });
+
+            $items = $programs->toArray();
+            foreach($items as &$item) {
+                $category = array_map(function ($c) {
+                    return "<span class='label label-info'>{$c}</span>";
+                }, $item['category']);
+                $item['category'] = implode(' ', $category);
+            }
+            
+            return new Table(['ID', '名称', '栏目', '排序', '创建时间'], $items);
+        });
         $grid->column('version', __('Version'))->display(function($version) {
             return '<span class="label label-default">'.$version.'</span>';
         });
