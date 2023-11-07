@@ -2,11 +2,14 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Category;
+use App\Models\Template;
 use App\Models\TemplatePrograms;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\DB;
 
 class TemplateProgramsController extends AdminController
 {
@@ -28,11 +31,25 @@ class TemplateProgramsController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
-        $grid->column('unique_id', __('Unique id'));
-        $grid->column('template_id', __('Template id'));
+        $grid->column('category', __('Category'))->display(function($category) {
+            $category = array_map(function ($c) {
+                return "<span class='label label-info'>{$c}</span>";
+            }, $category);
+            return implode(' ', $category);
+        });
+        //$grid->column('template_id', __('Template id'));
         $grid->column('order_no', __('Order no'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->filter(function ($filter) {
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+        
+            // 在这里添加字段过滤器
+            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
+            
+        });
 
         return $grid;
     }
@@ -49,7 +66,7 @@ class TemplateProgramsController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
-        $show->field('unique_id', __('Unique id'));
+        $show->field('category', __('Category'));
         $show->field('template_id', __('Template id'));
         $show->field('order_no', __('Order no'));
         $show->field('created_at', __('Created at'));
@@ -68,9 +85,9 @@ class TemplateProgramsController extends AdminController
         $form = new Form(new TemplatePrograms());
 
         $form->text('name', __('Name'));
-        $form->text('unique_id', __('Unique id'));
-        $form->number('template_id', __('Template id'));
-        $form->number('order_no', __('Order no'));
+        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
+        $form->select('template_id', __('Template id'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
+        $form->number('order_no', __('Order no'))->default(0);
 
         return $form;
     }

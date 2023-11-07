@@ -37,4 +37,19 @@ class Template extends Model
     {
         return $this->hasMany(TemplatePrograms::class, 'template_id', 'id');
     }
+
+    public static function getFormattedTemplate($group='default')
+    {
+        if($group == 'all')
+            $cates = Template::lazy()->pluck('name', 'no')->toArray();
+        else
+            $cates = Template::where('type', $group)->lazy()->pluck('name', 'no')->toArray();
+        
+        foreach($cates as $no=>&$c)
+        {
+            $c = "【{$no}】 $c";
+        }
+
+        return $cates;
+    }
 }

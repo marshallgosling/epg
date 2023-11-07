@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Template\Programs;
 use App\Models\Template;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -47,6 +48,13 @@ class TemplateController extends AdminController
             // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->equal('group_id', __('Group'))->select(Template::GROUPS);
+        
+        });
+
+        $grid->actions(function ($actions) {
+
+            // append一个操作
+            $actions->add(new Programs);
         
         });
 

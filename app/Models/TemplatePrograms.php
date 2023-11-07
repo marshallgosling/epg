@@ -18,7 +18,7 @@ class TemplatePrograms extends Model
     protected $fillable = [
         'id',
         'name',
-        'unique_id',
+        'category',
         'template_id',
         'order_no',
     ];
@@ -28,6 +28,16 @@ class TemplatePrograms extends Model
         'updated_at' => 'datetime:Y-m-d h:i:s',
         
     ];
+
+    public function getCategoryAttribute($value)
+    {
+        return explode(',', $value);
+    }
+
+    public function setCategoryAttribute($value)
+    {
+        $this->attributes['category'] = implode(',', $value);
+    }
 
     public function template()
     {

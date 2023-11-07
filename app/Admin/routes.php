@@ -20,7 +20,7 @@ Route::group([
     $router->resource('/channelv', 'ChannelController')->names('channel');
     $router->resource('/channel/programs', 'ChannelProgramsController')->names('channel.programs');
 
-    $router->resource('/template', 'TemplateController')->names('template');
     $router->resource('/template/programs', 'TemplateProgramsController')->names('template.programs');
-
+    $router->resource('/template', 'TemplateController')->names('template');
+    
 });
