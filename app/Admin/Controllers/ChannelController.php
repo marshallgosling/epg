@@ -42,7 +42,7 @@ class ChannelController extends AdminController
         });
         $grid->column('air_date', __('Air date'));
         //$grid->column('name', __('Name'));
-        $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['success','danger']);
+        $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['warning','danger','success','danger']);
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
