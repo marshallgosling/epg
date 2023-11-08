@@ -85,7 +85,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             $c->save();
         }
 
-        $channel->status = Channel::STATUS_NORMAL;
+        $channel->status = Channel::STATUS_READY;
         $channel->save();
 
         $this->info("Generate programs date: {$channel->air_date} succeed. ");

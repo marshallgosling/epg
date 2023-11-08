@@ -13,7 +13,7 @@ class Generator extends RowAction
     public function handle(Channel $model)
     {
         // $model ...
-        if($model->status != Channel::STATUS_NORMAL) {
+        if($model->status != Channel::STATUS_EMPTY) {
             return $this->response()->error(__('Generator start failed message.'))->refresh();
         }
 
