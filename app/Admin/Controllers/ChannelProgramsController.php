@@ -99,12 +99,12 @@ class ChannelProgramsController extends AdminController
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->datetime('start_at', __('Start at'))->default(date('Y-m-d H:i:s'));
-        $form->datetime('end_at', __('End at'))->default(date('Y-m-d H:i:s'));
+        $form->text('start_at', __('Start at'))->default('');
+        $form->text('end_at', __('End at'))->default('');
         $form->text('duration', __('Duration'));
-        $form->number('version', __('Version'));
-        $form->number('channel_id', __('Channel id'));
-        $form->text('data', __('Data'));
+        $form->text('version', __('Version'));
+        $form->text('channel_id', __('Channel id'));
+        $form->json('data', __('Data'));
 
         return $form;
     }
