@@ -38,7 +38,7 @@ class ChannelController extends AdminController
         $grid->model()->orderBy('air_date');
 
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="channel/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+            return '<a href="channelv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
         $grid->column('air_date', __('Air date'));
         //$grid->column('name', __('Name'));

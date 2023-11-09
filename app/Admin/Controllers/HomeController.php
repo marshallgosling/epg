@@ -86,10 +86,10 @@ HTML;
 
     public static function title() {
         $links = [
-            '物料管理' => admin_url('/material'),
-            '节目管理' => admin_url('/programs'),
-            'ChannelV' => admin_url('/channelv'),
-            '模版库' => admin_url('/template'),
+            '物料管理' => admin_url('/media/material'),
+            '节目管理' => admin_url('/media/programs'),
+            'ChannelV' => admin_url('/channel/channelv'),
+            '模版库' => admin_url('/template/channelv'),
         ];
         return view('admin.dashboard', ['title'=>'', 'links'=>$links]);
     }

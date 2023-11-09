@@ -13,14 +13,14 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
-    $router->resource('/category', 'CategoryController')->names('category');
+    $router->resource('/media/category', 'CategoryController')->names('media.category');
     $router->resource('/records', 'RecordsController')->names('records');
-    $router->resource('/material', 'MaterialController')->names('material');
-    $router->resource('/programs', 'ProgramController')->names('program');
-    $router->resource('/channelv', 'ChannelController')->names('channel');
-    $router->resource('/channel/programs', 'ChannelProgramsController')->names('channel.programs');
+    $router->resource('/media/material', 'MaterialController')->names('media.material');
+    $router->resource('/media/programs', 'ProgramController')->names('media.program');
+    $router->resource('/channel/channelv', 'ChannelController')->names('channel.channelv');
+    $router->resource('/channel/channelv/programs', 'ChannelProgramsController')->names('channel.channelv.programs');
 
-    $router->resource('/template/programs', 'TemplateProgramsController')->names('template.programs');
-    $router->resource('/template', 'TemplateController')->names('template');
+    $router->resource('/template/channelv/programs', 'TemplateProgramsController')->names('template.programs');
+    $router->resource('/template/channelv', 'TemplateController')->names('template');
     
 });
