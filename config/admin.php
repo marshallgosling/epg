@@ -410,7 +410,7 @@ return [
             'enable' => true,
             'config' =>
                 [
-                    'mode' => 'tree',
+                    'mode' => 'code',
                     'modes' => ['code', 'form', 'text', 'tree', 'view'], // allowed modes
                 ],
         ]
