@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Meterial;
 use App\Models\Program;
 use App\Models\Spider\CnvSpider;
+use App\Models\Template;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class generateTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:generate';
+    protected $signature = 'tools:generate {id?}';
 
     /**
      * The console command description.
@@ -48,15 +49,14 @@ class generateTool extends Command
         //$m = preg_match('/value=\"([\w\-]+)\" \/>/', $s, $match);
 
         //Meterial::truncate();
-        $arr = ['B1','C1','RK','IDOL','B1','B1','B1','B1'];
 
-        //foreach($arr as $c) {
-        for($i=0;$i<10000;$i++) {
-            $item = Program::findOneOrderByRandom('B1');
-            $this->info("id: {$item->id} {$item->name} ");
-        }
+        $id = $this->argument('id') ?? "";
+        
+        $template = Template::findOrFail($id);
 
-        echo 'B1: '.Program::getTotal('B1');
+        $programs = $template->programs()->get();
+
+        print_r($programs->toArray());
         
         //$this->getPrograms();
 

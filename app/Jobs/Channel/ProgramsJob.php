@@ -70,7 +70,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             $c->version = '1';
             
             $data = [];
-            $programs = $t->programs();
+            $programs = $t->programs()->get();
             foreach($programs as $p) {
                 $c = $p->category;
                 $item = Program::findOneOrderByRandom($c[0]);

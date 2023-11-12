@@ -8,7 +8,9 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-
+use Encore\Admin\Layout\Content;
+use Encore\Admin\Layout\Column;
+use Encore\Admin\Layout\Row;
 class ChannelProgramsController extends AdminController
 {
     /**
@@ -58,6 +60,8 @@ class ChannelProgramsController extends AdminController
             
         });
 
+        $grid->disableCreateButton();
+
         return $grid;
     }
 
@@ -79,8 +83,8 @@ class ChannelProgramsController extends AdminController
         $show->field('end_at', __('End at'));
         $show->field('duration', __('Duration'));
         $show->field('version', __('Version'));
-        $show->field('channel_id', __('Channel id'));
-        $show->field('data', __('Data'));
+        //$show->field('channel_id', __('Air date'));
+        //$show->field('data', __('Data'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -99,13 +103,33 @@ class ChannelProgramsController extends AdminController
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'))->default('');
-        $form->text('end_at', __('End at'))->default('');
-        $form->text('duration', __('Duration'));
-        $form->text('version', __('Version'));
-        $form->text('channel_id', __('Channel id'));
+        $form->text('start_at', __('Start at'))->disable();
+        $form->text('end_at', __('End at'))->disable();
+        $form->text('duration', __('Duration'))->disable();
+        //$form->text('version', __('Version'));
+        //$form->select('channel_id', __('Air date'))->options(Channel::where);
         $form->json('data', __('Data'));
 
+        $form->saving(function(Form $form) {
+            if($form->isEditing()) {
+                
+                $form->version = (int)$form->version + 1;
+                
+            }
+        });
+
         return $form;
+    }
+
+
+    public function tree($id, Content $content)
+    {
+        $model = ChannelPrograms::findOrFail($id);
+
+        $data = $model->data;
+
+        return $content->title('编辑节目单')
+            ->description("编排调整节目内容")
+            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data]));
     }
 }
