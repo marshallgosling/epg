@@ -8,7 +8,7 @@
                     <input type="hidden" name="start_at" value="{{$model->start_at}}" id="start_at">
                     <input type="hidden" name="end_at" value="{{$model->end_at}}" id="end_at">
                     <input type="hidden" name="duration" value="{{$model->duration}}" id="duration">
-                    <input type="hidden" name="data" value='{{$model->data}}' id="data">
+                    <input type="hidden" name="data" value='{{$data}}' id="data">
     </div>
     <input type="hidden" name="_method" value="PUT" class="_method">
             <input type="hidden" name="_token" value="{{@csrf_token()}}">
