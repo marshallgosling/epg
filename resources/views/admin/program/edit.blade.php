@@ -145,6 +145,7 @@
             },
             allowClear:true,placeholder:"标题或播出编号",minimumInputLength:1,
             //templateResult: formatProgram,
+            language: "zh-CN",
             escapeMarkup: function (markup) {
                 return markup;
             }
@@ -156,7 +157,7 @@
             formatProgram(replaceItem);
         });
         function formatProgram (repo) {
-            $("#pName").html(repo.text);
+            $("#pName").html(repo.name);
             $("#pDuration").html(repo.duration);
             $("#pNo").html(repo.unique_no);
             $('#pCategory').html(repo.category);

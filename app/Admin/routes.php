@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Encore\Admin\Facades\Admin;
 use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 Admin::routes();
 
@@ -35,6 +36,8 @@ Route::group([
     $router->get('/api/programs', function (Request $request) {
         $q = $request->get('q');
     
-        return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->paginate(null, ['id', 'name as text','category','unique_no','duration']);
+        return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")
+            ->select(DB::raw('id, concat(unique_no, " ", name) as text, unique_no, duration, name, category'))
+            ->paginate(15);
     });
 });
