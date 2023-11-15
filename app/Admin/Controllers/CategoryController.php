@@ -2,12 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Category\TestModal;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-
 class CategoryController extends AdminController
 {
     /**
@@ -47,6 +47,14 @@ class CategoryController extends AdminController
         
         });
 
+        /*$grid->rows(function (Grid\Tools $tools) {
+            $tools->append(new TestModal());
+        });*/
+
+        $grid->actions(function ($actions) {
+            $actions->add(new TestModal);
+        });
+
         return $grid;
     }
 
@@ -82,6 +90,7 @@ class CategoryController extends AdminController
         //$form->select('no', __('CategoryNo'))->options(Category::getFormattedCategories());
         $form->text('no', __('CategoryNo'))->rules('required|max:10');
         $form->select('type', __('CategoryType'))->options(Category::TYPES)->rules('required');
+        
         $form->text('duration', __('Duration'));
 
         return $form;

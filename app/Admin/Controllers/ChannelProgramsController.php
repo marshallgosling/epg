@@ -4,13 +4,13 @@ namespace App\Admin\Controllers;
 
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use App\Models\Program;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
-use Encore\Admin\Layout\Column;
-use Encore\Admin\Layout\Row;
+
 class ChannelProgramsController extends AdminController
 {
     /**
@@ -38,7 +38,9 @@ class ChannelProgramsController extends AdminController
 
 
         //$grid->column('id', __('Id'));
-        $grid->column('name', __('Name'));
+        $grid->column('name', __('Name'))->display(function($name) {
+            return "<a href=\"tree/{$this->id}\">$this->name</a>"; 
+        });
         $grid->column('schedule_start_at', __('Schedule start at'));
         $grid->column('schedule_end_at', __('Schedule end at'));
         $grid->column('start_at', __('Start at'));
@@ -106,7 +108,7 @@ class ChannelProgramsController extends AdminController
         $form->text('start_at', __('Start at'))->disable();
         $form->text('end_at', __('End at'))->disable();
         $form->text('duration', __('Duration'))->disable();
-        //$form->text('version', __('Version'));
+        $form->display('version', __('Version'));
         //$form->select('channel_id', __('Air date'))->options(Channel::where);
         $form->json('data', __('Data'));
 
@@ -126,10 +128,47 @@ class ChannelProgramsController extends AdminController
     {
         $model = ChannelPrograms::findOrFail($id);
 
-        $data = $model->data;
+        $data = json_decode($model->data, true);
 
-        return $content->title('编辑节目单')
-            ->description("编排调整节目内容")
-            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data]));
+        $form = new \Encore\Admin\Widgets\Form();
+        
+        $form->action(admin_url("channel/channelv/$id/edit"));
+        $form->hidden('_token')->default(csrf_token());
+        $form->hidden('name')->default($model->name);
+        $form->hidden('schedule_start_at')->default($model->schedule_start_at);
+        $form->hidden('schedule_end_at')->default($model->schedule_end_at);
+        $form->hidden('start_at')->default($model->start_at);
+        $form->hidden('end_at')->default($model->end_at);
+        $form->hidden('duration')->default($model->duration);
+        $form->hidden('data')->default($model->data);
+        
+        return $content->title('节目单详细编排 '.$model->start_at.' '.$model->name)
+            ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
+            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'form'=>$form->render()]));
     }
+
+    public function remove($id, $idx)
+    {
+
+        $model = ChannelPrograms::findOrFail($id);
+
+        $list = json_decode($model->data, true);
+
+        array_splice($list, (int)$idx, 1);
+
+        $model->data = json_encode($list);
+
+        $model->version = $model->version + 1;
+
+        $model->save();
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.delete_succeeded'),
+        ];
+
+        return response()->json($response);
+        
+    }
+
 }

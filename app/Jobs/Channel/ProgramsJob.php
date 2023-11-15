@@ -91,6 +91,11 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $this->info("Generate programs date: {$channel->air_date} succeed. ");
     }
 
+    private function caculateDuration($str1, $str2)
+    {
+
+    }
+    
     private function error($msg, $enterspace="\n")
     {
         $msg = date('Y/m/d H:i:s ') . "Channel ".$this->uuid. " error: " . $msg;
