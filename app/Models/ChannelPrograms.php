@@ -28,7 +28,6 @@ class ChannelPrograms extends Model
         'start_at' => 'datetime:h:i:s',
         'end_at' => 'datetime:h:i:s',
         'created_at' => 'datetime:Y-m-d h:i:s',
-        'updated_at' => 'datetime:Y-m-d h:i:s',
-        'data' => 'array'
+        'updated_at' => 'datetime:Y-m-d h:i:s'
     ];
 }
