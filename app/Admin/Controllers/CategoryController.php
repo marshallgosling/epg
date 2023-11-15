@@ -49,11 +49,11 @@ class CategoryController extends AdminController
 
         /*$grid->rows(function (Grid\Tools $tools) {
             $tools->append(new TestModal());
-        });*/
+        });
 
         $grid->actions(function ($actions) {
             $actions->add(new TestModal);
-        });
+        });*/
 
         return $grid;
     }

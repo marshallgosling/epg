@@ -128,7 +128,7 @@ class ChannelProgramsController extends AdminController
     {
         $model = ChannelPrograms::findOrFail($id);
 
-        $data = json_decode($model->data, true);
+        $data = is_array($model->data) ? $model->data : json_decode($model->data, true);
 
         $form = new \Encore\Admin\Widgets\Form();
         
@@ -152,11 +152,11 @@ class ChannelProgramsController extends AdminController
 
         $model = ChannelPrograms::findOrFail($id);
 
-        $list = json_decode($model->data, true);
+        $list = is_array($model->data) ? $model->data : json_decode($model->data, true);
 
         array_splice($list, (int)$idx, 1);
 
-        $model->data = json_encode($list);
+        $model->data = $list;
 
         $model->version = $model->version + 1;
 
