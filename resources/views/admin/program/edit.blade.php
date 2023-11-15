@@ -119,7 +119,7 @@
     var selectedItem = null;
     var selectedIndex = -1;
     var replaceItem = null;
-    var dataList = JSON.parse('{!! @json_encode($model->data) !!}');
+    var dataList = JSON.parse('{!!@json_encode($data)!!}');
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
