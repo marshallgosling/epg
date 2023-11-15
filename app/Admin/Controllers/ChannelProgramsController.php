@@ -129,9 +129,9 @@ class ChannelProgramsController extends AdminController
     {
         $model = ChannelPrograms::findOrFail($id);
 
-        $data = is_array($model->data) ? $model->data : json_decode($model->data, true);
+        $data = json_decode($model->data, true);
 
-        $data = $this->caculateDuration($data);
+        $data = $this->caculateDuration($data, strtotime($model->start_at));
 
         //$model->end_at = $end_at;
 
@@ -178,11 +178,11 @@ class ChannelProgramsController extends AdminController
 
         $model = ChannelPrograms::findOrFail($id);
 
-        $list = is_array($model->data) ? $model->data : json_decode($model->data, true);
+        $list = json_decode($model->data, true);
 
         array_splice($list, (int)$idx, 1);
 
-        $model->data = $list;
+        $model->data = json_encode($list);
 
         $model->version = $model->version + 1;
 
