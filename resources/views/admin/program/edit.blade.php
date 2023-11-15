@@ -1,14 +1,8 @@
 <div class="row">
 <form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/channelv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
     <div class="box-body fields-group">
-     
-                    <input type="hidden" name="name" value="{{$model->name}}" id="name">
-                    <input type="hidden" name="schedule_start_at" value="{{$model->schedule_start_at}}" id="schedule_start_at">
-                    <input type="hidden" name="schedule_end_at" value="{{$model->schedule_end_at}}" id="schedule_end_at">
-                    <input type="hidden" name="start_at" value="{{$model->start_at}}" id="start_at">
-                    <input type="hidden" name="end_at" value="{{$model->end_at}}" id="end_at">
-                    <input type="hidden" name="duration" value="{{$model->duration}}" id="duration">
-                    <input type="hidden" name="data" value='{!!$model->data!!}' id="data">
+    
+                    <input type="hidden" name="data" value='' id="data">
     </div>
     
             <input type="hidden" name="_token" value="{{@csrf_token()}}">
@@ -101,11 +95,13 @@
                 <div class="col-md-4"></div>
 
                 <div class="col-md-8">
-                    <div class="btn-group">
-                        <a class="btn btn-info btn-sm" id="newBtn" title="新增"><i class="fa fa-save"></i><span class="hidden-xs"> 新增</span></a>
-                    </div>
-                    <div class="btn-group pull-right">
+                    
+                    <div class="btn-group pull-left">                       
                         <button id="replaceBtn" type="button" class="btn btn-info pull-right">替换</button>
+                    </div>
+                    
+                    <div class="btn-group pull-right">
+                        <button id="newBtn" title="新增" type="button" class="btn btn-success pull-right">新增</button>
                     </div>
                 </div>
             </div>
@@ -167,6 +163,10 @@
         }
 
         $('#newBtn').on('click', function(e) {
+            if(replaceItem == null) {         
+                toastr.error('请先搜索节目！');
+                return;
+            }
             replaceItem.name = replaceItem.text;
             dataList.push(replaceItem);
 
@@ -189,20 +189,47 @@
                 replaceItem.name = replaceItem.text;
                 dataList[selectedIndex] = replaceItem;
                 console.log(JSON.stringify(dataList));
-                //$('#data').val(JSON.stringify(dataList));
-                //$('#widget-form-655477f1c8f59').submit();
-                $.ajax({
-                    method: 'post',
-                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
-                    data: {
-                        data: JSON.stringify(dataList),
-                        _token:LA.token,
-                    },
-                    success: function (data) {
-                        $.pjax.reload('#pjax-container');
-                        toastr.success('替换成功 !');
+                
+                swal({
+                    title: "确认要替换?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确认",
+                    showLoaderOnConfirm: true,
+                    cancelButtonText: "取消",
+                    preConfirm: function() {
+                        return new Promise(function(resolve) {
+                            $.ajax({
+                                method: 'post',
+                                url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                                data: {
+                                    data: JSON.stringify(dataList),
+                                    _token:LA.token,
+                                },
+                                success: function (data) {
+                                    $.pjax.reload('#pjax-container');
+                                    toastr.success('替换成功 !');
+                                    resolve(data);
+                                }
+                            });
+                        });
+                    }
+                }).then(function(result) {
+                    var data = result.value;
+                    if (typeof data === 'object') {
+                        if (data.status) {
+                            swal(data.message, '', 'success');
+                        } else {
+                            swal(data.message, '', 'error');
+                        }
                     }
                 });
+
+                
+            }
+            else {
+                toastr.error('请先选择节目！');
             }
             
         });
@@ -276,6 +303,5 @@
         $('#sCategory').html(repo.category.join(' '));
         selectedItem = repo;
         selectedIndex = idx;
-        console.log("select Program "+idx);
     }
 </script></div></div>

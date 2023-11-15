@@ -153,7 +153,7 @@ class ChannelProgramsController extends AdminController
     }
 
     public function save($id, Request $request) {
-        $data = $request->all(['data', 'start_at', 'end_at', 'duration']);
+        $data = $request->all(['data']);
         $model = ChannelPrograms::findOrFail($id);
 
         $model->data = $data['data'];
