@@ -140,7 +140,7 @@ class ChannelProgramsController extends AdminController
         $form->hidden('start_at')->default($model->start_at);
         $form->hidden('end_at')->default($model->end_at);
         $form->hidden('duration')->default($model->duration);
-        $form->hidden('data')->default($model->data);
+        $form->hidden('data')->default(json_encode($model->data));
         
         return $content->title('节目单详细编排 '.$model->start_at.' '.$model->name)
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
