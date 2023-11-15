@@ -10,6 +10,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
+use Illuminate\Http\Request;
 
 class ChannelProgramsController extends AdminController
 {
@@ -130,6 +131,10 @@ class ChannelProgramsController extends AdminController
 
         $data = is_array($model->data) ? $model->data : json_decode($model->data, true);
 
+        $data = $this->caculateDuration($data);
+
+        //$model->end_at = $end_at;
+
         $form = new \Encore\Admin\Widgets\Form();
         
         $form->action(admin_url("channel/channelv/$id/edit"));
@@ -142,9 +147,30 @@ class ChannelProgramsController extends AdminController
         $form->hidden('duration')->default($model->duration);
         $form->hidden('data')->default(json_encode($model->data));
         
-        return $content->title('节目单详细编排 '.$model->start_at.' '.$model->name)
+        return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
             ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'form'=>$form->render()]));
+    }
+
+    public function save($id, Request $request) {
+        $data = $request->all(['data', 'start_at', 'end_at', 'duration']);
+        $model = ChannelPrograms::findOrFail($id);
+
+        $model->data = $data['data'];
+        /*$model->start_at = $data['start_at'];
+        $model->end_at = $data['end_at'];
+        $model->duration = $data['duration'];
+*/
+        $model->version = $model->version + 1;
+
+        $model->save();
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.delete_succeeded'),
+        ];
+
+        return response()->json($response);
     }
 
     public function remove($id, $idx)
@@ -170,5 +196,24 @@ class ChannelProgramsController extends AdminController
         return response()->json($response);
         
     }
+
+    private function caculateDuration($data, $start=0)
+    {
+        foreach($data as &$item)
+        {
+            $duration = explode(':', $item['duration']);
+            $seconds = (int)$duration[0]*3600 + (int)$duration[1]*60 + (int)$duration[2];
+
+            $item['start_at'] = date('H:i:s', $start);
+            $item['end_at'] = date('H:i:s', $start+$seconds);
+
+            $start += $seconds;
+            
+        }
+
+        return $data;
+    }
+
+
 
 }

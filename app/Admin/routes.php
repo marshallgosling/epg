@@ -26,6 +26,8 @@ Route::group([
     $router->resource('/channel/channelv/programs', 'ChannelProgramsController')->names('channel.channelv.programs');
     $router->resource('/channel/channelv', 'ChannelController')->names('channel.channelv');
     $router->delete('/channel/channelv/data/{id}/remove/{idx}', 'ChannelProgramsController@remove')->name('channel.channelv.programs.delete');
+    $router->post('/channel/channelv/data/{id}/save', 'ChannelProgramsController@save')->name('channel.channelv.programs.post');
+
 
     $router->resource('/template/channelv/programs', 'TemplateProgramsController')->names('template.programs');
     $router->resource('/template/channelv', 'TemplateController')->names('template');

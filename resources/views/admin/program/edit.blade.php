@@ -1,5 +1,5 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/channelv/programs/{{$model->id}}" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/channelv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
     <div class="box-body fields-group">
      
                     <input type="hidden" name="name" value="{{$model->name}}" id="name">
@@ -8,9 +8,9 @@
                     <input type="hidden" name="start_at" value="{{$model->start_at}}" id="start_at">
                     <input type="hidden" name="end_at" value="{{$model->end_at}}" id="end_at">
                     <input type="hidden" name="duration" value="{{$model->duration}}" id="duration">
-                    <input type="hidden" name="data" value='{{@json_encode($data)}}' id="data">
+                    <input type="hidden" name="data" value='{!!$model->data!!}' id="data">
     </div>
-    <input type="hidden" name="_method" value="PUT" class="_method">
+    
             <input type="hidden" name="_token" value="{{@csrf_token()}}">
 </form>
 </div>
@@ -28,7 +28,7 @@
                 </div>
                 
                 <div class="btn-group">
-                    <a class="btn btn-warning btn-sm tree-654ce72915b12-refresh" title="刷新"><i class="fa fa-refresh"></i><span class="hidden-xs"> 刷新</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>
@@ -39,7 +39,7 @@
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle">
-                                <i class="fa fa-bars"></i> {{$item['duration']}} <strong>{{$item['name']}}</strong> 【{{@implode(' ', $item['category'])}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
+                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{@implode(' ', $item['category'])}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
                                 <span class="pull-right dd-nodrag">
                                     <a href="javascript:selectProgram({{$idx}});"><i class="fa fa-edit"></i></a>
                                     <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
@@ -98,19 +98,17 @@
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-            <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
 
-            <div class="col-md-8">
-                
-                            <div class="btn-group pull-right">
-                    <button id="replaceBtn" type="button" class="btn btn-info pull-right">替换</button>
+                <div class="col-md-8">
+                    <div class="btn-group">
+                        <a class="btn btn-info btn-sm" id="newBtn" title="新增"><i class="fa fa-save"></i><span class="hidden-xs"> 新增</span></a>
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button id="replaceBtn" type="button" class="btn btn-info pull-right">替换</button>
+                    </div>
                 </div>
-                        </div>
             </div>
-
-
-        
-
 
         </div><!-- /.box-body -->
     </div>
@@ -119,7 +117,7 @@
     var selectedItem = null;
     var selectedIndex = -1;
     var replaceItem = null;
-    var dataList = JSON.parse('{!!@json_encode($data)!!}');
+    var dataList = JSON.parse('{!!$model->data!!}');
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
@@ -168,13 +166,43 @@
             $('#pCategory').html(repo.category);
         }
 
+        $('#newBtn').on('click', function(e) {
+            replaceItem.name = replaceItem.text;
+            dataList.push(replaceItem);
+
+            $.ajax({
+                    method: 'post',
+                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                    data: {
+                        data: JSON.stringify(dataList),
+                        _token:LA.token,
+                    },
+                    success: function (data) {
+                        $.pjax.reload('#pjax-container');
+                        toastr.success('新增成功 !');
+                    }
+                });
+        });
+
         $('#replaceBtn').on('click', function(e) {
             if(selectedIndex > -1) {
                 replaceItem.name = replaceItem.text;
                 dataList[selectedIndex] = replaceItem;
                 console.log(JSON.stringify(dataList));
-                $('#data').val(JSON.stringify(dataList));
-                $('#widget-form-655477f1c8f59').submit();
+                //$('#data').val(JSON.stringify(dataList));
+                //$('#widget-form-655477f1c8f59').submit();
+                $.ajax({
+                    method: 'post',
+                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                    data: {
+                        data: JSON.stringify(dataList),
+                        _token:LA.token,
+                    },
+                    success: function (data) {
+                        $.pjax.reload('#pjax-container');
+                        toastr.success('替换成功 !');
+                    }
+                });
             }
             
         });
@@ -186,9 +214,18 @@
             {
                 newList[i] = dataList[list[i].id];
             }
-            console.log(newList);
-            $('#data').val(JSON.stringify(newList));
-            $('#widget-form-655477f1c8f59').submit();
+            $.ajax({
+                    method: 'post',
+                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                    data: {
+                        data: JSON.stringify(newList),
+                        _token:LA.token,
+                    },
+                    success: function (data) {
+                        $.pjax.reload('#pjax-container');
+                        toastr.success('保存成功 !');
+                    }
+                });
         });
 
         $('.tree_branch_delete').click(function() {
