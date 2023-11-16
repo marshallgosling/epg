@@ -100,12 +100,15 @@
 
                 <div class="col-md-8">
                     
-                    <div class="btn-group pull-left">                       
+                    <div class="btn-group pull-right">                       
                         <button id="replaceBtn" type="button" class="btn btn-info pull-right">替换</button>
+                        &nbsp;
+                        &nbsp;
                     </div>
                     
                     <div class="btn-group pull-right">
                         <button id="newBtn" title="新增" type="button" class="btn btn-success pull-right">新增</button>
+                        &nbsp;&nbsp;
                     </div>
                 </div>
             </div>
