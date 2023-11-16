@@ -2,6 +2,8 @@
 
 namespace App\Listeners\Channel;
 
+use App\Events\Channel\ProgramsEvent;
+use App\Models\ChannelPrograms;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -23,8 +25,9 @@ class ProgramsListener
      * @param  object  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(ProgramsEvent $event)
     {
-        //
+        $channel = ChannelPrograms::find($event->getChannelProgramId());
+        $channel->exportXML();
     }
 }

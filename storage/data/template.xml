@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<PgmItem>
+	<PgmDate>2023-09-08</PgmDate> <!--(必填) 节目单日期-->
+	<ChannelName>测试频道</ChannelName> <!--(必填) 频道名称-->
+	<PgmClass>全天</PgmClass> <!--(必填) 节目单时段 如白天，晚上，全天-->
+	<ListType>0</ListType> <!--节目单类型(默认给0) 0.合并广告播出频道节目单；1.广告单，2.未合并广告播出频道节目单；3.播后节目单-->
+	<Version>1</Version> <!--节目单版本号(默认给1)-->
+	<Count>7</Count> <!--节目单条目数-->
+    <ItemList> <!--节目单条目-->
+		<PlayType>1</PlayType> <!--(必填) 播出类型 0-顺延 1-定时 2-手动 3-逆推 4-随切 5-跳过 6-保持 -->
+		<StartTime>1080000</StartTime> <!--(必填) 开始时间 去掉当前日期的一个时间(帧数) -->
+		<SystemTime>2023-09-08 12:00:00</SystemTime> <!--(必填) 开始时间 -->
+		<Insert>0</Insert> <!--(必填) 插播类型 0-无插播 1-确定长度插播 2-不定长度插播 3-跟随上条节目 -->
+		<Length>15000</Length> <!--(必填) 节目设定时长 帧 -->
+		<Offset>0</Offset> <!--节目入点 -->
+		<ChSignal>0</ChSignal> <!--(必填) 信号源序号 -->
+		<ChSignalEx>0</ChSignalEx> <!--B类源序号 -->
+		<DevType>0</DevType> <!--(必填) 节目设备类型 0-硬盘 1-外来信号 2-录像机 3-播放器 -->
+		<DevId>0</DevId> <!--设备编号 -->
+		<Name>10分钟（带时码）</Name> <!--(必填) 节目名称 -->
+		<Name2/> <!--节目别名 -->
+		<TapeID/> <!--磁带号 -->
+		<BillType>0908新建</BillType> <!--(必填) 串联单类型 格式：mmdd类型-->
+		<ProgType>综艺</ProgType> <!--(必填) 节目类型-->
+		<Memo/> <!--(必填) 备注 -->
+		<PlayedTask/> <!--字幕 -->
+		<LimitOffset>0</LimitOffset> <!--节目实际入点 -->
+		<LimitLen>15000</LimitLen> <!--(必填) 节目实际长度 -->
+		<AdvType>0</AdvType> <!--(必填) 广告类型 0.普通节目 1-广告 -->
+		<ID></ID>  <!--(必填) 节目唯一Id -->
+		<Pid></Pid>  <!--(必填) 节目单唯一Id -->
+		<Status>0</Status> <!--状态 -->
+		<Modify>0</Modify> <!--播控修改字段 -->
+		<First>0</First> <!--是否为开播条 -->
+		<PgmDate>45177</PgmDate> <!--(必填) 播放日期(与StartTime可以组成一个完整的播放日)-->
+		<ColumnName/> <!--栏目名称 -->
+		<Category/> <!--节目类别 -->
+		<ProductDepartment/> <!--制作部门 -->
+		<Origin/> <!--来源 -->
+		<sCharats/>
+		<sKeys/>
+		<sPlayType/>
+		<sDevType>硬盘</sDevType> <!--(必填) 信源名称-->
+		<ClipsCount>1</ClipsCount> <!--子素材数量-->
+		<ClipsItem>
+			<FileName>UH82CDAW</FileName> <!--素材文件名称-->
+			<Name>10分钟（带时码）</Name> <!--(必填) 素材名称-->
+			<Id></Id> <!--素材Id-->
+			<LimitOffset>0</LimitOffset> <!--素材实际入点-->
+			<LimitDuration>15000</LimitDuration> <!--素材实际长度 帧-->
+			<Offset>0</Offset>	<!--(必填) 素材设置入点-->
+			<Duration>1500</Duration> <!--(必填) 素材设置长度 帧-->
+			<Status>0</Status> <!--素材状态-->
+			<MediaType></MediaType> <!--素材文件类型-->
+			<FileId></FileId> <!--素材文件Id-->
+			<AreaStatus>25556860</AreaStatus> <!--素材存储区标识-->
+			<Code/> <!--素材外来Id-->
+			<ClipFileCount>1</ClipFileCount> <!--素材文件数量-->
+			<ClipFile>
+				<AreaId>2</AreaId> <!--存储区标识-->
+				<FileSize>3885854500</FileSize> <!--文件大小-->
+				<MD5>1c45e54500dc7af257636b816ebb5435</MD5> <!--文件MD5值-->
+			</ClipFile>
+		</ClipsItem>
+	</ItemList>
+</PgmItem>

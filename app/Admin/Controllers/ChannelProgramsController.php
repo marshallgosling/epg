@@ -42,11 +42,12 @@ class ChannelProgramsController extends AdminController
         $grid->column('name', __('Name'))->display(function($name) {
             return "<a href=\"tree/{$this->id}\">$this->name</a>"; 
         });
-        $grid->column('schedule_start_at', __('Schedule start at'));
-        $grid->column('schedule_end_at', __('Schedule end at'));
+        
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
         $grid->column('duration', __('Duration'));
+        $grid->column('schedule_start_at', __('Schedule start at'));
+        $grid->column('schedule_end_at', __('Schedule end at'));
         $grid->column('version', __('Version'));
         //$grid->column('channel_id', __('Channel id'));
         //$grid->column('data', __('Data'));

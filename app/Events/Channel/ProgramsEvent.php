@@ -14,14 +14,28 @@ class ProgramsEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    private $channel_id;
+    private $program_id;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($channel_id, $program_id=0)
     {
-        //
+        $this->channel_id = $channel_id;
+        $this->program_id = $program_id;
+    }
+
+    public function getChannelId()
+    {
+        return $this->channel_id;
+    }
+
+    public function getChannelProgramId()
+    {
+        return $this->program_id;
     }
 
     /**
@@ -31,6 +45,6 @@ class ProgramsEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('channel-program');
     }
 }

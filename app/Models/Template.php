@@ -52,4 +52,5 @@ class Template extends Model
 
         return $cates;
     }
+
 }

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8">
+<PgmItem>
+    <PgmDate>2023-10-18</PgmDate>
+    <ChannelName>channelv</ChannelName>
+    <PgmClass>全天</PgmClass>
+    <ListType>0</ListType>
+    <Version>1</Version>
+    <Count>1</Count>
+    <ItemList>
+        <PlayType>1</PlayType>
+        <StartTime>540000</StartTime>
+        <SystemTime>2023-10-18 06:00:00</SystemTime>
+        <Insert>0</Insert>
+        <Length>201300</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>偶像派+民谣风+粤来香</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>1018新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>201300</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>d830244b-2dd6-4aab-afc6-c353ed06bcf3</ID>
+        <Pid>bf794c2b-c658-4eb9-acd5-4723f1bb3a42</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45217</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>7</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNM14000870</FileName>
+            <Name>雨打花瓣的声音</Name>
+            <Id>VCNM14000870</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>7125</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>7125</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile></ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI16000044</FileName>
+            <Name>20th CMA- AID 莫文蔚</Name>
+            <Id>VCNI16000044</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>275</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>275</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile></ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018015</FileName>
+            <Name>2018 V Pop Promo</Name>
+            <Id>VCNP18018015</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile></ClipsItem>
+        <ClipsItem>
+            <FileName>VCNM14000345</FileName>
+            <Name>今宵多珍重</Name>
+            <Id>VCNM14000345</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>4625</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>4625</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile></ClipsItem>
+        <ClipsItem>
+            <FileName>VCNM14000179</FileName>
+            <Name>Chiristmas in LA</Name>
+            <Id>VCNM14000179</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>7775</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>7775</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile></ClipsItem>
+        <ClipsItem>
+            <FileName>XKCMA2023</FileName>
+            <Name>2023CMA华语榜中榜</Name>
+            <Id>XKCMA2023</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>180000</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>180000</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile></ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018015</FileName>
+            <Name>2018 V Pop Promo</Name>
+            <Id>VCNP18018015</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+</PgmItem>

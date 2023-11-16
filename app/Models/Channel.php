@@ -37,4 +37,9 @@ class Channel extends Model
         'created_at' => 'datetime:Y-m-d h:i:s',
         'updated_at' => 'datetime:Y-m-d h:i:s',
     ];
+
+    public function programs()
+    {
+        return $this->hasMany(ChannelPrograms::class, 'channel_id', 'id');
+    }
 }

@@ -24,7 +24,7 @@
                 <div class="btn-group">
                     <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
-                <div class="btn-group">
+                <div class="btn-group pull-right">
                     <small>可拖动排序</small>
                 </div>
             </div>
@@ -175,7 +175,6 @@
                 toastr.error('请先搜索节目！');
                 return;
             }
-            replaceItem.name = replaceItem.text;
             dataList.push(replaceItem);
 
             $.ajax({
@@ -194,7 +193,7 @@
 
         $('#replaceBtn').on('click', function(e) {
             if(selectedIndex > -1) {
-                replaceItem.name = replaceItem.text;
+
                 dataList[selectedIndex] = replaceItem;
                 console.log(JSON.stringify(dataList));
                 
