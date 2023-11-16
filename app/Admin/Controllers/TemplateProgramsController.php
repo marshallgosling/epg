@@ -39,10 +39,10 @@ class TemplateProgramsController extends AdminController
             }, $category);
             return implode(' ', $category);
         });
-        //$grid->column('template_id', __('Template id'));
+        $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
         $grid->column('order_no', __('Order no'));
         $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        //$grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function ($filter) {
             // 去掉默认的id过滤器
@@ -77,7 +77,7 @@ class TemplateProgramsController extends AdminController
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
         $show->field('category', __('Category'));
-        $show->field('template_id', __('Template id'));
+        $show->field('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
         $show->field('order_no', __('Order no'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -97,6 +97,7 @@ class TemplateProgramsController extends AdminController
         $form->text('name', __('Name'));
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
         $form->select('template_id', __('Template id'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
+        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->number('order_no', __('Order no'))->default(0);
 
         return $form;

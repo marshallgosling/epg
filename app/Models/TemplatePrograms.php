@@ -12,6 +12,7 @@ class TemplatePrograms extends Model
     public const STATUS_READY = 0;
     public const STATUS_SYNCING = 1;
     public const STATUS_STOPED = 2;
+    public const TYPES = ['节目','广告','垫片'];
 
     protected $table = 'template_programs';
 
@@ -20,6 +21,7 @@ class TemplatePrograms extends Model
         'name',
         'category',
         'data',
+        'type',
         'template_id',
         'order_no',
     ];
@@ -27,7 +29,7 @@ class TemplatePrograms extends Model
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s',
         'updated_at' => 'datetime:Y-m-d h:i:s',
-        'data' => 'array'
+        //'data' => 'array'
     ];
 
     public function getCategoryAttribute($value)
