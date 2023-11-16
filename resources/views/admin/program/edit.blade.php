@@ -24,7 +24,9 @@
                 <div class="btn-group">
                     <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
-                
+                <div class="btn-group">
+                    <small>可拖动排序</small>
+                </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
@@ -80,14 +82,15 @@
                     <div class="form-group col-sm-12 ">                     
                         <input type="hidden" name="program"><select class="form-control program" style="width: 100%;" name="program" data-value=""><option value=""></option></select>
                     </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <tr><td width="120px">名称</td><td id="pName"></td></tr>
-                        <tr><td>播出编号</td><td id="pNo"></td></tr>
-                        <tr><td>栏目</td><td id="pCategory"></td></tr>
-                        <tr><td>时长</td><td id="pDuration"></td></tr>
-                    </table>
+                
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tr><td width="120px">名称</td><td id="pName"></td></tr>
+                            <tr><td>播出编号</td><td id="pNo"></td></tr>
+                            <tr><td>栏目</td><td id="pCategory"></td></tr>
+                            <tr><td>时长</td><td id="pDuration"></td></tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <!-- /.box-body -->
@@ -145,7 +148,7 @@
             },
             allowClear:true,placeholder:"标题或播出编号",minimumInputLength:1,
             //templateResult: formatProgram,
-            language: "zh-CN",
+            language: "zh_CN",
             escapeMarkup: function (markup) {
                 return markup;
             }
