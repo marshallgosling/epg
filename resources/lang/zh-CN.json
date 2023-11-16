@@ -34,6 +34,7 @@
     "Audit status"  : "审核状态",
     "Uuid"          : "UUID",
     "Status"        : "状态",
+    "Type"          : "类型",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Schedule start at": "计划开始时间",

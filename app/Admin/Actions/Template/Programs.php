@@ -14,7 +14,7 @@ class Programs extends RowAction
      */
     public function href()
     {
-        return 'template/channelv/programs?template_id='.$this->getKey();
+        return 'channelv/programs?template_id='.$this->getKey();
     }
 
 }
