@@ -59,13 +59,21 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             return 0;
         }
 
+        $last = strtotime($channel->air_date);
+
         foreach($templates as $t) {
+            $air = strtotime($channel->air_date.' '.$t->start_at);
+
+            if($air < $last) $air += 24 * 3600;
+
+            $last = $air;
+
             $c = new ChannelPrograms();
             $c->name = $t->name;
             $c->schedule_start_at = $t->start_at;
             $c->schedule_end_at = $t->end_at;
             $c->channel_id = $channel->id;
-            $c->start_at = $channel->air_date.' '.$t->start_at;
+            $c->start_at = date('Y-m-d H:i:s', $air);
             $c->duration = 0;
             $c->version = '1';
             

@@ -127,7 +127,7 @@ class generateTool extends Command
             $itemList->ClipsCount = count($data);
             //$itemList->ClipsItem = $clips;
             //$json->ItemList[$idx] = $itemList;
-            break;
+            //break;
         }
 
         //$json->ItemList[$idx] = $itemList;
@@ -137,7 +137,8 @@ class generateTool extends Command
         $exporter = new \App\Tools\XmlExporter();
         $xml = $exporter->export($json, 'PgmItem');
 
-        echo $xml;
+        Storage::disk('public')->put($json->ChannelName.'_'.$json->PgmDate.'.xml', $xml);
+
 
         return 0;
     }

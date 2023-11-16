@@ -26,7 +26,7 @@ class ProgramsExporter
 
         $programs = $channel->programs()->get();
 
-        //$json->Count = count($programs);
+        $json->Count = count($programs);
 
         foreach($programs as $idx=>$program)
         {
@@ -48,6 +48,7 @@ class ProgramsExporter
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = ChannelPrograms::caculateFrames($program->duration);
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
+                $itemList->PlayType = $idx == 0 ? 1 : 0;
 
             $clips = &$itemList->ClipsItem;
             $data = json_decode($program->data);
@@ -69,9 +70,9 @@ class ProgramsExporter
             $itemList->LimitLen = $duration * config('FRAME', 25);
             $itemList->ID = (string)Str::uuid();
             $itemList->Pid = (string)Str::uuid();
-            $itemList->ClipsCount = count($data);
+            $itemList->ClipsCount = is_array($data) ? count($data) : 0;
 
-            break;
+            //break;
         }
 
         self::$json = $json;

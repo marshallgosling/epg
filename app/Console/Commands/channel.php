@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Channel as ModelsChannel;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Template;
@@ -47,7 +46,7 @@ class channel extends Command
 
         $templates = Template::with('programs')->where('group_id', $group)->lazy();
 
-        $channel = ModelsChannel::where('uuid', $uuid)->first();
+        $channel = \App\Models\Channel::where('uuid', $uuid)->first();
 
         if(!$channel) {
             $this->error("Channel $uuid is null");
