@@ -82,7 +82,8 @@
                     <div class="form-group col-sm-12 ">                     
                         <input type="hidden" name="program"><select class="form-control program" style="width: 100%;" name="program" data-value=""><option value=""></option></select>
                     </div>
-                
+                </div>
+                <div class="box-body fields-group">
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <tr><td width="120px">名称</td><td id="pName"></td></tr>
