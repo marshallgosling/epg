@@ -152,7 +152,7 @@
             },
             allowClear:true,placeholder:"标题或播出编号",minimumInputLength:1,
             //templateResult: formatProgram,
-            language: "zh_CN",
+            language: "zh-CN",
             escapeMarkup: function (markup) {
                 return markup;
             }
