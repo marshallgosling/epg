@@ -22,9 +22,10 @@ class Template extends Model
         'name',
         'schedule',
         'start_at',
-        'end_at',
+        'sort',
         'duration',
         'group_id',
+        'version',
         'comment'
     ];
 
