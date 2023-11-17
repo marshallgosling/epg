@@ -41,8 +41,8 @@ class TemplateProgramsController extends AdminController
         });
         $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
         $grid->column('sort', __('Sort'));
-        $grid->column('created_at', __('Created at'));
-        //$grid->column('updated_at', __('Updated at'));
+        //$grid->column('created_at', __('Created at'));
+        $grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function ($filter) {
             // 去掉默认的id过滤器
@@ -60,6 +60,8 @@ class TemplateProgramsController extends AdminController
         $grid->batchActions(function ($actions) {
             $actions->add(new BatchReplicate);
         });
+
+        $grid->paginate(100);
 
         return $grid;
     }

@@ -25,15 +25,14 @@ class XmlExporter
             } else {
                 $this->xml .= '>';
                 if (is_array($value)) {
-                    if ($value) {
-                        $temporary = $this->getArrayName($key);
-                        foreach ($value as $idx=>$entry) {
-                            if($idx>0) $this->xml .= PHP_EOL . $indent . '<' . $key .'>';
-                            $this->recurse($entry, $level + 1);
-                            if($idx<count($value)-1) $this->xml .= PHP_EOL . $indent . '</' . $key . '>';
-                        }
-                        $this->xml .= PHP_EOL . $indent;
+                    
+                    foreach ($value as $idx=>$entry) {
+                        if($idx>0) $this->xml .= PHP_EOL . $indent . '<' . $key .'>';
+                        $this->recurse($entry, $level + 1);
+                        if($idx<count($value)-1) $this->xml .= PHP_EOL . $indent . '</' . $key . '>';
                     }
+                    $this->xml .= PHP_EOL . $indent;
+                    
                 } else if (is_object($value)) {
                     if ($value) {
                         $this->recurse($value, $level + 1);
