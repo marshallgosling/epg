@@ -61,8 +61,6 @@ class TemplateProgramsController extends AdminController
             $actions->add(new BatchReplicate);
         });
 
-        $grid->paginate(100);
-
         return $grid;
     }
 
