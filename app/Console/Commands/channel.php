@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Template;
-use Carbon\Carbon;
+use App\Tools\ProgramsExporter;
 use Illuminate\Console\Command;
 
 class channel extends Command
@@ -15,7 +15,7 @@ class channel extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:channel {group} {uuid}';
+    protected $signature = 'tools:channel {action} {id} {group?}';
 
     /**
      * The console command description.
@@ -41,15 +41,31 @@ class channel extends Command
      */
     public function handle()
     {
-        $group = $this->argument('group') ?? "";
-        $uuid = $this->argument('uuid') ?? "";
+        $group = $this->argument('group') ?? "default";
+        $id = $this->argument('id') ?? "";
+        $action = $this->argument('action') ?? "";
 
+        if($action == 'list') $this->generateChannel($id, $group);
+
+        if($action == 'export') $this->exportChannel($id);
+
+        return 0;
+    }
+
+    private function exportChannel($id)
+    {
+        ProgramsExporter::generate($id);
+        ProgramsExporter::exportXml(true);
+    }
+
+    private function generateChannel($id, $group='default')
+    {
         $templates = Template::with('programs')->where('group_id', $group)->lazy();
 
-        $channel = \App\Models\Channel::where('uuid', $uuid)->first();
+        $channel = \App\Models\Channel::find($id);
 
         if(!$channel) {
-            $this->error("Channel $uuid is null");
+            $this->error("Channel $id is null");
             return 0;
         }
 
@@ -78,7 +94,5 @@ class channel extends Command
 
             $c->save();
         }
-
-        return 0;
     }
 }

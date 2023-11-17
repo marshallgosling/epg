@@ -8,6 +8,7 @@ use App\Models\Meterial;
 use App\Models\Program;
 use App\Models\Spider\CnvSpider;
 use App\Models\Template;
+use App\Tools\ChannelFixer;
 use App\Tools\ProgramsExporter;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -55,8 +56,7 @@ class generateTool extends Command
 
         $id = $this->argument('id') ?? "";
 
-        ProgramsExporter::generate($id);
-        ProgramsExporter::exportXml(true);
+        ChannelFixer::fixChannelStartTime(\App\Models\Channel::find($id));
 
         return 0;
         

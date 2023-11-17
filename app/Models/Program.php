@@ -36,7 +36,7 @@ class Program extends Model
 
     private static $cache = [];
 
-    public static function findOneOrderByRandom($key)
+    public static function findRandom($key)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('id')->where('category','like',"%$key%")->pluck('id')->toArray();
 

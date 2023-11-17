@@ -81,7 +81,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 $ca = $p->category;
-                $item = Program::findOneOrderByRandom($ca[0]);
+                $item = Program::findRandom($ca[0]);
 
                 if($item) {
                     $data[] = $item->toArray();
@@ -104,17 +104,17 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
     }
     
-    private function error($msg, $enterspace="\n")
+    private function error($msg)
     {
         $msg = date('Y/m/d H:i:s ') . "Channel ".$this->uuid. " error: " . $msg;
-        echo $msg.$enterspace;
+        echo $msg.PHP_EOL;
         Log::channel('channel')->error($msg);
     }
 
-    private function info($msg, $enterspace="\n")
+    private function info($msg)
     {
         $msg = date('Y/m/d H:i:s ')."Channel ".$this->uuid. " info: " . $msg;
-        echo $msg.$enterspace;
+        echo $msg.PHP_EOL;
         Log::channel('channel')->info($msg);
     }
 
