@@ -15,7 +15,7 @@ class channel extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:channel {action} {id} {group?}';
+    protected $signature = 'tools:channel {action?} {id?} {group?}';
 
     /**
      * The console command description.

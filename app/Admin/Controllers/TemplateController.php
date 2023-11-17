@@ -28,7 +28,7 @@ class TemplateController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->with('programs');
+        $grid->model()->where('group_id', 'default')->with('programs');
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->expand(function ($model) {
             $programs = $model->programs()->take(10)->get()->map(function ($program) {  
@@ -45,14 +45,18 @@ class TemplateController extends AdminController
             
             return new Table(['ID', '名称', '栏目', '排序', '创建时间'], $items);
         });
-        $grid->column('version', __('Version'))->display(function($version) {
+        $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';
         });
-        $grid->column('start_at', __('Start at'));
-        $grid->column('end_at', __('End at'));
+        $grid->column('start_at', __('Start at'))->display(function($start_at) {
+            $today = strtotime(date('Y-m-d 6:00:00'));
+            $air = strtotime(date('Y-m-d '.$start_at));
+            $html = $start_at;
+            if( $air < $today ) $html .= ' <span class="label label-default">次日</span>';
+            return $html;
+        });
         $grid->column('duration', __('Duration'));
-        $grid->column('schedule', __('Schedule'));
-        $grid->column('group_id', __('Group'))->using(Template::GROUPS);
+        $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);;
         
         $grid->column('updated_at', __('Updated at'));
 
@@ -63,7 +67,7 @@ class TemplateController extends AdminController
         
             // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
-            $filter->equal('group_id', __('Group'))->select(Template::GROUPS);
+            $filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
         
         });
 

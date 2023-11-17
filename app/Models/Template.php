@@ -13,7 +13,7 @@ class Template extends Model
     public const STATUS_SYNCING = 1;
     public const STATUS_STOPED = 2;
 
-    public const GROUPS = ["default"=>"日常", "weekend"=>"周末"];
+    public const SCHEDULES = ["日常", "周末"];
 
     protected $table = 'template';
 
