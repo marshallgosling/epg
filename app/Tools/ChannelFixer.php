@@ -27,8 +27,8 @@ class ChannelFixer
                 
                 echo "fix program: {$p->start_at} to ".date('Y-m-d H:i:s', $air).PHP_EOL;
 
-                //$p->start_at = date('Y-m-d H:i:s', $air);
-                //$p->save();
+                $p->start_at = date('Y-m-d H:i:s', $air);
+                $p->save();
             }
 
             $last = $air;
