@@ -17,9 +17,9 @@ class CreateTemplate extends Migration
         Schema::create('template', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->default('')->comment('模版编号名称');
-            $table->unsignedSmallInteger("schedule")->default(0)->comment('普通模版为0，特殊模版对应所在星期的数字');
+            $table->unsignedSmallInteger("schedule")->default(0)->comment('普通模版为0，计划模版则对应所在星期的数字');
             $table->string('start_at', 22)->default('')->comment("开始时间");
-            $table->string('end_at', 22)->default('')->comment('结束时间');
+            $table->unsignedTinyInteger('sort')->default(0)->comment('排序');
             $table->string('duration', 50)->default('')->comment('预估时长');
             $table->unsignedInteger('version')->default(0)->comment('版本号');
             $table->string('group_id', 10)->default('')->comment("分组号")->nullable();
@@ -34,7 +34,7 @@ class CreateTemplate extends Migration
             $table->string("category", 20)->default('')->comment('栏目分类');
             $table->json('data')->default('')->comment("数据")->nullable();
             $table->unsignedInteger('template_id')->default(0);
-            $table->unsignedInteger('order_no')->default(0)->comment('排序号');
+            $table->unsignedInteger('sort')->default(0)->comment('排序号');
             $table->timestamps();
         });
 

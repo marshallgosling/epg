@@ -9,6 +9,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
+use Encore\Admin\Widgets\InfoBox;
 
 class TemplateController extends AdminController
 {
@@ -42,8 +43,12 @@ class TemplateController extends AdminController
                 }, $item['category']);
                 $item['category'] = implode(' ', $category);
             }
-            
-            return new Table(['ID', '名称', '栏目', '排序', '创建时间'], $items);
+            if(count($items) == 0) $info = "没有模版条目记录，请点击更多添加。";
+            else $info = '当前只显示10条记录，请点击更多查看。';
+            $infoBox = (new InfoBox($info, '', 'aqua', 'channelv/programs?template_id='.$this->id, ''))->render();
+
+
+            return (new Table(['ID', '名称', '栏目', '排序', '创建时间'], $items))->render(). $infoBox;
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';
@@ -98,7 +103,7 @@ class TemplateController extends AdminController
         $show->field('duration', __('Duration'));
         $show->field('version', __('Version'));
         $show->field('sort', __('Sort'));
-        $show->field('comment', __('Summary'));
+        $show->field('comment', __('Comment'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -121,8 +126,8 @@ class TemplateController extends AdminController
         $form->text('start_at', __('Start at'));
         $form->text('duration', __('Duration'));
 
-        $form->text('sort', __('End at'));
-        $form->text('comment', __('Summary'));
+        $form->text('sort', __('Sort'));
+        $form->text('comment', __('Comment'));
 
 
         return $form;

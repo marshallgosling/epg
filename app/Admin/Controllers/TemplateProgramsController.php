@@ -40,7 +40,7 @@ class TemplateProgramsController extends AdminController
             return implode(' ', $category);
         });
         $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
-        $grid->column('order_no', __('Order no'));
+        $grid->column('sort', __('Sort'));
         $grid->column('created_at', __('Created at'));
         //$grid->column('updated_at', __('Updated at'));
 
@@ -78,7 +78,7 @@ class TemplateProgramsController extends AdminController
         $show->field('name', __('Name'));
         $show->field('category', __('Category'));
         $show->field('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
-        $show->field('order_no', __('Order no'));
+        $show->field('sort', __('Sort'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -98,7 +98,7 @@ class TemplateProgramsController extends AdminController
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
         $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
-        $form->number('order_no', __('Order no'))->default(0);
+        $form->number('sort', __('Sort'))->default(0);
         $form->json('data', __('Data'));
 
         $form->saved(function (Form $form) {
