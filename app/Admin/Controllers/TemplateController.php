@@ -28,7 +28,7 @@ class TemplateController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->where('group_id', 'default')->with('programs');
+        $grid->model()->where('group_id', 'default')->with('programs')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->expand(function ($model) {
             $programs = $model->programs()->take(10)->get()->map(function ($program) {  
@@ -57,7 +57,7 @@ class TemplateController extends AdminController
         });
         $grid->column('duration', __('Duration'));
         $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);;
-        
+        $grid->column('sort', __('Sort'));
         $grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function($filter){
@@ -93,11 +93,12 @@ class TemplateController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
-        $show->field('type', __('Type'));
-        $show->field('status', __('Status'));
+        $show->field('schedule', __('Schedule'))->using(Template::SCHEDULES);
         $show->field('start_at', __('Start at'));
-        $show->field('end_at', __('End at'));
-        $show->field('summary', __('Summary'));
+        $show->field('duration', __('Duration'));
+        $show->field('version', __('Version'));
+        $show->field('sort', __('Sort'));
+        $show->field('comment', __('Summary'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -113,12 +114,16 @@ class TemplateController extends AdminController
     {
         $form = new Form(new Template());
 
+        $form->text('version', __('Version'))->disable();
         $form->text('name', __('Name'));
-        $form->number('type', __('Type'));
-        $form->switch('status', __('Status'));
+        $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES);
+        
         $form->text('start_at', __('Start at'));
-        $form->text('end_at', __('End at'));
-        $form->text('summary', __('Summary'));
+        $form->text('duration', __('Duration'));
+
+        $form->text('sort', __('End at'));
+        $form->text('comment', __('Summary'));
+
 
         return $form;
     }

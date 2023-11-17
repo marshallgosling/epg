@@ -21,6 +21,7 @@
 
 Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
     $grid->disableExport();
+    $grid->paginate(30);
 });
 
 Encore\Admin\Form::forget(['map', 'editor']);
