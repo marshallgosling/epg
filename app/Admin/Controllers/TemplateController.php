@@ -43,11 +43,12 @@ class TemplateController extends AdminController
                 }, $item['category']);
                 $item['category'] = implode(' ', $category);
             }
-            if(count($items) == 0) $info = "没有模版条目记录，请点击更多添加。";
-            else $info = '当前最多只显示10条记录，请点击更多查看。';
-            $infoBox = (new InfoBox($info, '', 'aqua', 'channelv/programs?template_id='.$this->id, ''))->render();
+            if(count($items) == 0) $info = "没有模版条目记录，请点击添加";
+            else $info = '当前最多只显示10条记录，请点击查看';
 
-            return (new Table(['ID', '名称', '栏目', '排序', '创建时间'], $items))->render(). $infoBox;
+            $infoBox = '<div class="small-box bg-aqua" style="margin-bottom:0"><a href="channelv/tree/'.$this->id.'" class="small-box-footer">'.$info.'<i class="fa fa-arrow-circle-right"></i></a></div>';
+            
+            return $infoBox.(new Table(['ID', '名称', '栏目', '排序', '创建时间'], $items))->render();
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';

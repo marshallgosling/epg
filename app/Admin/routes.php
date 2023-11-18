@@ -4,6 +4,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Encore\Admin\Facades\Admin;
 use App\Models\Program;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +30,11 @@ Route::group([
     $router->delete('/channel/channelv/data/{id}/remove/{idx}', 'ChannelProgramsController@remove')->name('channel.channelv.programs.delete');
     $router->post('/channel/channelv/data/{id}/save', 'ChannelProgramsController@save')->name('channel.channelv.programs.post');
 
-
+    $router->get('/template/channelv/tree/{id}', 'TemplateProgramsController@tree')->name('template.channelv.programs.tree');
+    $router->post('/template/channelv/tree/{id}/append', 'TemplateProgramsController@append')->name('template.channelv.programs.append');
+    $router->post('/template/channelv/tree/{id}/save', 'TemplateProgramsController@save')->name('template.channelv.programs.save');
+    $router->delete('/template/channelv/tree/{id}/remove/{idx}', 'TemplateProgramsController@remove')->name('template.channelv.programs.delete');
+    
     $router->resource('/template/channelv/programs', 'TemplateProgramsController')->names('template.programs');
     $router->resource('/template/channelv', 'TemplateController')->names('template');
     
@@ -38,6 +43,13 @@ Route::group([
     
         return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")
             ->select(DB::raw('id, concat(unique_no, " ", name) as text, unique_no, duration, name, category'))
+            ->paginate(15);
+    });
+    $router->get('/api/category', function (Request $request) {
+        $q = $request->get('q');
+    
+        return Category::where('no', 'like', "$q%")->where('type', 'channel')
+            ->select(DB::raw('id, concat("【 ",no, " 】 ", name) as text, no as category,  name, duration'))
             ->paginate(15);
     });
 });

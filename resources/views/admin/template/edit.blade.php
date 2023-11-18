@@ -16,17 +16,20 @@
                 <div class="btn-group">
                     {{$model->start_at}} {{$model->name}}
                 </div>
-                <div class="btn-group">&nbsp; &nbsp;</div>
-               
                 <div class="btn-group pull-right">
-                    <a class="btn btn-info btn-sm" id="tree-save" title="保存"><i class="fa fa-save"></i><span class="hidden-xs"> 保存</span></a>        
-                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
+                    
+                </div>
+                <div class="btn-group">&nbsp; &nbsp;</div>
+                <div class="btn-group">&nbsp; &nbsp;</div>
+                <div class="btn-group pull-right">
+                    <a class="btn btn-info btn-sm" id="tree-save" title="保存"><i class="fa fa-save"></i><span class="hidden-xs"> 保存</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/template/channelv"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-                <div class="dd">
+                <div id="treeinfo" class="dd">
                     <small>可拖动排序</small>
                 </div>
                 <div class="dd" id="tree-programs">
@@ -34,10 +37,12 @@
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle">
-                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{@implode(' ', $item['category'])}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
+                                <small>类型：</small> <span class="label label-info">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> <small>&nbsp;栏目：</small> <a href="#" class="dd-nodrag">{{$item['category'][0]}}</a> <small> &nbsp;别名：</small> {{$item['name']}}
                                 <span class="pull-right dd-nodrag">
-                                    <a href="javascript:selectProgram({{$idx}});"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:selectProgram({{$idx}});" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
+                                    <a href="javascript:copyProgram({{$idx}});" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
+                                    
+                                    <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
                                 </span>
                             </div>
                         </li>
@@ -51,7 +56,7 @@
     <div class="col-md-4">
         <div  class="box box-info">
                 <div class="box-header with-border">
-                <h3 class="box-title">已选中节目</h3>
+                <h3 class="box-title">已选中栏目</h3>
                 <div class="box-tools pull-right">
                                 </div><!-- /.box-tools -->
             </div><!-- /.box-header -->
@@ -61,9 +66,8 @@
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <tr><td width="120px">名称</td><td id="sName"></td></tr>
-                            <tr><td>播出编号</td><td id="sNo"></td></tr>
                             <tr><td>栏目</td><td id="sCategory"></td></tr>
-                            <tr><td>时长</td><td id="sDuration"></td></tr>
+                            <tr><td>类型</td><td id="sType"></td></tr>
                         </table>
                     </div>
                 </div>
@@ -85,10 +89,37 @@
                 <div class="box-body fields-group">
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr><td width="120px">名称</td><td id="pName"></td></tr>
-                            <tr><td>播出编号</td><td id="pNo"></td></tr>
+                            <tr><td>名称</td><td><input type="text" id="pName"></td></tr>
                             <tr><td>栏目</td><td id="pCategory"></td></tr>
-                            <tr><td>时长</td><td id="pDuration"></td></tr>
+                            <tr><td>类型</td><td id="pType">
+                            
+                            <span class="icheck">
+
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" value="0" class="minimal type"> 节目  
+                                </label>
+
+                            </span>
+
+
+                            <span class="icheck">
+
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" value="1" class="minimal type"> 垫片 
+                                </label>
+
+                            </span>
+
+                            <span class="icheck">
+
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" value="2" class="minimal type"> 广告 
+                                </label>
+
+                            </span>
+
+
+                            </td></tr>
                         </table>
                     </div>
                 </div>
@@ -119,12 +150,16 @@
     var selectedItem = null;
     var selectedIndex = -1;
     var replaceItem = null;
+    var dataList = JSON.parse('{!!$data!!}');
     var sortChanged = false;
-    var dataList = JSON.parse('{!!$model->data!!}');
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
+        });
+        $('.type').iCheck({radioClass:'iradio_minimal-blue'});          
+        $('.after-submit').iCheck({checkboxClass:'icheckbox_minimal-blue'}).on('ifChecked', function () {
+            $('.after-submit').not(this).iCheck('uncheck');
         });
         $('#tree-programs').nestable({maxDepth: 1});
         $('#tree-programs').on('change', function() {
@@ -133,7 +168,7 @@
         });
         $(".program").select2({
             ajax: {
-                url: "/admin/api/programs",
+                url: "/admin/api/category",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -154,7 +189,7 @@
                 },
                 cache: true
             },
-            allowClear:true,placeholder:"标题或播出编号",minimumInputLength:1,
+            allowClear:true,placeholder:"标题或编号",minimumInputLength:1,
             //templateResult: formatProgram,
             language: "zh-CN",
             escapeMarkup: function (markup) {
@@ -164,28 +199,30 @@
 
         $('.program').on('select2:select', function (e) {
             replaceItem = e.params.data;
+            replaceItem.category = [e.params.data.category];
             
             formatProgram(replaceItem);
         });
         function formatProgram (repo) {
-            $("#pName").html(repo.name);
-            $("#pDuration").html(repo.duration);
-            $("#pNo").html(repo.unique_no);
+            $("#pName").val(repo.name);
+            $(".type[value="+repo.type+"]").attr('checked', 'true');
             $('#pCategory').html(repo.category);
         }
 
         $('#newBtn').on('click', function(e) {
             if(replaceItem == null) {         
-                toastr.error('请先搜索节目！');
+                toastr.error('请先搜索节目分类！');
                 return;
             }
-            dataList.push(replaceItem);
+            replaceItem.type = $(".type:checked").val();
+            replaceItem.sort = dataList.length + 1;
 
             $.ajax({
                     method: 'post',
-                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                    url: '/admin/template/tree/{!! $model->id !!}/append',
                     data: {
-                        data: JSON.stringify(dataList),
+                        data: JSON.stringify(replaceItem),
+                        action: "append",
                         _token:LA.token,
                     },
                     success: function (data) {
@@ -197,10 +234,25 @@
 
         $('#replaceBtn').on('click', function(e) {
             if(selectedIndex > -1) {
-
-                dataList[selectedIndex] = replaceItem;
-                console.log(JSON.stringify(dataList));
                 
+                dataList[selectedIndex].name = replaceItem.name;
+                dataList[selectedIndex].category = replaceItem.category;
+                dataList[selectedIndex].type = replaceItem.type;
+                dataList[selectedIndex].haschanged = 1;
+                //console.table(dataList); return;
+
+                if(sortChanged) {
+                    var list = $('#tree-programs').nestable('serialize');
+            
+                    for(var i=0;i<list.length;i++)
+                    {
+                        if(dataList[i].sort != list[i].id) {
+                            dataList[i].sort = list[i].id;
+                            dataList[i].haschanged = 1;
+                        }
+                    }
+                }
+
                 swal({
                     title: "确认要替换?",
                     type: "warning",
@@ -213,9 +265,10 @@
                         return new Promise(function(resolve) {
                             $.ajax({
                                 method: 'post',
-                                url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                                url: '/admin/template/tree/{!! $model->id !!}/save',
                                 data: {
                                     data: JSON.stringify(dataList),
+                                    action: "replace",
                                     _token:LA.token,
                                 },
                                 success: function (data) {
@@ -247,16 +300,21 @@
 
         $('#tree-save').on('click', function(e) {
             var list = $('#tree-programs').nestable('serialize');
-            var newList = [];
+            
             for(var i=0;i<list.length;i++)
             {
-                newList[i] = dataList[list[i].id];
+                if(dataList[i].sort != list[i].id) {
+                    dataList[i].sort = list[i].id;
+                    dataList[i].haschanged = 1;
+                }
             }
+
+            //console.table(dataList); return;
             $.ajax({
                     method: 'post',
-                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                    url: '/admin/template/tree/{!! $model->id !!}/save',
                     data: {
-                        data: JSON.stringify(newList),
+                        data: JSON.stringify(dataList),
                         _token:LA.token,
                     },
                     success: function (data) {
@@ -280,7 +338,7 @@
                     return new Promise(function(resolve) {
                         $.ajax({
                             method: 'post',
-                            url: '/admin/channel/channelv/data/{!! $model->id !!}/remove/' + id,
+                            url: '/admin/template/tree/{!! $model->id !!}/remove/'+id,
                             data: {
                                 _method:'delete',
                                 _token:LA.token,
@@ -309,10 +367,27 @@
     function selectProgram (idx) {
         var repo = dataList[idx];
         $("#sName").html(repo.name);
-        $("#sDuration").html(repo.duration);
-        $("#sNo").html(repo.unique_no);
-        $('#sCategory').html(repo.category.join(' '));
+        $("#sType").html(repo.type);
+        $('#sCategory').html(repo.category[0]);
         selectedItem = repo;
         selectedIndex = idx;
+    }
+
+    function copyProgram (idx) {
+        var repo = dataList[idx];
+        repo.sort = dataList.length + 1;
+        $.ajax({
+            method: 'post',
+            url: '/admin/template/tree/{!! $model->id !!}/append',
+            data: {
+                data: JSON.stringify(repo),
+                action: "copy",
+                _token:LA.token,
+            },
+            success: function (data) {
+                $.pjax.reload('#pjax-container');
+                toastr.success('复制成功 !');
+            }
+        });
     }
 </script></div></div>

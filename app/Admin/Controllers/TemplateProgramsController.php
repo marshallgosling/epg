@@ -11,7 +11,8 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Illuminate\Support\Facades\DB;
+use Encore\Admin\Layout\Content;
+use Illuminate\Http\Request;
 
 class TemplateProgramsController extends AdminController
 {
@@ -32,7 +33,8 @@ class TemplateProgramsController extends AdminController
         $grid = new Grid(new TemplatePrograms());
 
         $grid->column('id', __('Id'));
-        $grid->column('name', __('Name'));
+        
+        $grid->column('sort', __('Sort'));
         $grid->column('category', __('Category'))->display(function($category) {
             $category = array_map(function ($c) {
                 return "<span class='label label-info'>{$c}</span>";
@@ -40,7 +42,8 @@ class TemplateProgramsController extends AdminController
             return implode(' ', $category);
         });
         $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
-        $grid->column('sort', __('Sort'));
+        
+        $grid->column('name', __('Name'));
         //$grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -94,11 +97,12 @@ class TemplateProgramsController extends AdminController
     {
         $form = new Form(new TemplatePrograms());
 
-        $form->text('name', __('Name'));
-        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
         $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
+        
+        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->number('sort', __('Sort'))->default(0);
+        $form->text('name', __('Name'));
         $form->json('data', __('Data'));
 
         $form->saved(function (Form $form) {
@@ -110,5 +114,93 @@ class TemplateProgramsController extends AdminController
         });
 
         return $form;
+    }
+
+    public function tree($id, Content $content)
+    {
+        $data = TemplatePrograms::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','sort')->get();
+
+        $model = Template::find($id);
+
+        $form = new \Encore\Admin\Widgets\Form();
+        
+        $form->action(admin_url("template/channelv/$id/edit"));
+        $form->hidden('_token')->default(csrf_token());
+        $form->hidden('name')->default($model->name);
+        $form->hidden('start_at')->default($model->start_at);
+        $form->hidden('duration')->default($model->duration);
+        $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
+        
+        return $content->title($model->start_at . ' '.$model->name.' 详细编排')
+            ->description("编排调整模版内容")
+            ->body(view('admin.template.edit', ['model'=>$model,'data'=>$data]));
+    }
+
+    public function append($id, Request $request)
+    {
+        $data = $request->post('data');
+        $item = json_decode($data, true);
+        
+        $program = new TemplatePrograms();
+        $program->name = $item['name'];
+        $program->type = $item['type'];
+        $program->category = $item['category'];
+        $program->sort = $item['sort'];
+        $program->template_id = $id;
+        $program->save();
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.create_succeeded'),
+        ];
+
+        return response()->json($response);
+
+    }
+
+    public function save($id, Request $request) {
+        $data = $request->post('data');
+        $list = json_decode($data, true);
+
+        foreach($list as $item)
+        {
+            if(key_exists('haschanged', $item)) {
+                TemplatePrograms::where('id', $item['id'])->update([
+                    'name' => $item['name'],
+                    'sort' => $item['sort'],
+                    'type' => $item['type'],
+                    'category' => implode(',', $item['category'])
+                ]);
+            }
+        }
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.create_succeeded'),
+        ];
+
+        return response()->json($response);
+    }
+
+    public function remove($id, $idx)
+    {
+
+        $item = TemplatePrograms::find($idx);
+
+        if($item && $item->template_id == $id) {
+            $item->delete();
+            $status = true;
+        }
+        else {
+            $status = true;
+        }
+
+        $response = [
+            'status'  => $status,
+            'message' => trans('admin.delete_succeeded'),
+        ];
+
+        return response()->json($response);
+        
     }
 }
