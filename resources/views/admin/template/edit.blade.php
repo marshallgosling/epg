@@ -37,7 +37,7 @@
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle">
-                                <small>类型：</small> <span class="label label-info">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> <small>&nbsp;栏目：</small> <a href="#" class="dd-nodrag">{{$item['category'][0]}}</a> <small> &nbsp;别名：</small> {{$item['name']}}
+                                <small>类型：</small> <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> <small>&nbsp;栏目：</small> <a href="#" class="dd-nodrag">{{$item['category'][0]}}</a> <small> &nbsp;别名：</small> {{$item['name']}}
                                 <span class="pull-right dd-nodrag">
                                     <a href="javascript:selectProgram({{$idx}});" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
                                     <a href="javascript:copyProgram({{$idx}});" title="复制"><i class="fa fa-copy"></i></a>&nbsp;

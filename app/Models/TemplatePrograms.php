@@ -13,6 +13,7 @@ class TemplatePrograms extends Model
     public const STATUS_SYNCING = 1;
     public const STATUS_STOPED = 2;
     public const TYPES = ['节目','广告','垫片'];
+    public const LABELS = ['info', 'warning', 'default'];
 
     protected $table = 'template_programs';
 
