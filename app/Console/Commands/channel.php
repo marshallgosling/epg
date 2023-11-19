@@ -103,9 +103,13 @@ class channel extends Command
                         $data[] = $item;
                         $c->duration += $item->frames;    
                         
-                        $this->info("add item to program: {$item->name} {$item->duration}");
+                        $this->info("add item to program: {$item->category} {$item->name} {$item->duration}");
                     }
                     else {
+
+                        $this->warn("no material found, so ignore.");
+                        continue;
+                        
                         $duration = $this->parseDuration($item->duration);
                         if($duration > 0) {
                             $data[] = $item->toArray();
