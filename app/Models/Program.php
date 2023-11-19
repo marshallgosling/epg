@@ -46,7 +46,7 @@ class Program extends Model
 
         return Program::where('unique_no', $id)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
-            ->select("material.name","material.duration","material.frames","material.category","program.unique_no")->first();
+            ->select("program.name","material.duration","material.frames","program.category","program.unique_no")->first();
     }
 
     public static function getTotal($key) {
