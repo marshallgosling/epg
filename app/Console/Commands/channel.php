@@ -100,23 +100,19 @@ class channel extends Command
                 if($item) {
                     
                     if($item->frames > 0) {
+                        
+                        $frames = $this->parseDuration($item->duration) * config('FRAMES', 25);
+                        if($frames != $item->frames) $item->frames = $frames;
+                        $c->duration += $item->frames;
                         $data[] = $item;
-                        $c->duration += $item->frames;    
+                        
                         $cat = implode(',', $item->category);
                         $this->info("add item: {$cat} {$item->name} {$item->duration}");
                     }
                     else {
 
                         $this->warn(" {$item->name} no material found, so ignore.");
-                        continue;
 
-                        $duration = $this->parseDuration($item->duration);
-                        if($duration > 0) {
-                            $data[] = $item->toArray();
-                            $c->duration += $duration * config('FRAME', 25);
-
-                            $this->info("add item ( no material info ): {$item->name} {$item->duration}");
-                        }  
                     }
                 }
                 else
