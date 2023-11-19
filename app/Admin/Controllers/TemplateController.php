@@ -37,12 +37,7 @@ class TemplateController extends AdminController
             });
 
             $items = $programs->toArray();
-            foreach($items as &$item) {
-                $category = array_map(function ($c) {
-                    return "<span class='label label-info'>{$c}</span>";
-                }, $item['category']);
-                $item['category'] = implode(' ', $category);
-            }
+            
             if(count($items) == 0) $info = "没有模版条目记录，请点击添加";
             else $info = '当前最多只显示10条记录，请点击查看';
 

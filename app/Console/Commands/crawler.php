@@ -135,12 +135,10 @@ class crawler extends Command
 
     private function getTemplateProgram($uuid)
     {
-        $spider = new CnvSpider();
-        $r = $spider->login();
 
-        if($r) {
+        if($this->login()) {
             echo "find Template Programs\n";
-            $data = $spider->getTemplatePrograms($uuid);
+            $data = $this->crawler->getTemplatePrograms($uuid);
 
             $template = Template::where('comment', $uuid)->first();
             $categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
