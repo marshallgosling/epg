@@ -63,8 +63,10 @@ class ChannelGenerator
                 if($item) {
                     
                     if($item->frames > 0) {
-                        $data[] = $item;
-                        $c->duration += $item->frames;    
+                        $frames = $this->parseDuration($item->duration) * config('FRAMES', 25);
+                        if($frames != $item->frames) $item->frames = $frames;
+                        $c->duration += $item->frames;   
+                        $data[] = $item; 
                         $cat = implode(',', $item->category);
                         $this->info("add item: {$cat} {$item->name} {$item->duration}");
                     }
