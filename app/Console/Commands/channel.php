@@ -103,13 +103,15 @@ class channel extends Command
                         $data[] = $item->toArray();
                         $c->duration += $item->frames;    
                         
-                        $this->info("add item to program: ".implode(',',$item));
+                        $this->info("add item to program: ".implode(',',$item->toArray()));
                     }
                     else {
                         $duration = $this->parseDuration($item->duration);
                         if($duration > 0) {
                             $data[] = $item->toArray();
                             $c->duration += $duration * config('FRAME', 25);
+
+                            $this->info("add item to program ( no material info ): ".implode(',',$item->toArray()));
                         }  
                     }
                 }
