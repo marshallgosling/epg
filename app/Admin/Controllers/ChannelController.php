@@ -35,7 +35,7 @@ class ChannelController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->orderBy('air_date');
+        $grid->model()->orderBy('air_date', 'desc');
 
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="channelv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
@@ -50,8 +50,8 @@ class ChannelController extends AdminController
         /*$grid->column('audit_date', __('Audit date'));
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
         */
+        $grid->column('updated_at', __('Updated at'));
 
         $grid->actions(function ($actions) {
             $actions->add(new Generator);

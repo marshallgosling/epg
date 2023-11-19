@@ -37,7 +37,6 @@ class ChannelProgramsController extends AdminController
     {
         $grid = new Grid(new ChannelPrograms());
 
-
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->display(function($name) {
             return "<a href=\"tree/{$this->id}\">$this->name</a>"; 

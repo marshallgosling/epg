@@ -7,25 +7,27 @@ use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\Program;
-
+use Illuminate\Support\Facades\Log;
 class ChannelGenerator
 {
     private $channel;
     private $templates;
+    private $logs;
 
     public function __construct()
     {
-        //$this->channel = $channel;
+        
     }
 
-    public function loadTemplate($group='')
+    public function loadTemplate($channel, $group='default')
     {
-        $this->templates = Template::where('group_id', 'default')->with('programs')->orderBy('sort', 'asc')->get();
+        $this->channel = $channel;
+        $this->templates = Template::where('group_id', $group)->with('programs')->orderBy('sort', 'asc')->get();
     }
 
     public function generate(Channel $channel)
     {
-        
+        $logs = [];
         if(!$channel) {
             
             return ["satus" =>false, "message"=>"Channel is null"];
@@ -48,6 +50,8 @@ class ChannelGenerator
             $c->start_at = date('Y-m-d H:i:s', $air);
             $c->duration = 0;
             $c->version = '1';
+
+            $this->error("create program: {$t->name} {$t->start_at}");
             
             $data = [];
             $programs = $t->programs()->get();
@@ -59,22 +63,25 @@ class ChannelGenerator
                 if($item) {
                     
                     if($item->frames > 0) {
-                        $data[] = $item->toArray();
-                        $c->duration += $item->frames;                   
+                        $data[] = $item;
+                        $c->duration += $item->frames;    
+                        $cat = implode(',', $item->category);
+                        $this->info("add item: {$cat} {$item->name} {$item->duration}");
                     }
                     else {
-                        $duration = $this->parseDuration($item->duration);
-                        if($duration > 0) {
-                            $data[] = $item->toArray();
-                            $c->duration += $duration * config('FRAME', 25);
-                        }  
+
+                        $this->warn(" {$item->name} no material found, so ignore.");
+
                     }
+                }
+                else
+                {
+                    $this->error("category {$p->category} has no items.");
                 }
             }
             $c->data = json_encode($data);
 
             $c->save();
-
 
         }
     }
@@ -86,5 +93,27 @@ class ChannelGenerator
         $seconds = count($duration )>= 3 ? (int)$duration[0]*3600 + (int)$duration[1]*60 + (int)$duration[2] : 0;
 
         return $seconds;
+    }
+
+    protected function info($msg)
+    {
+        $this->log($msg, 'info');
+    }
+
+    protected function warn($msg)
+    {
+        $this->log($msg, 'warn');
+    }
+
+    protected function error($msg)
+    {
+        $this->log($msg, 'error');
+    }
+
+    private function log($msg, $level="info")
+    {
+        $msg = date('Y/m/d H:i:s ') . "$level: " . $msg;
+        echo $msg.PHP_EOL;
+        Log::channel('channel')->error($msg);
     }
 }
