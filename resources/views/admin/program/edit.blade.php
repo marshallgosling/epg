@@ -13,8 +13,19 @@
         <div class="box">
             <div class="box-header">
                 <div class="btn-group"><b>具体节目编排</b>&nbsp; &nbsp;</div>
+                
                 <div class="btn-group">
-                    {{$model->start_at}} {{$model->name}}
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{$model->start_at}} {{$model->name}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            @foreach($list as $item) 
+                            <li><a href="./{{$item->id}}">{{$item->start_at}} {{$item->name}}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
                 <div class="btn-group">&nbsp; &nbsp;</div>
                

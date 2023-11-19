@@ -119,6 +119,8 @@ class TemplateProgramsController extends AdminController
 
         $model = Template::find($id);
 
+        $list = Template::where('group_id', 'default')->get();
+
         $form = new \Encore\Admin\Widgets\Form();
         
         $form->action(admin_url("template/channelv/$id/edit"));
@@ -130,7 +132,7 @@ class TemplateProgramsController extends AdminController
         
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整模版内容")
-            ->body(view('admin.template.edit', ['model'=>$model,'data'=>$data]));
+            ->body(view('admin.template.edit', ['model'=>$model,'data'=>$data, 'list'=>$list]));
     }
 
     public function append($id, Request $request)

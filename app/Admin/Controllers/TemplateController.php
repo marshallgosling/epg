@@ -31,7 +31,12 @@ class TemplateController extends AdminController
 
         $grid->model()->where('group_id', 'default')->with('programs')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
-        $grid->column('name', __('Name'))->expand(function ($model) {
+        $grid->column('name', __('Name'))->display(function($name) {
+            return '<a href="channelv/tree/'.$this->id.'">'.$name.'</a>'; 
+        });
+        $grid->column('ex', __(" "))->display(function() {
+            return "预览";
+        })->expand(function ($model) {
             $programs = $model->programs()->take(10)->get()->map(function ($program) {  
                 return $program->only(['id', 'name', 'category', 'order_no', 'created_at']);
             });

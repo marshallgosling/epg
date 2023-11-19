@@ -137,6 +137,8 @@ class ChannelProgramsController extends AdminController
 
         $data = $this->caculateDuration($data, strtotime($model->start_at));
 
+        $list = ChannelPrograms::where("channel_id", $model->channel_id)->orderBy('id')->get();
+
         //$model->end_at = $end_at;
 
         $form = new \Encore\Admin\Widgets\Form();
@@ -153,7 +155,7 @@ class ChannelProgramsController extends AdminController
         
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
-            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'form'=>$form->render()]));
+            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'list'=>$list,'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {

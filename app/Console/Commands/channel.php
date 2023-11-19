@@ -88,7 +88,7 @@ class channel extends Command
             $c->duration = 0;
             $c->version = '1';
 
-            $this->info("create program: {$t->name} {$t->start_at}");
+            $this->error("create program: {$t->name} {$t->start_at}");
             
             $data = [];
             $programs = $t->programs()->get();
