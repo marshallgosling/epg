@@ -100,10 +100,10 @@ class channel extends Command
                 if($item) {
                     
                     if($item->frames > 0) {
-                        $data[] = $item->toArray();
+                        $data[] = $item;
                         $c->duration += $item->frames;    
                         
-                        $this->info("add item to program: ".implode(',',$item->toArray()));
+                        $this->info("add item to program: {$item->name} {$item->duration}");
                     }
                     else {
                         $duration = $this->parseDuration($item->duration);
@@ -111,7 +111,7 @@ class channel extends Command
                             $data[] = $item->toArray();
                             $c->duration += $duration * config('FRAME', 25);
 
-                            $this->info("add item to program ( no material info ): ".implode(',',$item->toArray()));
+                            $this->info("add item to program ( no material info ): {$item->name} {$item->duration}");
                         }  
                     }
                 }
