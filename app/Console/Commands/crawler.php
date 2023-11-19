@@ -79,9 +79,7 @@ class crawler extends Command
 
         if($url == 'templateProgram')
         {
-            $templates = Template::where('group_id', 'default')->where('sort','>',4)->get();
-            foreach($templates as $t)
-                $this->getTemplateProgram($t);
+            $this->getTemplateProgram($uuid);
         }
 
         if($url == "daily") {
@@ -135,15 +133,15 @@ class crawler extends Command
         }
     }
 
-    private function getTemplateProgram($template, $uuid='')
+    private function getTemplateProgram($uuid='')
     {
         $categories = false;
         if($this->login()) {
             
-            $uuid = $template->comment;
+            //$uuid = $template->comment;
             $data = $this->crawler->getTemplatePrograms($uuid);
 
-            //$template = Template::where('comment', $uuid)->first();
+            $template = Template::where('comment', $uuid)->first();
             if(!$categories)$categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
 
             if(is_array($data)) {
