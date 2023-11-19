@@ -22,8 +22,8 @@ class Material extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d h:i:s',
-        'updated_at' => 'datetime:Y-m-d h:i:s',
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     private static $cache = [];

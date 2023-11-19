@@ -70,7 +70,7 @@ class channel extends Command
         }
 
         $templates = Template::where('group_id', $group)->with('programs')->orderBy('sort', 'asc')->get();
-        $last = strtotime($channel->air_date);
+        $last = strtotime($channel->air_date." 00:00:00");
 
         foreach($templates as $t) {
             $air = strtotime($channel->air_date.' '.$t->start_at);
