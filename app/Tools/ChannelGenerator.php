@@ -71,7 +71,7 @@ class ChannelGenerator
                     }
                 }
             }
-            $c->data = $data;
+            $c->data = json_encode($data);
 
             $c->save();
 
