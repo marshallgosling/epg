@@ -27,7 +27,8 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
-                    <small>可拖动排序</small>
+                    <span id="treeinfo"><small>可拖动排序</small></span>
+                    <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
                 <div class="dd" id="tree-programs">
                     <ol class="dd-list">
