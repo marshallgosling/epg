@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Arr;
 class Material extends Model
 {
     use HasFactory;
@@ -25,4 +25,18 @@ class Material extends Model
         'created_at' => 'datetime:Y-m-d h:i:s',
         'updated_at' => 'datetime:Y-m-d h:i:s',
     ];
+
+    private static $cache = [];
+
+    public static function findRandom($key)
+    {
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
+
+        self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
+        $id = Arr::random(self::$cache[$key]);
+        self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
+
+        return self::where('unique_no', $id)
+            ->select("name","duration","frames","category","unique_no")->first();
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Template;
+use App\Tools\ChannelGenerator;
 use App\Tools\ProgramsExporter;
 use Illuminate\Console\Command;
 
@@ -60,8 +61,7 @@ class channel extends Command
 
     private function generateChannel($id, $group='default')
     {
-        $templates = Template::with('programs')->where('group_id', $group)->lazy();
-
+    
         $channel = \App\Models\Channel::find($id);
 
         if(!$channel) {
@@ -69,30 +69,14 @@ class channel extends Command
             return 0;
         }
 
-        foreach($templates as $t) {
-            $c = new ChannelPrograms();
-            $c->name = $t->name;
-            $c->schedule_start_at = $t->start_at;
-            $c->schedule_end_at = $t->end_at;
-            $c->channel_id = $channel->id;
-            $c->start_at = $channel->air_date.' '.$t->start_at;
-            $c->duration = 0;
-            $c->version = '1';
-            
-            $data = [];
-            $programs = $t->programs();
-            foreach($programs as $p) {
-                $c = $p->category;
-                $item = Program::findOneOrderByRandom($c[0]);
+        $generator = new ChannelGenerator();
+        $generator->loadTemplate($group);
 
-                if($item) {
-                    $data[] = $item->toArray();
-                    $c->duration += (int)$item->duration;
-                }
-            }
-            $c->data = $data;
+        $generator->generate($channel);
 
-            $c->save();
-        }
+        $channel->status = \App\Models\Channel::STATUS_READY;
+        $channel->save();
+
+        $this->info("Generate programs date: {$channel->air_date} succeed. "); 
     }
 }

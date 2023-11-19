@@ -38,13 +38,15 @@ class Program extends Model
 
     public static function findRandom($key)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('id')->where('category','like',"%$key%")->pluck('id')->toArray();
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
-        return Program::where('id', $id)->first();
+        return Program::where('unique_no', $id)
+            ->join('material', 'program.unique_no', '=', 'material.unique_no')
+            ->select("material.name","material.duration","material.frames","material.category","program.unique_no")->first();
     }
 
     public static function getTotal($key) {

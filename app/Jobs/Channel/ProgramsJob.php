@@ -81,7 +81,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 $ca = $p->category;
-                $item = Program::findRandom($ca[0]);
+                $item = Program::findRandom($ca);
 
                 if($item) {
                     $data[] = $item->toArray();
