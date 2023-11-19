@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
 use Illuminate\Console\Command;
 use App\Models\Template;
 use App\Models\Material;
 use App\Models\Program;
-use App\Models\Spider\CnvSpider;
+use App\Models\TemplatePrograms;
+use App\Tools\CnvSpider;
 use Illuminate\Support\Facades\Storage;
 
 class crawler extends Command
@@ -75,6 +77,11 @@ class crawler extends Command
             $this->getTemplate($uuid);
         }
 
+        if($url == 'templateProgram')
+        {
+            $this->getTemplateProgram($uuid);
+        }
+
         if($url == "daily") {
             $this->daily();
         }
@@ -126,6 +133,31 @@ class crawler extends Command
         }
     }
 
+    private function getTemplateProgram($uuid)
+    {
+        $spider = new CnvSpider();
+        $r = $spider->login();
+
+        if($r) {
+            echo "find Template Programs\n";
+            $data = $spider->getTemplatePrograms($uuid);
+
+            $template = Template::where('comment', $uuid)->first();
+            $categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
+
+            if($template)foreach($data as $idx=>&$item)
+            {
+                $item['template_id'] = $template->id;
+                $item['sort'] = $idx;
+                $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '0';
+            }
+            
+            TemplatePrograms::insert($data);
+
+            $this->info("Batch insert success.");
+
+        }
+    }
 
     private function login()
     {

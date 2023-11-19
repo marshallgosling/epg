@@ -36,10 +36,7 @@ class TemplateProgramsController extends AdminController
         
         $grid->column('sort', __('Sort'));
         $grid->column('category', __('Category'))->display(function($category) {
-            $category = array_map(function ($c) {
-                return "<span class='label label-info'>{$c}</span>";
-            }, $category);
-            return implode(' ', $category);
+            return "<span class='label label-info'>{$category}</span>";
         });
         $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
         
@@ -99,7 +96,7 @@ class TemplateProgramsController extends AdminController
 
         $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
         
-        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
+        $form->select('category', __('Category'))->options(Category::getFormattedCategories());
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->number('sort', __('Sort'))->default(0);
         $form->text('name', __('Name'));

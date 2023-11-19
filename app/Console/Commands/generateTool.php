@@ -6,9 +6,9 @@ use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Meterial;
 use App\Models\Program;
-use App\Models\Spider\CnvSpider;
 use App\Models\Template;
 use App\Tools\ChannelFixer;
+use App\Tools\CnvSpider;
 use App\Tools\ProgramsExporter;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -56,7 +56,12 @@ class generateTool extends Command
 
         $id = $this->argument('id') ?? "";
 
-        ChannelFixer::fixChannelStartTime(\App\Models\Channel::find($id));
+        $body = Storage::disk('data')->get('sample.html');
+
+        $spider = new CnvSpider();
+        $items = $spider->parseTemplatePrograms($body);
+
+        print_r($items);
 
         return 0;
         
@@ -141,6 +146,21 @@ class generateTool extends Command
 
 
         return 0;
+    }
+
+    private function getTemplatePrograms()
+    {
+        $spider = new CnvSpider();
+        
+        
+        
+        $r = $spider->login('18001799001@163.com', '123QWE#canxin');
+
+        if($r) {
+            echo "find Programs\n";
+            $data = $spider->getPrograms(1);
+
+        }
     }
 
     private function getPrograms()

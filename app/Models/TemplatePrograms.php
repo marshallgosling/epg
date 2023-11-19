@@ -33,7 +33,7 @@ class TemplatePrograms extends Model
         //'data' => 'array'
     ];
 
-    public function getCategoryAttribute($value)
+    /*public function getCategoryAttribute($value)
     {
         return explode(',', $value);
     }
@@ -41,7 +41,7 @@ class TemplatePrograms extends Model
     public function setCategoryAttribute($value)
     {
         $this->attributes['category'] = implode(',', $value);
-    }
+    }*/
 
     public function template()
     {

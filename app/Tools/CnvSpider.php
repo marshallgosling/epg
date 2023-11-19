@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Models\Spider;
+namespace App\Tools;
 
 use App\Models\Category;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Psr7\Message;
 
 class CnvSpider
 {
@@ -65,6 +63,18 @@ class CnvSpider
         $body = $response->getBody();
 
         $items = $this->parseTemplate($body);
+        return $items;
+    }
+
+    public function getTemplatePrograms($uuid)
+    {
+        $response = $this->client->request('GET', 'https://www.maoch.cn/CnvProgram/Column/Details/'.$uuid, [
+            'cookies'=>$this->jar,
+            'http_errors'=>false
+        ]);
+
+        $body = $response->getBody();
+        $items = $this->parseTemplatePrograms($body);
         return $items;
     }
 
@@ -181,6 +191,25 @@ class CnvSpider
         }
 
         return $items;
+    }
+
+    public function parseTemplatePrograms($body)
+    {
+        $m = preg_match_all('/<td\sstyle=\"width:30px;color:blue\"\sonclick=\"ReplaceCategory\(this\);\"\sdata-toggle=\"modal\"\sdata-target=\"#myModal\">[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $matches);
+        $items = $matches[1];
+        $total = count($items);
+        $data = [];
+        for($i=0;$i<$total;$i++)
+        {
+            $v = trim($items[$i]);
+            if(!empty($v)) {
+                $data[] = [
+                    "category" => $v
+                ];
+            }
+        }
+
+        return $data;
     }
 
     private function parseTemplate($body)
