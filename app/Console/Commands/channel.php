@@ -132,4 +132,13 @@ class channel extends Command
 
         $this->info("Generate channel date: {$channel->air_date} succeed. "); 
     }
+
+    private function parseDuration($str)
+    {
+        $duration = explode(':', $str);
+        
+        $seconds = count($duration )>= 3 ? (int)$duration[0]*3600 + (int)$duration[1]*60 + (int)$duration[2] : 0;
+
+        return $seconds;
+    }
 }
