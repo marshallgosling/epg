@@ -44,7 +44,7 @@ class Program extends Model
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
-        return Program::where('unique_no', $id)
+        return Program::where('program.unique_no', $id)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
             ->select("program.name","material.duration","material.frames","program.category","program.unique_no")->first();
     }
