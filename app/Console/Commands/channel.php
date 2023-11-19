@@ -69,14 +69,65 @@ class channel extends Command
             return 0;
         }
 
-        $generator = new ChannelGenerator();
-        $generator->loadTemplate($group);
+        $templates = Template::where('group_id', $group)->with('programs')->orderBy('sort', 'asc')->get();
+        $last = strtotime($channel->air_date);
 
-        $generator->generate($channel);
+        foreach($templates as $t) {
+            $air = strtotime($channel->air_date.' '.$t->start_at);
+
+            if($air < $last) $air += 24 * 3600;
+
+            $last = $air;
+
+            $c = new ChannelPrograms();
+            $c->name = $t->name;
+            $c->schedule_start_at = $t->start_at;
+            $c->schedule_end_at = $t->end_at;
+            $c->channel_id = $channel->id;
+            $c->start_at = date('Y-m-d H:i:s', $air);
+            $c->duration = 0;
+            $c->version = '1';
+
+            $this->info("create program: {$t->name} {$t->start_at}");
+            
+            $data = [];
+            $programs = $t->programs()->get();
+            foreach($programs as $p) {
+                
+                $item = Program::findRandom($p->category);
+                //$item = Material::findRandom($p->category);
+
+                if($item) {
+                    
+                    if($item->frames > 0) {
+                        $data[] = $item->toArray();
+                        $c->duration += $item->frames;    
+                        
+                        $this->info("add item to program: ".implode(',',$item));
+                    }
+                    else {
+                        $duration = $this->parseDuration($item->duration);
+                        if($duration > 0) {
+                            $data[] = $item->toArray();
+                            $c->duration += $duration * config('FRAME', 25);
+                        }  
+                    }
+                }
+                else
+                {
+                    $this->error("category {$p->category} has no items.");
+                }
+            }
+            $c->data = json_encode($data);
+
+            $c->save();
+            $this->info("save program.");
+
+        }
 
         $channel->status = \App\Models\Channel::STATUS_READY;
         $channel->save();
 
-        $this->info("Generate programs date: {$channel->air_date} succeed. "); 
+        $this->info("Generate channel date: {$channel->air_date} succeed. "); 
     }
 }

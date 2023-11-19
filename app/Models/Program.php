@@ -40,6 +40,8 @@ class Program extends Model
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
 
+        if(!self::$cache[$key]) return false;
+        
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
