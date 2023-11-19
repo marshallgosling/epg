@@ -53,8 +53,8 @@ class ChannelGenerator
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 
-                //$item = Program::findRandom($p->category);
-                $item = Material::findRandom($p->category);
+                $item = Program::findRandom($p->category);
+                //$item = Material::findRandom($p->category);
 
                 if($item) {
                     
@@ -74,6 +74,8 @@ class ChannelGenerator
             $c->data = $data;
 
             $c->save();
+
+
         }
     }
 
