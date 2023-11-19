@@ -151,8 +151,10 @@ class crawler extends Command
             }
             
             TemplatePrograms::insert($data);
+            $template->version = 2;
+            $template->save();
 
-            $this->info("Batch insert success.");
+            $this->info("Batch insert success. Total:".count($data));
 
         }
     }
