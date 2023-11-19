@@ -79,7 +79,9 @@ class crawler extends Command
 
         if($url == 'templateProgram')
         {
-            $this->getTemplateProgram($uuid);
+            $templates = Template::where('group_id', 'default')->where('sort','>',4)->get();
+            foreach($templates as $t)
+                $this->getTemplateProgram($t);
         }
 
         if($url == "daily") {
@@ -133,21 +135,29 @@ class crawler extends Command
         }
     }
 
-    private function getTemplateProgram($uuid)
+    private function getTemplateProgram($template, $uuid='')
     {
-
+        $categories = false;
         if($this->login()) {
-            echo "find Template Programs\n";
+            
+            $uuid = $template->comment;
             $data = $this->crawler->getTemplatePrograms($uuid);
 
-            $template = Template::where('comment', $uuid)->first();
-            $categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
+            //$template = Template::where('comment', $uuid)->first();
+            if(!$categories)$categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
 
-            if($template)foreach($data as $idx=>&$item)
-            {
-                $item['template_id'] = $template->id;
-                $item['sort'] = $idx;
-                $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '0';
+            if(is_array($data)) {
+                $this->info("find Template Programs:".$template->name);
+                foreach($data as $idx=>&$item)
+                {
+                    $item['template_id'] = $template->id;
+                    $item['sort'] = $idx;
+                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '0';
+                }
+            }
+            else {
+                $this->error("no programs founds.");
+                return;
             }
             
             TemplatePrograms::insert($data);
