@@ -43,7 +43,7 @@ class CategoryController extends AdminController
         
             // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
-            $filter->equal('unique_no', __('Unique_no'));
+            $filter->equal('no', __('CategoryNo'));
             $filter->equal('type', __('CategoryType'))->select(Category::TYPES);
             $filter->in('duration', __('Duration'))->checkbox(TemplatePrograms::TYPES);
         
