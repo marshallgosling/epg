@@ -130,8 +130,8 @@
                 <div class="box-body fields-group">
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr><td>名称</td><td><select class="form-control category" style="width: 100%;" name="category" data-value=""><option value=""></option></select></td></tr>
-                            <tr><td>栏目</td><td><select class="form-control program" style="width: 100%;" name="program" data-value=""><option value=""></option></select>
+                            <tr><td>栏目</td><td><select class="form-control category" style="width: 100%;" name="category" data-value=""><option value=""></option></select></td></tr>
+                            <tr><td>节目</td><td><select class="form-control program" style="width: 100%;" name="program" data-value=""><option value=""></option></select>
                     </td></tr>
 
                             </td></tr>
@@ -212,7 +212,7 @@
 
         $('.category').on('select2:select', function (e) {
             replaceCategory = e.params.data;
-            $('#sCategory').val(replaceCategory.category);
+            
         });
         $(".program").select2({
             ajax: {
@@ -247,7 +247,6 @@
 
         $('.program').on('select2:select', function (e) {
             replaceItem = e.params.data;  
-            $('#sName').val(replaceItem.name);
         });
 
         $('#newBtn').on('click', function(e) {
@@ -398,6 +397,14 @@
                     }
                 }
             });
+        });
+
+        $('#replaceBtn').on('click', function(e) {
+            if(replaceCategory) {
+                $('#sName').val(replaceItem.name);
+                $('#code').val(replaceItem.unique_no);
+            }
+            if(replaceCategory) ('#sCategory').val(replaceCategory.category);
         });
         
     });
