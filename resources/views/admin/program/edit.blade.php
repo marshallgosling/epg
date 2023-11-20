@@ -73,7 +73,7 @@
                 
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr><td width="120px">名称</td><td id="sName"></td></tr>
+                            <tr><td width="120px">名称</td><td id="sName" width="220px"></td></tr>
                             <tr><td>播出编号</td><td id="sNo"></td></tr>
                             <tr><td>栏目</td><td id="sCategory"></td></tr>
                             <tr><td>时长</td><td id="sDuration"></td></tr>
@@ -98,7 +98,7 @@
                 <div class="box-body fields-group">
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr><td width="120px">名称</td><td id="pName"></td></tr>
+                            <tr><td width="120px">名称</td><td id="pName" width="220px"></td></tr>
                             <tr><td>播出编号</td><td id="pNo"></td></tr>
                             <tr><td>栏目</td><td id="pCategory"></td></tr>
                             <tr><td>时长</td><td id="pDuration"></td></tr>
