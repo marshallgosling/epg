@@ -75,8 +75,8 @@
                 
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr><td width="120px">别名</td><td><input type="text" id="sName"></td></tr>
-                            <tr><td>栏目</td><td><input type="text" id="sCategory"></td></tr>
+                            <tr><td width="120px">别名</td><td><input type="text" id="sName" class="form-control" placeholder="名称及描述"></td></tr>
+                            <tr><td>栏目</td><td><input type="text" id="sCategory" class="form-control" placeholder="栏目编号"></td></tr>
                             <tr><td>类型</td><td>
                                 <span class="icheck">
                                     <label class="radio-inline">
@@ -404,8 +404,8 @@
     function selectProgram (idx) {
         var repo = dataList[idx];
         $("#sName").val(repo.name);
-        $(".type[value="+repo.type+"]").attr("checked","true");
-        console.log(".type[value="+repo.type+"]");
+        $(".type[value="+repo.type+"]").iCheck("check");
+        
         $('#sCategory').val(repo.category);
         selectedItem = repo;
         selectedIndex = repo.id;
