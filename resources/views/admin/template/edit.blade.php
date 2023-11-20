@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="col-md-4" >
-        <div data-spy="affix" data-offset-top="60"> 
+        <div data-spy="affix" data-offset-top="10"> 
         <div class="box box-info" >
                 <div class="box-header with-border">
                 <h3 class="box-title">已选中栏目</h3>
