@@ -169,11 +169,11 @@ class crawler extends Command
 
             TemplatePrograms::where('template_id', $template->id)->delete();
             
-            TemplatePrograms::insert($data);
+            TemplatePrograms::insert($list);
             $template->version = $template->version + 1;
             $template->save();
 
-            $this->info("Batch insert success. Total:".count($data));
+            $this->info("Batch insert success. Total:".count($list));
 
         }
     }
