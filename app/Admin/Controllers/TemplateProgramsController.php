@@ -96,10 +96,12 @@ class TemplateProgramsController extends AdminController
 
         $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
         
-        $form->select('category', __('Category'))->options(Category::getFormattedCategories());
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
-        $form->number('sort', __('Sort'))->default(0);
+        $form->text('category', __('Category'));
         $form->text('name', __('Name'));
+        
+        $form->number('sort', __('Sort'))->default(0);
+        
         $form->json('data', __('Data'));
 
         $form->saved(function (Form $form) {

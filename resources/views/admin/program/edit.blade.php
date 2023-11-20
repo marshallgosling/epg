@@ -323,7 +323,7 @@
         $("#sName").html(repo.name);
         $("#sDuration").html(repo.duration);
         $("#sNo").html(repo.unique_no);
-        $('#sCategory').html(repo.category.join(' '));
+        $('#sCategory').html(repo.category);
         selectedItem = repo;
         selectedIndex = idx;
     }

@@ -378,7 +378,7 @@
         var repo = dataList[idx];
         $("#sName").html(repo.name);
         $("#sType").html(repo.type);
-        $('#sCategory').html(repo.category[0]);
+        $('#sCategory').html(repo.category);
         selectedItem = repo;
         selectedIndex = idx;
     }
