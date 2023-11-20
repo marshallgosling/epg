@@ -65,8 +65,8 @@
         </div>
     </div>
     <div class="col-md-4" >
-
-        <div class="box box-info" data-spy="affix" data-offset-top="160">
+        <div data-spy="affix" data-offset-top="180" data-offset-bottom="100"> 
+        <div class="box box-info" >
                 <div class="box-header with-border">
                 <h3 class="box-title">已选中栏目</h3>
                 <div class="box-tools pull-right"></div><!-- /.box-tools -->
@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <div class="box box-success" data-spy="affix" data-offset-top="260" data-offset-bottom="100">
+        <div class="box box-success">
             <div class="box-header with-border">
                 <h3 class="box-title">搜索</h3>
                 <div class="box-tools pull-right"></div><!-- /.box-tools -->
@@ -157,7 +157,7 @@
             </div>
 
         </div><!-- /.box-body -->
-
+        </div>
     </div>
 
 <script>
