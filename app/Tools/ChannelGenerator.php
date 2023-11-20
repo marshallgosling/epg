@@ -57,8 +57,12 @@ class ChannelGenerator
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 
-                $item = Program::findRandom($p->category);
-                //$item = Material::findRandom($p->category);
+                if(!empty($p->data)) {
+                    $item = Program::findUnique($p->data);
+                }
+                
+                if(!$item)
+                    $item = Program::findRandom($p->category);
 
                 if($item) {
                     

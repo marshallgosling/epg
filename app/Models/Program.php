@@ -51,6 +51,13 @@ class Program extends Model
             ->select("program.name","material.duration","material.frames","program.category","program.unique_no")->first();
     }
 
+    public static function findUnique($no)
+    {
+        return Program::where('program.unique_no', $no)
+            ->join('material', 'program.unique_no', '=', 'material.unique_no')
+            ->select("program.name","material.duration","material.frames","program.category","program.unique_no")->first();
+    }
+
     public static function getTotal($key) {
         return Arr::exists(self::$cache, $key) ? count(self::$cache[$key]) : 0;
     }
