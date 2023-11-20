@@ -117,7 +117,7 @@ class TemplateProgramsController extends AdminController
 
     public function tree($id, Content $content)
     {
-        $data = TemplatePrograms::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','sort')->get();
+        $data = TemplatePrograms::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','sort','data')->get();
 
         $model = Template::find($id);
 
@@ -156,7 +156,7 @@ class TemplateProgramsController extends AdminController
         $program->category = $item['category'];
         $program->sort = $item['sort'];
         $program->template_id = $id;
-        $program->data = json_encode($item['data']);
+        $program->data = $item['data'];
         $program->save();
 
         $response = [
@@ -177,7 +177,7 @@ class TemplateProgramsController extends AdminController
         $program->name = $item['name'];
         $program->type = $item['type'];
         $program->category = $item['category'];
-        $program->data = json_encode($item['data']);
+        $program->data = $item['data'];
         $program->save();
 
         $response = [
