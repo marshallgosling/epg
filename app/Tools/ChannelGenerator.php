@@ -52,7 +52,7 @@ class ChannelGenerator
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 
-                if(!empty($p->data)) {
+                if($p->data != '') {
                     $item = Program::findUnique($p->data);
                 }
                 
