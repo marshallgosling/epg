@@ -34,7 +34,7 @@ class CategoryController extends AdminController
         });
         $grid->column('no', __('CategoryNo'));
         $grid->column('type', __('CategoryType'))->using(Category::TYPES);
-        $grid->column('duration', __('Duration'));
+        $grid->column('duration', __('Duration'))->using(TemplatePrograms::TYPES);
 
         $grid->filter(function($filter){
 
@@ -45,6 +45,7 @@ class CategoryController extends AdminController
             $filter->like('name', __('Name'));
             $filter->equal('unique_no', __('Unique_no'));
             $filter->equal('type', __('CategoryType'))->select(Category::TYPES);
+            $filter->in('duration', __('Duration'))->checkbox(TemplatePrograms::TYPES);
         
         });
 
