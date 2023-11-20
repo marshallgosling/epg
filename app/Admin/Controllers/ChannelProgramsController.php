@@ -151,14 +151,8 @@ class ChannelProgramsController extends AdminController
         
         $form->action(admin_url("channel/channelv/$id/edit"));
         $form->hidden('_token')->default(csrf_token());
-        $form->hidden('name')->default($model->name);
-        $form->hidden('schedule_start_at')->default($model->schedule_start_at);
-        $form->hidden('schedule_end_at')->default($model->schedule_end_at);
-        $form->hidden('start_at')->default($model->start_at);
-        $form->hidden('end_at')->default($model->end_at);
-        $form->hidden('duration')->default($model->duration);
-        $form->hidden('data')->default(json_encode($model->data));
-        
+
+        $model->data = str_replace("'","\\'", $model->data);
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
             ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'list'=>$list,'form'=>$form->render()]));
