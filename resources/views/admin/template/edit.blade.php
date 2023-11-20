@@ -76,7 +76,7 @@
                 
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr><td width="120px">别名</td><td><input type="text" id="sName" class="form-control" placeholder="名称及描述"></td></tr>
+                            <tr><td width="120px">别名</td><td width="200px"><input type="text" id="sName" class="form-control" placeholder="名称及描述"></td></tr>
                             <tr><td>栏目</td><td><input type="text" id="sCategory" class="form-control" placeholder="栏目编号"></td></tr>
                             <tr><td>类型</td><td>
                                 <span class="icheck">
