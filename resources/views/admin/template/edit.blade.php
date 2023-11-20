@@ -400,7 +400,7 @@
         });
 
         $('#replaceBtn').on('click', function(e) {
-            if(replaceCategory) {
+            if(replaceItem) {
                 $('#sName').val(replaceItem.name);
                 $('#code').val(replaceItem.unique_no);
             }
