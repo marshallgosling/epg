@@ -93,11 +93,11 @@ class channel extends Command
             $data = [];
             $programs = $t->programs()->get();
             foreach($programs as $p) {
-                
-                if(!empty($p->data)) {
+                $item = false;
+                if($p->data != '') {
                     $item = Program::findUnique($p->data);
                 }
-                
+
                 if(!$item)
                     $item = Program::findRandom($p->category);
                 //$item = Material::findRandom($p->category);
