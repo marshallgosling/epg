@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
@@ -55,6 +56,7 @@ class ChannelController extends AdminController
 
         $grid->actions(function ($actions) {
             $actions->add(new Generator);
+            $actions->add(new Clean);
         });
 
         $grid->filter(function($filter){

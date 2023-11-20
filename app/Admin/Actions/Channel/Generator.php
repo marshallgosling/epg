@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Channel;
 
 use App\Jobs\Channel\ProgramsJob;
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use Encore\Admin\Actions\RowAction;
 
 class Generator extends RowAction
