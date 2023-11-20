@@ -29,6 +29,10 @@ class crawler extends Command
     
     protected $crawler;
 
+    private $categories;
+
+    private $isLogin = false;
+
     /**
      * Create a new command instance.
      *
@@ -82,6 +86,11 @@ class crawler extends Command
             $this->getTemplateProgram($uuid);
         }
 
+        if($url == 'templateProgramAll')
+        {
+            $this->getTemplateAll($uuid);
+        }
+
         if($url == "daily") {
             $this->daily();
         }
@@ -133,17 +142,30 @@ class crawler extends Command
         }
     }
 
+    private function getTemplateAll($id)
+    {
+        $templates = Template::where('group_id', 'default')->get();
+        foreach($templates as $t)
+        {
+            $this->getTemplateProgram($t->comment);
+        }
+    }
+
     private function getTemplateProgram($uuid='')
     {
-        $categories = false;
+        
+        if(!$this->categories){
+            $this->categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
+        }
+        $categories = $this->categories;
+
         if($this->login()) {
             
             //$uuid = $template->comment;
             $data = $this->crawler->getTemplatePrograms($uuid);
 
             $template = Template::where('comment', $uuid)->first();
-            if(!$categories)$categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
-
+            
             $list = [];
             if(is_array($data)) {
                 $this->info("find Template Programs:".$template->name);
@@ -182,9 +204,11 @@ class crawler extends Command
 
     private function login()
     {
+        if($this->isLogin) return true;
         $username = config('maoch_username') ?? '18001799001@163.com';
         $password = config('maoch_password') ?? '123QWE#canxin';
-        return $this->crawler->login($username, $password);
+        $this->isLogin = $this->crawler->login($username, $password);
+        return $this->isLogin;
     }
 
     private function getTemplate($uuid='')
