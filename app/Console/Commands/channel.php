@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Template;
+use App\Models\TemplatePrograms;
 use App\Tools\ChannelGenerator;
 use App\Tools\ProgramsExporter;
 use Illuminate\Console\Command;
@@ -90,14 +91,14 @@ class channel extends Command
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 $item = false;
-                if($p->data != '') {
+
+                if($p->type == TemplatePrograms::TYPE_PROGRAM) {
+                    $item = Program::findRandom($p->category);
+                    
+                }
+                else {
                     $item = Program::findUnique($p->data);
                 }
-
-                if(!$item)
-                    $item = Program::findRandom($p->category);
-                //$item = Material::findRandom($p->category);
-
                 if($item) {
                     
                     if($item->frames > 0) {

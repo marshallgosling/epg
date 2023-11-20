@@ -9,9 +9,9 @@ class TemplatePrograms extends Model
 {
     use HasFactory;
 
-    public const STATUS_READY = 0;
-    public const STATUS_SYNCING = 1;
-    public const STATUS_STOPED = 2;
+    public const TYPE_PROGRAM = 0;
+    public const TYPE_ADVERTISE = 1;
+    public const TYPE_CLIP = 2;
     public const TYPES = ['节目','广告','垫片'];
     public const LABELS = ['info', 'warning', 'default'];
 

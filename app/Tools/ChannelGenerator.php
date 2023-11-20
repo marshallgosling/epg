@@ -7,6 +7,7 @@ use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\Program;
+use App\Models\TemplatePrograms;
 use Illuminate\Support\Facades\Log;
 class ChannelGenerator
 {
@@ -51,14 +52,16 @@ class ChannelGenerator
             $data = [];
             $programs = $t->programs()->get();
             foreach($programs as $p) {
+                $item = false;
                 
-                if($p->data != '') {
+                if($p->type == TemplatePrograms::TYPE_PROGRAM) {
+                    $item = Program::findRandom($p->category);
+                    
+                }
+                else {
                     $item = Program::findUnique($p->data);
                 }
                 
-                if(!$item)
-                    $item = Program::findRandom($p->category);
-
                 if($item) {
                     
                     if($item->frames > 0) {
