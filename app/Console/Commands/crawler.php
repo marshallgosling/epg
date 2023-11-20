@@ -151,7 +151,7 @@ class crawler extends Command
                 {
                     $item['template_id'] = $template->id;
                     $item['sort'] = $idx;
-                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '';
+                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '0';
                     if($item['type'] == '0') {
                         $item['data'] = '';
                         $item['name'] = '';
@@ -166,6 +166,8 @@ class crawler extends Command
                 $this->error("no programs founds.");
                 return;
             }
+
+            $this->info("Found programs Total:".count($data));
 
             TemplatePrograms::where('template_id', $template->id)->delete();
             
