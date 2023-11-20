@@ -96,7 +96,7 @@
                                         <input type="radio" name="type" value="2" class="minimal type"> 垫片 
                                     </label>
                                 </span></td></tr>
-                            <tr><td>编号</td><td id="code"></td></tr>
+                            <tr><td>编号</td><td><input type="text" id="code" class="form-control" placeholder="播出编号"></td></tr>
                         </table>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                 type: $(".type:checked").val(),
                 sort: dataList.length + 1,
                 category: $('#sCategory').val(),
-                data: replaceItem.unique_no
+                data: $('#code').val()
             }
 
             $.ajax({
@@ -287,7 +287,7 @@
                     name: $('#sName').val(),
                     type: $(".type:checked").val(),
                     category: $('#sCategory').val(),
-                    data: replaceItem.unique_no
+                    data: $('#code').val()
                 }
                 
                 swal({
@@ -414,7 +414,7 @@
         var repo = dataList[idx];
         $("#sName").val(repo.name);
         $(".type[value="+repo.type+"]").iCheck("check");
-        $("#code").html(repo.data);
+        $("#code").val(repo.data);
         $('#sCategory').val(repo.category);
         selectedItem = repo;
         selectedIndex = repo.id;
