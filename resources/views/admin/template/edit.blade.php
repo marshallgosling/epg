@@ -65,6 +65,7 @@
         </div>
     </div>
     <div class="col-md-4">
+        <div class="row" data-spy="affix" data-offset-top="160" data-offset-bottom="200">
         <div  class="box box-info">
                 <div class="box-header with-border">
                 <h3 class="box-title">已选中栏目</h3>
@@ -156,6 +157,7 @@
             </div>
 
         </div><!-- /.box-body -->
+        </div>
     </div>
 
 <script>
