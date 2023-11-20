@@ -33,15 +33,10 @@ class ChannelGenerator
             return ["satus" =>false, "message"=>"Channel is null"];
         }
 
-        $last = strtotime($channel->air_date);
+        $air = strtotime($channel->air_date." 06:00:00");
 
         foreach($this->templates as $t) {
-            $air = strtotime($channel->air_date.' '.$t->start_at);
-
-            if($air < $last) $air += 24 * 3600;
-
-            $last = $air;
-
+            
             $c = new ChannelPrograms();
             $c->name = $t->name;
             $c->schedule_start_at = $t->start_at;
@@ -67,9 +62,9 @@ class ChannelGenerator
                 if($item) {
                     
                     if($item->frames > 0) {
-                        $frames = $this->parseDuration($item->duration) * config('FRAMES', 25);
-                        if($frames != $item->frames) $item->frames = $frames;
-                        $c->duration += $item->frames;   
+                        $seconds = $this->parseDuration($item->duration);
+                        $air += $seconds;
+                        $c->duration += $seconds;   
                         $data[] = $item; 
                         $cat = implode(',', $item->category);
                         $this->info("add item: {$cat} {$item->name} {$item->duration}");
@@ -86,7 +81,7 @@ class ChannelGenerator
                 }
             }
             $c->data = json_encode($data);
-
+            $c->end_at = date('Y-m-d H:i:s', $air);
             $c->save();
 
         }

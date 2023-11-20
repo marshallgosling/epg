@@ -70,15 +70,11 @@ class channel extends Command
         }
 
         $templates = Template::where('group_id', $group)->with('programs')->orderBy('sort', 'asc')->get();
-        $last = strtotime($channel->air_date." 00:00:00");
+        //$last = strtotime($channel->air_date." 00:00:00");
+        $air = strtotime($channel->air_date." 06:00:00");
 
         foreach($templates as $t) {
-            $air = strtotime($channel->air_date.' '.$t->start_at);
-
-            if($air < $last) $air += 24 * 3600;
-
-            $last = $air;
-
+            
             $c = new ChannelPrograms();
             $c->name = $t->name;
             $c->schedule_start_at = $t->start_at;
@@ -105,19 +101,16 @@ class channel extends Command
                 if($item) {
                     
                     if($item->frames > 0) {
-                        
-                        $frames = $this->parseDuration($item->duration) * config('FRAMES', 25);
-                        if($frames != $item->frames) $item->frames = $frames;
-                        $c->duration += $item->frames;
+                        $seconds = $this->parseDuration($item->duration);
+                        $air += $seconds;                      
+                        $c->duration += $seconds;
                         $data[] = $item;
                         
                         $cat = implode(',', $item->category);
                         $this->info("add item: {$cat} {$item->name} {$item->duration}");
                     }
                     else {
-
                         $this->warn(" {$item->name} no material found, so ignore.");
-
                     }
                 }
                 else
@@ -126,8 +119,9 @@ class channel extends Command
                 }
             }
             $c->data = json_encode($data);
-
+            $c->end_at = date('Y-m-d H:i:s', $air);
             $c->save();
+            
             $this->info("save program.");
 
         }
