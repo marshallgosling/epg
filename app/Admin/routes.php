@@ -31,7 +31,6 @@ Route::group([
     $router->post('/channel/channelv/data/{id}/save', 'ChannelProgramsController@save')->name('channel.channelv.programs.post');
 
     $router->get('/template/channelv/tree/{id}', 'TemplateProgramsController@tree')->name('template.channelv.programs.tree');
-    $router->post('/template/channelv/tree/{id}/append', 'TemplateProgramsController@append')->name('template.channelv.programs.append');
     $router->post('/template/channelv/tree/{id}/save', 'TemplateProgramsController@save')->name('template.channelv.programs.save');
     $router->delete('/template/channelv/tree/{id}/remove/{idx}', 'TemplateProgramsController@remove')->name('template.channelv.programs.delete');
     

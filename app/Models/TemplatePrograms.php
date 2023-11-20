@@ -12,7 +12,7 @@ class TemplatePrograms extends Model
     public const STATUS_READY = 0;
     public const STATUS_SYNCING = 1;
     public const STATUS_STOPED = 2;
-    public const TYPES = ['节目','广告','垫片'];
+    public const TYPES = ['节目','垫片','广告'];
     public const LABELS = ['info', 'warning', 'default'];
 
     protected $table = 'template_programs';
@@ -24,7 +24,7 @@ class TemplatePrograms extends Model
         'data',
         'type',
         'template_id',
-        'order_no',
+        'sort',
     ];
 
     protected $casts = [

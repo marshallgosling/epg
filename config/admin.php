@@ -129,7 +129,7 @@ return [
         ],
 
         // Add "remember me" to login form
-        'remember' => false,
+        'remember' => true,
 
         // Redirect to the specified URI when user is not authorized.
         'redirect_to' => 'auth/login',

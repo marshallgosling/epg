@@ -99,7 +99,7 @@ class TemplateProgramsController extends AdminController
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->text('category', __('Category'));
         $form->text('name', __('Name'));
-        
+
         $form->number('sort', __('Sort'))->default(0);
         
         $form->json('data', __('Data'));
@@ -137,7 +137,15 @@ class TemplateProgramsController extends AdminController
             ->body(view('admin.template.edit', ['model'=>$model,'data'=>$data, 'list'=>$list]));
     }
 
-    public function append($id, Request $request)
+    public function save($id, Request $request)
+    {
+        $action = $request->post('action');
+
+        if(in_array($action, ['append','replace','sort']))
+            return $this->$action($id, $request);
+    }
+
+    private function append($id, Request $request)
     {
         $data = $request->post('data');
         $item = json_decode($data, true);
@@ -148,6 +156,7 @@ class TemplateProgramsController extends AdminController
         $program->category = $item['category'];
         $program->sort = $item['sort'];
         $program->template_id = $id;
+        $program->data = json_encode($item['data']);
         $program->save();
 
         $response = [
@@ -159,7 +168,28 @@ class TemplateProgramsController extends AdminController
 
     }
 
-    public function save($id, Request $request) {
+    private function replace($id, Request $request)
+    {
+        $data = $request->post('data');
+        $item = json_decode($data, true);
+        
+        $program = TemplatePrograms::findOrFail($item['id']);
+        $program->name = $item['name'];
+        $program->type = $item['type'];
+        $program->category = $item['category'];
+        $program->data = json_encode($item['data']);
+        $program->save();
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.save_succeeded'),
+        ];
+
+        return response()->json($response);
+
+    }
+
+    private function sort($id, Request $request) {
         $data = $request->post('data');
         $list = json_decode($data, true);
 
@@ -167,10 +197,10 @@ class TemplateProgramsController extends AdminController
         {
             if(key_exists('haschanged', $item)) {
                 TemplatePrograms::where('id', $item['id'])->update([
-                    'name' => $item['name'],
-                    'sort' => $item['sort'],
-                    'type' => $item['type'],
-                    'category' => implode(',', $item['category'])
+                    //'name' => $item['name'],
+                    //'type' => $item['type'],
+                    //'category' => implode(',', $item['category']),
+                    'sort' => $item['sort']
                 ]);
             }
         }

@@ -14,6 +14,7 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Template;
+use App\Tools\ChannelGenerator;
 
 class ProgramsJob implements ShouldQueue, ShouldBeUnique
 {
@@ -45,8 +46,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $templates = Template::with('programs')->where('group_id', $this->group)->lazy();
-
+        
         $channel = Channel::where('uuid', $this->uuid)->first();
 
         if(!$channel) {
@@ -59,40 +59,12 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             return 0;
         }
 
-        $last = strtotime($channel->air_date);
+        $generator = new ChannelGenerator();
+        $generator->loadTemplate('default');
 
-        foreach($templates as $t) {
-            $air = strtotime($channel->air_date.' '.$t->start_at);
+        $generator->generate($channel);
 
-            if($air < $last) $air += 24 * 3600;
-
-            $last = $air;
-
-            $c = new ChannelPrograms();
-            $c->name = $t->name;
-            $c->schedule_start_at = $t->start_at;
-            $c->schedule_end_at = $t->end_at;
-            $c->channel_id = $channel->id;
-            $c->start_at = date('Y-m-d H:i:s', $air);
-            $c->duration = 0;
-            $c->version = '1';
-            
-            $data = [];
-            $programs = $t->programs()->get();
-            foreach($programs as $p) {
-                $ca = $p->category;
-                $item = Program::findRandom($ca);
-
-                if($item) {
-                    $data[] = $item->toArray();
-                    $c->duration += (int)$item->duration;
-                }
-            }
-            $c->data = $data;
-
-            $c->save();
-        }
-
+        
         $channel->status = Channel::STATUS_READY;
         $channel->save();
 
