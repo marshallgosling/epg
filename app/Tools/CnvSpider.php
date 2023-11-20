@@ -195,18 +195,38 @@ class CnvSpider
 
     public function parseTemplatePrograms($body)
     {
-        $m = preg_match_all('/<td\sstyle=\"width:30px;color:blue\"\sonclick=\"ReplaceCategory\(this\);\"\sdata-toggle=\"modal\"\sdata-target=\"#myModal\">[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $matches);
-        $items = $matches[1];
-        $total = count($items);
+        $body = substr($body, strpos($body, "ui-widget-content"));
+        $body = substr($body, 20, strpos($body, "ProgramReplaceResult"));
+        $body = preg_replace('/\sScheduleItemID=\"[\w-]+\"\s/', '', $body);
+        $body = preg_replace('/onmouseenter=\"ShowDetail\(this\)\"\s/', '', $body);
+        $body = preg_replace('/onmouseout=\"HideDetails\(this\);\"/', '', $body);
+
+        preg_match_all('/<td\sstyle=\"width:30px;color:blue\"\sonclick=\"ReplaceCategory\(this\);\"\sdata-toggle=\"modal\"\sdata-target=\"#myModal\">[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $mCategory);
+        preg_match_all('/<td\sstyle=\"width:150px\">[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $mCode);
+        preg_match_all('/<td\sstyle=\"width:200px\"\s>[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $mName);
+        preg_match_all('/<td\sstyle=\"width:120px\">[\s]+(.*)[\s]+<\/td>[\s]+/', $body, $mDuration);
+
+        $categories = $mCategory[1];
+        $names = $mName[1];
+        $codes = $mCode[1];
+        $durations = $mDuration[1];
+
+        $total = count($categories);
         $data = [];
         for($i=0;$i<$total;$i++)
         {
-            $v = trim($items[$i]);
-            if(!empty($v)) {
-                $data[] = [
-                    "category" => $v
-                ];
+            $d = trim($durations[$i]);
+            $v = trim($categories[$i]);
+            if($d != '' && $d != '00:00:00:00') {
+                if(!empty($v)) {
+                    $data[] = [
+                        "category" => trim($categories[$i]),
+                        "name" => trim($names[$i]),
+                        "data" => trim($codes[$i])
+                    ];
+                }
             }
+            
         }
 
         return $data;

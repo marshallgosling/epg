@@ -144,22 +144,33 @@ class crawler extends Command
             $template = Template::where('comment', $uuid)->first();
             if(!$categories)$categories = Category::where('type', 'channel')->lazy()->pluck('duration', 'no')->toArray();
 
+            $list = [];
             if(is_array($data)) {
                 $this->info("find Template Programs:".$template->name);
-                foreach($data as $idx=>&$item)
+                foreach($data as $idx=>$item)
                 {
                     $item['template_id'] = $template->id;
                     $item['sort'] = $idx;
-                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '0';
+                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '';
+                    if($item['type'] == '0') {
+                        $item['data'] = '';
+                        $item['name'] = '';
+                    }
+
+                    if($item['type'] != '') {
+                        $list[] = $item;
+                    }
                 }
             }
             else {
                 $this->error("no programs founds.");
                 return;
             }
+
+            TemplatePrograms::where('template_id', $template->id)->delete();
             
             TemplatePrograms::insert($data);
-            $template->version = 2;
+            $template->version = $template->version + 1;
             $template->save();
 
             $this->info("Batch insert success. Total:".count($data));

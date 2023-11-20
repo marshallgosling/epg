@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Category\TestModal;
 use App\Models\Category;
+use App\Models\TemplatePrograms;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -72,7 +73,7 @@ class CategoryController extends AdminController
         $show->field('name', __('Name'));
         $show->field('no', __('CategoryNo'));
         $show->field('type', __('CategoryType'))->using(Category::TYPES);
-        $show->field('duration', __('Duration'));
+        $show->field('duration', __('Duration'))->using(TemplatePrograms::TYPES);
 
         return $show;
     }
@@ -91,7 +92,7 @@ class CategoryController extends AdminController
         $form->text('no', __('CategoryNo'))->rules('required|max:10');
         $form->select('type', __('CategoryType'))->options(Category::TYPES)->rules('required');
         
-        $form->text('duration', __('Duration'));
+        $form->radio('duration', __('Duration'))->options(TemplatePrograms::TYPES)->default('0');
 
         return $form;
     }
