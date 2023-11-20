@@ -86,13 +86,13 @@
 
                                 <span class="icheck">
                                     <label class="radio-inline">
-                                        <input type="radio" name="type" value="1" class="minimal type"> 垫片 
+                                        <input type="radio" name="type" value="1" class="minimal type"> 广告 
                                     </label>
                                 </span>
 
                                 <span class="icheck">
                                     <label class="radio-inline">
-                                        <input type="radio" name="type" value="2" class="minimal type"> 广告 
+                                        <input type="radio" name="type" value="2" class="minimal type"> 垫片 
                                     </label>
                                 </span></td></tr>
                             <tr><td>编号</td><td id="code"></td></tr>
