@@ -45,7 +45,7 @@ class ChannelProgramsController extends AdminController
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
         $grid->column('duration', __('Duration'))->display(function($duration) {
-            $seconds = floor($duration / config('FRAME', 25));
+            $seconds = $duration;
             $hour = floor($seconds / 3600);
             $min = floor(($seconds%3600)/60);
             $sec = ($seconds%60);
