@@ -52,7 +52,7 @@ class ChannelProgramsController extends AdminController
             $min = $min>9?$min:'0'.$min;
             $sec = $sec>9?$sec:'0'.$sec;
             $erro = '';
-            if(abs($duration - 3600)<300) $erro = '&nbsp;<span class="label label-danger">需处理</span>';
+            if(abs($duration - 3600)>300) $erro = '&nbsp;<span class="label label-danger">需处理</span>';
             return  "$hour:$min:$sec ". $erro;
         });
         $grid->column('schedule_start_at', __('Schedule start at'));
