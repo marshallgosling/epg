@@ -8,11 +8,15 @@ use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\Program;
 use App\Models\TemplatePrograms;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 class ChannelGenerator
 {
     private $channel;
     private $templates;
+    private $daily;
+    private $weekends;
+    private $special;
     private $logs;
 
     public function __construct()
@@ -23,7 +27,29 @@ class ChannelGenerator
     public function loadTemplate($channel, $group='default')
     {
         $this->channel = $channel;
-        $this->templates = Template::where('group_id', $group)->with('programs')->orderBy('sort', 'asc')->get();
+        $this->daily = Template::where('group_id', $group)->where('schedule', Template::DAILY)->with('programs')->orderBy('sort', 'asc')->get();
+        $this->weekends = Template::where('group_id', $group)->where('schedule', Template::WEEKENDS)->with('programs')->orderBy('sort', 'asc')->get();
+        $this->special = Template::where('group_id', $group)->where('schedule', Template::SPECIAL)->with('programs')->orderBy('sort', 'asc')->get();
+        
+    }
+
+    private function loadWeekendsTemplate($date, $daily)
+    {
+        $air = Carbon::parse($date);
+
+        if($air->dayOfWeekIso > 5) {
+            if(!$this->weekends) return $daily;
+            if(!is_array($this->weekends)) return $daily;
+
+            foreach($this->weekends as $weekend)
+            {
+                if($weekend->start_at == $daily->start_at) {
+                    return $weekend;
+                }
+            }
+        }
+
+        return $daily;
     }
 
     public function generate(Channel $channel)
@@ -35,9 +61,13 @@ class ChannelGenerator
         }
 
         $air = strtotime($channel->air_date." 06:00:00");
+        $schecule = strtotime($channel->air_date." 06:00:00");
 
-        foreach($this->templates as $t) {
+        foreach($this->daily as $t) {
             
+            // check Date using Weekends Template or not.
+            $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
+
             $c = new ChannelPrograms();
             $c->name = $t->name;
             $c->schedule_start_at = $t->start_at;
@@ -47,13 +77,15 @@ class ChannelGenerator
             $c->duration = 0;
             $c->version = '1';
 
+            $schecule += $this->parseDuration($t->duration);
+
             $this->error("create program: {$t->name} {$t->start_at}");
             
             $data = [];
             $programs = $t->programs()->get();
             foreach($programs as $p) {
                 $item = false;
-                
+
                 if($p->type == TemplatePrograms::TYPE_PROGRAM) {
                     $item = Program::findRandom($p->category);
                     
