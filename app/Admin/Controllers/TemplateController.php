@@ -128,6 +128,7 @@ class TemplateController extends AdminController
 
         $form->text('sort', __('Sort'));
         $form->text('comment', __('Comment'));
+        $form->hidden('group_id', __('Group'))->default('default');
 
 
         return $form;
