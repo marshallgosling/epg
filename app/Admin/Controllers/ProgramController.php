@@ -31,6 +31,19 @@ class ProgramController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'));
         $grid->column('name', __('Name'))->expand(function() {
+            
+            $table = '<tr><td width="200px">'.__('Artist').'</td><td colspan="3">'.$this->artist.'</td></tr>'.
+            '<tr><td width="200px">'.__('Co artist').'</td><td colspan="3">'.$this->co_artist.'</td></tr>'.
+            '<tr><td width="200px">'.__('Tags').'</td><td colspan="3">'.
+            '<span class="label label-warning">'.$this->mood.'</span>&nbsp;'.
+            '<span class="label label-warning">'.$this->energy.'</span>&nbsp;'.
+            '<span class="label label-warning">'.$this->tempo.'</span>&nbsp;'.
+            '<span class="label label-danger">'.$this->gender.'</span>'.'</td></tr>'.
+            '<tr><td width="200px">'.__('Genre').'</td><td>'.$this->genre.'</td><td width="200px">'.__('Author').'</td><td>'.$this->author.'</td></tr>'.
+            '<tr><td width="200px">'.__('Company').'</td><td>'.$this->company.'</td><td width="200px">'.__('Lang').'</td><td>'.$this->lang.'</td></tr>'.
+            '<tr><td width="200px">'.__('Product date').'</td><td>'.$this->product_date.'</td><td width="200px">'.__('Air date').'</td><td>'.$this->air_date.'</td></tr>';
+
+            return '<table class="table table-striped">'.$table.'</table>';
 
         });
         $grid->column('category', __('Category'))->display(function($artist) {
@@ -44,7 +57,7 @@ class ProgramController extends AdminController
             $tags[]= $this->tempo ? "<span class='label label-warning'>{$this->tempo}</span>" : '';
 
             $tags[] = $this->gender ? "<span class='label label-danger'>{$this->gender}</span>" : '';
-            return join('&nbsp;', $category).'&nbsp;'.join('&nbsp;', $tags);
+            return join('&nbsp;', $category);
         });
         
         $grid->column('comment', __('Comment'));    
