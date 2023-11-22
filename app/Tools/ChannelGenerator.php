@@ -102,6 +102,7 @@ class ChannelGenerator
                     if($seconds > 0) {
                         $air += $seconds;
                         $c->duration += $seconds;
+                        $item->category = $p->category;
                         //if(!is_array( $item->category))  $item->category = [ $item->category ];
                         $data[] = $item; 
                         //$cat = implode(',', $item->category);

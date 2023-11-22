@@ -46,7 +46,7 @@
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle">
-                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{@implode(' ', $item['category'])}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
+                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{$item['category']}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
                                 <span class="pull-right dd-nodrag">
                                     <a href="javascript:selectProgram({{$idx}});"><i class="fa fa-edit"></i></a>
                                     <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
