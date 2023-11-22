@@ -31,7 +31,7 @@ class ProgramController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return $name.'<br /><span class="label label-default">'. __('Artist').'</span>:<small>'.$this->artist.'</small>';
+            return $name.'<br /><span class="label label-default">'. __('Artist').'</span>:<small style="width:200px;text-overflow:ellipsis;">'.$this->artist.'</small>';
         });
         $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
