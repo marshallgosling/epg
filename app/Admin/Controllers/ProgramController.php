@@ -142,19 +142,18 @@ class ProgramController extends AdminController
         $form = new Form(new Program());
 
         $form->divider(__('BasicInfo'));
-        $form->text('name', __('Name'));
-        $form->text('unique_no', __('Unique no'));
+        $form->text('name', __('Name'))->require();
+        $form->text('unique_no', __('Unique no'))->require();
+        $form->text('duration', __('Duration'))->require();
+        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories())->require();
+        
+        $form->text('comment', __('Comment'));
+        
         $form->text('air_date', __('Air date'));
         $form->text('product_date', __('Product date'));
-        $form->text('comment', __('Comment'));
-        $form->text('album', __('Album'));
-        $form->text('artist', __('Artist'));
-        $form->text('co_artist', __('Co artist'));
-        $form->text('duration', __('Duration'));
-        $form->text('company', __('Company'));
-
+        
+        
         $form->divider(__('TagsInfo'));
-        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories());
         
         $form->select('mood', __('Mood'))->options(Category::getCategories('mood'));
         $form->select('energy', __('Energy'))->options(Category::getCategories('energy'));
@@ -166,6 +165,10 @@ class ProgramController extends AdminController
         $form->text('author', __('Author'));
         $form->text('lyrics', __('Lyrics'));
         
+        $form->text('album', __('Album'));
+        $form->text('artist', __('Artist'));
+        $form->text('co_artist', __('Co artist'));
+        $form->text('company', __('Company'));
         
 
         return $form;
