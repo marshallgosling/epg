@@ -102,11 +102,16 @@ class ChannelGenerator
                     if($seconds > 0) {
                         $air += $seconds;
                         $c->duration += $seconds;
-                        $item->category = $p->category;
+                        
                         //if(!is_array( $item->category))  $item->category = [ $item->category ];
-                        $data[] = $item; 
-                        //$cat = implode(',', $item->category);
-                        $this->info("add item: {$item->name} {$item->duration}");
+                        $data[] = [
+                            "unique_no" => $item->unique_no,
+                            "name" => $item->name,
+                            "duration" => $item->duration,
+                            "category" => $p->category
+                        ];
+                             
+                        $this->info("add item: {$p->category} {$item->name} {$item->duration}");
                     }
                     else {
 
