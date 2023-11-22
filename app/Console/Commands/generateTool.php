@@ -23,7 +23,7 @@ class generateTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:generate {id?} {date?}';
+    protected $signature = 'tools:generate {id?} {time?}';
 
     /**
      * The console command description.
