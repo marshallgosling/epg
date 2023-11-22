@@ -109,7 +109,7 @@ class ChannelController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->text('name', __('Name'))->default('channelv')->required();
+        $form->text('name', __('Name'))->default('channelv')->disable();
         $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();

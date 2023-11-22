@@ -8,7 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-
+use Illuminate\Support\MessageBag;
 class ProgramController extends AdminController
 {
     /**
@@ -170,6 +170,33 @@ class ProgramController extends AdminController
         $form->text('co_artist', __('Co artist'));
         $form->text('company', __('Company'));
         
+        $form->saving(function(Form $form) {
+
+            if($form->isCreating()) {
+                $error = new MessageBag([
+                    'title'   => '创建节目失败',
+                    'message' => '该'.__('Unique no').': '. $form->unique_no.' 已存在。'
+                ]);
+    
+                if(Program::where('unique_no', $form->unique_no)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+
+            if($form->isEditing()) {
+                $error = new MessageBag([
+                    'title'   => '修改节目失败',
+                    'message' => '该'.__('Unique no').': '. $form->unique_no.' 已存在。'
+                ]);
+    
+                if(Program::where('unique_no', $form->air_date)->where('id','<>',$form->model()->id)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+            
+        });
 
         return $form;
     }
