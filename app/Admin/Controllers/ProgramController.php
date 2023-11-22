@@ -44,7 +44,7 @@ class ProgramController extends AdminController
             $tags[]= $this->tempo ? "<span class='label label-warning'>{$this->tempo}</span>" : '';
 
             $tags[] = $this->gender ? "<span class='label label-danger'>{$this->gender}</span>" : '';
-            return join('&nbsp;', $category).'&nbsp;'.join('&nbsp;', $tags);
+            return join('&nbsp;', $category).'<br/>'.join('&nbsp;', $tags);
         });
         
         $grid->column('album', __('Album'))->display(function ($album) {
