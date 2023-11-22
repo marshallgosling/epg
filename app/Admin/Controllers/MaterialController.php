@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Material\Importer;
+use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
 use App\Models\Material;
 use Encore\Admin\Controllers\AdminController;
@@ -44,7 +44,7 @@ class MaterialController extends AdminController
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->add(new Importer);
+            $actions->add(new Importor);
         });
 
         $grid->filter(function($filter){

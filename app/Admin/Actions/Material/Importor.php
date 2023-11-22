@@ -6,7 +6,7 @@ use App\Models\Program;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 
-class Importer extends RowAction
+class Importor extends RowAction
 {
     public $name = '导入节目库';
 
