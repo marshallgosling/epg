@@ -66,7 +66,7 @@ class generateTool extends Command
         if($air->dayOfWeekIso > 5) {
             if(!$weekends) $this->info("!weekends:");
 
-            if(!is_array($weekends)) $this->info("not array");
+            //if(!is_array($weekends)) $this->info("not array");
 
 
             foreach($weekends as $weekend)
