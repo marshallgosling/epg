@@ -41,7 +41,7 @@ class MaterialController extends AdminController
         $grid->column('created_at', __('Created at'));
         //$grid->column('updated_at', __('Updated at'));
 
-        $grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
+        //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
             $actions->add(new Importer);
