@@ -23,7 +23,7 @@ class generateTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:generate {id?}';
+    protected $signature = 'tools:generate {id?} {date?}';
 
     /**
      * The console command description.
@@ -55,13 +55,30 @@ class generateTool extends Command
         //Meterial::truncate();
 
         $id = $this->argument('id') ?? "";
+        $time = $this->argument('time') ?? "";
 
-        $body = Storage::disk('data')->get('sample.html');
+        $air = Carbon::parse($id);
 
-        $spider = new CnvSpider();
-        $items = $spider->parseTemplatePrograms($body);
+        $weekends = Template::where('group_id', 'default')->where('schedule', Template::WEEKENDS)->with('programs')->orderBy('sort', 'asc')->get();
+        
+        $this->info("dayOfWeekIso:".$air->dayOfWeekIso);
 
-        print_r($items);
+        if($air->dayOfWeekIso > 5) {
+            if(!$weekends) $this->info("!weekends:");
+
+            if(!is_array($weekends)) $this->info("not array");
+
+
+            foreach($weekends as $weekend)
+            {
+                if($weekend->start_at == $time) {
+                    $this->info("found weekend:".$weekend->name);
+                }
+            }
+        }
+
+
+        
 
         return 0;
         

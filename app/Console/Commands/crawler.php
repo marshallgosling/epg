@@ -173,8 +173,9 @@ class crawler extends Command
                 {
                     $item['template_id'] = $template->id;
                     $item['sort'] = $idx;
-                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : '0';
-                    if($item['type'] == '0') {
+                    $item['type'] = (array_key_exists($item['category'], $categories) && $categories[$item['category']]) ? $categories[$item['category']] : TemplatePrograms::TYPE_PROGRAM;
+                    
+                    if(in_array($item['type'], [TemplatePrograms::TYPE_PROGRAM, TemplatePrograms::TYPE_ADVERTISE])) {
                         $item['data'] = '';
                         $item['name'] = '';
                     }
