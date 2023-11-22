@@ -31,7 +31,9 @@ class ProgramController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'));
         $grid->column('name', __('Name'))->display(function($name) {
-        
+            return $name.'<br /><span class="label label-default">'. __('Artist').'</span>:<small>'.$this->artist.'</small>';
+        });
+        $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
                 return "<span class='label label-info'>{$c}</span>";
             }, $this->category);
@@ -42,15 +44,9 @@ class ProgramController extends AdminController
             $tags[]= $this->tempo ? "<span class='label label-warning'>{$this->tempo}</span>" : '';
 
             $tags[] = $this->gender ? "<span class='label label-danger'>{$this->gender}</span>" : '';
-
-            return $name.'<br />'.join('&nbsp;', $category).'&nbsp;'.join('&nbsp;', $tags);
-
-        });
-        $grid->column('artist', __('Artist'))->display(function($artist) {
-            return $artist.'<br />'.'<span class="label label-default">'. __('Co artist').': '.$this->co_artist.'</span>';
+            return join('&nbsp;', $category).'&nbsp;'.join('&nbsp;', $tags);
         });
         
-        //$grid->column('album', __('Album'));
         $grid->column('album', __('Album'))->display(function ($album) {
             
             return $album.'<br /><span class="label label-default">'.__('Comment').': '.$this->comment.'</span>';
@@ -65,7 +61,7 @@ class ProgramController extends AdminController
         $grid->column('author', __('Author'));
         $grid->column('lyrics', __('Lyrics'));
         */
-        $grid->column('company', __('Company'));
+        $grid->column('duration', __('Duration'));
         //$grid->column('co_artist', __('Co artist'));
         
         //$grid->column('product_date', __('Product date'));
