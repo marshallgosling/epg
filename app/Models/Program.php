@@ -48,14 +48,14 @@ class Program extends Model
 
         return Program::where('program.unique_no', $id)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
-            ->select("program.name","material.duration","material.frames","program.category","program.unique_no")->first();
+            ->select("program.unique_no", "program.name","material.duration","material.frames")->first();
     }
 
     public static function findUnique($no)
     {
         return Program::where('program.unique_no', $no)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
-            ->select("program.name","material.duration","material.frames","program.category","program.unique_no")->first();
+            ->select("program.unique_no","program.name","material.duration","material.frames")->first();
     }
 
     public static function getTotal($key) {

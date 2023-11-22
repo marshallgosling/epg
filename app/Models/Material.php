@@ -37,12 +37,12 @@ class Material extends Model
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
         return self::where('unique_no', $id)
-            ->select("name","duration","frames","category","unique_no")->first();
+            ->select("unique_no", "name","duration","frames","category")->first();
     }
 
     public static function findUnique($no)
     {
         return self::where('unique_no', $no)
-            ->select("name","duration","frames","category","unique_no")->first();
+            ->select("unique_no", "name","duration","frames")->first();
     }
 }

@@ -98,18 +98,18 @@ class ChannelGenerator
                 }
                 
                 if($item) {
-                    
-                    if($item->frames > 0) {
-                        $seconds = $this->parseDuration($item->duration);
+                    $seconds = $this->parseDuration($item->duration);
+                    if($seconds > 0) {
                         $air += $seconds;
-                        $c->duration += $seconds;   
+                        $c->duration += $seconds;
+                        //if(!is_array( $item->category))  $item->category = [ $item->category ];
                         $data[] = $item; 
-                        $cat = implode(',', $item->category);
-                        $this->info("add item: {$cat} {$item->name} {$item->duration}");
+                        //$cat = implode(',', $item->category);
+                        $this->info("add item: {$item->name} {$item->duration}");
                     }
                     else {
 
-                        $this->warn(" {$item->name} no material found, so ignore.");
+                        $this->warn(" {$item->name} has no duration {$item->duration}, so ignore.");
 
                     }
                 }
