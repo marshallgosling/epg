@@ -151,8 +151,7 @@ class ProgramController extends AdminController
 
         $form->text('air_date', __('Air date'));
         $form->text('product_date', __('Product date'));
-        
-        
+          
         $form->divider(__('TagsInfo'));
         
         $form->select('mood', __('Mood'))->options(Category::getCategories('mood'));

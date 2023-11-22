@@ -96,8 +96,8 @@ class MaterialController extends AdminController
         $form->text('unique_no', __('Unique no'))->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->required();
-        $form->text('frames', __('Frames'))->required();
-        $form->text('size', __('Size'));
+        $form->text('frames', __('Frames'))->default(0);
+        $form->text('size', __('Size'))->default(0);
         
         $form->saving(function(Form $form) {
 
