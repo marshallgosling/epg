@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Material\Importer;
 use App\Models\Category;
 use App\Models\Material;
 use Encore\Admin\Controllers\AdminController;
@@ -31,8 +32,8 @@ class MaterialController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique_no'));
         $grid->column('name', __('Name'));  
-        $grid->column('category', __('Category'))->display(function () {
-            return Category::findCategory($this->category);
+        $grid->column('category', __('Category'))->display(function ($category) {
+            return Category::findCategory($category). '&nbsp;('.$category.')';
         });
         $grid->column('duration', __('Duration'));
         $grid->column('size', __('Size'));
@@ -43,6 +44,7 @@ class MaterialController extends AdminController
         $grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
+            $actions->add(new Importer);
         });
 
         $grid->filter(function($filter){
