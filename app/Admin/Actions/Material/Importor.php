@@ -17,7 +17,7 @@ class Importor extends RowAction
         $program->unique_no = $model->unique_no;
         $program->name = $model->name;
         $program->duration = $model->duration;
-        $program->category = $model->category;
+        $program->category = [$model->category];
         
         if(Program::where('unique_no', $model->unique_no)->exists())
         {
