@@ -39,7 +39,6 @@ class ChannelGenerator
 
         if($air->dayOfWeekIso > 5) {
             if(!$this->weekends) return $daily;
-            if(!is_array($this->weekends)) return $daily;
 
             foreach($this->weekends as $weekend)
             {
