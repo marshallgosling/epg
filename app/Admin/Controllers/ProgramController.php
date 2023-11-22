@@ -30,8 +30,8 @@ class ProgramController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'));
-        $grid->column('name', __('Name'))->display(function($name) {
-            return $name.'<br /><span class="label label-default">'. __('Artist').'</span>:<small style="width:200px;text-overflow:ellipsis;">'.$this->artist.'</small>';
+        $grid->column('name', __('Name'))->expand(function() {
+
         });
         $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
@@ -44,13 +44,10 @@ class ProgramController extends AdminController
             $tags[]= $this->tempo ? "<span class='label label-warning'>{$this->tempo}</span>" : '';
 
             $tags[] = $this->gender ? "<span class='label label-danger'>{$this->gender}</span>" : '';
-            return join('&nbsp;', $category).'<br/>'.join('&nbsp;', $tags);
+            return join('&nbsp;', $category).'&nbsp;'.join('&nbsp;', $tags);
         });
         
-        $grid->column('album', __('Album'))->display(function ($album) {
-            
-            return $album.'<br /><span class="label label-default">'.__('Comment').': '.$this->comment.'</span>';
-        });    
+        $grid->column('comment', __('Comment'));    
         /*$grid->column('gender', __('Gender'));
         $grid->column('mood', __('Mood'));
         $grid->column('energy', __('Energy'));
