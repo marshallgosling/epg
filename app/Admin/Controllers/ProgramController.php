@@ -142,13 +142,13 @@ class ProgramController extends AdminController
         $form = new Form(new Program());
 
         $form->divider(__('BasicInfo'));
-        $form->text('name', __('Name'))->require();
-        $form->text('unique_no', __('Unique no'))->require();
-        $form->text('duration', __('Duration'))->require();
-        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories())->require();
+        $form->text('name', __('Name'))->rules('required');
+        $form->text('unique_no', __('Unique no'))->rules('required');
+        $form->text('duration', __('Duration'))->rules('required');
+        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories())->rules('required');
         
         $form->text('comment', __('Comment'));
-        
+
         $form->text('air_date', __('Air date'));
         $form->text('product_date', __('Product date'));
         
