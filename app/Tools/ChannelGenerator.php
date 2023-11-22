@@ -91,6 +91,10 @@ class ChannelGenerator
                 }
                 else {
                     $item = Program::findUnique($p->data);
+
+                    if(!$item) {
+                        $item = Material::findUnique($p->data);
+                    }
                 }
                 
                 if($item) {

@@ -39,4 +39,10 @@ class Material extends Model
         return self::where('unique_no', $id)
             ->select("name","duration","frames","category","unique_no")->first();
     }
+
+    public static function findUnique($no)
+    {
+        return self::where('unique_no', $no)
+            ->select("name","duration","frames","category","unique_no")->first();
+    }
 }
