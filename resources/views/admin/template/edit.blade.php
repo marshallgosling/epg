@@ -41,16 +41,17 @@
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
                     <span id="treeinfo"><small>可拖动排序</small></span>
+                    <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
                     <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
                 <div class="dd" id="tree-programs">
                     <ol class="dd-list">
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
-                            <div class="dd-handle">
-                                <small>类型：</small> <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> <small>&nbsp;栏目：</small> <a href="#" class="dd-nodrag">{{$item['category']}}</a> &nbsp;<small> 别名：</small> {{$item['name']}} &nbsp;<small class="text-warning">{{$item['data']}}</small>
+                            <div class="dd-handle {{$item['category']=='m1'?'bg-warning':''}}">
+                                <small>类型：</small> <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> <small>&nbsp;栏目：</small> <a href="javascript:selectProgram({{$idx}});" class="dd-nodrag">{{$item['category']}}</a> &nbsp;<small> 别名：</small> {{$item['name']}} &nbsp;<small class="text-warning">{{$item['data']}}</small>
                                 <span class="pull-right dd-nodrag">
-                                    <a href="javascript:selectProgram({{$idx}});" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
+                                    <a href="javascript:editProgram({{$idx}});" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
                                     <a href="javascript:copyProgram({{$idx}});" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
                                     
                                     <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
@@ -159,14 +160,15 @@
         </div><!-- /.box-body -->
         </div>
     </div>
-
-<script>
+</div></div>
+<script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
     var replaceItem = null;
     var replaceCategory = null;
     var dataList = JSON.parse('{!!$data!!}');
     var sortChanged = false;
+    var sortEnabled = false;
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
@@ -176,11 +178,46 @@
         $('.after-submit').iCheck({checkboxClass:'icheckbox_minimal-blue'}).on('ifChecked', function () {
             $('.after-submit').not(this).iCheck('uncheck');
         });
-        $('#tree-programs').nestable({maxDepth: 1});
-        $('#tree-programs').on('change', function() {
-            sortChanged = true;
-            $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
-        });
+        $('#btnSort').on('click', function(e) {
+            if(!sortEnabled) {
+                $('#tree-programs').nestable({maxDepth: 1});
+                $('#tree-programs').on('change', function() {
+                    sortChanged = true;
+                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
+                });
+                sortEnabled = true;
+                $('#btnSort').html("保存排序");
+                $('#treeinfo').html('<small>可拖动排序</small>');
+            }
+            else {
+                var list = $('#tree-programs').nestable('serialize');
+            
+                for(var i=0;i<list.length;i++)
+                {
+                    if(dataList[i].sort != list[i].id) {
+                        dataList[i].sort = list[i].id;
+                        dataList[i].haschanged = 1;
+                    }
+                }
+
+                $.ajax({
+                    method: 'post',
+                    url: '/admin/template/channelv/tree/{!! $model->id !!}/save',
+                    data: {
+                        data: JSON.stringify(dataList),
+                        action: "sort",
+                        _token:LA.token,
+                    },
+                    success: function (data) {
+                        $.pjax.reload('#pjax-container');
+                        toastr.success('保存成功 !');
+                    }
+                });
+
+                sortEnabled = false;
+            }
+        })
+
         $(".category").select2({
             ajax: {
                 url: "/admin/api/category",
@@ -335,33 +372,6 @@
             
         });
 
-        $('#tree-save').on('click', function(e) {
-            var list = $('#tree-programs').nestable('serialize');
-            
-            for(var i=0;i<list.length;i++)
-            {
-                if(dataList[i].sort != list[i].id) {
-                    dataList[i].sort = list[i].id;
-                    dataList[i].haschanged = 1;
-                }
-            }
-
-            //console.table(dataList); return;
-            $.ajax({
-                    method: 'post',
-                    url: '/admin/template/channelv/tree/{!! $model->id !!}/save',
-                    data: {
-                        data: JSON.stringify(dataList),
-                        action: "sort",
-                        _token:LA.token,
-                    },
-                    success: function (data) {
-                        $.pjax.reload('#pjax-container');
-                        toastr.success('保存成功 !');
-                    }
-                });
-        });
-
         $('.tree_branch_delete').click(function() {
             var id = $(this).data('id');
             swal({
@@ -420,6 +430,10 @@
         selectedIndex = repo.id;
     }
 
+    function editProgram(idx) {
+
+    }
+
     function copyProgram (idx) {
         var repo = dataList[idx];
         repo.sort = dataList.length + 1;
@@ -437,4 +451,4 @@
             }
         });
     }
-</script></div></div>
+</script>

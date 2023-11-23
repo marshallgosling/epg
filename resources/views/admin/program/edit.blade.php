@@ -37,7 +37,7 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
-                    <span id="treeinfo"><small>可拖动排序</small></span>
+                    <span id="treeinfo"></span>
                     <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
                     <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
@@ -129,8 +129,8 @@
         </div><!-- /.box-body -->
     </div>
     </div>
-
-<script>
+</div></div>
+<script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
     var replaceItem = null;
@@ -151,6 +151,7 @@
                 });
                 sortEnabled = true;
                 $('#btnSort').html("保存排序");
+                $('#treeinfo').html('<small>可拖动排序</small>');
             }
             else {
                 var list = $('#tree-programs').nestable('serialize');
@@ -171,6 +172,8 @@
                         toastr.success('保存成功 !');
                     }
                 });
+
+                sortEnabled = false;
             }
         });
         
@@ -341,4 +344,4 @@
         selectedItem = repo;
         selectedIndex = idx;
     }
-</script></div></div>
+</script>
