@@ -21,7 +21,9 @@ Route::group([
 
     $router->resource('/media/category', 'CategoryController')->names('media.category');
     $router->resource('/records', 'RecordsController')->names('records');
+    $router->post('/media/material/unique', 'MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'MaterialController')->names('media.material');
+    $router->post('/media/programs/unique', 'ProgramController@unique')->name('media.material.unique');
     $router->resource('/media/programs', 'ProgramController')->names('media.program');
     
     $router->get('/channel/channelv/tree/{id}', 'ChannelProgramsController@tree')->name('channel.channelv.programs.tree');

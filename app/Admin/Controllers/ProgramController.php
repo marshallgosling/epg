@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 class ProgramController extends AdminController
 {
@@ -88,7 +89,7 @@ class ProgramController extends AdminController
             // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->like('artist', __('Artist'));
-            $filter->equal('unique_no', __('Unique_no'));
+            $filter->like('unique_no', __('Unique_no'));
             $filter->like('category', __('Category'))->select(Category::getFormattedCategories());
         
         });
@@ -139,6 +140,8 @@ class ProgramController extends AdminController
      */
     protected function form()
     {
+        \Encore\Admin\Admin::script(self::JS);
+
         $form = new Form(new Program());
 
         $form->divider(__('BasicInfo'));
@@ -199,4 +202,32 @@ class ProgramController extends AdminController
 
         return $form;
     }
+
+    public function unique(Request $request) {
+        $data = $request->post('data');
+        return response()->json(['result' => Program::where('unique_no', $data)->exists()]);
+    }
+
+    public const JS = <<<EOF
+$('input[name=unique_no]').on('change', function(e) {
+    var parent = $(this).parent();
+
+    $.ajax({
+        method: 'post',
+        url: '/admin/media/programs/unique',
+        data: {
+            data: e.currentTarget.value,
+            _token:LA.token,
+        },
+        success: function (data) {
+            if(data.result) {
+                parent.addClass('has-error');
+            }
+            else {
+                parent.removeClass('has-error');
+            }
+        }
+    });
+});
+EOF;
 }
