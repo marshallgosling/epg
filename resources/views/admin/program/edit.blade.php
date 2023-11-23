@@ -47,7 +47,13 @@
                         <li class="dd-item" data-id="{{$idx}}">
                             
                             <div class="dd-handle {{ \App\Models\Category::parseBg($item['category'], $item['unique_no']) }}">
-                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{$item['category']}}】  <a href="javascript:selectProgram({{$idx}});" class="dd-nodrag">{{$item['unique_no']}}</a>
+                                <span style="display:inline-block;width:120px;">{{$item['start_at']}} -- {{$item['end_at']}} </span>
+                                <span style="display:inline-block;width:200px;text-overflow:ellipsis"><strong>{{$item['name']}}</strong></span>
+
+                                <span style="display:inline-block;width:80px;"><small>{{$item['duration']}}</small></span>
+                                <span style="display:inline-block;width:60px;">【{{$item['category']}}】</span>
+                                <span style="display:inline-block;width:120px;text-overflow:ellipsis">{{ @array_key_exists($item['unique_no'], $artists) ? $artists[$item['unique_no']] : ''}}</span>
+                                <a href="javascript:selectProgram({{$idx}});" class="dd-nodrag">{{$item['unique_no']}}</a>
                                 <span class="pull-right dd-nodrag">
                                     <a href="javascript:editProgram({{$idx}});"><i class="fa fa-edit"></i></a>
                                     <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
