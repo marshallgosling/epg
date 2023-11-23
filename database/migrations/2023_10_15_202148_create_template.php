@@ -24,6 +24,7 @@ class CreateTemplate extends Migration
             $table->unsignedInteger('version')->default(0)->comment('版本号');
             $table->string('group_id', 10)->default('')->comment("分组号")->nullable();
             $table->string('comment', 255)->default('')->comment('模版说明')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->comment('模版状态，使用中，未启用，停用');
             $table->timestamps();
         });
 

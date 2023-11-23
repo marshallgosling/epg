@@ -60,6 +60,8 @@
     "Clean failed message.": "无法清空节目单，节目单状态异常",
     "Import failed message": "导入节目库失败，重复的播出编号！",
     "Import Success message": "导入节目库成功",
+    "BatchDisabled Success message": "批量停用模版成功",
+    "BatchEnabled Success message": "批量启用模版成功",
     
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息",

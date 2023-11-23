@@ -62,24 +62,24 @@ class ProgramController extends AdminController
             return join('&nbsp;', $category);
         })->sortable();
         
-        $grid->column('comment', __('Comment'));    
-        /*$grid->column('gender', __('Gender'));
-        $grid->column('mood', __('Mood'));
-        $grid->column('energy', __('Energy'));
-        $grid->column('tempo', __('Tempo'));
-        $grid->column('lang', __('Lang'));
-        $grid->column('duration', __('Duration'));
-        $grid->column('genre', __('Genre'));
-        $grid->column('author', __('Author'));
-        $grid->column('lyrics', __('Lyrics'));
-        */
+        $grid->column('comment', __('Comment'))->style('max-width:200px;word-break:break-all;');    
+        
+        $grid->column('gender', __('Gender'))->hide();
+        $grid->column('mood', __('Mood'))->hide();
+        $grid->column('energy', __('Energy'))->hide();
+        $grid->column('tempo', __('Tempo'))->hide();
+        $grid->column('lang', __('Lang'))->hide();
+        $grid->column('genre', __('Genre'))->hide();
+        $grid->column('author', __('Author'))->hide();
+        $grid->column('lyrics', __('Lyrics'))->hide();
+        
         $grid->column('duration', __('Duration'))->sortable();
         //$grid->column('co_artist', __('Co artist'));
         
         //$grid->column('product_date', __('Product date'));
         //$grid->column('air_date', __('Air date'));
 
-        //$grid->column('created_at', __('Created at'))->sortable();
+        $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->filter(function($filter){

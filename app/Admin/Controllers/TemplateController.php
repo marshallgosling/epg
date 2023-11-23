@@ -2,7 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Template\Programs;
+use App\Admin\Actions\Template\BatchDisable;
+use App\Admin\Actions\Template\BatchEnable;
 use App\Models\Template;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -10,6 +11,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Widgets\InfoBox;
+use App\Admin\Actions\Template\Programs;
 
 class TemplateController extends AdminController
 {
@@ -61,8 +63,9 @@ class TemplateController extends AdminController
             return $html;
         });
         $grid->column('duration', __('Duration'));
-        $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);;
+        $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);
         $grid->column('sort', __('Sort'));
+        $grid->column('status', __('Status'))->using(Template::STATUSES)->label();
         $grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function($filter){
@@ -73,14 +76,16 @@ class TemplateController extends AdminController
             // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
-        
+            $filter->in('status',  __('Status'))->checkbox(Template::STATUSES);
         });
 
         $grid->actions(function ($actions) {
+            $actions->add(new Programs);     
+        });
 
-            // append一个操作
-            $actions->add(new Programs);
-        
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchEnable);
+            $actions->add(new BatchDisable);
         });
 
         return $grid;
@@ -129,7 +134,7 @@ class TemplateController extends AdminController
         $form->text('sort', __('Sort'));
         $form->text('comment', __('Comment'));
         $form->hidden('group_id', __('Group'))->default('default');
-
+        
 
         return $form;
     }
