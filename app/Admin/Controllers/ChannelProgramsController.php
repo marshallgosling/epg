@@ -152,11 +152,11 @@ class ChannelProgramsController extends AdminController
         $form->action(admin_url("channel/channelv/$id/edit"));
         $form->hidden('_token')->default(csrf_token());
 
-        $data = str_replace("'","\\'", $data);
+        $json = str_replace("'","\\'", json_encode($data));
 
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
-            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'list'=>$list,'form'=>$form->render()]));
+            ->body(view('admin.program.edit', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {
