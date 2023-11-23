@@ -30,7 +30,6 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-info btn-sm" id="tree-save" title="保存"><i class="fa fa-save"></i><span class="hidden-xs"> 保存</span></a>        
                     <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
@@ -151,7 +150,38 @@
                     $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
                 });
                 sortEnabled = true;
+                $('#btnSort').html("保存排序");
             }
+            else {
+                var list = $('#tree-programs').nestable('serialize');
+                var newList = [];
+                for(var i=0;i<list.length;i++)
+                {
+                    newList[i] = dataList[list[i].id];
+                }
+                $.ajax({
+                    method: 'post',
+                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
+                    data: {
+                        data: JSON.stringify(newList),
+                        _token:LA.token,
+                    },
+                    success: function (data) {
+                        $.pjax.reload('#pjax-container');
+                        toastr.success('保存成功 !');
+                    }
+                });
+            }
+        });
+
+        $(".dd-item").on('click', function(e) {
+            var repo = dataList[e.data.id];
+            $("#sName").html(repo.name);
+            $("#sDuration").html(repo.duration);
+            $("#sNo").html(repo.unique_no);
+            $('#sCategory').html(repo.category);
+            selectedItem = repo;
+            selectedIndex = idx;
         });
         
         $(".program").select2({
@@ -266,27 +296,6 @@
                 toastr.error('请先选择节目！');
             }
             
-        });
-
-        $('#tree-save').on('click', function(e) {
-            var list = $('#tree-programs').nestable('serialize');
-            var newList = [];
-            for(var i=0;i<list.length;i++)
-            {
-                newList[i] = dataList[list[i].id];
-            }
-            $.ajax({
-                    method: 'post',
-                    url: '/admin/channel/channelv/data/{!! $model->id !!}/save',
-                    data: {
-                        data: JSON.stringify(newList),
-                        _token:LA.token,
-                    },
-                    success: function (data) {
-                        $.pjax.reload('#pjax-container');
-                        toastr.success('保存成功 !');
-                    }
-                });
         });
 
         $('.tree_branch_delete').click(function() {
