@@ -143,8 +143,8 @@ class ProgramController extends AdminController
 
         $form->divider(__('BasicInfo'));
         $form->text('name', __('Name'))->rules('required');
-        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:unique_no"]);
-        $form->time('duration', __('Duration'))->format('HH:mm:ss:00')->rules('required');
+        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:program,unique_no"]);
+        $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:00'])->rules('required');
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories())->rules('required');
         
         $form->text('comment', __('Comment'));
