@@ -47,9 +47,9 @@
                         <li class="dd-item" data-id="{{$idx}}">
                             
                             <div class="dd-handle {{ $item['bg'] }}">
-                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{$item['category']}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
+                                 {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{$item['category']}}】  <a href="javascript:selectProgram({{$idx}});" class="dd-nodrag">{{$item['unique_no']}}</a>
                                 <span class="pull-right dd-nodrag">
-                                    <a href="javascript:selectProgram({{$idx}});"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:editProgram({{$idx}});"><i class="fa fa-edit"></i></a>
                                     <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
                                 </span>
                             </div>
@@ -172,16 +172,6 @@
                     }
                 });
             }
-        });
-
-        $(".dd-item").on('click', function(e) {
-            var repo = dataList[e.data.id];
-            $("#sName").html(repo.name);
-            $("#sDuration").html(repo.duration);
-            $("#sNo").html(repo.unique_no);
-            $('#sCategory').html(repo.category);
-            selectedItem = repo;
-            selectedIndex = idx;
         });
         
         $(".program").select2({
@@ -338,6 +328,10 @@
         });
         
     });
+
+    function editProgram(idx) {
+
+    }
     function selectProgram (idx) {
         var repo = dataList[idx];
         $("#sName").html(repo.name);
