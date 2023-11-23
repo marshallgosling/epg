@@ -24,19 +24,23 @@ class Category extends Model
 
     private static $categories = [];
 
-    public static function getFormattedCategories($type='channel')
+    public static function getFormattedCategories($type='channel', $withEmpty=false)
     {
         if($type == 'all')
             $cates = Category::lazy()->pluck('name', 'no')->toArray();
         else
             $cates = Category::where('type', $type)->lazy()->pluck('name', 'no')->toArray();
         
+        if($withEmpty) $list = [''=>'空'];
+        else $list = [];
+
         foreach($cates as $no=>&$c)
         {
             $c = "【{$no}】 $c";
+            $list[$no] = $c;
         }
 
-        return $cates;
+        return $list;
     }
 
     public static function getCategories($type='channel')

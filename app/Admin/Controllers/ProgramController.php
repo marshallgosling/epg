@@ -49,7 +49,8 @@ class ProgramController extends AdminController
         })->sortable();
         $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
-                return "<span class='label label-info'>{$c}</span>";
+                $t = Category::findCategory($c);
+                return "<span class='label label-info' title='{$t}'>{$c}</span>";
             }, $this->category);
 
             $tags = [];
@@ -59,7 +60,7 @@ class ProgramController extends AdminController
 
             $tags[] = $this->gender ? "<span class='label label-danger'>{$this->gender}</span>" : '';
             return join('&nbsp;', $category);
-        });
+        })->sortable();
         
         $grid->column('comment', __('Comment'));    
         /*$grid->column('gender', __('Gender'));
@@ -90,8 +91,8 @@ class ProgramController extends AdminController
             $filter->like('name', __('Name'));
             $filter->like('artist', __('Artist'));
             $filter->like('unique_no', __('Unique_no'));
-            $filter->like('category', __('Category'))->select(Category::getFormattedCategories());
-        
+            $filter->like('category', __('Category'))->select(Category::getFormattedCategories('channel', true));
+
         });
 
         return $grid;
