@@ -30,15 +30,15 @@ class MaterialController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique_no'));
-        $grid->column('name', __('Name'));  
+        $grid->column('unique_no', __('Unique_no'))->sortable();
+        $grid->column('name', __('Name'))->sortable();  
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
         });
-        $grid->column('duration', __('Duration'));
+        $grid->column('duration', __('Duration'))->sortable();
         $grid->column('size', __('Size'));
-        $grid->column('frames', __('Frames'));
-        $grid->column('created_at', __('Created at'));
+        $grid->column('frames', __('Frames'))->sortable();
+        $grid->column('created_at', __('Created at'))->sortable();
         //$grid->column('updated_at', __('Updated at'));
 
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
@@ -95,9 +95,9 @@ class MaterialController extends AdminController
         $form = new Form(new Material());
 
         $form->text('name', __('Name'))->required();
-        $form->text('unique_no', __('Unique no'))->required();
+        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:unique_no"]);
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
-        $form->text('duration', __('Duration'))->required();
+        $form->time('duration', __('Duration'))->format('HH:mm:ss:00')->required();
         $form->text('frames', __('Frames'))->default(0);
         $form->text('size', __('Size'))->default(0);
         

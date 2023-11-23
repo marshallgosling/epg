@@ -29,7 +29,7 @@ class ProgramController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'));
+        $grid->column('unique_no', __('Unique no'))->sortable();
         $grid->column('name', __('Name'))->expand(function() {
             
             $table = '<tr><td width="200px">'.__('Artist').'</td><td colspan="3">'.$this->artist.'</td></tr>'.
@@ -45,7 +45,7 @@ class ProgramController extends AdminController
 
             return '<table class="table table-striped">'.$table.'</table>';
 
-        });
+        })->sortable();
         $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
                 return "<span class='label label-info'>{$c}</span>";
@@ -71,14 +71,14 @@ class ProgramController extends AdminController
         $grid->column('author', __('Author'));
         $grid->column('lyrics', __('Lyrics'));
         */
-        $grid->column('duration', __('Duration'));
+        $grid->column('duration', __('Duration'))->sortable();
         //$grid->column('co_artist', __('Co artist'));
         
         //$grid->column('product_date', __('Product date'));
         //$grid->column('air_date', __('Air date'));
 
-        //$grid->column('created_at', __('Created at'));
-        //$grid->column('updated_at', __('Updated at'));
+        //$grid->column('created_at', __('Created at'))->sortable();
+        $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->filter(function($filter){
 
@@ -143,8 +143,8 @@ class ProgramController extends AdminController
 
         $form->divider(__('BasicInfo'));
         $form->text('name', __('Name'))->rules('required');
-        $form->text('unique_no', __('Unique no'))->rules('required');
-        $form->text('duration', __('Duration'))->rules('required');
+        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:unique_no"]);
+        $form->time('duration', __('Duration'))->format('HH:mm:ss:00')->rules('required');
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories())->rules('required');
         
         $form->text('comment', __('Comment'));
