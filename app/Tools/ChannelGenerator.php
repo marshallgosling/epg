@@ -111,7 +111,7 @@ class ChannelGenerator
                             "name" => $item->name,
                             "duration" => $item->duration,
                             "category" => $p->category,
-                            "bg" => 'class="'.$bg.'"'
+                            "bg" => $bg
                         ];
                              
                         $this->info("add item: {$p->category} {$item->name} {$item->duration}");
