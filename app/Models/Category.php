@@ -55,9 +55,11 @@ class Category extends Model
             self::$categories[$type][$key] : $key;
     }
 
-    public static function parseBg($no)
+    public static function parseBg($no, $code='')
     {
         if($no == 'm1') return 'bg-warning';
+        if($no == 'v1') return 'bg-default';
+        if(preg_match('/VCNM(\w+)/', $code, $m)) return 'bg-info';
         return '';
     }
     

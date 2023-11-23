@@ -100,7 +100,6 @@ class ChannelGenerator
                 
                 if($item) {
                     $seconds = $this->parseDuration($item->duration);
-                    $bg = Category::parseBg($p->category);
                     if($seconds > 0) {
                         $air += $seconds;
                         $c->duration += $seconds;
@@ -110,8 +109,7 @@ class ChannelGenerator
                             "unique_no" => $item->unique_no,
                             "name" => $item->name,
                             "duration" => $item->duration,
-                            "category" => $p->category,
-                            "bg" => $bg
+                            "category" => $p->category
                         ];
                              
                         $this->info("add item: {$p->category} {$item->name} {$item->duration}");
