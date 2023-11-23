@@ -136,7 +136,7 @@
     var selectedIndex = -1;
     var replaceItem = null;
     var sortChanged = false;
-    var dataList = JSON.parse('{!!$model->data!!}');
+    var dataList = JSON.parse('{!!$data!!}');
     var sortEnabled = false;
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
