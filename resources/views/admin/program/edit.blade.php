@@ -30,7 +30,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/channelv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>

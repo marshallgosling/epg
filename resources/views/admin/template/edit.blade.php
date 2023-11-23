@@ -32,15 +32,14 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                 <div class="btn-group">&nbsp; &nbsp;</div>
                 <div class="btn-group pull-right">
-                    <a class="btn btn-info btn-sm" id="tree-save" title="保存"><i class="fa fa-save"></i><span class="hidden-xs"> 保存</span></a>
-                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/template/channelv"><i class="fa fa-refresh"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/template/channelv"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
-                    <span id="treeinfo"><small>可拖动排序</small></span>
+                    <span id="treeinfo"></span>
                     <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
                     <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
