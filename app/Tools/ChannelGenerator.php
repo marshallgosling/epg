@@ -2,6 +2,7 @@
 
 namespace App\Tools;
 
+use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Template;
 use App\Models\ChannelPrograms;
@@ -99,6 +100,7 @@ class ChannelGenerator
                 
                 if($item) {
                     $seconds = $this->parseDuration($item->duration);
+                    $bg = Category::parseBg($p->category);
                     if($seconds > 0) {
                         $air += $seconds;
                         $c->duration += $seconds;
@@ -108,7 +110,8 @@ class ChannelGenerator
                             "unique_no" => $item->unique_no,
                             "name" => $item->name,
                             "duration" => $item->duration,
-                            "category" => $p->category
+                            "category" => $p->category,
+                            "bg" => 'class="'.$bg.'"'
                         ];
                              
                         $this->info("add item: {$p->category} {$item->name} {$item->duration}");

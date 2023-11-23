@@ -50,5 +50,11 @@ class Category extends Model
         return array_key_exists($key, self::$categories[$type]) ? 
             self::$categories[$type][$key] : $key;
     }
+
+    public static function parseBg($no)
+    {
+        if($no == 'm1') return 'bg-warning';
+        return '';
+    }
     
 }

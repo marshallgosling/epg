@@ -39,13 +39,15 @@
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
                     <span id="treeinfo"><small>可拖动排序</small></span>
+                    <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
                     <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
                 <div class="dd" id="tree-programs">
                     <ol class="dd-list">
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
-                            <div class="dd-handle">
+                            
+                            <div class="dd-handle" {{ $item["bg"] }}>
                                  {{$item['start_at']}} -- {{$item['end_at']}} <strong>{{$item['name']}}</strong> <small>{{$item['duration']}}</small>【{{$item['category']}}】  <a href="#" class="dd-nodrag">{{$item['unique_no']}}</a>
                                 <span class="pull-right dd-nodrag">
                                     <a href="javascript:selectProgram({{$idx}});"><i class="fa fa-edit"></i></a>
@@ -135,16 +137,23 @@
     var replaceItem = null;
     var sortChanged = false;
     var dataList = JSON.parse('{!!$model->data!!}');
+    var sortEnabled = false;
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
-        $('#tree-programs').nestable({maxDepth: 1});
-        $('#tree-programs').on('change', function() {
-            sortChanged = true;
-            $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
+        $('#btnSort').on('click', function(e) {
+            if(!sortEnabled) {
+                $('#tree-programs').nestable({maxDepth: 1});
+                $('#tree-programs').on('change', function() {
+                    sortChanged = true;
+                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
+                });
+                sortEnabled = true;
+            }
         });
+        
         $(".program").select2({
             ajax: {
                 url: "/admin/api/programs",
