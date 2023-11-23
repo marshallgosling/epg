@@ -95,7 +95,7 @@ class MaterialController extends AdminController
         $form = new Form(new Material());
 
         $form->text('name', __('Name'))->required();
-        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:unique_no"]);
+        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:material,unique_no"]);
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->time('duration', __('Duration'))->format('HH:mm:ss:00')->required();
         $form->text('frames', __('Frames'))->default(0);
