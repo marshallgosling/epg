@@ -12,7 +12,7 @@ class Category extends Model
     protected $table = 'category';
     public $timestamps = false;
 
-    public const TYPES = ['channel'=>'Channel', 'mood'=>'Mood', 'energy'=>'Energy', 'tempo'=>'Tempo', 'genre'=>'SongStyle', 'sex'=>'Sex'];
+    public const TYPES = ['tags'=>'标签', 'mood'=>'情绪', 'energy'=>'力量', 'tempo'=>'节奏', 'genre'=>'风格', 'sex'=>'性别'];
 
     protected $fillable = [
         'id',
@@ -24,7 +24,7 @@ class Category extends Model
 
     private static $categories = [];
 
-    public static function getFormattedCategories($type='channel', $withEmpty=false)
+    public static function getFormattedCategories($type='tags', $withEmpty=false)
     {
         if($type == 'all')
             $cates = Category::lazy()->pluck('name', 'no')->toArray();
@@ -43,12 +43,12 @@ class Category extends Model
         return $list;
     }
 
-    public static function getCategories($type='channel')
+    public static function getCategories($type='tags')
     {
         return Category::where('type', $type)->lazy()->pluck('name', 'no')->toArray();
     }
 
-    public static function findCategory($key, $type='channel')
+    public static function findCategory($key, $type='tags')
     {
         if(!key_exists($type, self::$categories)) self::$categories[$type] = self::getCategories($type);
         return array_key_exists($key, self::$categories[$type]) ? 

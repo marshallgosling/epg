@@ -91,7 +91,7 @@ class ProgramController extends AdminController
             $filter->like('name', __('Name'));
             $filter->like('artist', __('Artist'));
             $filter->like('unique_no', __('Unique_no'));
-            $filter->like('category', __('Category'))->select(Category::getFormattedCategories('channel', true));
+            $filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true));
 
         });
 
