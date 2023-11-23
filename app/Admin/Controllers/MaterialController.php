@@ -93,7 +93,8 @@ class MaterialController extends AdminController
      */
     protected function form()
     {
-        \Encore\Admin\Admin::script(self::JS);
+        
+        \Encore\Admin\Admin::script(str_replace('FRAMES', config('FRAMES', 25), self::JS));
 
         $form = new Form(new Material());
 
@@ -160,6 +161,13 @@ $('input[name=unique_no]').on('change', function(e) {
             }
         }
     });
+});
+$('input[name=duration]').on('change', function(e) {
+    var duration = e.currentTarget.value;
+    var items = duration.split(":");
+    var seconds = items[0] * 3600 + items[1] * 60 + items[2];
+
+    $('input[name=frames]').val(seconds * FRAMES);
 });
 EOF;
 }
