@@ -150,6 +150,8 @@ class ChannelController extends AdminController
                     return back()->with(compact('error'));
                 }
             }
+
+            return $form;
             
         });
 
