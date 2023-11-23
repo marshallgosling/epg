@@ -74,10 +74,10 @@ class ProgramController extends AdminController
         $grid->column('lyrics', __('Lyrics'))->hide();
         
         $grid->column('duration', __('Duration'))->sortable();
-        //$grid->column('co_artist', __('Co artist'));
+        $grid->column('co_artist', __('Co artist'))->hide();
         
-        //$grid->column('product_date', __('Product date'));
-        //$grid->column('air_date', __('Air date'));
+        $grid->column('product_date', __('Product date'))->hide();
+        $grid->column('air_date', __('Air date'))->hide();
 
         $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();
