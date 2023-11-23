@@ -109,7 +109,7 @@ class ChannelController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->text('name', __('Name'))->default('channelv')->disable();
+        //$form->text('name', __('Name'))->default('channelv')->();
         $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
@@ -130,6 +130,8 @@ class ChannelController extends AdminController
                     'title'   => '创建节目单失败',
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
+
+                $form->name = 'channelv';
     
                 if(Channel::where('air_date', $form->air_date)->exists())
                 {
