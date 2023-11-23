@@ -77,6 +77,7 @@
                             <tr><td width="120px">名称</td><td id="sName" width="200px"></td></tr>
                             <tr><td>播出编号</td><td id="sNo"></td></tr>
                             <tr><td>栏目</td><td id="sCategory"></td></tr>
+                            <tr><td>时间</td><td id="sAir"></td></tr>
                             <tr><td>时长</td><td id="sDuration"></td></tr>
                         </table>
                     </div>
@@ -218,6 +219,7 @@
             $("#pDuration").html(repo.duration);
             $("#pNo").html(repo.unique_no);
             $('#pCategory').html(repo.category);
+            $('#s')
         }
 
         $('#newBtn').on('click', function(e) {
@@ -341,6 +343,7 @@
         $("#sDuration").html(repo.duration);
         $("#sNo").html(repo.unique_no);
         $('#sCategory').html(repo.category);
+        $('#sAir').html(repo.start_at+" -- "+repo.end_at);
         selectedItem = repo;
         selectedIndex = idx;
     }
