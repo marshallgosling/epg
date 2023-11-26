@@ -12,6 +12,7 @@
         "jxlwqq/json-editor": "^1.0",
         "laravel-admin-ext/config": "^1.1",
         "laravel-admin-ext/log-viewer": "^1.0",
+        "laravel-admin-ext/media-manager": "1.x",
         "laravel-admin-ext/redis-manager": "^1.3",
         "laravel-admin-ext/scheduling": "^1.2",
         "laravel/framework": "^8.75",
