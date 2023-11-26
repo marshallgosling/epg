@@ -66,11 +66,5 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "/www/packages/nathan/phpExcel"
-        }
-    ],
     "prefer-stable": true
 }
