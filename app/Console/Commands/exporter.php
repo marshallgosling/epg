@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\ExportJob;
 use App\Tools\ExcelWriter;
-use App\Tools\ProgramsExporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -51,7 +50,7 @@ class exporter extends Command
         
         $export = ExportJob::findOrFail($id);
 
-        $lines = ProgramsExporter::gatherLines($export->start_at, $export->end_at);
+        $lines = \App\Tools\Exporter::gatherLines($export->start_at, $export->end_at);
 
         if(count($lines) == 0) {
             $export->status = ExportJob::STATUS_ERROR;

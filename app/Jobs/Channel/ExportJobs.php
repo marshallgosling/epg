@@ -4,7 +4,7 @@ namespace App\Jobs\Channel;
 
 use App\Models\ExportJob;
 use Illuminate\Support\Facades\Storage;
-use App\Tools\ProgramsExporter;
+use App\Tools\Exporter;
 use App\Tools\ExcelWriter;
 use App\Tools\PHPExcel\Exception;
 use Illuminate\Bus\Queueable;
@@ -48,7 +48,7 @@ class ExportJobs implements ShouldQueue, ShouldBeUnique
     {
         $export = ExportJob::findOrFail($this->id);
 
-        $lines = ProgramsExporter::gatherLines($export->start_at, $export->end_at);
+        $lines = Exporter::gatherLines($export->start_at, $export->end_at);
 
         if(count($lines) == 0) {
             $export->status = ExportJob::STATUS_ERROR;
