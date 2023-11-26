@@ -27,6 +27,7 @@ use App\Tools\PHPExcel\Worksheet\AutoFilter\Column;
 use App\Tools\PHPExcel\Worksheet\AutoFilter\Column\Rule;
 use App\Tools\PHPExcel\Worksheet\Drawing as WorksheetDrawing;
 use App\Tools\PHPExcel\Worksheet\HeaderFooterDrawing;
+use ZipArchive;
 
 /**
  * Excel2007
