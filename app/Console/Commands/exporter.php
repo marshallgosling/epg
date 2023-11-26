@@ -17,7 +17,7 @@ class exporter extends Command
      *
      * @var string
      */
-    protected $signature = 'export:excel {jobid}';
+    protected $signature = 'export:excel {id}';
 
     /**
      * The console command description.
