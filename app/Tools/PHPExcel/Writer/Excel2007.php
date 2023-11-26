@@ -5,16 +5,14 @@ namespace App\Tools\PHPExcel\Writer;
 use App\Tools\PHPExcel;
 use App\Tools\PHPExcel\Calculation;
 use App\Tools\PHPExcel\Calculation\Functions;
-use App\Tools\PHPExcel\Exception;
 use App\Tools\PHPExcel\HashTable;
 use App\Tools\PHPExcel\Settings;
 use App\Tools\PHPExcel\Shared\File;
-use App\Tools\PHPExcel\Shared\ZipArchive;
-use App\Tools\PHPExcel\Worksheet\Drawing as WorksheetDrawing;
-use App\Tools\PHPExcel\Worksheet\MemoryDrawing as WorksheetMemoryDrawing;
+use App\Tools\PHPExcel\Worksheet\Drawing;
+use App\Tools\PHPExcel\Worksheet\MemoryDrawing;
 
 /**
- * Excel2007
+ * PHPExcel_Writer_Excel2007
  *
  * Copyright (c) 2006 - 2015 PHPExcel
  *
@@ -33,7 +31,7 @@ use App\Tools\PHPExcel\Worksheet\MemoryDrawing as WorksheetMemoryDrawing;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category   PHPExcel
- * @package    Excel2007
+ * @package    PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
@@ -61,7 +59,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     /**
      * Private writer parts
      *
-     * @var Excel2007_WriterPart[]
+     * @var Excel2007\WriterPart[]
      */
     private $writerParts    = array();
 
@@ -80,56 +78,56 @@ class Excel2007 extends AbstractWriter implements IWriter
     private $stringTable    = array();
 
     /**
-     * Private unique Style_Conditional HashTable
+     * Private unique PHPExcel_Style_Conditional HashTable
      *
      * @var HashTable
      */
     private $stylesConditionalHashTable;
 
     /**
-     * Private unique Style HashTable
+     * Private unique PHPExcel_Style HashTable
      *
      * @var HashTable
      */
     private $styleHashTable;
 
     /**
-     * Private unique Style_Fill HashTable
+     * Private unique PHPExcel_Style_Fill HashTable
      *
      * @var HashTable
      */
     private $fillHashTable;
 
     /**
-     * Private unique Style_Font HashTable
+     * Private unique PHPExcel_Style_Font HashTable
      *
      * @var HashTable
      */
     private $fontHashTable;
 
     /**
-     * Private unique Style_Borders HashTable
+     * Private unique PHPExcel_Style_Borders HashTable
      *
      * @var HashTable
      */
     private $bordersHashTable ;
 
     /**
-     * Private unique Style_NumberFormat HashTable
+     * Private unique PHPExcel_Style_NumberFormat HashTable
      *
      * @var HashTable
      */
     private $numFmtHashTable;
 
     /**
-     * Private unique Worksheet_BaseDrawing HashTable
+     * Private unique PHPExcel_Worksheet_BaseDrawing HashTable
      *
      * @var HashTable
      */
     private $drawingHashTable;
 
     /**
-     * Create a new Excel2007
+     * Create a new PHPExcel_Writer_Excel2007
      *
      * @param     PHPExcel    $pPHPExcel
      */
@@ -138,19 +136,19 @@ class Excel2007 extends AbstractWriter implements IWriter
         // Assign PHPExcel
         $this->setPHPExcel($pPHPExcel);
 
-        $writerPartsArray = array(  'stringtable'       => 'Excel2007_StringTable',
-                                    'contenttypes'      => 'Excel2007_ContentTypes',
-                                    'docprops'          => 'Excel2007_DocProps',
-                                    'rels'              => 'Excel2007_Rels',
-                                    'theme'             => 'Excel2007_Theme',
-                                    'style'             => 'Excel2007_Style',
-                                    'workbook'          => 'Excel2007_Workbook',
-                                    'worksheet'         => 'Excel2007_Worksheet',
-                                    'drawing'           => 'Excel2007_Drawing',
-                                    'comments'          => 'Excel2007_Comments',
-                                    'chart'             => 'Excel2007_Chart',
-                                    'relsvba'           => 'Excel2007_RelsVBA',
-                                    'relsribbonobjects' => 'Excel2007_RelsRibbon'
+        $writerPartsArray = array(  'stringtable'       => Excel2007\StringTable::class,
+                                    'contenttypes'      => Excel2007\ContentTypes::class,
+                                    'docprops'          => Excel2007\DocProps::class,
+                                    'rels'              => Excel2007\Rels::class,
+                                    'theme'             => Excel2007\Theme::class,
+                                    'style'             => Excel2007\Style::class,
+                                    'workbook'          => Excel2007\Workbook::class,
+                                    'worksheet'         => Excel2007\Worksheet::class,
+                                    'drawing'           => Excel2007\Drawing::class,
+                                    'comments'          => Excel2007\Comments::class,
+                                    'chart'             => Excel2007\Chart::class,
+                                    'relsvba'           => Excel2007\RelsVBA::class,
+                                    'relsribbonobjects' => Excel2007\RelsRibbon::class
                                  );
 
         //    Initialise writer parts
@@ -174,7 +172,7 @@ class Excel2007 extends AbstractWriter implements IWriter
      * Get writer part
      *
      * @param     string     $pPartName        Writer part name
-     * @return     Excel2007_WriterPart
+     * @return     Excel2007\WriterPart
      */
     public function getWriterPart($pPartName = '')
     {
@@ -189,7 +187,7 @@ class Excel2007 extends AbstractWriter implements IWriter
      * Save PHPExcel to file
      *
      * @param     string         $pFilename
-     * @throws     Exception
+     * @throws     WriterException
      */
     public function save($pFilename = null)
     {
@@ -244,7 +242,7 @@ class Excel2007 extends AbstractWriter implements IWriter
             // Try opening the ZIP file
             if ($objZip->open($pFilename, $zipOverWrite) !== true) {
                 if ($objZip->open($pFilename, $zipCreate) !== true) {
-                    throw new Exception("Could not open " . $pFilename . " for writing.");
+                    throw new WriterException("Could not open " . $pFilename . " for writing.");
                 }
             }
 
@@ -364,14 +362,14 @@ class Excel2007 extends AbstractWriter implements IWriter
 
             // Add media
             for ($i = 0; $i < $this->getDrawingHashTable()->count(); ++$i) {
-                if ($this->getDrawingHashTable()->getByIndex($i) instanceof WorksheetDrawing) {
+                if ($this->getDrawingHashTable()->getByIndex($i) instanceof Drawing) {
                     $imageContents = null;
                     $imagePath = $this->getDrawingHashTable()->getByIndex($i)->getPath();
                     if (strpos($imagePath, 'zip://') !== false) {
                         $imagePath = substr($imagePath, 6);
                         $imagePathSplitted = explode('#', $imagePath);
 
-                        $imageZip = new ZipArchive();
+                        $imageZip = new \ZipArchive();
                         $imageZip->open($imagePathSplitted[0]);
                         $imageContents = $imageZip->getFromName($imagePathSplitted[1]);
                         $imageZip->close();
@@ -381,7 +379,7 @@ class Excel2007 extends AbstractWriter implements IWriter
                     }
 
                     $objZip->addFromString('xl/media/' . str_replace(' ', '_', $this->getDrawingHashTable()->getByIndex($i)->getIndexedFilename()), $imageContents);
-                } elseif ($this->getDrawingHashTable()->getByIndex($i) instanceof WorksheetMemoryDrawing) {
+                } elseif ($this->getDrawingHashTable()->getByIndex($i) instanceof MemoryDrawing) {
                     ob_start();
                     call_user_func(
                         $this->getDrawingHashTable()->getByIndex($i)->getRenderingFunction(),
@@ -399,18 +397,18 @@ class Excel2007 extends AbstractWriter implements IWriter
 
             // Close file
             if ($objZip->close() === false) {
-                throw new Exception("Could not close zip file $pFilename.");
+                throw new WriterException("Could not close zip file $pFilename.");
             }
 
             // If a temporary file was used, copy it to the correct file stream
             if ($originalFilename != $pFilename) {
                 if (copy($pFilename, $originalFilename) === false) {
-                    throw new Exception("Could not copy temporary zip file $pFilename to $originalFilename.");
+                    throw new WriterException("Could not copy temporary zip file $pFilename to $originalFilename.");
                 }
                 @unlink($pFilename);
             }
         } else {
-            throw new Exception("PHPExcel object unassigned.");
+            throw new WriterException("PHPExcel object unassigned.");
         }
     }
 
@@ -418,14 +416,14 @@ class Excel2007 extends AbstractWriter implements IWriter
      * Get PHPExcel object
      *
      * @return PHPExcel
-     * @throws Exception
+     * @throws WriterException
      */
     public function getPHPExcel()
     {
         if ($this->spreadSheet !== null) {
             return $this->spreadSheet;
         } else {
-            throw new Exception("No PHPExcel object assigned.");
+            throw new WriterException("No PHPExcel object assigned.");
         }
     }
 
@@ -433,8 +431,8 @@ class Excel2007 extends AbstractWriter implements IWriter
      * Set PHPExcel object
      *
      * @param     PHPExcel     $pPHPExcel    PHPExcel object
-     * @throws    Exception
-     * @return Excel2007
+     * @throws    WriterException
+     * @return    Excel2007
      */
     public function setPHPExcel(PHPExcel $pPHPExcel = null)
     {
@@ -453,7 +451,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Style HashTable
+     * Get PHPExcel_Style HashTable
      *
      * @return HashTable
      */
@@ -463,7 +461,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Style_Conditional HashTable
+     * Get PHPExcel_Style_Conditional HashTable
      *
      * @return HashTable
      */
@@ -473,7 +471,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Style_Fill HashTable
+     * Get PHPExcel_Style_Fill HashTable
      *
      * @return HashTable
      */
@@ -483,7 +481,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Style_Font HashTable
+     * Get PHPExcel_Style_Font HashTable
      *
      * @return HashTable
      */
@@ -493,7 +491,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Style_Borders HashTable
+     * Get PHPExcel_Style_Borders HashTable
      *
      * @return HashTable
      */
@@ -503,7 +501,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Style_NumberFormat HashTable
+     * Get PHPExcel_Style_NumberFormat HashTable
      *
      * @return HashTable
      */
@@ -513,7 +511,7 @@ class Excel2007 extends AbstractWriter implements IWriter
     }
 
     /**
-     * Get Worksheet_BaseDrawing HashTable
+     * Get PHPExcel_Worksheet_BaseDrawing HashTable
      *
      * @return HashTable
      */

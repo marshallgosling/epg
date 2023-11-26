@@ -9,7 +9,6 @@ use App\Tools\PHPExcel\Calculation\Functions;
 use App\Tools\PHPExcel\Calculation\Token\Stack;
 use App\Tools\PHPExcel\Shared\JAMA\Matrix;
 use App\Tools\PHPExcel\Shared\SharedString;
-use Illuminate\Support\Facades\Storage;
 
 if (!defined('CALCULATION_REGEXP_CELLREF')) {
     //    Test for support of \P (multibyte options) in PCRE
@@ -27,7 +26,7 @@ if (!defined('CALCULATION_REGEXP_CELLREF')) {
 }
 
 if (!defined('ROOT')) {
-    define('ROOT', Storage::disk('data'));
+    define('ROOT', storage_path().PATH_SEPARATOR);
 }
 
 /**

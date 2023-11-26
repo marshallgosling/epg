@@ -2,6 +2,9 @@
 
 namespace App\Tools\PHPExcel\Worksheet;
 
+use App\Tools\PHPExcel\Exception;
+use App\Tools\PHPExcel\IComparable;
+
 /**
  * Drawing
  *
@@ -27,7 +30,7 @@ namespace App\Tools\PHPExcel\Worksheet;
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
  */
-class Drawing extends BaseDrawing implements PHPExcel_IComparable
+class Drawing extends BaseDrawing implements IComparable
 {
     /**
      * Path
@@ -110,7 +113,7 @@ class Drawing extends BaseDrawing implements PHPExcel_IComparable
                     list($this->width, $this->height) = getimagesize($pValue);
                 }
             } else {
-                throw new PHPExcel_Exception("File $pValue not found!");
+                throw new Exception("File $pValue not found!");
             }
         } else {
             $this->path = $pValue;

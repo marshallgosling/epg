@@ -17,6 +17,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "nathan/php-excel": "dev-master",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
@@ -65,5 +66,11 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/www/packages/nathan/phpExcel"
+        }
+    ],
     "prefer-stable": true
 }

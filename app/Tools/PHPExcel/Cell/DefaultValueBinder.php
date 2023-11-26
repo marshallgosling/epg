@@ -77,8 +77,6 @@ class DefaultValueBinder implements IValueBinder
             return DataType::TYPE_STRING;
         } elseif ($pValue instanceof RichText) {
             return DataType::TYPE_INLINE;
-        } elseif ($pValue{0} === '=' && strlen($pValue) > 1) {
-            return DataType::TYPE_FORMULA;
         } elseif (is_bool($pValue)) {
             return DataType::TYPE_BOOL;
         } elseif (is_float($pValue) || is_int($pValue)) {
@@ -93,6 +91,8 @@ class DefaultValueBinder implements IValueBinder
             return DataType::TYPE_NUMERIC;
         } elseif (is_string($pValue) && array_key_exists($pValue, DataType::getErrorCodes())) {
             return DataType::TYPE_ERROR;
+        } elseif ($pValue{0} === '=' && strlen($pValue) > 1) {
+            return DataType::TYPE_FORMULA;
         }
 
         return DataType::TYPE_STRING;

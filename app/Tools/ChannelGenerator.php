@@ -99,18 +99,25 @@ class ChannelGenerator
                 }
                 
                 if($item) {
-                    $seconds = $this->parseDuration($item->duration);
+                    $seconds = self::parseDuration($item->duration);
                     if($seconds > 0) {
-                        $air += $seconds;
+                        
                         $c->duration += $seconds;
                         
-                        //if(!is_array( $item->category))  $item->category = [ $item->category ];
-                        $data[] = [
+                        $line =
+                        [
                             "unique_no" => $item->unique_no,
                             "name" => $item->name,
                             "duration" => $item->duration,
-                            "category" => $p->category
+                            "category" => $p->category,
+                            "start_at" => date('H:i:s', $air)
                         ];
+
+                        $air += $seconds;
+
+                        $line['end_at'] = date('H:i:s', $air);
+
+                        $data[] = $line;
                              
                         $this->info("add item: {$p->category} {$item->name} {$item->duration}");
                     }
@@ -132,7 +139,7 @@ class ChannelGenerator
         }
     }
 
-    private function parseDuration($str)
+    public static function parseDuration($str)
     {
         $duration = explode(':', $str);
         

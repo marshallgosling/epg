@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
+use App\Admin\Actions\Channel\BatchExporter;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -68,6 +69,10 @@ class ChannelController extends AdminController
             $filter->equal('uuid', __('Uuid'));
             $filter->date('air_date', __('Air date'));
             
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchExporter());
         });
 
         return $grid;

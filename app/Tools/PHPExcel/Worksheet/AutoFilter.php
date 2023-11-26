@@ -26,7 +26,6 @@ use App\Tools\PHPExcel\Worksheet;
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category   PHPExcel
@@ -614,6 +613,7 @@ class AutoFilter
             switch ($filterColumn->getFilterType()) {
                 case AutoFilter\Column::AUTOFILTER_FILTERTYPE_FILTER:
                     $ruleValues = array();
+                    $ruleType = null;
                     //    Build a list of the filter value selections
                     foreach ($rules as $rule) {
                         $ruleType = $rule->getRuleType();
@@ -792,22 +792,22 @@ class AutoFilter
         for ($row = $rangeStart[1]+1; $row <= $rangeEnd[1]; ++$row) {
 //            echo 'Testing Row = ', $row,PHP_EOL;
             $result = true;
-            foreach ($columnFilterTests as $columnID => $columnFilterTest) {
-//                echo 'Testing cell ', $columnID.$row,PHP_EOL;
-                $cellValue = $this->workSheet->getCell($columnID.$row)->getCalculatedValue();
-//                echo 'Value is ', $cellValue,PHP_EOL;
-                //    Execute the filter test
-                $result = $result &&
-                    call_user_func_array(
-                        array('AutoFilter', $columnFilterTest['method']),
-                        array($cellValue, $columnFilterTest['arguments'])
-                    );
-//                echo (($result) ? 'VALID' : 'INVALID'),PHP_EOL;
-                //    If filter test has resulted in FALSE, exit the loop straightaway rather than running any more tests
-                if (!$result) {
-                    break;
-                }
-            }
+//             foreach ($columnFilterTests as $columnID => $columnFilterTest) {
+// //                echo 'Testing cell ', $columnID.$row,PHP_EOL;
+//                 $cellValue = $this->workSheet->getCell($columnID.$row)->getCalculatedValue();
+// //                echo 'Value is ', $cellValue,PHP_EOL;
+//                 //    Execute the filter test
+//                 $result = $result &&
+//                     call_user_func_array(
+//                         array('AutoFilter', $columnFilterTest['method']),
+//                         array($cellValue, $columnFilterTest['arguments'])
+//                     );
+// //                echo (($result) ? 'VALID' : 'INVALID'),PHP_EOL;
+//                 //    If filter test has resulted in FALSE, exit the loop straightaway rather than running any more tests
+//                 if (!$result) {
+//                     break;
+//                 }
+//             }
             //    Set show/hide for the row based on the result of the autoFilter result
 //            echo (($result) ? 'SHOW' : 'HIDE'),PHP_EOL;
             $this->workSheet->getRowDimension($row)->setVisible($result);

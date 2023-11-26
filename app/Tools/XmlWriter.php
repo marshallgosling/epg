@@ -2,7 +2,7 @@
 
 namespace App\Tools;
 
-class XmlExporter
+class XmlWriter
 {
     private $indentation = '    ';
     private $xml;

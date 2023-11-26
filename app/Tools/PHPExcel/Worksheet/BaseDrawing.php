@@ -3,6 +3,7 @@
 namespace App\Tools\PHPExcel\Worksheet;
 
 use App\Tools\PHPExcel\Exception;
+use App\Tools\PHPExcel\IComparable;
 use App\Tools\PHPExcel\Worksheet;
 
 /**

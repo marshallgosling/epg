@@ -52,7 +52,7 @@ class Worksheet extends WriterPart
     /**
      * Write worksheet to XML format
      *
-     * @param    Worksheet        $pSheet
+     * @param    PHPExcelWorksheet        $pSheet
      * @param    string[]                $pStringTable
      * @param    boolean                    $includeCharts    Flag indicating if we should write charts
      * @return    string                    XML Output
@@ -154,10 +154,10 @@ class Worksheet extends WriterPart
      * Write SheetPr
      *
      * @param    XMLWriter        $objWriter        XML Writer
-     * @param    Worksheet                $pSheet            Worksheet
+     * @param    PHPExcelWorksheet                $pSheet            Worksheet
      * @throws    Exception
      */
-    private function writeSheetPr(XMLWriter $objWriter = null, Worksheet $pSheet = null)
+    private function writeSheetPr(XMLWriter $objWriter = null, PHPExcelWorksheet $pSheet = null)
     {
         // sheetPr
         $objWriter->startElement('sheetPr');
@@ -403,7 +403,7 @@ class Worksheet extends WriterPart
                     $objWriter->writeAttribute('width', '9.10');
                 } else {
                     // Width set
-                    $objWriter->writeAttribute('width', String::FormatNumber($colDimension->getWidth()));
+                    $objWriter->writeAttribute('width', SharedString::FormatNumber($colDimension->getWidth()));
                 }
 
                 // Column visibility
@@ -747,12 +747,12 @@ class Worksheet extends WriterPart
     {
         // pageMargins
         $objWriter->startElement('pageMargins');
-        $objWriter->writeAttribute('left', String::FormatNumber($pSheet->getPageMargins()->getLeft()));
-        $objWriter->writeAttribute('right', String::FormatNumber($pSheet->getPageMargins()->getRight()));
-        $objWriter->writeAttribute('top', String::FormatNumber($pSheet->getPageMargins()->getTop()));
-        $objWriter->writeAttribute('bottom', String::FormatNumber($pSheet->getPageMargins()->getBottom()));
-        $objWriter->writeAttribute('header', String::FormatNumber($pSheet->getPageMargins()->getHeader()));
-        $objWriter->writeAttribute('footer', String::FormatNumber($pSheet->getPageMargins()->getFooter()));
+        $objWriter->writeAttribute('left', SharedString::FormatNumber($pSheet->getPageMargins()->getLeft()));
+        $objWriter->writeAttribute('right', SharedString::FormatNumber($pSheet->getPageMargins()->getRight()));
+        $objWriter->writeAttribute('top', SharedString::FormatNumber($pSheet->getPageMargins()->getTop()));
+        $objWriter->writeAttribute('bottom', SharedString::FormatNumber($pSheet->getPageMargins()->getBottom()));
+        $objWriter->writeAttribute('header', SharedString::FormatNumber($pSheet->getPageMargins()->getHeader()));
+        $objWriter->writeAttribute('footer', SharedString::FormatNumber($pSheet->getPageMargins()->getFooter()));
         $objWriter->endElement();
     }
 
@@ -1013,7 +1013,7 @@ class Worksheet extends WriterPart
                     // Row dimensions
                     if ($rowDimension->getRowHeight() >= 0) {
                         $objWriter->writeAttribute('customHeight', '1');
-                        $objWriter->writeAttribute('ht', String::FormatNumber($rowDimension->getRowHeight()));
+                        $objWriter->writeAttribute('ht', SharedString::FormatNumber($rowDimension->getRowHeight()));
                     }
 
                     // Row visibility
@@ -1108,7 +1108,7 @@ class Worksheet extends WriterPart
                 switch (strtolower($mappedType)) {
                     case 'inlinestr':    // Inline string
                         if (! $cellValue instanceof RichText) {
-                            $objWriter->writeElement('t', String::ControlCharacterPHP2OOXML(htmlspecialchars($cellValue)));
+                            $objWriter->writeElement('t', SharedString::ControlCharacterPHP2OOXML(htmlspecialchars($cellValue)));
                         } elseif ($cellValue instanceof RichText) {
                             $objWriter->startElement('is');
                             $this->getParentWriter()->getWriterPart('stringtable')->writeRichText($objWriter, $cellValue);
@@ -1143,7 +1143,7 @@ class Worksheet extends WriterPart
                             if ($this->getParentWriter()->getPreCalculateFormulas()) {
 //                                $calculatedValue = $pCell->getCalculatedValue();
                                 if (!is_array($calculatedValue) && substr($calculatedValue, 0, 1) != '#') {
-                                    $objWriter->writeElement('v', String::FormatNumber($calculatedValue));
+                                    $objWriter->writeElement('v', SharedString::FormatNumber($calculatedValue));
                                 } else {
                                     $objWriter->writeElement('v', '0');
                                 }

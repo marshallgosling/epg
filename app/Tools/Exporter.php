@@ -5,7 +5,9 @@ namespace App\Tools;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use Illuminate\Support\Facades\DB;
 
 class ProgramsExporter
 {
@@ -18,7 +20,7 @@ class ProgramsExporter
 
         $json = json_decode($jsonstr);
 
-        $channel = \App\Models\Channel::find($id);
+        $channel = Channel::find($id);
 
         $json->ChannelName = $channel->name;
         $json->PgmDate = $channel->air_date;
@@ -80,7 +82,7 @@ class ProgramsExporter
 
     public static function exportXml($file=false)
     {
-        $exporter = new \App\Tools\XmlExporter();
+        $exporter = new \App\Tools\XmlWriter();
         self::$xml = $exporter->export(self::$json, 'PgmItem');
 
         if($file) {
@@ -88,6 +90,42 @@ class ProgramsExporter
 
         }
         return self::$xml;
+    }
+
+    public static function gatherLines($start_at, $end_at)
+    {
+        
+        $channels = DB::table('channel')->whereBetween('air_date', [$start_at, $end_at])
+                                        ->select('id','air_date','uuid')
+                                        ->orderBy('air_date')->get();
+
+        $no = 1;
+        $lines = [];
+
+        if($channels)foreach($channels as $channel)
+        {
+            $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('id')->get();
+            $air = strtotime($channel->air_date.' 06:00:00');
+            if($programs)foreach($programs as $p)
+            {
+                $items = json_decode($p->data);
+                if($items)foreach($items as $item)
+                {
+                    $end = $air + ChannelGenerator::parseDuration($item->duration);
+                    $l = [
+                        $no, $p->name, $item->name, $item->unique_no, date('y-m-d', $air),
+                        date('H:i:s', $air).':00', date('H:i:s', $end).':00', $item->duration, '00:00:00:00', ''
+                    ];
+                    $no ++;
+                    $air = $end; 
+
+                    $lines[] = $l;
+                }
+                
+            }
+        }
+
+        return $lines;
     }
 
 

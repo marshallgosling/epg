@@ -38,6 +38,8 @@ Route::group([
     
     $router->resource('/template/channelv/programs', 'TemplateProgramsController')->names('template.programs');
     $router->resource('/template/channelv', 'TemplateController')->names('template');
+
+    $router->resource('/export/jobs', 'ExportJobController')->names('export.jobs');
     
     $router->get('/api/programs', function (Request $request) {
         $q = $request->get('q');
