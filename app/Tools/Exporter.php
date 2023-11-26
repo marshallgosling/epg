@@ -9,7 +9,7 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use Illuminate\Support\Facades\DB;
 
-class ProgramsExporter
+class Exporter
 {
     private static $json;
     private static $xml;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "378f326fc6fbf771cefafe54566e9256",
+    "content-hash": "b6a78bb51c11e56d89afdafdfac273d0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2609,41 +2609,6 @@
                 "source": "https://github.com/namshi/jose/tree/master"
             },
             "time": "2016-12-05T07:27:31+00:00"
-        },
-        {
-            "name": "nathan/php-excel",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "/www/packages/nathan/phpExcel",
-                "reference": "3a343ad01477114b62159bc7bc7e50a68b25df17"
-            },
-            "require": {
-                "php": "^7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nathan\\PhpExcel\\": "src/"
-                }
-            },
-            "license": [
-                "apache2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Nathan Gao",
-                    "email": "marshall.goslin@gmail.com"
-                }
-            ],
-            "description": "phpExcel for Laravel",
-            "keywords": [
-                "excel",
-                "laravel"
-            ],
-            "transport-options": {
-                "relative": false
-            }
         },
         {
             "name": "nesbot/carbon",
@@ -9004,9 +8969,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "nathan/php-excel": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
