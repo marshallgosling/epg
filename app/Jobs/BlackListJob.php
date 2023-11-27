@@ -76,6 +76,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         $model = BlackList::find($this->id);
         $model->status = BlackList::STATUS_READY;
         $model->data = json_encode($data);
+        $model->scaned_at = date('Y/m/d H:i:s');
         $model->save();
     }
 
