@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\BlackList\Scanner;
 use App\Models\BlackList;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Controllers\AdminController;
@@ -51,6 +52,10 @@ class BlackListController extends AdminController
             $filter->like('keyword', __('Keyword'));
             $filter->in('status', __('Status'))->checkbox(BlackList::STATUS);
             
+        });
+
+        $grid->actions(function ($actions) {
+            $actions->add(new Scanner);
         });
 
         return $grid;
