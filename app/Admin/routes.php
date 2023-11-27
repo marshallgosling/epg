@@ -45,9 +45,11 @@ Route::group([
     $router->resource('/template/channelv/programs', 'TemplateProgramsController')->names('template.programs');
     $router->resource('/template/channelv', 'TemplateController')->names('template');
 
-    $router->get('/export/download/{id}', 'ExportJobController@download')->name('export.download');
-    $router->resource('/export/jobs', 'ExportJobController')->names('export.jobs');
+    $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
+    $router->resource('/export/list', 'ExportListController')->names('export.list');
     
+    $router->resource('/tools/blacklist', BlackListController::class)->names('tools.blacklist');
+
     $router->get('/api/programs', function (Request $request) {
         $q = $request->get('q');
     

@@ -53,6 +53,16 @@ class generateTool extends Command
         //$m = preg_match('/value=\"([\w\-]+)\" \/>/', $s, $match);
 
         //Meterial::truncate();
+        Program::loadBlackList();
+        for($i=0;$i<100;$i++)
+        {
+            $program = Program::findRandom('B1');
+
+            $this->info("program: ".$program->name. ' '.$program->artist);
+    
+        }
+       
+        return 0;
 
         $id = $this->argument('id') ?? "";
         $time = $this->argument('time') ?? "";

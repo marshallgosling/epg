@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-
+use Illuminate\Support\Str;
 class Program extends Model
 {
     use HasFactory;
@@ -35,27 +35,44 @@ class Program extends Model
     }
 
     private static $cache = [];
+    private static $blacklist = [];
+
+    public static function loadBlackList()
+    {
+        self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
+    }
 
     public static function findRandom($key)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
 
-        if(!self::$cache[$key]) return false;
+        if(!self::$cache[$key]) return false;   
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
-        return Program::where('program.unique_no', $id)
+        $program = Program::where('program.unique_no', $id)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
-            ->select("program.unique_no", "program.name","material.duration","material.frames")->first();
+            ->select("program.unique_no", "program.name", "program.artist", "material.duration","material.frames")->first();
+
+        $black = false;
+        foreach(self::$blacklist as $keyword) {
+            if(Str::contains($program->artist, $keyword)) {
+                $black = true;
+                break;
+            }
+        };
+
+        if($black) return self::findRandom($key);
+        else return $program;
     }
 
     public static function findUnique($no)
     {
         return Program::where('program.unique_no', $no)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
-            ->select("program.unique_no","program.name","material.duration","material.frames")->first();
+            ->select("program.unique_no","program.name","program.artist","material.duration","material.frames")->first();
     }
 
     public static function getTotal($key) {

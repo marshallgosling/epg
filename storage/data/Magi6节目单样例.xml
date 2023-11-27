@@ -1,5 +1,4 @@
-
-<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <PgmItem>
 	<PgmDate>2023-09-08</PgmDate> <!--(必填) 节目单日期-->
 	<ChannelName>测试频道</ChannelName> <!--(必填) 频道名称-->

@@ -6,7 +6,7 @@ use Encore\Admin\Grid\Filter\Group;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExportJob extends Model
+class ExportList extends Model
 {
     use HasFactory;
 

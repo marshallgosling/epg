@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\Channel;
+namespace App\Jobs;
 
-use App\Models\ExportJob;
+use App\Models\ExportList;
 use Illuminate\Support\Facades\Storage;
 use App\Tools\Exporter;
 use App\Tools\ExcelWriter;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
-class ExportJobs implements ShouldQueue, ShouldBeUnique
+class ExportJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -46,12 +46,12 @@ class ExportJobs implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $export = ExportJob::findOrFail($this->id);
+        $export = ExportList::findOrFail($this->id);
 
         $lines = Exporter::gatherLines($export->start_at, $export->end_at);
 
         if(count($lines) == 0) {
-            $export->status = ExportJob::STATUS_ERROR;
+            $export->status = ExportList::STATUS_ERROR;
             $export->reason = "串联单数据为空";
             $export->save();
             return;
@@ -61,12 +61,12 @@ class ExportJobs implements ShouldQueue, ShouldBeUnique
 
         try {
             $this->printToExcel($lines, $filename, $export->group_id);
-            $export->status = ExportJob::STATUS_READY;
+            $export->status = ExportList::STATUS_READY;
             $export->filename = $filename;
             $export->save();
         }catch(Exception $e)
         {
-            $export->status = ExportJob::STATUS_ERROR;
+            $export->status = ExportList::STATUS_ERROR;
             $export->reason = $e->getMessage(); 
             $export->save();
         }
@@ -85,7 +85,7 @@ class ExportJobs implements ShouldQueue, ShouldBeUnique
 
         ExcelWriter::printData($data, config('EXCEL_OFFSET', 10));
 
-        ExcelWriter::ourputFile($filename, 'file');
+        ExcelWriter::outputFile($filename, 'file');
     }
 
     /**

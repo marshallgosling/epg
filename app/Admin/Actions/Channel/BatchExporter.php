@@ -2,8 +2,8 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\Channel\ExportJobs;
-use App\Models\ExportJob;
+use App\Jobs\ExportJob;
+use App\Models\ExportList;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 
@@ -24,15 +24,15 @@ class BatchExporter extends Action
             return $this->response()->error('结束日期不能早于开始日期');
         }
 
-        $model = new ExportJob();
+        $model = new ExportList();
         $model->start_at = $start_at;
         $model->end_at = $end_at;
-        $model->status = ExportJob::STATUS_RUNNING;
+        $model->status = ExportList::STATUS_RUNNING;
         $model->name = $name;
         $model->group_id = 'xkv';
         $model->save();
 
-        ExportJobs::dispatch($model->id);
+        ExportJob::dispatch($model->id);
 
         return $this->response()->success('批量生成Excel任务添加成功。')->redirect(admin_url('export/jobs'));
     }

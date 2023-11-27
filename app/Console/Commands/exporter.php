@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\ExportJob;
+use App\Models\ExportList;
 use App\Tools\ExcelWriter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -48,12 +48,12 @@ class exporter extends Command
 
         $id = $this->argument('id') ?? "";
         
-        $export = ExportJob::findOrFail($id);
+        $export = ExportList::findOrFail($id);
 
         $lines = \App\Tools\Exporter::gatherLines($export->start_at, $export->end_at);
 
         if(count($lines) == 0) {
-            $export->status = ExportJob::STATUS_ERROR;
+            $export->status = ExportList::STATUS_ERROR;
             $export->reason = "串联单数据为空";
             $export->save();
             return;
@@ -63,12 +63,12 @@ class exporter extends Command
 
         try {
             $this->printToExcel($lines, $filename, $export->group_id);
-            $export->status = ExportJob::STATUS_READY;
+            $export->status = ExportList::STATUS_READY;
             $export->filename = $filename;
             $export->save();
         }catch(Exception $e)
         {
-            $export->status = ExportJob::STATUS_ERROR;
+            $export->status = ExportList::STATUS_ERROR;
             $export->reason = $e->getMessage(); 
             $export->save();
         }
@@ -87,7 +87,7 @@ class exporter extends Command
 
         ExcelWriter::printData($data, config('EXCEL_OFFSET', 10));
 
-        ExcelWriter::ourputFile($filename, 'file');
+        ExcelWriter::outputFile($filename, 'file');
     }
 
 }

@@ -44,6 +44,9 @@
     "Order no" : "排序",
     "Sort" : "序号",
     "Template" : "模版名称",
+    "Scaned at":    "上次扫描时间",
+    "Keyword":      "关键字",
+    "Data":     "扫描结果",
     "ChannelController" : "Channel【V】节目单",
     "ChannelIndexDesc" : "查看和编辑每日节目单数据",
 

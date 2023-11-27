@@ -62,8 +62,8 @@ class ProgramController extends AdminController
             return join('&nbsp;', $category);
         })->sortable();
         
-        $grid->column('comment', __('Comment'))->style('max-width:200px;word-break:break-all;');    
-        
+        $grid->column('comment', __('Comment'))->style('max-width:200px;word-break:break-all;')->hide();    
+        $grid->column('artist', __('Artist'))->style('max-width:200px;word-break:break-all;');
         $grid->column('gender', __('Gender'))->hide();
         $grid->column('mood', __('Mood'))->hide();
         $grid->column('energy', __('Energy'))->hide();

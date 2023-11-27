@@ -70,6 +70,7 @@ class ChannelGenerator
 
         $air = strtotime($channel->air_date." 06:00:00");
         $schecule = strtotime($channel->air_date." 06:00:00");
+        Program::loadBlackList();
 
         foreach($this->daily as $t) {
             
