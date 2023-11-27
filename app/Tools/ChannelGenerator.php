@@ -79,7 +79,7 @@ class ChannelGenerator
 
             $schecule += $this->parseDuration($t->duration);
 
-            $this->error("create program: {$t->name} {$t->start_at}");
+            $this->info("开始生成节目单: {$t->name} {$t->start_at}");
             
             $data = [];
             $programs = $t->programs()->get();
@@ -119,17 +119,17 @@ class ChannelGenerator
 
                         $data[] = $line;
                              
-                        $this->info("add item: {$p->category} {$item->name} {$item->duration}");
+                        $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
                     }
                     else {
 
-                        $this->warn(" {$item->name} has no duration {$item->duration}, so ignore.");
+                        $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
 
                     }
                 }
                 else
                 {
-                    $this->error("category {$p->category} has no items.");
+                    $this->error("栏目 {$p->category} 内没有任何节目");
                 }
             }
             $c->data = json_encode($data);
@@ -165,8 +165,8 @@ class ChannelGenerator
 
     private function log($msg, $level="info")
     {
-        $msg = date('Y/m/d H:i:s ') . "$level: " . $msg;
+        $msg = date('Y/m/d H:i:s ') . $msg;
         echo $msg.PHP_EOL;
-        Log::channel('channel')->error($msg);
+        Log::channel('channel')->$level($msg);
     }
 }

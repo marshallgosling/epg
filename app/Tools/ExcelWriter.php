@@ -77,28 +77,26 @@ class ExcelWriter {
 	 */
 	public static function printData($data, $offset=2)
 	{
-
 		$sheet = self::$objPHPExcel->getActiveSheet();
 		
 		foreach($data as $row)
 		{
 			$idx = 0;
-			foreach($row as $key=>$rs) {
+			foreach($row as $rs) {
 				$c = chr(65+$idx);
-				$sheet->setCellValue($c . $offset, $rs);
+				$sheet->setCellValue($c . $offset, $rs);				
 				$idx ++;
 			}
+			$sheet->getRowDimension($offset)->setRowHeight(20);
 			$offset++;
-			
 		}
-		
 	}
 	/**
 	 * 输出到流或文件
 	 * @param string $filename
 	 * @param string $mode file|stream
 	 */
-	public static function ourputFile($filename, $mode='stream') 
+	public static function ourputFile($filename, $mode='file') 
 	{
 		self::$objPHPExcel->getActiveSheet()->setAutoFilter(self::$objPHPExcel->getActiveSheet()->calculateWorksheetDimension());
 		
