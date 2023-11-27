@@ -31,7 +31,7 @@ class ExportJobController extends AdminController
 
         $grid->column('id', __('Id'))->sortable();
         $grid->column('name', __('Name'))->display(function ($name) {
-            return $name.' <small>'.ExportJob::GROUPS[$this->group_id].'</small>';
+            return $name.' <span class="label label-default">'.ExportJob::GROUPS[$this->group_id].'</span>';
         });
         $grid->column('start_at', __('Start at'))->sortable();
         $grid->column('end_at', __('End at'))->sortable();
@@ -43,6 +43,20 @@ class ExportJobController extends AdminController
         });        
         $grid->column('created_at', __('Created at'))->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
+
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+        
+            // 在这里添加字段过滤器
+            $filter->like('name', __('Name'));
+            $filter->date('start_at', __('Start at'));
+            $filter->date('end_at', __('End at'));
+            $filter->in('status',  __('Status'))->checkbox(ExportJob::STATUS);
+
+            
+        });
 
         return $grid;
     }
