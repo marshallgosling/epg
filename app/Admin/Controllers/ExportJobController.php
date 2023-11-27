@@ -53,12 +53,12 @@ class ExportJobController extends AdminController
 
         $filename = $file->filename;
 
-        if(!Storage::disk('public')->exists($filename)) {
+        if(!Storage::disk($file->group_id)->exists($filename)) {
             return response('文件不存在或者仍在处理中。', 404);
         }
 
         if($file->status == ExportJob::STATUS_READY) {
-            return Storage::disk('public')->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+            return Storage::disk($file->group_id)->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
         }
         else {
             return response('文件仍在处理中。', 404);
