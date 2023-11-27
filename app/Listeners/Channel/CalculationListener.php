@@ -10,7 +10,7 @@ use App\Tools\LoggerTrait;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class ProgramsListener
+class CalculationListener
 {
     use LoggerTrait;
 
