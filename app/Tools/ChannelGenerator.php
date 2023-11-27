@@ -25,6 +25,13 @@ class ChannelGenerator
         
     }
 
+    /**
+     * Load all templates
+     * 
+     * @param Channel $channel
+     * @param string $group
+     * 
+     */
     public function loadTemplate($channel, $group='default')
     {
         $this->channel = $channel;
@@ -139,6 +146,12 @@ class ChannelGenerator
         }
     }
 
+    /**
+     * Parse duration format 00:00:00:00 to seconds (int).
+     * 
+     * @param string $str
+     * @return int  
+     */
     public static function parseDuration($str)
     {
         $duration = explode(':', $str);

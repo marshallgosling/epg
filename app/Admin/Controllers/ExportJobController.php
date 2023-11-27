@@ -31,7 +31,7 @@ class ExportJobController extends AdminController
 
         $grid->column('id', __('Id'))->sortable();
         $grid->column('name', __('Name'))->display(function ($name) {
-            return $name.' <span class="label label-default">'.ExportJob::GROUPS[$this->group_id].'</span>';
+            return '<span class="label label-default">'.ExportJob::GROUPS[$this->group_id].'</span> <b>'.$name.'</b>';
         });
         $grid->column('start_at', __('Start at'))->sortable();
         $grid->column('end_at', __('End at'))->sortable();
@@ -61,6 +61,12 @@ class ExportJobController extends AdminController
         return $grid;
     }
 
+    /**
+     * Download Excel file.
+     * 
+     * @param int $id
+     * @return Response
+     */
     public function download($id) 
     {
         $file = ExportJob::findOrFail($id);
