@@ -37,7 +37,7 @@ class ExportJobController extends AdminController
         $grid->column('status', __('Status'))->using(ExportJob::STATUS)->label(['default','warning','success','danger']);
         
         $grid->column('filename', __('Filename'))->display(function($filename) {
-            return '<a href="/storage/'.$filename.'"><i class="fa fa-download"></i> '.__('Download').'</a>';
+            return '<a href="/admin/export/download/'.$this->id.'"><i class="fa fa-download"></i> '.__('Download').'</a>';
         });        
         $grid->column('created_at', __('Created at'))->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
@@ -45,6 +45,14 @@ class ExportJobController extends AdminController
         return $grid;
     }
 
+    public function download($id) 
+    {
+        $file = ExportJob::findOfFail($id);
+
+        $filename = $file->filename;
+
+        Storage::download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+    }
     /**
      * Make a show builder.
      *
