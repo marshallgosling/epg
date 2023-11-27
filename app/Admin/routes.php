@@ -32,11 +32,11 @@ Route::group([
     $router->delete('/channel/channelv/data/{id}/remove/{idx}', 'ChannelProgramsController@remove')->name('channel.channelv.programs.delete');
     $router->post('/channel/channelv/data/{id}/save', 'ChannelProgramsController@save')->name('channel.channelv.programs.post');
 
-    $router->get('/channel/xkv/tree/{id}', 'ChannelXkvController@tree')->name('channel.xkv.programs.tree');
-    $router->resource('/channel/xkv/programs', 'ChannelXkvController')->names('channel.xkv.programs');
-    $router->resource('/channel/xkv', 'ChannelController')->names('channel.xkv');
-    $router->delete('/channel/xkv/data/{id}/remove/{idx}', 'ChannelXkvController@remove')->name('channel.xkv.programs.delete');
-    $router->post('/channel/xkv/data/{id}/save', 'ChannelXkvController@save')->name('channel.xkv.programs.post');
+    $router->get('/channel/xkv/tree/{id}', 'Program\\XkvController@tree')->name('channel.xkv.programs.tree');
+    $router->resource('/channel/xkv/programs', 'Program\\XkvController')->names('channel.xkv.programs');
+    $router->resource('/channel/xkv', 'Channel\\XkvController')->names('channel.xkv');
+    $router->delete('/channel/xkv/data/{id}/remove/{idx}', 'Program\\XkvController@remove')->name('channel.xkv.programs.delete');
+    $router->post('/channel/xkv/data/{id}/save', 'Program\\XkvController@save')->name('channel.xkv.programs.post');
 
     $router->get('/template/channelv/tree/{id}', 'TemplateProgramsController@tree')->name('template.channelv.programs.tree');
     $router->post('/template/channelv/tree/{id}/save', 'TemplateProgramsController@save')->name('template.channelv.programs.save');

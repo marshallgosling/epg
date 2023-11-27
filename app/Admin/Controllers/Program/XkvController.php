@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Program;
 
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
@@ -12,7 +12,7 @@ use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 
-class ChannelXkvController extends AdminController
+class XkvController extends AdminController
 {
     /**
      * Title for current resource.
