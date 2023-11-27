@@ -62,7 +62,7 @@ class exporter extends Command
         $filename = $export->group_id.'_'.$export->start_at .'_'. $export->end_at.'_'. Str::random(4).'.xlsx';
 
         try {
-            $this->printToExcel($lines, $filename);
+            $this->printToExcel($lines, $filename, $export->group_id);
             $export->status = ExportJob::STATUS_READY;
             $export->filename = $filename;
             $export->save();
@@ -75,9 +75,9 @@ class exporter extends Command
         return 0;
     }
 
-    private function printToExcel($data, $filename)
+    private function printToExcel($data, $filename, $disk)
     {
-        $filename = Storage::disk('public')->path($filename);
+        $filename = Storage::disk($disk)->path($filename);
 
         $data[] = [
             '', '©2023 - '. date('Y'),	'软件节目编单系统',	'星空传媒', '', '', '', '', '', ''

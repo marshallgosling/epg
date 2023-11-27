@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Grid\Filter\Group;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,8 @@ class ExportJob extends Model
     public const STATUS_ERROR = 3;
 
     public const STATUS = ['未生成', '运行中', '可下载', '错误'];
+
+    public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
 
     protected $fillable = [
         'id',

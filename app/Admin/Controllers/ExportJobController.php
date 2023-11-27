@@ -30,7 +30,9 @@ class ExportJobController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('name', __('Name'));
+        $grid->column('name', __('Name'))->display(function ($name) {
+            return $name.' <small>'.ExportJob::GROUPS[$this->group_id].'</small>';
+        });
         $grid->column('start_at', __('Start at'))->sortable();
         $grid->column('end_at', __('End at'))->sortable();
 
@@ -79,7 +81,7 @@ class ExportJobController extends AdminController
         $show->field('start_at', __('Start at'));
         $show->field('end_at', __('End at'));
         $show->field('filename', __('Filename'));
-        $show->field('group_id', __('Group id'));
+        $show->field('group_id', __('Group id'))->using(ExportJob::GROUPS);
         $show->field('status', __('Status'))->using(ExportJob::STATUS);
         $show->field('reason', __('Reason'));
         $show->field('created_at', __('Created at'));
@@ -101,7 +103,9 @@ class ExportJobController extends AdminController
         $form->date('start_at', __('Start at'))->required();
         $form->date('end_at', __('End at'))->required();
         $form->text('filename', __('Filename'));
-        $form->hidden('group_id', __('Group id'))->default('xkv');
+        $form->radio('group_id', __('Group id'))->default('xkv')->options(ExportJob::GROUPS);
+        $form->radio('status', __('Status'))->default(0)->options(ExportJob::STATUS);
+        $form->textarea('reason', __('Reason'));
 
         return $form;
     }

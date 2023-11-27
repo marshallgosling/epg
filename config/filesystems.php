@@ -45,7 +45,28 @@ return [
         'admin' => [
             'driver' => 'local',
             'root' => storage_path('app/public/admin'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL').'/storage/admin',
+            'visibility' => 'public',
+        ],
+
+        'xkv' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/xkv'),
+            'url' => env('APP_URL').'/storage/xkv',
+            'visibility' => 'public',
+        ],
+
+        'xkc' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/xkc'),
+            'url' => env('APP_URL').'/storage/xkc',
+            'visibility' => 'public',
+        ],
+
+        'xki' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/xki'),
+            'url' => env('APP_URL').'/storage/xki',
             'visibility' => 'public',
         ],
 
