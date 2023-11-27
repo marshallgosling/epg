@@ -51,7 +51,7 @@ class ExportJobController extends AdminController
 
         $filename = $file->filename;
 
-        Storage::disk('public')->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        return Storage::disk('public')->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
     }
     /**
      * Make a show builder.
