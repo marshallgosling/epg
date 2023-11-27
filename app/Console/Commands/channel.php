@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Events\Channel\CalculationEvent;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Template;
 use App\Models\TemplatePrograms;
 use App\Tools\ChannelGenerator;
-use App\Tools\ProgramsExporter;
+use App\Tools\Exporter;
 use Illuminate\Console\Command;
 
 class channel extends Command
@@ -51,13 +52,21 @@ class channel extends Command
 
         if($action == 'export') $this->exportChannel($id);
 
+        if($action == 'calculate') $this->calculateChannel($id, $group);
+
         return 0;
+    }
+
+    private function calculateChannel($id, $pid)
+    {
+        $this->info("start calcution: $id $pid");
+        CalculationEvent::dispatch($id, $pid);
     }
 
     private function exportChannel($id)
     {
-        ProgramsExporter::generate($id);
-        ProgramsExporter::exportXml(true);
+        Exporter::generate($id);
+        Exporter::exportXml(true);
     }
 
     private function generateChannel($id, $group='default')

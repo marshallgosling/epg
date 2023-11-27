@@ -10,19 +10,20 @@ use App\Models\Material;
 use App\Models\Program;
 use App\Models\TemplatePrograms;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+
 class ChannelGenerator
 {
+    use LoggerTrait;
+
     private $channel;
     private $templates;
     private $daily;
     private $weekends;
     private $special;
-    private $logs;
-
+    
     public function __construct()
     {
-        
+        $this->log_channel = 'channel';
     }
 
     /**
@@ -61,7 +62,7 @@ class ChannelGenerator
 
     public function generate(Channel $channel)
     {
-        $logs = [];
+        
         if(!$channel) {
             
             return ["satus" =>false, "message"=>"Channel is null"];
@@ -161,25 +162,4 @@ class ChannelGenerator
         return $seconds;
     }
 
-    protected function info($msg)
-    {
-        $this->log($msg, 'info');
-    }
-
-    protected function warn($msg)
-    {
-        $this->log($msg, 'warn');
-    }
-
-    protected function error($msg)
-    {
-        $this->log($msg, 'error');
-    }
-
-    private function log($msg, $level="info")
-    {
-        $msg = date('Y/m/d H:i:s ') . $msg;
-        echo $msg.PHP_EOL;
-        Log::channel('channel')->$level($msg);
-    }
 }

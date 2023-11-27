@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers\Program;
 
+use App\Events\Channel\CalculationEvent;
+use App\Events\Channel\ProgramsEvent;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
@@ -56,12 +58,12 @@ class XkvController extends AdminController
             return  "$hour:$min:$sec ". $erro;
         });
         $grid->column('schedule_start_at', __('Schedule start at'));
-        $grid->column('schedule_end_at', __('Schedule end at'));
+        $grid->column('schedule_end_at', __('Schedule end at'))->hide();
         $grid->column('version', __('Version'));
         //$grid->column('channel_id', __('Channel id'));
         //$grid->column('data', __('Data'));
-        //$grid->column('created_at', __('Created at'));
-        //$grid->column('updated_at', __('Updated at'));
+        $grid->column('created_at', __('Created at'))->hide();
+        $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->filter(function($filter){
 
@@ -71,6 +73,10 @@ class XkvController extends AdminController
             // 在这里添加字段过滤器
             $filter->equal('channel_id', __('Air date'))->select(Channel::orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
             
+        });
+
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
         });
 
         $grid->disableCreateButton();
@@ -173,14 +179,16 @@ class XkvController extends AdminController
         $model->end_at = $data['end_at'];
         $model->duration = $data['duration'];
 */
-        $model->version = $model->version + 1;
+        //$model->version = $model->version + 1;
 
         $model->save();
 
         $response = [
             'status'  => true,
-            'message' => trans('admin.delete_succeeded'),
+            'message' => trans('admin.save_succeeded'),
         ];
+
+        CalculationEvent::dispatch($model->channel_id, $model->id);
 
         return response()->json($response);
     }
@@ -196,9 +204,11 @@ class XkvController extends AdminController
 
         $model->data = json_encode($list);
 
-        $model->version = $model->version + 1;
+        //$model->version = $model->version + 1;
 
         $model->save();
+
+        CalculationEvent::dispatch($model->channel_id, $model->id);
 
         $response = [
             'status'  => true,
