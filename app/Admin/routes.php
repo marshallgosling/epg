@@ -48,7 +48,7 @@ Route::group([
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/list', 'ExportListController')->names('export.list');
     
-    $router->resource('/tools/blacklist', BlackListController::class)->names('tools.blacklist');
+    $router->resource('/media/blacklist', BlackListController::class)->names('tools.blacklist');
 
     $router->get('/api/programs', function (Request $request) {
         $q = $request->get('q');
