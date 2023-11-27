@@ -47,7 +47,7 @@ class ExportJobController extends AdminController
 
     public function download($id) 
     {
-        $file = ExportJob::findOfFail($id);
+        $file = ExportJob::findOrFail($id);
 
         $filename = $file->filename;
 
