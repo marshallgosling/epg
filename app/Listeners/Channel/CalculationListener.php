@@ -23,6 +23,7 @@ class CalculationListener
     public function handle(CalculationEvent $event)
     {
         $this->log_channel = 'program';
+        $this->log_print = false;
 
         $channel = Channel::with('programs')->find($event->getChannelId());
         $programs = $channel->programs()->get();

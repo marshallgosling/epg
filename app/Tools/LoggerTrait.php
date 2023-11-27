@@ -8,6 +8,7 @@ trait LoggerTrait {
 
     private $logs;
     private $log_channel;
+    private $log_print = true;
 
     protected function info($msg)
     {
@@ -27,7 +28,9 @@ trait LoggerTrait {
     private function log($msg, $level="info")
     {
         $msg = date('Y/m/d H:i:s ') . $msg;
-        echo $msg.PHP_EOL;
+        if($this->log_print) {
+            echo $msg.PHP_EOL;
+        }
         $_ch = $this->log_channel ?? 'channel';
         Log::channel($_ch)->$level($msg);
     }
