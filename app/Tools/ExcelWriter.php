@@ -96,10 +96,8 @@ class ExcelWriter {
 	 * @param string $filename
 	 * @param string $mode file|stream
 	 */
-	public static function ourputFile($filename, $mode='file') 
+	public static function outputFile($filename, $mode='file') 
 	{
-		self::$objPHPExcel->getActiveSheet()->setAutoFilter(self::$objPHPExcel->getActiveSheet()->calculateWorksheetDimension());
-		
 		self::$objPHPExcel->setActiveSheetIndex(0);
 		
 		$objWriter = IOFactory::createWriter(self::$objPHPExcel, 'Excel2007');
