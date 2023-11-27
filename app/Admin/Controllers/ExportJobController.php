@@ -37,7 +37,7 @@ class ExportJobController extends AdminController
         $grid->column('status', __('Status'))->using(ExportJob::STATUS)->label(['default','warning','success','danger']);
         
         $grid->column('filename', __('Filename'))->display(function($filename) {
-            return '<a href="/admin/export/download/'.$this->id.'" target="_blank"><i class="fa fa-download"></i> '.__('Download').'</a>';
+            return $this->status == ExportJob::STATUS_READY ? '<a href="/admin/export/download/'.$this->id.'" target="_blank"><i class="fa fa-download"></i> '.__('Download').'</a>' : '';
         });        
         $grid->column('created_at', __('Created at'))->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
@@ -51,7 +51,18 @@ class ExportJobController extends AdminController
 
         $filename = $file->filename;
 
-        return Storage::disk('public')->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        if(!Storage::disk('public')->exists($filename)) {
+            return response('文件不存在或者仍在处理中。', 404);
+        }
+
+        if($file->status == ExportJob::STATUS_READY) {
+            return Storage::disk('public')->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        }
+        else {
+            return response('文件仍在处理中。', 404);
+        }
+        
+
     }
     /**
      * Make a show builder.
