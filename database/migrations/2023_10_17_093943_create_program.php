@@ -26,6 +26,7 @@ class CreateProgram extends Migration
             $table->string('energy', 20)->default('')->comment('力量')->nullable();
             $table->string('tempo', 20)->default('')->comment('节奏')->nullable();
             $table->string('lang', 20)->default('')->comment('语言')->nullable();
+            $table->string('black', 20)->comment('黑名单')->nullable();
             $table->string('duration', 20)->default('')->comment('时长')->nullable();
             $table->string('genre', 50)->default('')->comment('曲风')->nullable();
             $table->string('author', 50)->default('')->comment('作曲')->nullable();

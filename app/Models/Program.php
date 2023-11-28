@@ -16,7 +16,7 @@ class Program extends Model
         'id', 'name', 'unique_no','category', 'comment',
         'album','artist','co_artist', 'duration',
         'company', 'air_date', 'product_date', 
-        'genre', 'gender','lang','mood','tempo','energy'
+        'genre', 'gender','lang','mood','tempo','energy', 'black'
     ];
 
     protected $casts = [

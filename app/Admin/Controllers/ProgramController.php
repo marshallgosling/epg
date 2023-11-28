@@ -50,7 +50,7 @@ class ProgramController extends AdminController
         $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
                 $t = Category::findCategory($c);
-                return "<span class='label label-info' title='{$t}'>{$c}</span>";
+                return '<span class="label label-info" title="'.$t.'" data-toggle="tooltip" data-placement="top">'.$c.'</span>';
             }, $this->category);
 
             $tags = [];

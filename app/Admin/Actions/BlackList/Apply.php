@@ -6,9 +6,9 @@ use App\Jobs\BlackListJob;
 use App\Models\BlackList;
 use Encore\Admin\Actions\RowAction;
 
-class Scanner extends RowAction
+class Apply extends RowAction
 {
-    public $name = '扫描编单';
+    public $name = '处理扫描';
 
     /**
      * Handle action
@@ -19,14 +19,14 @@ class Scanner extends RowAction
     {
         // $model ...
         if($model->status == BlackList::STATUS_RUNNING) {
-            return $this->response()->error(__('Scanner start failed message.'))->refresh();
+            return $this->response()->error('正在运行中，请稍后')->refresh();
         }
 
-        BlackListJob::dispatch($model->id, 'scan');
+        BlackListJob::dispatch($model->id, 'apply');
         $model->status = BlackList::STATUS_RUNNING;
         $model->save();
 
-        return $this->response()->success(__('Scanner start success message.'))->refresh();
+        return $this->response()->success('任务启动成功')->refresh();
     }
 
 }

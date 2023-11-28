@@ -113,15 +113,8 @@ class ChannelGenerator
                         
                         $c->duration += $seconds;
                         
-                        $line =
-                        [
-                            "unique_no" => $item->unique_no,
-                            "name" => $item->name,
-                            "duration" => $item->duration,
-                            "category" => $p->category,
-                            "start_at" => date('H:i:s', $air)
-                        ];
-
+                        $line = ChannelGenerator::createItem($item, $p->category, date('H:i:s', $air));
+                        
                         $air += $seconds;
 
                         $line['end_at'] = date('H:i:s', $air);
@@ -146,6 +139,18 @@ class ChannelGenerator
             $c->save();
 
         }
+    }
+
+    public static function createItem(Program $program, string $category='', string $air='')
+    {
+        return [
+            "unique_no" => $program->unique_no,
+            "name" => $program->name,
+            "duration" => $program->duration,
+            "category" => $category,
+            "start_at" => $air,
+            "end_at" => ''
+        ];
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\BlackList\Apply;
 use App\Admin\Actions\BlackList\Scanner;
 use App\Models\BlackList;
 use Encore\Admin\Widgets\Box;
@@ -56,6 +57,7 @@ class BlackListController extends AdminController
 
         $grid->actions(function ($actions) {
             $actions->add(new Scanner);
+            $actions->add(new Apply);
         });
 
         return $grid;
