@@ -12,10 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
-use App\Models\Program;
-use App\Models\Template;
 use App\Tools\ChannelGenerator;
-use App\Tools\LoggerTrait;
+
 
 class ProgramsJob implements ShouldQueue, ShouldBeUnique
 {

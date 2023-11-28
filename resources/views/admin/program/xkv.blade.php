@@ -258,10 +258,10 @@
         $('#replaceBtn').on('click', function(e) {
             if(selectedIndex > -1) {
 
-                if(replaceItem.black) {
-                    toastr.error("该艺人以上黑名单，不能使用");
-                    return;
-                }
+                // if(replaceItem.black) {
+                //     toastr.error("该艺人以上黑名单，不能使用");
+                //     return;
+                // }
                 dataList[selectedIndex] = replaceItem;
                 console.log(JSON.stringify(dataList));
 
