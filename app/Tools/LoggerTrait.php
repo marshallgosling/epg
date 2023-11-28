@@ -17,7 +17,7 @@ trait LoggerTrait {
 
     protected function warn($msg)
     {
-        $this->log($msg, 'warn');
+        $this->log($msg, 'warning');
     }
 
     protected function error($msg)

@@ -4,9 +4,7 @@ namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
 use App\Models\ChannelPrograms;
-use App\Models\Program;
-use App\Models\Template;
-use App\Models\TemplatePrograms;
+use App\Models\Channel as Modal;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use Illuminate\Console\Command;
@@ -72,74 +70,28 @@ class channel extends Command
     private function generateChannel($id, $group='default')
     {
     
-        $channel = \App\Models\Channel::find($id);
+        $channel = Modal::where('id', $id)->first();
 
         if(!$channel) {
-            $this->error("Channel $id is null");
+            $this->error("Channel is null.");
             return 0;
         }
 
-        $templates = Template::where('group_id', $group)->with('programs')->orderBy('sort', 'asc')->get();
-        //$last = strtotime($channel->air_date." 00:00:00");
-        $air = strtotime($channel->air_date." 06:00:00");
-
-        foreach($templates as $t) {
-            
-            $c = new ChannelPrograms();
-            $c->name = $t->name;
-            $c->schedule_start_at = $t->start_at;
-            $c->schedule_end_at = $t->end_at;
-            $c->channel_id = $channel->id;
-            $c->start_at = date('Y-m-d H:i:s', $air);
-            $c->duration = 0;
-            $c->version = '1';
-
-            $this->error("create program: {$t->name} {$t->start_at}");
-            
-            $data = [];
-            $programs = $t->programs()->get();
-            foreach($programs as $p) {
-                $item = false;
-
-                if($p->type == TemplatePrograms::TYPE_PROGRAM) {
-                    $item = Program::findRandom($p->category);
-                    
-                }
-                else {
-                    $item = Program::findUnique($p->data);
-                }
-                if($item) {
-                    
-                    if($item->frames > 0) {
-                        $seconds = $this->parseDuration($item->duration);
-                        $air += $seconds;                      
-                        $c->duration += $seconds;
-                        $data[] = $item;
-                        
-                        $cat = implode(',', $item->category);
-                        $this->info("add item: {$cat} {$item->name} {$item->duration}");
-                    }
-                    else {
-                        $this->warn(" {$item->name} no material found, so ignore.");
-                    }
-                }
-                else
-                {
-                    $this->error("category {$p->category} has no items.");
-                }
-            }
-            $c->data = json_encode($data);
-            $c->end_at = date('Y-m-d H:i:s', $air);
-            $c->save();
-            
-            $this->info("save program.");
-
+        if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
+            $this->error("Programs exist.");
+            return 0;
         }
 
-        $channel->status = \App\Models\Channel::STATUS_READY;
+        $generator = new ChannelGenerator();
+        $generator->loadTemplate('default');
+
+        $generator->generate($channel);
+
+        $channel->status = Modal::STATUS_READY;
         $channel->save();
 
-        $this->info("Generate channel date: {$channel->air_date} succeed. "); 
+        $this->info("Generate programs date: {$channel->air_date} succeed. ");
+        
     }
 
     private function parseDuration($str)

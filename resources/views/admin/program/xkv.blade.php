@@ -41,28 +41,11 @@
                     <span id="treeinfo"></span>
                     <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
                     <a id="btnDelete" class="btn btn-danger btn-sm">批量删除</a>
-                    <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
+                    <a id="newBtn" title="新增" class="btn btn-success btn-sm" data-toggle="modal" data-target="#searchModal" data-id="new">新增</a>
+                    <span id="total" class="pull-right"></span>
                 </div>
                 <div class="dd" id="tree-programs">
-                    <ol class="dd-list">
-                        @foreach($data as $idx=>$item)
-                        <li class="dd-item" data-id="{{$idx}}">
-                            <div class="dd-handle {{ \App\Models\Category::parseBg($item['category'], $item['unique_no']) }}">
-                                <input type="checkbox" class="grid-row-checkbox" data-id="{{$idx}}" autocomplete="off">                    
-                                <span style="display:inline-block;width:120px;margin-left:10px;">{{$item['start_at']}} -- {{$item['end_at']}} </span>
-                                <span style="display:inline-block;width:120px;"><a class="dd-nodrag" href="#" data-toggle="modal" data-target="#searchModal" data-id="{{$idx}}">{{$item['unique_no']}}</a></span>
-                                <span style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>{{$item['name']}}</strong></span>
-                                <span style="display:inline-block;width:80px;"><small>{{$item['duration']}}</small></span>
-                                <span style="display:inline-block;width:60px;">【{{$item['category']}}】</span>
-                                <span style="display:inline-block;width:300px;text-overflow:ellipsis">{{ $item['artist'] }}</span>
-                                
-                                <span class="pull-right dd-nodrag">
-                                    <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
-                                </span>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ol>
+                    
                 </div>
             </div>
             <!-- /.box-body -->
@@ -85,13 +68,13 @@
                 </div>
                 <div class="fields-group">
                     <div class="table-responsive table-search" style="height: 500px; overflow-y:scroll">
-                        
+                        <strong>没有找到任何记录</strong>
                     </div>
                 </div>
       </div>
       <div class="modal-footer">
-        <button id="replaceBtn" type="button" class="btn btn-info">替换</button>
-        <button id="newBtn" title="新增" type="button" class="btn btn-success">新增</button>
+        <button id="confirmBtn" type="button" class="btn btn-info">确认</button>
+        
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div><!-- /.modal-content -->
@@ -107,19 +90,19 @@
     var sortEnabled = false;
     var cachedPrograms = null;
     var uniqueAjax = null;
+    var backupList = JSON.parse(JSON.stringify(dataList));
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
-        $('#searchModal').on('show.bs.modal', function (event) {
-            selectedIndex = $(event.relatedTarget).data('id');
-        }).on('hidden.bs.modal', function (e) {
+
+        // $('#searchModal').on('show.bs.modal', function (event) {
+        //     selectedIndex = $(event.relatedTarget).data('id');
+        // }).on('hidden.bs.modal', function (e) {
             
-        });
-        $('.grid-row-checkbox').iCheck({
-            checkboxClass:'icheckbox_minimal-blue'
-        });
+        // });
+
         $('#btnDelete').on('click', function(e) {
             var selected = [];
 
@@ -128,45 +111,16 @@
             });
 
             if (selected.length == 0) {
+                toastr.error("请先勾选需要删除的节目。");
                 return;
             }
-
-            swal({
-                title: "确认删除?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确认",
-                showLoaderOnConfirm: true,
-                cancelButtonText: "取消",
-                preConfirm: function() {
-                    return new Promise(function(resolve) {
-                        $.ajax({
-                            method: 'post',
-                            url: '/admin/channel/xkv/data/{!! $model->id !!}/remove/' + selected.join('_'),
-                            data: {
-                                _method:'delete',
-                                _token:LA.token,
-                            },
-                            success: function (data) {
-                                $.pjax.reload('#pjax-container');
-                                toastr.success('删除成功 !');
-                                resolve(data);
-                            }
-                        });
-                    });
-                }
-            }).then(function(result) {
-                var data = result.value;
-                if (typeof data === 'object') {
-                    if (data.status) {
-                        swal(data.message, '', 'success');
-                    } else {
-                        swal(data.message, '', 'error');
-                    }
-                }
-            });
+            for(i=selected.length-1;i>=0;i--)
+            {
+                dataList.splice(selected[i], 1);
+            }
+            reloadTree();
         });
+
         $('#btnSort').on('click', function(e) {
             if(!sortEnabled) {
                 $('#tree-programs').nestable({maxDepth: 1});
@@ -219,9 +173,15 @@
                 },
                 success: function (data) {
                     uniqueAjax = null;
+                    var items = data.result;
+                    cachedPrograms = items;
+                    if(items.length == 0) {
+                        $('.table-search').html('<strong>没有找到任何记录</strong>');
+                        return;
+                    }
                     var head = ['播出编号','名称','艺人','时长','栏目'];
                     var html = '<table class="table table-hover table-striped"><tr><th>'+head.join('</th><th>')+'</th></tr>';
-                    var items = data.result;
+                    
                     for(i=0;i<items.length;i++)
                     {
                         item = items[i];
@@ -231,7 +191,7 @@
                     }
                     html += '</table>';
                     $('.table-search').html(html);
-                    cachedPrograms = items;
+                    
                 },
                 error: function() {
                     uniqueAjax = null;
@@ -239,108 +199,119 @@
             })
         });
 
-        $('#newBtn').on('click', function(e) {
-            if(replaceItem == null) {         
-                toastr.error('请先搜索节目！');
-                return;
+        $('#confirmBtn').on('click', function(e) {
+            if(!selectedItem) {
+                toastr.error('请先选择节目！');
             }
-            dataList.push(replaceItem);
 
-            $.ajax({
-                    method: 'post',
-                    url: '/admin/channel/xkv/data/{!! $model->id !!}/save',
-                    data: {
-                        data: JSON.stringify(dataList),
-                        _token:LA.token,
-                    },
-                    success: function (data) {
-                        $.pjax.reload('#pjax-container');
-                        toastr.success('新增成功 !');
-                    }
+            if(selectedIndex == 'new') {
+                
+                selectedIndex = dataList.length;
+                
+                dataList.push(selectedItem);
+                
+                $('.dd-list').append(createItem(selectedIndex, selectedItem, ''));
+                $('.grid-row-checkbox').eq(selectedIndex).iCheck({
+                    checkboxClass:'icheckbox_minimal-blue'
                 });
-        });
-
-        
-
-        $('#replaceBtn').on('click', function(e) {
-            if(selectedIndex > -1) {
-
+                setDdItem();
+            }
+            else {
                 if(selectedItem.black) {
                     toastr.error("该艺人以上黑名单，不能使用");
                     return;
                 }
                 dataList[selectedIndex] = selectedItem;
-                console.log(JSON.stringify(dataList));
-
-                var spans = $('.dd-handle').eq(selectedIndex).children('span');
-                spans.eq(1).children('a').html(selectedItem.unique_no);
-                spans.eq(2).html('<strong class="danger">'+selectedItem.name+'</strong>');
-                spans.eq(3).html('<small>'+selectedItem.duration+'</small>');
-                //spans.eq(2).html('<strong>'.selectedItem.name.'</strong>');
-                spans.eq(5).html(selectedItem.artist);
-                $('#searchModal').modal('hide');
+                
+                setDdItem();
+            }
+            $('#searchModal').modal('hide');
                 sortEnabled = true;
                 $('#btnSort').html("保存");
                 $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</strong>');
-            }
-            else {
-                toastr.error('请先选择节目！');
-            }
+                selectedItem = false;
+                $('.search-item').removeClass('info');
             
         });
-
-        $('.tree_branch_delete').click(function() {
-            var id = $(this).data('id');
-            swal({
-                title: "确认删除?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确认",
-                showLoaderOnConfirm: true,
-                cancelButtonText: "取消",
-                preConfirm: function() {
-                    return new Promise(function(resolve) {
-                        $.ajax({
-                            method: 'post',
-                            url: '/admin/channel/xkv/data/{!! $model->id !!}/remove/' + id,
-                            data: {
-                                _method:'delete',
-                                _token:LA.token,
-                            },
-                            success: function (data) {
-                                $.pjax.reload('#pjax-container');
-                                toastr.success('删除成功 !');
-                                resolve(data);
-                            }
-                        });
-                    });
-                }
-            }).then(function(result) {
-                var data = result.value;
-                if (typeof data === 'object') {
-                    if (data.status) {
-                        swal(data.message, '', 'success');
-                    } else {
-                        swal(data.message, '', 'error');
-                    }
-                }
-            });
-        });
         
+        reloadTree();
     });
 
-    function editProgram(idx) {
-
+    function showSearchModal(idx) {
+        selectedIndex = idx;
+        $('#searchModal').modal('show');
     }
+
+    function setDdItem()
+    {
+        var spans = $('.dd-handle').eq(selectedIndex).children('span');
+        $('.dd-handle').eq(selectedIndex).addClass('bg-danger');
+        spans.eq(1).children('a').html('<span class="text-danger">'+selectedItem.unique_no+'</span>');
+        spans.eq(2).html('<strong class="text-danger">'+selectedItem.name+'</strong>');
+        spans.eq(3).html('<small class="text-danger">'+selectedItem.duration+'</small>');
+        //spans.eq(2).html('<strong>'.selectedItem.name.'</strong>');
+        spans.eq(5).html('<span class="text-danger">'+selectedItem.artist+'</span>');
+    }
+
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
         if(repo.black) {
             toastr.error("该节目以上黑名单");
         }
         selectedItem = repo;
-        selectedIndex = idx;
         $('.search-item').removeClass('info');
         $('.search-item').eq(idx).addClass('info');
+    }
+
+    function deleteProgram (idx) {
+        dataList.splice(idx, 1);
+        reloadTree();
+    }
+
+    function reloadTree()
+    {
+        var html = '<ol class="dd-list">';
+        for(i=0;i<dataList.length;i++)
+        {
+            html += createItem(i, dataList[i], '');
+        }
+        html += '</ol>';
+
+        $('#tree-programs').html(html);
+        $('.grid-row-checkbox').iCheck({
+            checkboxClass:'icheckbox_minimal-blue'
+        });
+
+        $('#total').html('<small>共 '+dataList.length+' 条记录</small>');
+    }
+
+    function createItem(idx, item, style) {
+        var html = '<li class="dd-item" data-id="idx">'+
+        '                    <div class="dd-handle bgstyle">'+
+        '                        <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">'+             
+        '                        <span style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at </span>'+
+        '                        <span style="display:inline-block;width:120px;"><a class="dd-nodrag" href="javascript:showSearchModal(idx);">unique_no</a></span>'+
+        '                        <span style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>'+
+        '                        <span style="display:inline-block;width:80px;"><small>duration</small></span>'+
+        '                        <span style="display:inline-block;width:60px;">【category】</span>'+
+        '                        <span style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>'+
+                              
+        '                        <span class="pull-right dd-nodrag">'+
+        '                            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>'+
+        '                        </span>'+
+        '                    </div>'+
+        '                </li>';
+        if(style == '') style = parseBg(item.category, item.unique_no);
+        return html.replace(/idx/g, idx).replace('start_at', item.start_at).replace('end_at', item.end_at)
+                    .replace('name', item.name).replace('duration', item.duration).replace('artist', item.artist)
+                    .replace('category', item.category).replace('unique_no', item.unique_no).replace('bgstyle', style);
+    }
+
+    function parseBg($no, $code)
+    {
+        if($no == 'm1') return 'bg-warning';
+        if($no == 'v1') return 'bg-default';
+        if($code.match(/VCNM(\w+)/)) return 'bg-info';
+        return '';
     }
 </script>
