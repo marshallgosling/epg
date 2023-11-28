@@ -164,12 +164,12 @@ class XkvController extends AdminController
 
         $list = ChannelPrograms::where("channel_id", $model->channel_id)->orderBy('id')->get();
 
-        $code = [];
-        foreach($data as $item) {
-            $code[] = $item['unique_no'];
-        }
+        // $code = [];
+        // foreach($data as $item) {
+        //     $code[] = $item['unique_no'];
+        // }
 
-        $artists = Program::whereIn('unique_no', $code)->select('unique_no', 'artist')->get()->pluck('artist', 'unique_no')->toArray();
+        //$artists = Program::whereIn('unique_no', $code)->select('unique_no', 'artist')->get()->pluck('artist', 'unique_no')->toArray();
 
         $form = new \Encore\Admin\Widgets\Form();
         
@@ -179,8 +179,8 @@ class XkvController extends AdminController
         $json = str_replace("'","\\'", json_encode($data));
 
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
-            ->description("编排调整节目内容，节目单计划播出时间 ".$model->schedule_start_at." -> ".$model->schedule_end_at)
-            ->body(view('admin.program.xkv', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'artists'=>$artists, 'form'=>$form->render()]));
+            ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
+            ->body(view('admin.program.xkv', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {

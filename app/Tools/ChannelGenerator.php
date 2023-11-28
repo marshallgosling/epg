@@ -142,7 +142,14 @@ class ChannelGenerator
         }
     }
 
-    public static function createItem(Program $program, string $category='', string $air='')
+    /**
+     * create an Item obj
+     * 
+     * @param Program|Metarial
+     * 
+     * @return array
+     */
+    public static function createItem($program, $category='', $air='')
     {
         return [
             "unique_no" => $program->unique_no,
@@ -150,6 +157,7 @@ class ChannelGenerator
             "duration" => $program->duration,
             "category" => $category,
             "start_at" => $air,
+            "artist" => $program instanceof Program ? $program->artist : '',
             "end_at" => ''
         ];
     }
