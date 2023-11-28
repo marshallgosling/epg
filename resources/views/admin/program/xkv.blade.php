@@ -179,12 +179,19 @@
                 $('#treeinfo').html('<small>可拖动排序</small>');
             }
             else {
-                var list = $('#tree-programs').nestable('serialize');
                 var newList = [];
-                for(var i=0;i<list.length;i++)
-                {
-                    newList[i] = dataList[list[i].id];
+                if(sortChanged) {
+                    var list = $('#tree-programs').nestable('serialize');
+                    
+                    for(var i=0;i<list.length;i++)
+                    {
+                        newList[i] = dataList[list[i].id];
+                    }
                 }
+                else {
+                    newList = dataList;
+                }
+                
                 $.ajax({
                     method: 'post',
                     url: '/admin/channel/xkv/data/{!! $model->id !!}/save',
@@ -258,11 +265,11 @@
         $('#replaceBtn').on('click', function(e) {
             if(selectedIndex > -1) {
 
-                // if(replaceItem.black) {
-                //     toastr.error("该艺人以上黑名单，不能使用");
-                //     return;
-                // }
-                dataList[selectedIndex] = replaceItem;
+                if(selectedItem.black) {
+                    toastr.error("该艺人以上黑名单，不能使用");
+                    return;
+                }
+                dataList[selectedIndex] = selectedItem;
                 console.log(JSON.stringify(dataList));
 
                 var spans = $('.dd-handle').eq(selectedIndex).children('span');
@@ -270,8 +277,11 @@
                 spans.eq(2).html('<strong class="danger">'+selectedItem.name+'</strong>');
                 spans.eq(3).html('<small>'+selectedItem.duration+'</small>');
                 //spans.eq(2).html('<strong>'.selectedItem.name.'</strong>');
-                spans.eq(5).html(selectedIem.artist);
-                
+                spans.eq(5).html(selectedItem.artist);
+                $('#searchModal').modal('hide');
+                sortEnabled = true;
+                $('#btnSort').html("保存");
+                $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</strong>');
             }
             else {
                 toastr.error('请先选择节目！');
