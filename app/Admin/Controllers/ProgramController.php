@@ -53,13 +53,8 @@ class ProgramController extends AdminController
                 return '<span class="label label-info" title="'.$t.'" data-toggle="tooltip" data-placement="top">'.$c.'</span>';
             }, $this->category);
 
-            $tags = [];
-            $tags[] = $this->mood ? "<span class='label label-warning'>{$this->mood}</span>" : '';
-            $tags[] = $this->energy ? "<span class='label label-warning'>{$this->energy}</span>" : '';
-            $tags[]= $this->tempo ? "<span class='label label-warning'>{$this->tempo}</span>" : '';
-
-            $tags[] = $this->gender ? "<span class='label label-danger'>{$this->gender}</span>" : '';
-            return join('&nbsp;', $category);
+            $black = $this->black ? "<span class='label label-danger'>黑名单</span>" : '';
+            return $black.'&nbsp;'.join('&nbsp;', $category);
         })->sortable();
         
         $grid->column('comment', __('Comment'))->style('max-width:200px;word-break:break-all;')->hide();    
