@@ -127,13 +127,13 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
     private function scan($model)
     {
-        $xkvs = Channel::where('air_date', '>', date('Y/m/d'))->with('programs')->select('id','air_date','group_id')->get();
+        $xkvs = Channel::where('air_date', '>', date('Y/m/d'))->with('programs')->select('id','air_date','name')->get();
         $data = ['xkv'=>[],'program'=>[]];
         if($xkvs)foreach($xkvs as $xkv)
         {
             $programs = $xkv->programs();
 
-            $_channel = ["id"=>$xkv->id, "date"=>$xkv->air_date, "group"=>$xkv->group_id, 'programs'=>[]];
+            $_channel = ["id"=>$xkv->id, "date"=>$xkv->air_date, "group"=>$xkv->name, 'programs'=>[]];
 
             foreach($programs as $pro)
             {
