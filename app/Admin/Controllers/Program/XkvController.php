@@ -171,6 +171,23 @@ class XkvController extends AdminController
 
         //$artists = Program::whereIn('unique_no', $code)->select('unique_no', 'artist')->get()->pluck('artist', 'unique_no')->toArray();
 
+        $template = 
+        '<li class="dd-item" data-id="idx">'.
+        '<div class="dd-handle bgstyle">'.
+        '<input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">'.            
+        '<span style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at </span>'.
+        '<span style="display:inline-block;width:120px;"><a class="dd-nodrag" href="javascript:showSearchModal(idx);">unique_no</a></span>'.
+        '<span style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>'.
+        '<span style="display:inline-block;width:80px;"><small>duration</small></span>'.
+        '<span style="display:inline-block;width:60px;">【category】</span>'.
+        '<span style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>'.
+        '<span class="pull-right dd-nodrag">'.
+        '<a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>'.
+        '</span>'.
+        '</div>'.
+        '</li>';
+
+
         $form = new \Encore\Admin\Widgets\Form();
         
         $form->action(admin_url("channel/xkv/$id/edit"));
@@ -180,7 +197,7 @@ class XkvController extends AdminController
 
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view('admin.program.xkv', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'form'=>$form->render()]));
+            ->body(view('admin.program.xkv', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {

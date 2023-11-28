@@ -22,7 +22,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li><a href="./{{$item->id}}">{{$item->start_at}} {{$item->name}}</a></li>
+                            <li><a href="./{{$item->id}}" target="_top">{{$item->start_at}} {{$item->name}}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -80,7 +80,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+<div id="template" style="display: none">{!!$template!!}</div>;
 <script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
@@ -126,11 +126,11 @@
                 $('#tree-programs').nestable({maxDepth: 1});
                 $('#tree-programs').on('change', function() {
                     sortChanged = true;
-                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
+                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</'+'strong>');
                 });
                 sortEnabled = true;
                 $('#btnSort').html("保存");
-                $('#treeinfo').html('<small>可拖动排序</small>');
+                $('#treeinfo').html('<small>可拖动排序</'+'small>');
             }
             else {
                 var newList = [];
@@ -228,7 +228,7 @@
             $('#searchModal').modal('hide');
                 sortEnabled = true;
                 $('#btnSort').html("保存");
-                $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</strong>');
+                $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
                 selectedItem = false;
                 $('.search-item').removeClass('info');
             
@@ -246,11 +246,11 @@
     {
         var spans = $('.dd-handle').eq(selectedIndex).children('span');
         $('.dd-handle').eq(selectedIndex).addClass('bg-danger');
-        spans.eq(1).children('a').html('<span class="text-danger">'+selectedItem.unique_no+'</span>');
-        spans.eq(2).html('<strong class="text-danger">'+selectedItem.name+'</strong>');
-        spans.eq(3).html('<small class="text-danger">'+selectedItem.duration+'</small>');
+        spans.eq(1).children('a').html('<span class="text-danger">'+selectedItem.unique_no+'</'+'span>');
+        spans.eq(2).html('<strong class="text-danger">'+selectedItem.name+'<'+'/strong>');
+        spans.eq(3).html('<small class="text-danger">'+selectedItem.duration+'<'+'/small>');
         //spans.eq(2).html('<strong>'.selectedItem.name.'</strong>');
-        spans.eq(5).html('<span class="text-danger">'+selectedItem.artist+'</span>');
+        spans.eq(5).html('<span class="text-danger">'+selectedItem.artist+'</'+'span>');
     }
 
     function selectProgram (idx) {
@@ -275,32 +275,18 @@
         {
             html += createItem(i, dataList[i], '');
         }
-        html += '</ol>';
+        html += '</'+'ol>';
 
         $('#tree-programs').html(html);
         $('.grid-row-checkbox').iCheck({
             checkboxClass:'icheckbox_minimal-blue'
         });
 
-        $('#total').html('<small>共 '+dataList.length+' 条记录</small>');
+        $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
     }
 
     function createItem(idx, item, style) {
-        var html = '<li class="dd-item" data-id="idx">'+
-        '                    <div class="dd-handle bgstyle">'+
-        '                        <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">'+             
-        '                        <span style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at </span>'+
-        '                        <span style="display:inline-block;width:120px;"><a class="dd-nodrag" href="javascript:showSearchModal(idx);">unique_no</a></span>'+
-        '                        <span style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>'+
-        '                        <span style="display:inline-block;width:80px;"><small>duration</small></span>'+
-        '                        <span style="display:inline-block;width:60px;">【category】</span>'+
-        '                        <span style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>'+
-                              
-        '                        <span class="pull-right dd-nodrag">'+
-        '                            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>'+
-        '                        </span>'+
-        '                    </div>'+
-        '                </li>';
+        var html = $('#template').html();
         if(style == '') style = parseBg(item.category, item.unique_no);
         return html.replace(/idx/g, idx).replace('start_at', item.start_at).replace('end_at', item.end_at)
                     .replace('name', item.name).replace('duration', item.duration).replace('artist', item.artist)
