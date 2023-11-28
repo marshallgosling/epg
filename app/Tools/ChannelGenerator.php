@@ -145,7 +145,7 @@ class ChannelGenerator
     /**
      * create an Item obj
      * 
-     * @param Program|Metarial
+     * @param mixed $program
      * 
      * @return array
      */
