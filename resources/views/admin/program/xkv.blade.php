@@ -37,8 +37,10 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
+                    
                     <span id="treeinfo"></span>
                     <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
+                    <a id="btnDelete" class="btn btn-danger btn-sm">批量删除</a>
                     <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
                 <div class="dd" id="tree-programs">
@@ -47,7 +49,8 @@
                         <li class="dd-item" data-id="{{$idx}}">
                             
                             <div class="dd-handle {{ \App\Models\Category::parseBg($item['category'], $item['unique_no']) }}">
-                                <span style="display:inline-block;width:120px;">{{$item['start_at']}} -- {{$item['end_at']}} </span>
+                                <input type="checkbox" class="grid-row-checkbox" data-id="{{$idx}}" autocomplete="off">
+                                <span style="display:inline-block;width:120px;">&nbsp;{{$item['start_at']}} -- {{$item['end_at']}} </span>
                                 <span style="display:inline-block;width:200px;text-overflow:ellipsis"><strong>{{$item['name']}}</strong></span>
 
                                 <span style="display:inline-block;width:80px;"><small>{{$item['duration']}}</small></span>
@@ -144,10 +147,70 @@
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
     var sortEnabled = false;
+
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
+        });
+        // $('.grid-select-all').iCheck({checkboxClass:'icheckbox_minimal-blue'});
+
+        // $('.grid-select-all').on('ifChanged', function(event) {
+        //     if (this.checked) {
+        //         $('.grid-row-checkbox').iCheck('check');
+        //     } else {
+        //         $('.grid-row-checkbox').iCheck('uncheck');
+        //     }
+        // });
+        $('.grid-row-checkbox').iCheck({
+            checkboxClass:'icheckbox_minimal-blue'
+        });
+        $('#btnDelete').on('click', function(e) {
+            var selected = [];
+
+            $('.grid-row-checkbox:checked').each(function () {
+                selected.push($(this).data('id'));
+            });
+
+            if (selected.length == 0) {
+                return;
+            }
+
+            swal({
+                title: "确认删除?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                showLoaderOnConfirm: true,
+                cancelButtonText: "取消",
+                preConfirm: function() {
+                    return new Promise(function(resolve) {
+                        $.ajax({
+                            method: 'post',
+                            url: '/admin/channel/xkv/data/{!! $model->id !!}/remove/' + selected.join('_'),
+                            data: {
+                                _method:'delete',
+                                _token:LA.token,
+                            },
+                            success: function (data) {
+                                $.pjax.reload('#pjax-container');
+                                toastr.success('删除成功 !');
+                                resolve(data);
+                            }
+                        });
+                    });
+                }
+            }).then(function(result) {
+                var data = result.value;
+                if (typeof data === 'object') {
+                    if (data.status) {
+                        swal(data.message, '', 'success');
+                    } else {
+                        swal(data.message, '', 'error');
+                    }
+                }
+            });
         });
         $('#btnSort').on('click', function(e) {
             if(!sortEnabled) {

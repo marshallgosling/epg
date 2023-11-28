@@ -2,8 +2,10 @@
 
 namespace App\Admin\Controllers\Program;
 
+use App\Admin\Actions\ChannelProgram\BatchReplicate;
+use App\Admin\Actions\ChannelProgram\Replicate;
+use App\Admin\Actions\ChannelProgram\ToolCalculate;
 use App\Events\Channel\CalculationEvent;
-use App\Events\Channel\ProgramsEvent;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
@@ -40,6 +42,7 @@ class XkvController extends AdminController
         $grid = new Grid(new ChannelPrograms());
 
         //$grid->column('id', __('Id'));
+        $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
             return "<a href=\"tree/{$this->id}\">$this->name</a>"; 
         });
@@ -60,7 +63,7 @@ class XkvController extends AdminController
         $grid->column('schedule_start_at', __('Schedule start at'));
         $grid->column('schedule_end_at', __('Schedule end at'))->hide();
         $grid->column('version', __('Version'));
-        //$grid->column('channel_id', __('Channel id'));
+        
         //$grid->column('data', __('Data'));
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
@@ -76,7 +79,17 @@ class XkvController extends AdminController
         });
 
         $grid->actions(function ($actions) {
-            $actions->disableDelete();
+            $actions->add(new Replicate);
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchReplicate);
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $calculate = new ToolCalculate();
+            $calculate->channel_id = $_REQUEST['channel_id'];
+            $tools->append($calculate);
         });
 
         $grid->disableCreateButton();
@@ -102,7 +115,7 @@ class XkvController extends AdminController
         $show->field('end_at', __('End at'));
         $show->field('duration', __('Duration'));
         $show->field('version', __('Version'));
-        //$show->field('channel_id', __('Air date'));
+        $show->field('sort', __('Sort'));
         //$show->field('data', __('Data'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -126,7 +139,7 @@ class XkvController extends AdminController
         $form->text('end_at', __('End at'))->disable();
         $form->text('duration', __('Duration'))->disable();
         $form->display('version', __('Version'));
-        //$form->select('channel_id', __('Air date'))->options(Channel::where);
+        $form->number('sort', __('Sort'));
         $form->json('data', __('Data'));
 
         $form->saving(function(Form $form) {
@@ -195,20 +208,27 @@ class XkvController extends AdminController
 
     public function remove($id, $idx)
     {
-
         $model = ChannelPrograms::findOrFail($id);
-
+        
+        $ids = explode('_', $idx);
+        if(count($ids)>1) {
+            sort($ids, SORT_NUMERIC);
+            $ids = array_reverse($ids);    
+        }
+        
         $list = json_decode($model->data, true);
 
-        array_splice($list, (int)$idx, 1);
-
+        foreach($ids as $idx) {
+            array_splice($list, (int)$idx, 1);
+        }
+        
         $model->data = json_encode($list);
 
         //$model->version = $model->version + 1;
 
         $model->save();
 
-        CalculationEvent::dispatch($model->channel_id, $model->id);
+        CalculationEvent::dispatch($model->channel_id);
 
         $response = [
             'status'  => true,

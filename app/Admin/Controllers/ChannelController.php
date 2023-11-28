@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
-use App\Admin\Actions\Channel\BatchExporter;
+use App\Admin\Actions\Channel\ToolExporter;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -72,7 +72,7 @@ class ChannelController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchExporter());
+            $tools->append(new ToolExporter());
         });
 
         return $grid;

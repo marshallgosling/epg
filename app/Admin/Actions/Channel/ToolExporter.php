@@ -7,7 +7,7 @@ use App\Models\ExportList;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 
-class BatchExporter extends Action
+class ToolExporter extends Action
 {
     protected $selector = '.export-channels';
     public $name = '批量导出';

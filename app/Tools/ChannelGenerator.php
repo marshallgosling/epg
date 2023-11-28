@@ -85,6 +85,7 @@ class ChannelGenerator
             $c->start_at = date('Y-m-d H:i:s', $air);
             $c->duration = 0;
             $c->version = '1';
+            $c->sort = $t->sort;
 
             $schecule += $this->parseDuration($t->duration);
 

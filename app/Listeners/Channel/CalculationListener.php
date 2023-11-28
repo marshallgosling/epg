@@ -25,7 +25,7 @@ class CalculationListener
         $this->log_channel = 'program';
         $this->log_print = false;
 
-        $channel = Channel::with('programs')->find($event->getChannelId());
+        $channel = Channel::find($event->getChannelId());
         $programs = $channel->programs()->get();
 
         $start = strtotime($channel->air_date . ' 06:00:00');

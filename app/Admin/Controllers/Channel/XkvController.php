@@ -2,9 +2,11 @@
 
 namespace App\Admin\Controllers\Channel;
 
+use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
-use App\Admin\Actions\Channel\BatchExporter;
+use App\Admin\Actions\Channel\ToolExporter;
+use App\Admin\Actions\Channel\BatchGenerator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -61,6 +63,11 @@ class XkvController extends AdminController
             $actions->add(new Clean);
         });
 
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchGenerator);
+            $actions->add(new BatchClean);
+        });
+
         $grid->filter(function($filter){
 
             // 去掉默认的id过滤器
@@ -73,7 +80,7 @@ class XkvController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchExporter());
+            $tools->append(new ToolExporter());
         });
 
         return $grid;

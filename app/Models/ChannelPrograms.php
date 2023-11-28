@@ -21,6 +21,7 @@ class ChannelPrograms extends Model
         'end_at',
         'duration',
         'version',
+        'sort',
         'data'
     ];
 
