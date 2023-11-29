@@ -48,7 +48,7 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
     {
         $export = ExportList::findOrFail($this->id);
 
-        $lines = Exporter::gatherLines($export->start_at, $export->end_at);
+        $lines = Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {
             $export->status = ExportList::STATUS_ERROR;

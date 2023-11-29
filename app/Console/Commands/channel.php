@@ -83,7 +83,7 @@ class channel extends Command
         }
 
         $generator = new ChannelGenerator();
-        $generator->loadTemplate('default');
+        $generator->loadTemplate($channel->name);
 
         $generator->generate($channel);
 

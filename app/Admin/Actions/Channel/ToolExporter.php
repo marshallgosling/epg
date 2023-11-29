@@ -42,6 +42,7 @@ class ToolExporter extends Action
         $this->date('start_at', '开始日期')->required();
         $this->date('end_at', '结束日期');
         $this->text('name', '别名');
+        $this->textarea('comment', '说明及注意事项')->default('只会导出的状态为正常的节目单。')->disable();
     }
 
     public function html()
