@@ -80,7 +80,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<div id="template" style="display: none">{!!$template!!}</div>;
+<div id="template" style="display: none">{!!$template!!}</div>
 <script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
@@ -249,7 +249,7 @@
         spans.eq(1).children('a').html('<span class="text-danger">'+selectedItem.unique_no+'</'+'span>');
         spans.eq(2).html('<strong class="text-danger">'+selectedItem.name+'<'+'/strong>');
         spans.eq(3).html('<small class="text-danger">'+selectedItem.duration+'<'+'/small>');
-        //spans.eq(2).html('<strong>'.selectedItem.name.'</strong>');
+        spans.eq(4).html('【'+selectedItem.category+'】');
         spans.eq(5).html('<span class="text-danger">'+selectedItem.artist+'</'+'span>');
     }
 
@@ -257,6 +257,9 @@
         var repo = cachedPrograms[idx];
         if(repo.black) {
             toastr.error("该节目以上黑名单");
+        }
+        if(repo.category) {
+            repo.category = repo.category.split(',')[0];
         }
         selectedItem = repo;
         $('.search-item').removeClass('info');

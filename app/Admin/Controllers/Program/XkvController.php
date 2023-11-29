@@ -171,22 +171,22 @@ class XkvController extends AdminController
 
         //$artists = Program::whereIn('unique_no', $code)->select('unique_no', 'artist')->get()->pluck('artist', 'unique_no')->toArray();
 
-        $template = 
-        '<li class="dd-item" data-id="idx">'.
-        '<div class="dd-handle bgstyle">'.
-        '<input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">'.            
-        '<span style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at </span>'.
-        '<span style="display:inline-block;width:120px;"><a class="dd-nodrag" href="javascript:showSearchModal(idx);">unique_no</a></span>'.
-        '<span style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>'.
-        '<span style="display:inline-block;width:80px;"><small>duration</small></span>'.
-        '<span style="display:inline-block;width:60px;">【category】</span>'.
-        '<span style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>'.
-        '<span class="pull-right dd-nodrag">'.
-        '<a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>'.
-        '</span>'.
-        '</div>'.
-        '</li>';
-
+        $template = <<<TMP
+<li class="dd-item" data-id="idx">
+    <div class="dd-handle bgstyle">
+        <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">            
+        <span style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at</span>
+        <span style="display:inline-block;width:120px;"><a class="dd-nodrag" href="javascript:showSearchModal(idx);">unique_no</a></span>
+        <span style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>
+        <span style="display:inline-block;width:80px;"><small>duration</small></span>
+        <span style="display:inline-block;width:60px;">【category】</span>
+        <span style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>
+        <span class="pull-right dd-nodrag">
+            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
+        </span>
+    </div>
+</li>
+TMP;
 
         $form = new \Encore\Admin\Widgets\Form();
         
