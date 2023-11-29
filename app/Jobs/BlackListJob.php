@@ -162,30 +162,33 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         }
 
  
-        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')->get();
+        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')->select('id', $property)->get();
         
         if($programs)foreach($programs as $pro)
         {
-            if($property == 'artist') {
-                $artists = explode(' ', str_replace('/', ' ', $pro->artist));
-                if(in_array($model->keyword, $artists)) {
-                    $data['program'][] = $pro;
-                    break;
-                }
+            // if($property == 'artist') {
+            //     $artists = explode(' ', str_replace('/', ' ', $pro->artist));
+            //     if(in_array($model->keyword, $artists)) {
+            //         $data['program'][] = $pro->toArray();
+            //         break;
+            //     }
     
     
-                $artists = explode(' ', str_replace('/', ' ', $pro->co_artist));
-                if(in_array($model->keyword, $artists)) {
-                    $data['program'][] = $pro;
-                    break;
-                }
-            }
-            else{
-                if(Str::contains($pro->$property, $model->keyword))
+            //     $artists = explode(' ', str_replace('/', ' ', $pro->co_artist));
+            //     if(in_array($model->keyword, $artists)) {
+            //         $data['program'][] = $pro;
+            //         break;
+            //     }
+            // }
+            // else{
+            $items = explode(' ', str_replace('/', ' ', $pro->$property));
+            foreach($items as $item)
+                if(Str::contains($item, $model->keyword))
                 {
-                    $data['program'][] = $pro;
+                    $data['program'][] = $pro->toArray();
+                    break;
                 }
-            }
+            //}
             
         }
 
