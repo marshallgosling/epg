@@ -46,7 +46,7 @@ class XkvController extends AdminController
             return '<a href="xkv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
         $grid->column('air_date', __('Air date'));
-        //$grid->column('name', __('Name'));
+        $grid->column('name', __('Group'))->hide();
         $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['warning','danger','success','danger']);
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
@@ -99,7 +99,7 @@ class XkvController extends AdminController
         $show->field('id', __('Id'));
         $show->field('uuid', __('Uuid'));
         $show->field('air_date', __('Air date'));
-        $show->field('name', __('Name'));
+        $show->field('name', __('Group'));
         $show->field('status', __('Status'))->using(Channel::STATUS);
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
@@ -122,7 +122,7 @@ class XkvController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->hidden('name', __('Name'))->default('channelv');
+        $form->hidden('name', __('Name'))->default('xkv');
         $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();

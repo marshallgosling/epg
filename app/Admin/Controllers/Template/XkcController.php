@@ -14,14 +14,14 @@ use Encore\Admin\Widgets\InfoBox;
 use App\Admin\Actions\Template\Programs;
 use App\Admin\Actions\Template\ReplicateTemplate;
 
-class XkvController extends AdminController
+class XkcController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '【 XKV 】模版';
+    protected $title = '【 XKC 】模版';
 
     /**
      * Make a grid builder.
@@ -32,10 +32,10 @@ class XkvController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->where('group_id', 'xkv')->orderBy('sort', 'asc');
+        $grid->model()->where('group_id', 'xkc')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return '<a href="xkv/tree/'.$this->id.'">'.$name.'</a>'; 
+            return '<a href="xkc/tree/'.$this->id.'">'.$name.'</a>'; 
         });
         // $grid->column('ex', __(" "))->display(function() {
         //     return "预览";
@@ -139,7 +139,7 @@ class XkvController extends AdminController
 
         $form->text('sort', __('Sort'));
         $form->text('comment', __('Comment'));
-        $form->hidden('group_id', __('Group'))->default('xkv');
+        $form->hidden('group_id', __('Group'))->default('xkc');
         
 
         return $form;

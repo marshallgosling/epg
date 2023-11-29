@@ -14,14 +14,14 @@ use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 
-class XkvProgramsController extends AdminController
+class XkcProgramsController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '【 XKV 】模版节目编排';
+    protected $title = '【 XKC 】模版节目编排';
 
     /**
      * Make a grid builder.
@@ -49,7 +49,7 @@ class XkvProgramsController extends AdminController
             $filter->disableIdFilter();
         
             // 在这里添加字段过滤器
-            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', 'xkv')->get()->pluck('name', 'id'));
+            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', 'xkc')->get()->pluck('name', 'id'));
             
         });
 
@@ -216,7 +216,7 @@ class XkvProgramsController extends AdminController
     public function remove($id, $idx)
     {
         $ids = explode('_', $idx);
-
+        
         foreach($ids as $idx) {
             $item = TemplatePrograms::find($idx);
 
