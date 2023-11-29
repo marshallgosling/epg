@@ -162,8 +162,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         }
 
  
-        $programs = Program::where('artist', 'like', '%'.$model->keyword.'%')->orWhere('co_artist', 'like', '%'.$model->keyword.'%')
-            ->whereNull('black')->select('id','name','artist','co_artist','unique_no')->get();
+        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')->get();
         
         if($programs)foreach($programs as $pro)
         {
