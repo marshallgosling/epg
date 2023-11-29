@@ -118,6 +118,7 @@
             {
                 dataList.splice(selected[i], 1);
             }
+            reCalculate(0);
             reloadTree();
         });
 
@@ -210,11 +211,7 @@
                 
                 dataList.push(selectedItem);
                 
-                $('.dd-list').append(createItem(selectedIndex, selectedItem, ''));
-                $('.grid-row-checkbox').eq(selectedIndex).iCheck({
-                    checkboxClass:'icheckbox_minimal-blue'
-                });
-                setDdItem();
+                reCalculate(selectedIndex);
             }
             else {
                 if(selectedItem.black) {
@@ -223,14 +220,17 @@
                 }
                 dataList[selectedIndex] = selectedItem;
                 
-                setDdItem();
+                reCalculate(selectedIndex);
             }
+
             $('#searchModal').modal('hide');
-                sortEnabled = true;
-                $('#btnSort').html("保存");
-                $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
-                selectedItem = false;
-                $('.search-item').removeClass('info');
+
+            reloadTree();
+            sortEnabled = true;
+            $('#btnSort').html("保存");
+            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+            selectedItem = false;
+            $('.search-item').removeClass('info');
             
         });
         
@@ -242,32 +242,24 @@
         $('#searchModal').modal('show');
     }
 
-    function setDdItem()
-    {
-        var spans = $('.dd-handle').eq(selectedIndex).children('span');
-        $('.dd-handle').eq(selectedIndex).addClass('bg-danger');
-        spans.eq(1).children('a').html('<span class="text-danger">'+selectedItem.unique_no+'</'+'span>');
-        spans.eq(2).html('<strong class="text-danger">'+selectedItem.name+'<'+'/strong>');
-        spans.eq(3).html('<small class="text-danger">'+selectedItem.duration+'<'+'/small>');
-        spans.eq(4).html('【'+selectedItem.category+'】');
-        spans.eq(5).html('<span class="text-danger">'+selectedItem.artist+'</'+'span>');
-    }
-
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
         if(repo.black) {
             toastr.error("该节目以上黑名单");
         }
         if(repo.category) {
-            repo.category = repo.category.split(',')[0];
+            repo.category = repo.category.toString().split(',')[0];
         }
+        repo.isnew = true;
         selectedItem = repo;
+        console.table(selectedItem);
         $('.search-item').removeClass('info');
         $('.search-item').eq(idx).addClass('info');
     }
 
     function deleteProgram (idx) {
         dataList.splice(idx, 1);
+        reCalculate(idx);
         reloadTree();
     }
 
@@ -276,22 +268,44 @@
         var html = '<ol class="dd-list">';
         for(i=0;i<dataList.length;i++)
         {
-            html += createItem(i, dataList[i], '');
+            var style = '';
+            if(dataList[i].hasOwnProperty('isnew')) style = 'bg-danger';
+            html += createItem(i, dataList[i], style);
         }
         html += '</'+'ol>';
 
         $('#tree-programs').html(html);
-        $('.grid-row-checkbox').iCheck({
-            checkboxClass:'icheckbox_minimal-blue'
-        });
 
         $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
     }
 
+    function reCalculate(idx) {
+
+        var start = idx == 0 ? Date.parse('{{$model->start_at}}') : Date.parse('2020-1-1 ' + dataList[idx-1].end_at);
+        console.log("start:"+dataList[idx-1].end_at);
+        for(i=idx;i<dataList.length;i++)
+        {
+            dataList[i].start_at = formatTime(start);
+            start += parseDuration(dataList[i].duration) * 1000;
+            dataList[i].end_at = formatTime(start);
+        }
+    }
+
+    function formatTime($time) {
+        var d = new Date($time);
+        var a = [];
+        a[0] = d.getHours() > 9 ? d.getHours().toString() : '0'+d.getHours().toString();
+        a[1] = d.getMinutes() > 9 ? d.getMinutes().toString() : '0'+d.getMinutes().toString();
+        a[2] = d.getSeconds() > 9 ? d.getSeconds().toString() : '0'+d.getSeconds().toString();
+        return a.join(':');
+    }
+
     function createItem(idx, item, style) {
         var html = $('#template').html();
+        var textstyle = "";
         if(style == '') style = parseBg(item.category, item.unique_no);
-        return html.replace(/idx/g, idx).replace('start_at', item.start_at).replace('end_at', item.end_at)
+        if(style == 'bg-danger') textstyle = 'text-danger';
+        return html.replace(/idx/g, idx).replace(/textstyle/g, textstyle).replace('start_at', item.start_at).replace('end_at', item.end_at)
                     .replace('name', item.name).replace('duration', item.duration).replace('artist', item.artist)
                     .replace('category', item.category).replace('unique_no', item.unique_no).replace('bgstyle', style);
     }
@@ -302,5 +316,10 @@
         if($no == 'v1') return 'bg-default';
         if($code.match(/VCNM(\w+)/)) return 'bg-info';
         return '';
+    }
+    function parseDuration($dur)
+    {
+        $d = $dur.toString().split(':');
+        return parseInt($d[0])*3600+parseInt($d[1])*60+parseInt($d[2]);
     }
 </script>
