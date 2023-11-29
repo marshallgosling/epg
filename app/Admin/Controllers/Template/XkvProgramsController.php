@@ -10,6 +10,7 @@ use App\Models\TemplatePrograms;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Grid\Filter;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
@@ -44,11 +45,8 @@ class XkvProgramsController extends AdminController
         //$grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
-        $grid->filter(function ($filter) {
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
+        $grid->filter(function (Filter $filter) {
+            
             $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', 'xkv')->get()->pluck('name', 'id'));
             
         });

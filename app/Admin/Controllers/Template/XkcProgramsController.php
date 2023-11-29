@@ -45,10 +45,6 @@ class XkcProgramsController extends AdminController
         $grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function ($filter) {
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', 'xkc')->get()->pluck('name', 'id'));
             
         });

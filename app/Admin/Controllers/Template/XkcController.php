@@ -75,13 +75,10 @@ class XkcController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
             $filter->in('status',  __('Status'))->checkbox(Template::STATUSES);
+            
         });
 
         $grid->actions(function ($actions) {

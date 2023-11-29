@@ -33,7 +33,7 @@ class BlackListController extends AdminController
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('keyword', __('Keyword'))->sortable();
-        $grid->column('group', __('Group'))->hide();
+        $grid->column('group', __('Group'))->using(BlackList::GROUPS);
         $grid->column('status', __('Status'))->using(BlackList::STATUS)->label(['warning','danger','success','default']);
         $grid->column('scaned_at', __('Scaned at'))->sortable();
         $grid->column('data', __('Data'))->display(function () {
@@ -75,7 +75,7 @@ class BlackListController extends AdminController
 
         $show->field('id', __('ID'));
         $show->field('keyword', __('Keyword'));
-        $show->field('group', __('Group'));
+        $show->field('group', __('Group'))->using(BlackList::GROUPS);
         $show->field('status', __('Status'))->using(BlackList::STATUS);
         $show->field('scaned_at', __('Scaned at'));
         $show->field('data', __('Data'));
@@ -95,7 +95,7 @@ class BlackListController extends AdminController
         $form = new Form(new BlackList());
 
         $form->text('keyword', __('Keyword'));
-        $form->text('group', __('Group'));
+        $form->radio('group', __('Group'))->options(BlackList::GROUPS);
 
         return $form;
     }

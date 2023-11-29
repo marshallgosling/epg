@@ -129,6 +129,8 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
     {
         $xkvs = Channel::where('air_date', '>', date('Y/m/d'))->with('programs')->select('id','air_date','name')->get();
         $data = ['xkv'=>[],'program'=>[]];
+        $property = $model->group;
+
         if($xkvs)foreach($xkvs as $xkv)
         {
             $programs = $xkv->programs();
@@ -137,14 +139,15 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
             foreach($programs as $pro)
             {
-                $items = json_decode($pro->data);
+                $items = json_decode($pro->data, true);
 
                 $_program = ["id"=>$pro->id,"name"=>$pro->name,"start_at"=>$pro->start_at, 'items'=>[]];
                 
                 foreach($items as $idx=>$item) {
+               
+                    if(!array_key_exists($property, $item) ) continue;
 
-                    
-                        if(Str::contains($item->artist, $model->keyword))
+                        if(Str::contains($item[$property], $model->keyword))
                         {
                             $item['offset'] = $idx;
                             $_program['items'][] = $item;
@@ -164,17 +167,27 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         
         if($programs)foreach($programs as $pro)
         {
-            $artists = explode(' ', str_replace('/', ' ', $pro->artist));
-            if(in_array($model->keyword, $artists)) {
-                $data['program'][] = $pro;
-                break;
+            if($property == 'artist') {
+                $artists = explode(' ', str_replace('/', ' ', $pro->artist));
+                if(in_array($model->keyword, $artists)) {
+                    $data['program'][] = $pro;
+                    break;
+                }
+    
+    
+                $artists = explode(' ', str_replace('/', ' ', $pro->co_artist));
+                if(in_array($model->keyword, $artists)) {
+                    $data['program'][] = $pro;
+                    break;
+                }
             }
-
-            $artists = explode(' ', str_replace('/', ' ', $pro->co_artist));
-            if(in_array($model->keyword, $artists)) {
-                $data['program'][] = $pro;
-                break;
+            else{
+                if(Str::contains($pro->$property, $model->keyword))
+                {
+                    $data['program'][] = $pro;
+                }
             }
+            
         }
 
         $model->status = BlackList::STATUS_READY;

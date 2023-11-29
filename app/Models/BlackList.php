@@ -14,6 +14,7 @@ class BlackList extends Model
     public const STATUS_CLOSE = 3;
 
     public const STATUS = ['未扫描', '扫描中', '生效中'];
+    public const GROUPS = ['artist'=>'艺人','name'=>"标题",'unique_no'=>'播出编号'];
 
     protected $table = 'blacklist';
     

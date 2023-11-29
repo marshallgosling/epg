@@ -18,10 +18,14 @@
  *
  */
 
-
 Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
     $grid->disableExport();
     $grid->paginate(50);
+    $grid->filter(function (Encore\Admin\Grid\Filter $filter) {
+        $filter->disableIdFilter();
+        if(array_key_exists('expand', $_REQUEST))$filter->expand();
+        $filter->setAction('?expand=1');
+    });
 });
 
 Encore\Admin\Form::forget(['map', 'editor']);

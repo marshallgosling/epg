@@ -38,15 +38,12 @@ class CategoryController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
             // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->like('no', __('CategoryNo'));
             $filter->equal('type', __('CategoryType'))->select(Category::TYPES);
             $filter->in('duration', __('Duration'))->checkbox(TemplatePrograms::TYPES);
-        
+
         });
 
         /*$grid->rows(function (Grid\Tools $tools) {
