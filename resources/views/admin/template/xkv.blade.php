@@ -50,10 +50,10 @@
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle {{$item['category']=='m1'?'bg-warning':''}}">
                                 <input type="checkbox" class="grid-row-checkbox" data-id="{{$item['id']}}" autocomplete="off">&nbsp;
-                                <small>类型：</small> 
-                                <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> 
-                                <small>&nbsp;栏目：</small> 
-                                <span style="width: 60px;"><a href="javascript:selectProgram({{$idx}});" class="dd-nodrag" title="{{\App\Models\Category::findCategory($item['category'])}}">{{$item['category']}}</a></span>
+                                <span style="display:inline-block;width:80px;"><small>类型：</small>
+                                <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span></span> 
+                                <span style="display:inline-block;width:80px;"><small>栏目：</small>
+                                <a href="javascript:selectProgram({{$idx}});" class="dd-nodrag" title="{{\App\Models\Category::findCategory($item['category'])}}">{{$item['category']}}</a></span>
                                 <small> 别名：</small> {{$item['name']}} &nbsp;
                                 <small class="text-warning">{{$item['data']}}</small>
                                 <span class="pull-right dd-nodrag">
