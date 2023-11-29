@@ -193,6 +193,7 @@
                         item = items[i];
                         tr = '';
                         if(item.black) tr = ' danger';
+                        if(item.artist==null) item.artist='';
                         html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
                     }
                     html += '</table>';
@@ -259,6 +260,7 @@
         if(repo.category) {
             repo.category = repo.category.toString().split(',')[0];
         }
+        if(repo.artist==null) repo.artist='';
         repo.isnew = true;
         selectedItem = repo;
 
