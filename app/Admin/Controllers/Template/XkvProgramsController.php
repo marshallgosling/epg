@@ -121,7 +121,7 @@ class XkvProgramsController extends AdminController
 
         $model = Template::find($id);
 
-        $list = Template::where('group_id', 'default')->get();
+        $list = Template::where('group_id', 'xkv')->get();
 
         $form = new \Encore\Admin\Widgets\Form();
         

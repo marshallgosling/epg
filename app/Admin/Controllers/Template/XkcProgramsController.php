@@ -121,11 +121,11 @@ class XkcProgramsController extends AdminController
 
         $model = Template::find($id);
 
-        $list = Template::where('group_id', 'default')->get();
+        $list = Template::where('group_id', 'xkc')->get();
 
         $form = new \Encore\Admin\Widgets\Form();
         
-        $form->action(admin_url("template/xkv/$id/edit"));
+        $form->action(admin_url("template/xkc/$id/edit"));
         $form->hidden('_token')->default(csrf_token());
         $form->hidden('name')->default($model->name);
         $form->hidden('start_at')->default($model->start_at);
@@ -134,7 +134,7 @@ class XkcProgramsController extends AdminController
         
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整模版内容")
-            ->body(view('admin.template.xkv', ['model'=>$model,'data'=>$data, 'list'=>$list]));
+            ->body(view('admin.template.xkc', ['model'=>$model,'data'=>$data, 'list'=>$list]));
     }
 
     public function save($id, Request $request)
