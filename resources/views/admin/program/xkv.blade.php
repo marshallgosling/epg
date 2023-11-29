@@ -41,7 +41,7 @@
                     <span id="treeinfo"></span>
                     <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
                     <a id="btnDelete" class="btn btn-danger btn-sm">批量删除</a>
-                    <a id="newBtn" title="新增" class="btn btn-success btn-sm" data-toggle="modal" data-target="#searchModal" data-id="new">新增</a>
+                    <a id="newBtn" title="新增" class="btn btn-success btn-sm" href="javascript:showSearchModal('new');">新增</a>
                     <span id="total" class="pull-right"></span>
                 </div>
                 <div class="dd" id="tree-programs">
@@ -84,7 +84,7 @@
 <script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
-    var replaceItem = null;
+    var replaceItem = [];
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
     var sortEnabled = false;
@@ -104,6 +104,11 @@
         // });
 
         $('#btnDelete').on('click', function(e) {
+
+            if(sortEnabled) {
+                toastr.error("请先保存排序结果。");
+                return;
+            }
             var selected = [];
 
             $('.grid-row-checkbox:checked').each(function () {
@@ -123,7 +128,7 @@
         });
 
         $('#btnSort').on('click', function(e) {
-            if(!sortEnabled) {
+            if($('#btnSort').html() != '保存') {
                 $('#tree-programs').nestable({maxDepth: 1});
                 $('#tree-programs').on('change', function() {
                     sortChanged = true;
@@ -132,7 +137,7 @@
                 sortEnabled = true;
                 $('#btnSort').html("保存");
                 $('#treeinfo').html('<small>可拖动排序</'+'small>');
-            }
+            } 
             else {
                 var newList = [];
                 if(sortChanged) {
@@ -144,7 +149,7 @@
                     }
                 }
                 else {
-                    newList = dataList;
+                    newList = dataList;     
                 }
                 
                 $.ajax({
@@ -210,7 +215,7 @@
                 selectedIndex = dataList.length;
                 
                 dataList.push(selectedItem);
-                
+                replaceItem.push(selectedItem.unique_no.toString());
                 reCalculate(selectedIndex);
             }
             else {
@@ -219,14 +224,14 @@
                     return;
                 }
                 dataList[selectedIndex] = selectedItem;
-                
+                replaceItem.push(selectedItem.unique_no.toString());
                 reCalculate(selectedIndex);
             }
 
             $('#searchModal').modal('hide');
 
             reloadTree();
-            sortEnabled = true;
+            
             $('#btnSort').html("保存");
             $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
             selectedItem = false;
@@ -238,6 +243,10 @@
     });
 
     function showSearchModal(idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
         selectedIndex = idx;
         $('#searchModal').modal('show');
     }
@@ -252,12 +261,16 @@
         }
         repo.isnew = true;
         selectedItem = repo;
-        console.table(selectedItem);
+
         $('.search-item').removeClass('info');
         $('.search-item').eq(idx).addClass('info');
     }
 
     function deleteProgram (idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
         dataList.splice(idx, 1);
         reCalculate(idx);
         reloadTree();
@@ -266,17 +279,19 @@
     function reloadTree()
     {
         var html = '<ol class="dd-list">';
+        var total = 0;
         for(i=0;i<dataList.length;i++)
         {
             var style = '';
-            if(dataList[i].hasOwnProperty('isnew')) style = 'bg-danger';
+            if(in_array(dataList[i].unique_no, replaceItem)) style = 'bg-danger';
             html += createItem(i, dataList[i], style);
+            total += parseDuration(dataList[i].duration);
         }
         html += '</'+'ol>';
 
         $('#tree-programs').html(html);
-
-        $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
+        var d = Date.parse('2000/1/1 00:00:00');
+        $('#total').html('<small>总时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
     }
 
     function reCalculate(idx) {
@@ -321,5 +336,14 @@
     {
         $d = $dur.toString().split(':');
         return parseInt($d[0])*3600+parseInt($d[1])*60+parseInt($d[2]);
+    }
+
+    function in_array(search,array){
+        for(var i in array){
+            if(array[i]==search){
+                return true;
+            }
+        }
+        return false;
     }
 </script>
