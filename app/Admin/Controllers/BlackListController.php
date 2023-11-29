@@ -39,7 +39,7 @@ class BlackListController extends AdminController
         $grid->column('data', __('Data'))->display(function () {
             return '展开';
         })->expand(function ($model) {
-            return new Box('Json', view('admin.form.config', ['id'=>$model->id,'config'=>json_encode($model->data, JSON_UNESCAPED_UNICODE)]));
+            return new Box('Json', view('admin.form.config', ['id'=>$model->id,'config'=>$model->data]));
         });
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'))->hide();
