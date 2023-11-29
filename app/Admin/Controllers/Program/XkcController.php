@@ -16,14 +16,14 @@ use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 
-class XkvController extends AdminController
+class XkcController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Channel【XKV】编单';
+    protected $title = 'Channel【XKC】编单';
 
     protected $description = [
         'index'  => "每日节目编单具体编排数据，可以编辑及排序",
@@ -74,7 +74,7 @@ class XkvController extends AdminController
             $filter->disableIdFilter();
         
             // 在这里添加字段过滤器
-            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
+            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkc')->orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
             
         });
 
@@ -197,7 +197,7 @@ TMP;
 
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view('admin.program.xkv', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
+            ->body(view('admin.program.xkc', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {

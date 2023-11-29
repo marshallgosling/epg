@@ -59,7 +59,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         }
 
         $generator = new ChannelGenerator();
-        $generator->loadTemplate($channel->name);
+        $generator->loadTemplate($channel, $channel->name);
 
         $generator->generate($channel);
 

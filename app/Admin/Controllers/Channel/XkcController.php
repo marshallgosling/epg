@@ -15,14 +15,14 @@ use Encore\Admin\Show;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 
-class XkvController extends AdminController
+class XkcController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = "Channel【XKV】节目单";
+    protected $title = "Channel【XKC】节目单";
 
     protected $description = [
                 'index'  => "查看和编辑每日节目单数据",
@@ -40,7 +40,7 @@ class XkvController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('name', 'xkv')->orderBy('air_date', 'desc');
+        $grid->model()->where('name', 'xkc')->orderBy('air_date', 'desc');
 
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="xkv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
@@ -122,7 +122,7 @@ class XkvController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->hidden('name', __('Name'))->default('xkv');
+        $form->hidden('name', __('Name'))->default('xkc');
         $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
