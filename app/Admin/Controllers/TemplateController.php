@@ -12,6 +12,7 @@ use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Widgets\InfoBox;
 use App\Admin\Actions\Template\Programs;
+use App\Admin\Actions\Template\ReplicateTemplate;
 
 class TemplateController extends AdminController
 {
@@ -84,7 +85,8 @@ class TemplateController extends AdminController
         });
 
         $grid->actions(function ($actions) {
-            $actions->add(new Programs);     
+            $actions->add(new Programs);
+            $actions->add(new ReplicateTemplate);
         });
 
         $grid->batchActions(function ($actions) {
