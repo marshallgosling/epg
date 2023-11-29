@@ -120,15 +120,16 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
             Program::whereIn('id', $ids)->update(['black' => $model->id]);
         }
 
+        $data->applied = date('Y/m/d H:i:s');
         $model->status = BlackList::STATUS_READY;
-        $model->data = null;
+        $model->data = json_encode($data);
         $model->save();
     }
 
     private function scan($model)
     {
         $xkvs = Channel::where('air_date', '>', date('Y/m/d'))->with('programs')->select('id','air_date','name')->get();
-        $data = ['xkv'=>[],'program'=>[]];
+        $data = ['xkv'=>[],'program'=>[],'applied'=>''];
         $property = $model->group;
 
         if($xkvs)foreach($xkvs as $xkv)
