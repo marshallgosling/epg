@@ -17,6 +17,7 @@ class ReplicateTemplate extends RowAction
         $template_id = $model->id;
         $new = $model->replicate();
         $new->status = Template::STATUS_NOUSE;
+        $new->version = 1;
         $new->save();
         
         $newid = $new->id;

@@ -430,7 +430,13 @@
     }
 
     function editProgram(idx) {
-
+        var repo = dataList[idx];
+        $("#sName").val(repo.name);
+        $(".type[value="+repo.type+"]").iCheck("check");
+        $("#code").val(repo.data);
+        $('#sCategory').val(repo.category);
+        selectedItem = repo;
+        selectedIndex = repo.id;
     }
 
     function copyProgram (idx) {
