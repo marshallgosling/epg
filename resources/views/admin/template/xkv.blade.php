@@ -41,6 +41,7 @@
                 <div class="dd">
                     <span id="treeinfo"></span>
                     <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
+                    <a id="btnDelete" class="btn btn-danger btn-sm">批量删除</a>
                     <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
                 </div>
                 <div class="dd" id="tree-programs">
@@ -48,6 +49,7 @@
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle {{$item['category']=='m1'?'bg-warning':''}}">
+                                <input type="checkbox" class="grid-row-checkbox" data-id="{{$idx}}" autocomplete="off">&nbsp;
                                 <small>类型：</small> 
                                 <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> 
                                 <small>&nbsp;栏目：</small> 
@@ -187,11 +189,11 @@
                 $('#tree-programs').nestable({maxDepth: 1});
                 $('#tree-programs').on('change', function() {
                     sortChanged = true;
-                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</strong>');
+                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</'+'strong>');
                 });
                 sortEnabled = true;
                 $('#btnSort').html("保存排序");
-                $('#treeinfo').html('<small>可拖动排序</small>');
+                $('#treeinfo').html('<small>可拖动排序</'+'small>');
             }
             else {
                 var list = $('#tree-programs').nestable('serialize');
@@ -206,7 +208,7 @@
 
                 $.ajax({
                     method: 'post',
-                    url: '/admin/template/channelv/tree/{!! $model->id !!}/save',
+                    url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(dataList),
                         action: "sort",
@@ -220,7 +222,62 @@
 
                 sortEnabled = false;
             }
-        })
+        });
+
+        $('#btnDelete').on('click', function(e) {
+
+            if(sortEnabled) {
+                toastr.error("请先保存排序结果。");
+                return;
+            }
+            var selected = [];
+
+            $('.grid-row-checkbox:checked').each(function () {
+                selected.push($(this).data('id'));
+            });
+
+            if (selected.length == 0) {
+                toastr.error("请先勾选需要删除的节目。");
+                return;
+            }
+
+            swal({
+                title: "确认删除?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                showLoaderOnConfirm: true,
+                cancelButtonText: "取消",
+                preConfirm: function() {
+                    return new Promise(function(resolve) {
+                        $.ajax({
+                            method: 'post',
+                            url: '/admin/template/xkv/tree/{!! $model->id !!}/remove/'+selected.join('_'),
+                            data: {
+                                _method:'delete',
+                                _token:LA.token,
+                            },
+                            success: function (data) {
+                                $.pjax.reload('#pjax-container');
+                                toastr.success('删除成功 !');
+                                resolve(data);
+                            }
+                        });
+                    });
+                }
+            }).then(function(result) {
+                var data = result.value;
+                if (typeof data === 'object') {
+                    if (data.status) {
+                        swal(data.message, '', 'success');
+                    } else {
+                        swal(data.message, '', 'error');
+                    }
+                }
+            });
+            
+        });
 
         $(".category").select2({
             ajax: {
@@ -293,10 +350,10 @@
         });
 
         $('#newBtn').on('click', function(e) {
-            /*if(replaceItem == null) {         
-                toastr.error('请先搜索节目分类！');
+            if(sortEnabled) {
+                toastr.error("请先保存排序结果。");
                 return;
-            }*/
+            }
             var newItem = {
                 name: $('#sName').val(),
                 type: $(".type:checked").val(),
@@ -307,7 +364,7 @@
 
             $.ajax({
                     method: 'post',
-                    url: '/admin/template/channelv/tree/{!! $model->id !!}/save',
+                    url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(newItem),
                         action: "append",
@@ -321,6 +378,10 @@
         });
 
         $('#editBtn').on('click', function(e) {
+            if(sortEnabled) {
+                toastr.error("请先保存排序结果。");
+                return;
+            }
             if(selectedIndex > -1) {
                 
                 var newItem = {
@@ -343,7 +404,7 @@
                         return new Promise(function(resolve) {
                             $.ajax({
                                 method: 'post',
-                                url: '/admin/template/channelv/tree/{!! $model->id !!}/save',
+                                url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
                                 data: {
                                     data: JSON.stringify(newItem),
                                     action: "replace",
@@ -390,7 +451,7 @@
                     return new Promise(function(resolve) {
                         $.ajax({
                             method: 'post',
-                            url: '/admin/template/channelv/tree/{!! $model->id !!}/remove/'+id,
+                            url: '/admin/template/xkv/tree/{!! $model->id !!}/remove/'+id,
                             data: {
                                 _method:'delete',
                                 _token:LA.token,
@@ -449,7 +510,7 @@
         repo.sort = dataList.length + 1;
         $.ajax({
             method: 'post',
-            url: '/admin/template/tree/{!! $model->id !!}/save',
+            url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
             data: {
                 data: JSON.stringify(repo),
                 action: "append",

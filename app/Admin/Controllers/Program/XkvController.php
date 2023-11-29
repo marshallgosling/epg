@@ -174,7 +174,7 @@ class XkvController extends AdminController
         $template = <<<TMP
 <li class="dd-item" data-id="idx">
     <div class="dd-handle bgstyle">
-        <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">            
+        <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">
         <span class="textstyle" style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at</span>
         <span style="display:inline-block;width:120px;"><a class="dd-nodrag textstyle" href="javascript:showSearchModal(idx);">unique_no</a></span>
         <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>
