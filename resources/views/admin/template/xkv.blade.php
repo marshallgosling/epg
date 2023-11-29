@@ -49,7 +49,7 @@
                         @foreach($data as $idx=>$item)
                         <li class="dd-item" data-id="{{$idx}}">
                             <div class="dd-handle {{$item['category']=='m1'?'bg-warning':''}}">
-                                <input type="checkbox" class="grid-row-checkbox" data-id="{{$idx}}" autocomplete="off">&nbsp;
+                                <input type="checkbox" class="grid-row-checkbox" data-id="{{$item['id']}}" autocomplete="off">&nbsp;
                                 <small>类型：</small> 
                                 <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span> 
                                 <small>&nbsp;栏目：</small> 
@@ -60,7 +60,7 @@
                                     <a href="javascript:editProgram({{$idx}});" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
                                     <a href="javascript:copyProgram({{$idx}});" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
                                     
-                                    <a href="javascript:void(0);" data-id="{{$idx}}" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:void(0);" data-id="{{$item['id']}}" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
                                 </span>
                             </div>
                         </li>
