@@ -69,19 +69,22 @@
                     </div>
                 </div>
                 <div class="fields-group">
-                    <div class="table-responsive" style="height: 450px; overflow-y:scroll">
+                    <div class="table-responsive" style="height:500px; overflow-y:scroll">
                         <table class="table table-search table-hover table-striped">
                             
                         </table>
                         <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
                     </div>
-                    <ul class="pager">
-                         <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多</a> <small id="totalSpan" class="pull-right"></small></li>
-                    </ul>
-
                 </div>
       </div>
       <div class="modal-footer">
+        <div class="pull-left">
+            <ul class="pager" style="margin:0;">
+                <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多 <i class="fa fa-angle-double-right"></i></a>
+                <small id="totalSpan"></small>
+                </li>
+            </ul>
+        </div>
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
