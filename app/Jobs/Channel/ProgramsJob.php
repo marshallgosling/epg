@@ -68,11 +68,6 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
         $this->info("Generate programs date: {$channel->air_date} succeed. ");
     }
-
-    private function caculateDuration($str1, $str2)
-    {
-
-    }
     
     private function error($msg)
     {

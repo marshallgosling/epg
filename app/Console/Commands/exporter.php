@@ -50,7 +50,7 @@ class exporter extends Command
         
         $export = ExportList::findOrFail($id);
 
-        $lines = \App\Tools\Exporter::gatherLines($export->start_at, $export->end_at);
+        $lines = \App\Tools\Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {
             $export->status = ExportList::STATUS_ERROR;
