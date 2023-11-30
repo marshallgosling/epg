@@ -57,7 +57,7 @@ Route::group([
     
     $router->resource('/media/blacklist', BlackListController::class)->names('tools.blacklist');
 
-    $router->get('/api/programs', function (Request $request) {
+    $router->get('/api/tree/programs', function (Request $request) {
         $q = $request->get('q');
         return response()->json(['result'=>Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
                 ->select(DB::raw('id, unique_no, duration, name, category, artist, black'))->orderByDesc('id')
@@ -65,6 +65,13 @@ Route::group([
         // return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q")
         //     ->select(DB::raw('id, concat(unique_no, " ", name, " ", artist) as text, unique_no, duration, name, category, artist, black'))
         //     ->paginate(15);
+    });
+    $router->get('/api/programs', function (Request $request) {
+        $q = $request->get('q');
+            
+        return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q")
+            ->select(DB::raw('id, concat(unique_no, " ", name, " ", artist) as text, unique_no, duration, name, category, artist, black'))
+            ->paginate(15);
     });
     $router->get('/api/category', function (Request $request) {
         $q = $request->get('q');

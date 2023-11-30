@@ -172,7 +172,7 @@
         $("#keyword").on('change', function(e) {
             if(uniqueAjax) uniqueAjax.abort();
             uniqueAjax = $.ajax({
-                url: "/admin/api/programs",
+                url: "/admin/api/tree/programs",
                 dataType: 'json',
                 data: {
                     q: e.currentTarget.value,
