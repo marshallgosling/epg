@@ -142,6 +142,7 @@
             dataList = backupList.pop();
             console.table(dataList);
             reloadTree();
+            toastr.success("回退成功");
 
             if(backupList.length==0)
                 $('#btnRollback').attr('disabled', true);
