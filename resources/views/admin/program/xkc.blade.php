@@ -234,7 +234,7 @@
                         return;
                     }
                     $('#noitem').hide();
-                    $('#totalSpan').html("共找到 " + data.total + " 条节目");
+                    $('#totalSpan').html("<small>共找到 " + data.total + " 条节目</s"+"mall>");
                     var head = ['序号','播出编号','名称','艺人','时长','栏目'];
                     var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();

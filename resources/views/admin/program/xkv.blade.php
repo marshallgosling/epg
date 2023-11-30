@@ -74,7 +74,7 @@
                         <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
                     </div>
                     <ul class="pager">
-                         <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多</a> <span id="totalSpan" class="pull-right"></span></li>
+                         <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多</a> <small id="totalSpan" class="pull-right"></small></li>
                     </ul>
 
                 </div>
