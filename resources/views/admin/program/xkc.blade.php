@@ -39,9 +39,11 @@
                 <div class="dd">
                     
                     <span id="treeinfo"></span>
-                    <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
-                    <a id="btnDelete" class="btn btn-danger btn-sm">批量删除</a>
-                    <a id="newBtn" title="新增" class="btn btn-success btn-sm" href="javascript:showSearchModal('new');">新增</a>
+                    <a id="btnSort" class="btn btn-info btn-sm"><i class="fa fa-sort-numeric-asc"></i> 开启排序</a>
+                    <a id="btnDelete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> 批量删除</a>
+                    <a id="newBtn" title="新增" class="btn btn-success btn-sm" href="javascript:showSearchModal('new');"><i class="fa fa-plus"></i> 新增</a>
+                    <a id="btnRollback" disabled="true" class="btn btn-warning btn-sm" title="回退"><i class="fa fa-rotate-left"></i> 回退</a>
+            
                     <span id="total" class="pull-right"></span>
                 </div>
                 <div class="dd" id="tree-programs">
@@ -80,7 +82,7 @@
                 </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>
+        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div><!-- /.modal-content -->
@@ -96,7 +98,7 @@
     var sortEnabled = false;
     var cachedPrograms = null;
     var uniqueAjax = null;
-    var backupList = JSON.parse(JSON.stringify(dataList));
+    var backupList = [];
     var curPage = 1;
     var keyword = '';
     var loadingMore = false;
@@ -128,6 +130,21 @@
             }
             reCalculate(0);
             reloadTree();
+        });
+
+        $('#btnRollback').on('click', function(e) {
+            if(backupList.length == 0) return;
+            if(sortEnabled) {
+                toastr.error("请先保存排序结果。");
+                return;
+            }
+            //console.log("rollback data");
+            dataList = backupList.pop();
+            console.table(dataList);
+            reloadTree();
+
+            if(backupList.length==0)
+                $('#btnRollback').attr('disabled', true);
         });
 
         $('#btnSort').on('click', function(e) {
@@ -236,7 +253,7 @@
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
                     var head = ['序号','播出编号','名称','艺人','时长','栏目'];
-                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    var html = '<tr><th>'+head.join('</'+'th><th>')+'</'+'th></'+'tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
                     for(i=0;i<items.length;i++)
@@ -265,6 +282,7 @@
 
             $('#searchModal').modal('hide');
 
+            backupData();
 
             if(selectedIndex == 'new') {
                 
@@ -284,7 +302,6 @@
                 reCalculate(selectedIndex);
             }
 
-            
             reloadTree();
             
             $('#btnSort').html("保存");
@@ -296,6 +313,13 @@
         
         reloadTree();
     });
+
+    function backupData() {
+        backupList.push(JSON.parse(JSON.stringify(dataList)));
+        console.log("backupData()");
+        $('#btnRollback').removeAttr('disabled');
+    }
+
 
     function showSearchModal(idx) {
         if(sortEnabled) {

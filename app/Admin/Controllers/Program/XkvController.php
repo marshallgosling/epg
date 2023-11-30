@@ -182,7 +182,7 @@ class XkvController extends AdminController
         <span class="textstyle" style="display:inline-block;width:60px;">【category】</span>
         <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>
         <span class="pull-right dd-nodrag">
-            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
+            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
         </span>
     </div>
 </li>
