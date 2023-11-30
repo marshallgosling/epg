@@ -1,5 +1,5 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkc/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
     <div class="box-body fields-group">
     
                     <input type="hidden" name="data" value='' id="data">
@@ -30,7 +30,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/xkv/programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/xkc/programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>
@@ -53,8 +53,8 @@
     </div>
 </div></div>
 <!-- Modal -->
-<div class="modal fade bs-example-modal-lg" id="searchModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -67,14 +67,20 @@
                     </div>
                 </div>
                 <div class="fields-group">
-                    <div class="table-responsive table-search" style="height: 500px; overflow-y:scroll">
-                        <strong>没有找到任何记录</strong>
+                    <div class="table-responsive" style="height: 450px; overflow-y:scroll">
+                        <table class="table table-search table-hover table-striped">
+                            
+                        </table>
+                        <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
                     </div>
+                    <ul class="pager">
+                         <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多</a> <span id="totalSpan" class="pull-right"></span></li>
+                    </ul>
+
                 </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>
-        
+        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div><!-- /.modal-content -->
@@ -91,17 +97,14 @@
     var cachedPrograms = null;
     var uniqueAjax = null;
     var backupList = JSON.parse(JSON.stringify(dataList));
+    var curPage = 1;
+    var keyword = '';
+    var loadingMore = false;
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
-
-        // $('#searchModal').on('show.bs.modal', function (event) {
-        //     selectedIndex = $(event.relatedTarget).data('id');
-        // }).on('hidden.bs.modal', function (e) {
-            
-        // });
 
         $('#btnDelete').on('click', function(e) {
 
@@ -154,7 +157,7 @@
                 
                 $.ajax({
                     method: 'post',
-                    url: '/admin/channel/xkv/data/{!! $model->id !!}/save',
+                    url: '/admin/channel/xkc/data/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(newList),
                         _token:LA.token,
@@ -168,37 +171,84 @@
                 sortEnabled = false;
             }
         });
-        
-        $("#keyword").on('change', function(e) {
-            if(uniqueAjax) uniqueAjax.abort();
-            uniqueAjax = $.ajax({
+
+        $('#moreBtn').on('click', function(e) {
+            if(loadingMore) return;
+            loadingMore = true;
+            curPage ++;
+            $.ajax({
                 url: "/admin/api/tree/programs",
                 dataType: 'json',
                 data: {
-                    q: e.currentTarget.value,
+                    q: keyword,
+                    p: curPage
                 },
                 success: function (data) {
-                    uniqueAjax = null;
+                    loadingMore = false;
                     var items = data.result;
-                    cachedPrograms = items;
-                    if(items.length == 0) {
-                        $('.table-search').html('<strong>没有找到任何记录</strong>');
-                        return;
-                    }
-                    var head = ['播出编号','名称','艺人','时长','栏目'];
-                    var html = '<table class="table table-hover table-striped"><tr><th>'+head.join('</th><th>')+'</th></tr>';
                     
+                    var idx = cachedPrograms.length;
+                    cachedPrograms = cachedPrograms.concat(items);
+                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
+                    else $('#moreBtn').hide();
+                    var html = '';
                     for(i=0;i<items.length;i++)
                     {
                         item = items[i];
                         tr = '';
                         if(item.black) tr = ' danger';
                         if(item.artist==null) item.artist='';
-                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+idx+')"><td>'+(idx+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                        idx ++;
                     }
-                    html += '</table>';
-                    $('.table-search').html(html);
                     
+                    $('.table-search').append(html);
+                },
+                error: function() {
+                    loadingMore = false;
+                }
+            })
+        });
+        
+        $("#keyword").on('change', function(e) {
+            if(uniqueAjax) uniqueAjax.abort();
+            keyword = e.currentTarget.value;
+            cachedPrograms = [];
+            curPage = 1
+            uniqueAjax = $.ajax({
+                url: "/admin/api/tree/programs",
+                dataType: 'json',
+                data: {
+                    q: keyword,
+                    p: curPage
+                },
+                success: function (data) {
+                    uniqueAjax = null;
+                    var items = data.result;
+                    cachedPrograms = cachedPrograms.concat(items);
+                    selectedItem = null;
+
+                    if(data.total == 0) {
+                        $('#noitem').show();
+                        $('#totalSpan').html('');
+                        return;
+                    }
+                    $('#noitem').hide();
+                    $('#totalSpan').html("共找到 " + data.total + " 条节目");
+                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
+                    else $('#moreBtn').hide();
+                    for(i=0;i<items.length;i++)
+                    {
+                        item = items[i];
+                        tr = '';
+                        if(item.black) tr = ' danger';
+                        if(item.artist==null) item.artist='';
+                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                    }
+                    
+                    $('.table-search').html(html);
                 },
                 error: function() {
                     uniqueAjax = null;
@@ -212,7 +262,9 @@
             }
 
             $(this).attr('disabled', 'true');
+
             $('#searchModal').modal('hide');
+
 
             if(selectedIndex == 'new') {
                 
@@ -232,6 +284,7 @@
                 reCalculate(selectedIndex);
             }
 
+            
             reloadTree();
             
             $('#btnSort').html("保存");
