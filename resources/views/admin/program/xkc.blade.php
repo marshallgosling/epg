@@ -22,7 +22,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li><a href="./{{$item->id}}" target="_top">{{$item->start_at}} {{$item->name}}</a></li>
+                            <li><a href="./{{$item->id}}" target="_top">{{$item->start_at}} -- {{$item->end_at}} {{$item->name}}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -74,13 +74,13 @@
                         <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
                     </div>
                     <ul class="pager">
-                         <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多</a> <span id="totalSpan" class="pull-right"></span></li>
+                         <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多</a> <small id="totalSpan" class="pull-right"></small></li>
                     </ul>
 
                 </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
+        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div><!-- /.modal-content -->
@@ -234,7 +234,7 @@
                         return;
                     }
                     $('#noitem').hide();
-                    $('#totalSpan').html("<small>共找到 " + data.total + " 条节目</s"+"mall>");
+                    $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
                     var head = ['序号','播出编号','名称','艺人','时长','栏目'];
                     var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
