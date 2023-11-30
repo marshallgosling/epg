@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Media;
 
 use App\Models\Category;
 use App\Models\Program;
@@ -79,10 +79,6 @@ class ProgramController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->like('artist', __('Artist'));
             $filter->like('unique_no', __('Unique_no'));

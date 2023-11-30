@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\BlackList\Apply;
 use App\Admin\Actions\BlackList\Scanner;
@@ -46,10 +46,6 @@ class BlackListController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->like('keyword', __('Keyword'));
             $filter->in('status', __('Status'))->checkbox(BlackList::STATUS);
             

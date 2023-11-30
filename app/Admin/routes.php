@@ -19,12 +19,12 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
-    $router->resource('/media/category', 'CategoryController')->names('media.category');
+    $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
     $router->resource('/records', 'RecordsController')->names('records');
-    $router->post('/media/material/unique', 'MaterialController@unique')->name('media.material.unique');
-    $router->resource('/media/material', 'MaterialController')->names('media.material');
-    $router->post('/media/programs/unique', 'ProgramController@unique')->name('media.material.unique');
-    $router->resource('/media/programs', 'ProgramController')->names('media.program');
+    $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
+    $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
+    $router->post('/media/programs/unique', 'Media\\ProgramController@unique')->name('media.material.unique');
+    $router->resource('/media/programs', 'Media\\ProgramController')->names('media.program');
     
     $router->get('/channel/xkc/tree/{id}', 'Program\\XkcController@tree')->name('channel.xkc.programs.tree');
     $router->resource('/channel/xkc/programs', 'Program\\XkcController')->names('channel.xkc.programs');

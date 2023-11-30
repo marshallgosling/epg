@@ -88,8 +88,8 @@ HTML;
         $links = [
             '物料管理' => admin_url('/media/material'),
             '节目管理' => admin_url('/media/programs'),
-            'ChannelV' => admin_url('/channel/channelv'),
-            '模版库' => admin_url('/template/channelv'),
+            'XKV' => admin_url('/channel/xkv'),
+            '模版库' => admin_url('/template/xkv'),
         ];
         return view('admin.dashboard', ['title'=>'', 'links'=>$links]);
     }

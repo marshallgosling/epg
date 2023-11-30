@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Media;
 
-use App\Admin\Actions\Category\TestModal;
 use App\Models\Category;
 use App\Models\TemplatePrograms;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+
 class CategoryController extends AdminController
 {
     /**
@@ -38,7 +38,6 @@ class CategoryController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->like('no', __('CategoryNo'));
             $filter->equal('type', __('CategoryType'))->select(Category::TYPES);

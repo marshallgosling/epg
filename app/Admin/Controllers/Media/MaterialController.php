@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
@@ -11,6 +11,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+
 class MaterialController extends AdminController
 {
     /**
@@ -50,10 +51,6 @@ class MaterialController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->like('unique_no', __('Unique_no'));
             $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
