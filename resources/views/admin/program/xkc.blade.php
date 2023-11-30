@@ -17,12 +17,12 @@
                 <div class="btn-group">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{$model->start_at}} {{$model->name}}
+                            {{@substr($model->start_at, 11)}} -- {{@substr($model->end_at, 11)}} {{$model->name}} 
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li><a href="./{{$item->id}}" target="_top">{{$item->start_at}} -- {{$item->end_at}} {{$item->name}}</a></li>
+                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top">{{@substr($item->start_at, 11)}} -- {{@substr($item->end_at, 11)}} {{$item->name}}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -30,7 +30,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/channel/xkc/programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="../programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>
