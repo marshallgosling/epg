@@ -69,7 +69,7 @@ Route::group([
     $router->get('/api/category', function (Request $request) {
         $q = $request->get('q');
     
-        return Category::where('no', 'like', "$q%")->where('type', 'channel')
+        return Category::where('no', 'like', "$q%")->where('type', 'tags')
             ->select(DB::raw('id, concat("【 ",no, " 】 ", name) as text, no as category,  name, duration'))
             ->paginate(15);
     });
