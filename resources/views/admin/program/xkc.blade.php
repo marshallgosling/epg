@@ -73,7 +73,7 @@
                 </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmBtn" type="button" class="btn btn-info">确认</button>
+        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>
         
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
@@ -211,6 +211,9 @@
                 toastr.error('请先选择节目！');
             }
 
+            $(this).attr('disabled', 'true');
+            $('#searchModal').modal('hide');
+
             if(selectedIndex == 'new') {
                 
                 selectedIndex = dataList.length;
@@ -228,8 +231,6 @@
                 replaceItem.push(selectedItem.unique_no.toString());
                 reCalculate(selectedIndex);
             }
-
-            $('#searchModal').modal('hide');
 
             reloadTree();
             
@@ -250,6 +251,7 @@
         }
         selectedIndex = idx;
         $('#searchModal').modal('show');
+        $('#confirmBtn').removeAttr('disabled');
     }
 
     function selectProgram (idx) {

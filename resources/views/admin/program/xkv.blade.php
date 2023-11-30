@@ -53,8 +53,8 @@
     </div>
 </div></div>
 <!-- Modal -->
-<div class="modal fade bs-example-modal-lg" id="searchModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -73,8 +73,7 @@
                 </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmBtn" type="button" class="btn btn-info">确认</button>
-        
+        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div><!-- /.modal-content -->
@@ -211,6 +210,11 @@
                 toastr.error('请先选择节目！');
             }
 
+            $(this).attr('disabled', 'true');
+
+            $('#searchModal').modal('hide');
+
+
             if(selectedIndex == 'new') {
                 
                 selectedIndex = dataList.length;
@@ -229,8 +233,7 @@
                 reCalculate(selectedIndex);
             }
 
-            $('#searchModal').modal('hide');
-
+            
             reloadTree();
             
             $('#btnSort').html("保存");
@@ -250,6 +253,7 @@
         }
         selectedIndex = idx;
         $('#searchModal').modal('show');
+        $('#confirmBtn').removeAttr('disabled');
     }
 
     function selectProgram (idx) {
