@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Advanced extends Action
 {
-    public $name = '高级编辑器';
+    public $name = '高级编辑模式';
 
     public $group = 'xkv';
     public $template_id;

@@ -35,7 +35,7 @@ class XkcController extends AdminController
         $grid->model()->where('group_id', 'xkc')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return '<a href="xkc/tree/'.$this->id.'">'.$name.'</a>'; 
+            return '<a href="xkv/programs?template_id='.$this->id.'">'.$name.'</a>'; 
         });
         // $grid->column('ex', __(" "))->display(function() {
         //     return "预览";

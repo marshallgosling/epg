@@ -23,7 +23,7 @@ class XkvProgramsController extends AdminController
      *
      * @var string
      */
-    protected $title = '【 XKV 】模版节目编排';
+    protected $title = '普通模版编排 【 XKV 】';
 
     /**
      * Make a grid builder.
@@ -62,7 +62,6 @@ class XkvProgramsController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $advanced = new Advanced();
-            $advanced->group = 'xkv';
             $advanced->template_id = $_REQUEST['template_id'];
             $tools->append($advanced);
         });
@@ -160,8 +159,7 @@ TMP;
 
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
-        return $content->title($model->start_at . ' '.$model->name.' 详细编排')
-            ->description("编排调整模版内容")
+        return $content->title('高级编排模式')->description("编排调整模版内容")
             ->body(view('admin.template.xkv', ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
                     'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
     }

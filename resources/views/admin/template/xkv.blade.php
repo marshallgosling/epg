@@ -1,5 +1,5 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+<form id="widget-form-655477f1c8f59" method="POST" action="/admin/template/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
     <div class="box-body fields-group">
     
                     <input type="hidden" name="data" value='' id="data">
@@ -30,7 +30,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回" href="../programs?template_id={{$model->template_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回普通模式" href="../programs?template_id={{$model->template_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回普通模式</span></a>
                 </div>
                 
             </div>
