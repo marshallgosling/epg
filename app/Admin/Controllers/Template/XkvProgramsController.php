@@ -168,7 +168,7 @@ TMP;
     {
         $action = $request->post('action');
 
-        if(in_array($action, ['append','replace','sort']))
+        if(in_array($action, ['modify','sort']))
             return $this->$action($id, $request);
     }
 
@@ -193,6 +193,52 @@ TMP;
 
         return response()->json($response);
 
+    }
+
+    private function modify($id, Request $request)
+    {
+        $data = $request->post('data');
+        $items = json_decode($data, true);
+        $deleted = json_decode($request->post('deleted'), true);
+        $list = [];
+
+        foreach($items as $item)
+        {
+            if($item['id'] != '0') {
+                $list[] = $item['id'];
+                $program = TemplatePrograms::findOrFail($item['id']);
+                $program->name = $item['name'];
+                $program->type = $item['type'];
+                $program->category = $item['category'];
+                $program->data = $item['data'];
+                if($program->isDirty()) $program->save();
+            }
+            else {
+                $program = new TemplatePrograms();
+                $program->name = $item['name'];
+                $program->type = $item['type'];
+                $program->category = $item['category'];
+                $program->data = $item['data'];
+                $program->template_id = $id;
+                $program->sort = $item['sort'];
+                $program->save();
+            }
+            
+        }
+
+        foreach($deleted as $item) {
+            if(in_array($item['id'], $list)) continue;
+
+            $program = TemplatePrograms::findOrFail($item['id']);
+            if($program->template_id == $id) $program->delete();
+        }
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.create_succeeded'),
+        ];
+
+        return response()->json($response);
     }
 
     private function replace($id, Request $request)

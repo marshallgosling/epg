@@ -60,11 +60,20 @@ Route::group([
     $router->get('/api/tree/programs', function (Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
+        $o = (int)$request->get('o', 1);
         $size = 20;$start = ($p-1)*$size;
+
+        $model = new Program();
+        if($o) {
+            $model = $model->where('category', 'like', "%$q%");
+        }
+        else {
+            $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
+        }
+
         return response()->json([
-            'total' => Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")->count(),
-            'result'=> Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
-                ->select(DB::raw('id, unique_no, duration, name, category, artist, black'))->orderByDesc('id')->offset($start)
+            'total' => $model->count(),
+            'result'=> $model->select(DB::raw('id, unique_no, duration, name, category, artist, black'))->orderByDesc('id')->offset($start)
                 ->limit($size)->get()->toArray()
             ]);      
         // return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")

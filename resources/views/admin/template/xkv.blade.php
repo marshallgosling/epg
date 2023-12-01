@@ -113,7 +113,7 @@
 <script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
-    var replaceItem = [];
+    var deletedItem = [];
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
     var category = JSON.parse('{!!@json_encode($category)!!}');
@@ -161,7 +161,9 @@
                 return;
             }
             //console.log("rollback data");
+            deletedItem.pop();
             dataList = backupList.pop();
+            
             console.table(dataList);
             reloadTree();
             toastr.success("回退成功");
@@ -182,6 +184,7 @@
                 $('#treeinfo').html('<small>可拖动排序</'+'small>');
             } 
             else {
+                var action = "";
                 var newList = [];
                 if(sortChanged) {
                     var list = $('#tree-programs').nestable('serialize');
@@ -190,8 +193,10 @@
                     {
                         newList[i] = dataList[list[i].id];
                     }
+                    action = "sort";
                 }
                 else {
+                    action = "modify";
                     newList = dataList;     
                 }
                 
@@ -200,7 +205,9 @@
                     url: '/admin/template/xkv/data/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(newList),
-                        _token:LA.token,
+                        action: action,
+                        deleted: JSON.stringify(deletedItem),
+                        _token: LA.token
                     },
                     success: function (data) {
                         $.pjax.reload('#pjax-container');
@@ -268,6 +275,7 @@
             $('#searchModal').modal('hide');
 
             backupData();
+            deletedItem.push({name: "empty"});
 
             var item = {
                 id: selectedIndex == 'new' ? 0 : dataList[selectedIndex].id,
@@ -366,7 +374,7 @@
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
         if(repo.black) {
-            toastr.error("该节目以上黑名单");
+            toastr.error("该节目已上黑名单");
         }
         if(repo.category) {
             repo.category = repo.category.toString().split(',')[0];
@@ -383,7 +391,8 @@
             toastr.error("请先保存排序结果。");
             return;
         }
-        dataList.splice(idx, 1);
+        backupData();
+        deletedItem.push(dataList.splice(idx, 1));
         //reCalculate(idx);
         reloadTree();
     }
