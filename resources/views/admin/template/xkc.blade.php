@@ -22,7 +22,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}"><b>{{@substr($item->start_at, 0)}}</b> (<small>{{@substr($item->duration, 0)}}</small>) {{$item->name}} <small class="text-danger">{{@\App\Models\Template::STATUSES[$model->status]}}</small></a></li>
+                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}"><b>{{@substr($item->start_at, 0)}}</b> (<small>{{@substr($item->duration, 0)}}</small>) {{$item->name}} <small class="text-{{$item->status==\App\Models\Template::STATUS_SYNCING?'danger':'info'}}">{{@\App\Models\Template::STATUSES[$model->status]}}</small></a></li>
                             @endforeach
                         </ul>
                     </div>
