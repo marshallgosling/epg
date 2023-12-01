@@ -83,15 +83,15 @@ Route::group([
     $router->get('/api/programs', function (Request $request) {
         $q = $request->get('q');
             
-        return Program::where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
-            ->select(DB::raw('unique_no as id, concat(unique_no, " ", name, " ", artist) as text'))
+        return DB::table('program')->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
+            ->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
             ->paginate(15);
     });
     $router->get('/api/category', function (Request $request) {
         $q = $request->get('q');
     
-        return Category::where('no', 'like', "$q%")->where('type', 'tags')
-            ->select(DB::raw('no as id, concat("【 ",no, " 】 ", name) as text'))
+        return DB::table('category')->where('no', 'like', "$q%")->where('type', 'tags')
+            ->select(DB::raw('`no` as id, concat("【 ",no, " 】 ", name) as text'))
             ->paginate(15);
     });
 });

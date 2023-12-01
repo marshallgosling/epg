@@ -3,11 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
+use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel as Modal;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class channel extends Command
 {
