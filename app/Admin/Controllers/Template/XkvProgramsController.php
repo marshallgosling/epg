@@ -122,7 +122,7 @@ class XkvProgramsController extends AdminController
 
     public function tree($id, Content $content)
     {
-        $data = TemplatePrograms::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','status','sort','data')->get();
+        $data = TemplatePrograms::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','sort','data')->get();
 
         $model = Template::find($id);
 
