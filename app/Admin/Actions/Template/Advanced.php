@@ -22,6 +22,6 @@ class Advanced extends Action
 
     public function html()
     {
-        return '<a class="advanced btn btn-sm btn-danger" href="'.$this->href().'"><i class="fa fa-dedent"></i> '.$this->name.'</a>';
+        return $this->template_id == '' ? '' : '<a class="advanced btn btn-sm btn-danger" href="'.$this->href().'"><i class="fa fa-dedent"></i> '.$this->name.'</a>';
     }
 }

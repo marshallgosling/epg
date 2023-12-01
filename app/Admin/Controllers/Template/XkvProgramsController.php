@@ -37,10 +37,10 @@ class XkvProgramsController extends AdminController
         $grid->column('id', __('Id'));
         
         $grid->column('sort', __('Sort'));
-        $grid->column('category', __('Category'))->display(function($category) {
-            return "<span class='label label-info'>{$category}</span>";
-        });
-        $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
+
+        $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
+        
+        $grid->column('category', __('Category'));
         
         $grid->column('name', __('Name'));
         //$grid->column('created_at', __('Created at'));

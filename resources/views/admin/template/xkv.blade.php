@@ -30,7 +30,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回普通模式" href="../programs?template_id={{$model->template_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回普通模式</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回普通模式" href="../programs?template_id={{$model->id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回普通模式</span></a>
                 </div>
                 
             </div>
