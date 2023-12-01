@@ -109,7 +109,7 @@ class XkvProgramsController extends AdminController
                 ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
         
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
-        $form->text('category', __('Category'));
+        $form->select('category', __('Category'))->ajax('/admin/api/category');
         $form->text('name', __('Name'));
 
         $form->number('sort', __('Sort'))->default(0);
