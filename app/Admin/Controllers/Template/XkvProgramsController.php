@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Template;
 
+use App\Admin\Models\MyGrid;
 use App\Admin\Actions\Template\Advanced;
 use App\Admin\Actions\Template\BatchReplicate;
 use App\Admin\Actions\Template\Replicate;
@@ -34,7 +35,9 @@ class XkvProgramsController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new TemplatePrograms());
+        $grid = new MyGrid(new TemplatePrograms());
+
+        $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
         $grid->column('id', __('Id'));
         
@@ -68,6 +71,17 @@ class XkvProgramsController extends AdminController
             $tools->append($advanced);
         });
 
+        // $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
+            
+        //     $create->select('type', __('Type'))->options(TemplatePrograms::TYPES);
+        //     $create->text('category', __('Category'));
+        //     $create->integer('sort', __('Sort'));
+        //     $create->text('name', __('Name'));
+        //     $create->text('data', __('Unique no'));
+        
+        //     $create->integer('template_id')->default($_REQUEST['template_id']);
+        // });
+
         return $grid;
     }
 
@@ -86,6 +100,7 @@ class XkvProgramsController extends AdminController
         $show->field('category', __('Category'));
         $show->field('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
         $show->field('sort', __('Sort'));
+        $show->field('data', __('Unique no'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -101,7 +116,8 @@ class XkvProgramsController extends AdminController
     {
         $form = new Form(new TemplatePrograms());
 
-        $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
+        $form->select('template_id', __('Template'))->default($_REQUEST['template_id'])
+            ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
         
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->text('category', __('Category'));
@@ -109,7 +125,7 @@ class XkvProgramsController extends AdminController
 
         $form->number('sort', __('Sort'))->default(0);
         
-        $form->json('data', __('Data'));
+        $form->text('data', __('Unique no'));
 
         $form->saved(function (Form $form) {
             $temp = Template::find($form->template_id);
