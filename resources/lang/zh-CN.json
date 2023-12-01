@@ -37,6 +37,7 @@
     "Type"          : "类型",
     "Download"      : "下载",
     "Filename"      : "文件",
+    "Alias"         : "别名",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Schedule start at": "计划开始时间",

@@ -47,7 +47,7 @@ class XkvProgramsController extends AdminController
         
         $grid->column('category', __('Category'));
         
-        $grid->column('name', __('Name'));
+        $grid->column('name', __('Alias'));
         //$grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -85,11 +85,14 @@ class XkvProgramsController extends AdminController
         $show = new Show(TemplatePrograms::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('name', __('Name'));
-        $show->field('category', __('Category'));
-        $show->field('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
         $show->field('sort', __('Sort'));
+
+        $show->field('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
+        $show->field('category', __('Category'));
+        
+        $show->field('name', __('Alias'));
         $show->field('data', __('Unique no'));
+
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -106,16 +109,17 @@ class XkvProgramsController extends AdminController
         $form = new Form(new TemplatePrograms());
 
         $form->select('template_id', __('Template'))->default($_REQUEST['template_id'])
-                ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
+                ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)
+                ->get()->pluck('name', 'id'));
         
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->select('category', __('Category'))->ajax('/admin/api/category');
-        $form->text('name', __('Name'));
+        $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
+        
+        $form->text('name', __('Alias'));
 
         $form->number('sort', __('Sort'))->default(0);
-        
-        $form->text('data', __('Unique no'));
-
+    
         $form->saved(function (Form $form) {
             $temp = Template::find($form->template_id);
             if($temp) {
