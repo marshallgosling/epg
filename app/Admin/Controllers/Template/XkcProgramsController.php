@@ -137,7 +137,7 @@ class XkcProgramsController extends AdminController
             <small> 别名：</small> name&nbsp;
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
-                <a href="javascript:showSearchModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
+                <a href="/admin/template/xkv/programs/idx/edit" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
                 <a href="javascript:copyProgram(idx);" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
                 
                 <a href="javascript:deleteProgram(idx);" title="删除"><i class="fa fa-trash"></i></a>

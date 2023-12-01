@@ -139,7 +139,7 @@ class XkvProgramsController extends AdminController
             <small> 别名：</small> name&nbsp;
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
-                <a href="javascript:showSearchModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
+                <a href="javascript:showEditorModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
                 <a href="javascript:copyProgram(idx);" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
                 
                 <a href="javascript:deleteProgram(idx);" title="删除"><i class="fa fa-trash"></i></a>
@@ -268,14 +268,11 @@ TMP;
 
         foreach($list as $item)
         {
-            if(key_exists('haschanged', $item)) {
-                TemplatePrograms::where('id', $item['id'])->update([
-                    //'name' => $item['name'],
-                    //'type' => $item['type'],
-                    //'category' => implode(',', $item['category']),
-                    'sort' => $item['sort']
-                ]);
-            }
+            
+            $template =  TemplatePrograms::find($item['id']);
+            $template->sort = $item['sort'];
+            if($template->isDirty())
+                $template->save();
         }
 
         $response = [

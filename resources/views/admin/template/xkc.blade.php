@@ -1,14 +1,4 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/template/xkc/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
-    <div class="box-body fields-group">
-    
-                    <input type="hidden" name="data" value='' id="data">
-    </div>
-    
-            <input type="hidden" name="_token" value="{{@csrf_token()}}">
-</form>
-</div>
-<div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
@@ -54,6 +44,66 @@
         </div>
     </div>
 </div></div>
+
+<!-- Modal -->
+<div class="modal fade" id="editorModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">修改</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+            <div class="form-group">
+                <label>类型</label>
+                <div>
+                    <span class="icheck">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="inputType0" value="0" class="minimal type action"> 节目  
+                            </label>
+                    </span>
+                    <span class="icheck">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="inputType1" value="1" class="minimal type action"> 广告  
+                            </label>
+                    </span>
+                    <span class="icheck">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="inputType2" value="2" class="minimal type action"> 垫片  
+                            </label>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                        <label>分类</label>
+                        
+                            <input type="text" class="form-control" id="inputCategory" placeholder="填写分类">
+                       
+                    </div>
+            <div class="form-group">
+                    <label>别名</label>
+                   
+                        <input type="text" class="form-control" id="inputName" placeholder="填写别名">
+                    
+                </div>
+            <div class="form-group">
+                <label>数据</label>
+                
+                    <input type="text" class="form-control" id="inputData" placeholder="填写播出编号">
+              
+            </div>
+        </div>
+    </div>
+      <div class="modal-footer">
+        
+        <button id="editBtn" type="button" class="btn btn-info">确认</button>      
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -113,7 +163,8 @@
 <script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
-    var replaceItem = [];
+    var editorIndex = -1;
+    var deletedItem = [];
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
     var category = JSON.parse('{!!@json_encode($category)!!}');
@@ -129,7 +180,7 @@
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
-        //$('.onlycategory').iCheck({radioClass:'iradio_minimal-blue'});
+        $('.minimal').iCheck({radioClass:'iradio_minimal-blue'});
         $('#btnDelete').on('click', function(e) {
 
             if(sortEnabled) {
@@ -148,9 +199,11 @@
             }
             for(i=selected.length-1;i>=0;i--)
             {
-                dataList.splice(selected[i], 1);
+                deletedItem.push(dataList.splice(selected[i], 1)[0]);
             }
-            //reCalculate(0);
+            $('#btnSort').html("保存");
+            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+
             reloadTree();
         });
 
@@ -161,13 +214,33 @@
                 return;
             }
             //console.log("rollback data");
+            deletedItem.pop();
             dataList = backupList.pop();
+            
             console.table(dataList);
             reloadTree();
             toastr.success("回退成功");
 
             if(backupList.length==0)
                 $('#btnRollback').attr('disabled', true);
+        });
+
+        $('#editBtn').on('click', function(e) {
+            $('#editorModal').modal('hide');
+            backupData();
+            var tmp = dataList[editorIndex];
+            tmp.type = $('input[name=type]:checked').val();
+            tmp.name = $('#inputName').val();
+            tmp.category = $('#inputCategory').val();
+            tmp.data = $('#inputData').val();
+            dataList[editorIndex] = tmp;
+
+            console.table(tmp);
+
+            $('#btnSort').html("保存");
+            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+
+            reloadTree();
         });
 
         $('#btnSort').on('click', function(e) {
@@ -182,6 +255,7 @@
                 $('#treeinfo').html('<small>可拖动排序</'+'small>');
             } 
             else {
+                var action = "";
                 var newList = [];
                 if(sortChanged) {
                     var list = $('#tree-programs').nestable('serialize');
@@ -190,8 +264,10 @@
                     {
                         newList[i] = dataList[list[i].id];
                     }
+                    action = "sort";
                 }
                 else {
+                    action = "modify";
                     newList = dataList;     
                 }
                 
@@ -200,7 +276,9 @@
                     url: '/admin/template/xkc/data/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(newList),
-                        _token:LA.token,
+                        action: action,
+                        deleted: JSON.stringify(deletedItem),
+                        _token: LA.token
                     },
                     success: function (data) {
                         $.pjax.reload('#pjax-container');
@@ -268,6 +346,7 @@
             $('#searchModal').modal('hide');
 
             backupData();
+            deletedItem.push({name: "empty"});
 
             var item = {
                 id: selectedIndex == 'new' ? 0 : dataList[selectedIndex].id,
@@ -326,7 +405,7 @@
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
                     var head = ['序号','播出编号','名称','艺人','时长','栏目'];
-                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    var html = '<tr><th>'+head.join('</'+'th><th>')+'</'+'th></t'+'r>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
                     for(i=0;i<items.length;i++)
@@ -352,6 +431,20 @@
         $('#btnRollback').removeAttr('disabled');
     }
 
+    function showEditorModal(idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
+        editorIndex = idx;
+        $('#editorModal').modal('show');
+        var tmp = dataList[editorIndex];
+        $('.minimal').iCheck('uncheck');
+        $('#inputType'+tmp.type).iCheck('check');
+        $('#inputName').val(tmp.name);
+        $('#inputCategory').val(tmp.category);
+        $('#inputData').val(tmp.data);
+    }
 
     function showSearchModal(idx) {
         if(sortEnabled) {
@@ -366,7 +459,7 @@
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
         if(repo.black) {
-            toastr.error("该节目以上黑名单");
+            toastr.error("该节目已上黑名单");
         }
         if(repo.category) {
             repo.category = repo.category.toString().split(',')[0];
@@ -383,8 +476,10 @@
             toastr.error("请先保存排序结果。");
             return;
         }
-        dataList.splice(idx, 1);
-        //reCalculate(idx);
+        backupData();
+        deletedItem.push(dataList.splice(idx, 1)[0]);
+        $('#btnSort').html("保存");
+        $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
         reloadTree();
     }
 
