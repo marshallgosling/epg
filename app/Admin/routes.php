@@ -49,7 +49,7 @@ Route::group([
     $router->post('/template/xkv/tree/{id}/save', 'Template\\XkvProgramsController@save')->name('template.xkv.tree.save');
     $router->delete('/template/xkv/tree/{id}/remove/{idx}', 'Template\\XkvProgramsController@remove')->name('template.xkv.tree.delete');
     
-    $router->resource('/template/xkv/programs', 'Template\\XkvProgramController')->names('template.xkv.programs');
+    $router->resource('/template/xkv/programs', 'Template\\XkvProgramsController')->names('template.xkv.programs');
     $router->resource('/template/xkv', 'Template\\XkvController')->names('template.xkv');
 
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');

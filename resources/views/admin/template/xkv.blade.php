@@ -1,5 +1,5 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/channelv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
     <div class="box-body fields-group">
     
                     <input type="hidden" name="data" value='' id="data">
@@ -9,221 +9,127 @@
 </form>
 </div>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="box">
             <div class="box-header">
                 <div class="btn-group"><b>具体节目编排</b>&nbsp; &nbsp;</div>
+                
                 <div class="btn-group">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{$model->start_at}} {{$model->name}}
+                            <b>{{@substr($model->start_at, 0)}}</b> (<small>{{@substr($model->duration, 0)}}</small>) {{$model->name}} <small class="text-{{$model->status==\App\Models\Template::STATUS_SYNCING?'danger':'info'}}">{{@\App\Models\Template::STATUSES[$model->status]}}</small>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li><a href="./{{$item->id}}">{{$item->start_at}} {{$item->name}}</a></li>
+                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top"><b>{{@substr($item->start_at, 0)}}</b> (<small>{{@substr($item->duration, 0)}}</small>) {{$item->name}} <small class="text-danger">{{@\App\Models\Template::STATUSES[$model->status]}}</small></a></li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
-                <div class="btn-group pull-right">
-                    
-                </div>
                 <div class="btn-group">&nbsp; &nbsp;</div>
-                <div class="btn-group">&nbsp; &nbsp;</div>
+               
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回" href="/admin/template/channelv"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回" href="../programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
                 </div>
                 
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
+                    
                     <span id="treeinfo"></span>
-                    <a id="btnSort" class="btn btn-info btn-sm">开启排序</a>
-                    <a id="btnDelete" class="btn btn-danger btn-sm">批量删除</a>
-                    <span class="pull-right"><small>共 {{ @count($data) }} 条记录</small></span>
+                    <a id="btnSort" class="btn btn-info btn-sm"><i class="fa fa-sort-numeric-asc"></i> 开启排序</a>
+                    <a id="btnDelete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> 批量删除</a>
+                    <a id="newBtn" title="新增" class="btn btn-success btn-sm" href="javascript:showSearchModal('new');"><i class="fa fa-plus"></i> 新增</a>
+                    <a id="btnRollback" disabled="true" class="btn btn-warning btn-sm" title="回退"><i class="fa fa-rotate-left"></i> 回退</a>
+            
+                    <span id="total" class="pull-right"></span>
                 </div>
                 <div class="dd" id="tree-programs">
-                    <ol class="dd-list">
-                        @foreach($data as $idx=>$item)
-                        <li class="dd-item" data-id="{{$idx}}">
-                            <div class="dd-handle {{$item['category']=='m1'?'bg-warning':''}}">
-                                <input type="checkbox" class="grid-row-checkbox" data-id="{{$item['id']}}" autocomplete="off">&nbsp;
-                                <span style="display:inline-block;width:80px;"><small>类型：</small>
-                                <span class="label label-{{ \App\Models\TemplatePrograms::LABELS[$item['type']] }}">{{ \App\Models\TemplatePrograms::TYPES[$item['type']] }}</span></span> 
-                                <span style="display:inline-block;width:80px;"><small>栏目：</small>
-                                <a href="javascript:selectProgram({{$idx}});" class="dd-nodrag" title="{{\App\Models\Category::findCategory($item['category'])}}">{{$item['category']}}</a></span>
-                                <small> 别名：</small> {{$item['name']}} &nbsp;
-                                <small class="text-warning">{{$item['data']}}</small>
-                                <span class="pull-right dd-nodrag">
-                                    <a href="javascript:editProgram({{$idx}});" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
-                                    <a href="javascript:copyProgram({{$idx}});" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
-                                    
-                                    <a href="javascript:void(0);" data-id="{{$item['id']}}" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
-                                </span>
-                            </div>
-                        </li>
-                        @endforeach
-                    </ol>
+                    
                 </div>
             </div>
             <!-- /.box-body -->
-        </div>
-    </div>
-    <div class="col-md-4" >
-        <div data-spy="affix" data-offset-top="10"> 
-        <div class="box box-info" >
-                <div class="box-header with-border">
-                <h3 class="box-title">已选中栏目</h3>
-                <div class="box-tools pull-right"></div><!-- /.box-tools -->
-            </div><!-- /.box-header -->
-            <div class="box-body" style="display: block;">
-                <div class="box-body fields-group">
-                
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <tr><td width="120px">别名</td><td width="200px"><input type="text" id="sName" class="form-control" placeholder="名称及描述"></td></tr>
-                            <tr><td>栏目</td><td><input type="text" id="sCategory" class="form-control" placeholder="栏目编号"></td></tr>
-                            <tr><td>类型</td><td>
-                                <span class="icheck">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="type" value="0" class="minimal type"> 节目  
-                                    </label>
-                                </span>
-
-                                <span class="icheck">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="type" value="1" class="minimal type"> 广告 
-                                    </label>
-                                </span>
-
-                                <span class="icheck">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="type" value="2" class="minimal type"> 垫片 
-                                    </label>
-                                </span></td></tr>
-                            <tr><td>编号</td><td><input type="text" id="code" class="form-control" placeholder="播出编号"></td></tr>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-            <div class="box-footer">
-                <div class="col-md-4"></div>
-
-                <div class="col-md-8">
-                    
-                    <div class="btn-group pull-right">                       
-                        <button id="editBtn" type="button" class="btn btn-info pull-right">保存</button>
-                        &nbsp;
-                        &nbsp;
-                    </div>
-                    
-                    <div class="btn-group pull-right">
-                        <button id="newBtn" title="新增" type="button" class="btn btn-success pull-right">新增</button>
-                        &nbsp;&nbsp;
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="box box-success">
-            <div class="box-header with-border">
-                <h3 class="box-title">搜索</h3>
-                <div class="box-tools pull-right"></div><!-- /.box-tools -->
-            </div><!-- /.box-header -->
-            <div class="box-body" style="display: block;">
-                
-                <div class="box-body fields-group">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <tr><td>栏目</td><td><select class="form-control category" style="width: 100%;" name="category" data-value=""><option value=""></option></select></td></tr>
-                            <tr><td>节目</td><td><select class="form-control program" style="width: 100%;" name="program" data-value=""><option value=""></option></select>
-                    </td></tr>
-
-                            </td></tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer">
-                <div class="col-md-4"></div>
-
-                <div class="col-md-8">
-                    
-                    <div class="btn-group pull-right">                       
-                        <button id="replaceBtn" type="button" class="btn btn-info pull-right">替换</button>
-                        &nbsp;
-                        &nbsp;
-                    </div>
-                    
-                    
-                </div>
-            </div>
-
-        </div><!-- /.box-body -->
         </div>
     </div>
 </div></div>
+<!-- Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">搜索</h4>
+      </div>
+      <div class="modal-body">
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="input-group">    
+                    <span class="input-group-addon">
+                        <label><input type="checkbox" id="onlycategory" autocomplete="off"> 只搜索栏目字段</label>
+                    </span>
+                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
+                    <span class="input-group-btn">
+                        <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
+                    </span>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive" style="margin-top:10px;height:500px; overflow-y:scroll">
+                    <table class="table table-search table-hover table-striped">
+                                
+                    </table>
+                    <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-left">
+            <ul class="pager" style="margin:0;">
+                <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多 <i class="fa fa-angle-double-right"></i></a>
+                <small id="totalSpan"></small>
+                </li>
+            </ul>
+        </div>
+        <span>模版类型</span>
+        <label><input type="radio" name="datatype" value="0" checked> 节目</label>
+        <label><input type="radio" name="datatype" value="2"> 垫片</label>
+        <label><input type="radio" name="datatype" value="1"> 广告</label>
+        &nbsp;
+        <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="template" style="display: none">{!!$template!!}</div>
 <script type="text/javascript">
     var selectedItem = null;
     var selectedIndex = -1;
-    var replaceItem = null;
-    var replaceCategory = null;
-    var dataList = JSON.parse('{!!$data!!}');
+    var replaceItem = [];
     var sortChanged = false;
+    var dataList = JSON.parse('{!!$json!!}');
+    var category = JSON.parse('{!!@json_encode($category)!!}');
     var sortEnabled = false;
+    var cachedPrograms = null;
+    var uniqueAjax = null;
+    var backupList = [];
+    var curPage = 1;
+    var keyword = '';
+    var loadingMore = false;
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
-        $('.type').iCheck({radioClass:'iradio_minimal-blue'});          
-        $('.after-submit').iCheck({checkboxClass:'icheckbox_minimal-blue'}).on('ifChecked', function () {
-            $('.after-submit').not(this).iCheck('uncheck');
-        });
-        $('#btnSort').on('click', function(e) {
-            if(!sortEnabled) {
-                $('#tree-programs').nestable({maxDepth: 1});
-                $('#tree-programs').on('change', function() {
-                    sortChanged = true;
-                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</'+'strong>');
-                });
-                sortEnabled = true;
-                $('#btnSort').html("保存排序");
-                $('#treeinfo').html('<small>可拖动排序</'+'small>');
-            }
-            else {
-                var list = $('#tree-programs').nestable('serialize');
-            
-                for(var i=0;i<list.length;i++)
-                {
-                    if(dataList[i].sort != list[i].id) {
-                        dataList[i].sort = list[i].id;
-                        dataList[i].haschanged = 1;
-                    }
-                }
-
-                $.ajax({
-                    method: 'post',
-                    url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
-                    data: {
-                        data: JSON.stringify(dataList),
-                        action: "sort",
-                        _token:LA.token,
-                    },
-                    success: function (data) {
-                        $.pjax.reload('#pjax-container');
-                        toastr.success('保存成功 !');
-                    }
-                });
-
-                sortEnabled = false;
-            }
-        });
-
+        //$('.onlycategory').iCheck({radioClass:'iradio_minimal-blue'});
         $('#btnDelete').on('click', function(e) {
 
             if(sortEnabled) {
@@ -240,286 +146,314 @@
                 toastr.error("请先勾选需要删除的节目。");
                 return;
             }
-
-            swal({
-                title: "确认删除?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确认",
-                showLoaderOnConfirm: true,
-                cancelButtonText: "取消",
-                preConfirm: function() {
-                    return new Promise(function(resolve) {
-                        $.ajax({
-                            method: 'post',
-                            url: '/admin/template/xkv/tree/{!! $model->id !!}/remove/'+selected.join('_'),
-                            data: {
-                                _method:'delete',
-                                _token:LA.token,
-                            },
-                            success: function (data) {
-                                $.pjax.reload('#pjax-container');
-                                toastr.success('删除成功 !');
-                                resolve(data);
-                            }
-                        });
-                    });
-                }
-            }).then(function(result) {
-                var data = result.value;
-                if (typeof data === 'object') {
-                    if (data.status) {
-                        swal(data.message, '', 'success');
-                    } else {
-                        swal(data.message, '', 'error');
-                    }
-                }
-            });
-            
-        });
-
-        $(".category").select2({
-            ajax: {
-                url: "/admin/api/category",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term,
-                        page: params.page
-                    };
-                },
-                processResults: function (data, params) {
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data.data,
-                        pagination: {
-                        more: data.next_page_url
-                        }
-                    };
-                },
-                cache: true
-            },
-            allowClear:true,placeholder:"标题或编号",minimumInputLength:1,
-            //templateResult: formatProgram,
-            language: "zh-CN",
-            escapeMarkup: function (markup) {
-                return markup;
+            for(i=selected.length-1;i>=0;i--)
+            {
+                dataList.splice(selected[i], 1);
             }
+            //reCalculate(0);
+            reloadTree();
         });
 
-        $('.category').on('select2:select', function (e) {
-            replaceCategory = e.params.data;
-            
-        });
-        $(".program").select2({
-            ajax: {
-                url: "/admin/api/programs",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term,
-                        page: params.page
-                    };
-                },
-                processResults: function (data, params) {
-                    params.page = params.page || 1;
-
-                    return {
-                        results: data.data,
-                        pagination: {
-                        more: data.next_page_url
-                        }
-                    };
-                },
-                cache: true
-            },
-            allowClear:true,placeholder:"标题或编号",minimumInputLength:1,
-            //templateResult: formatProgram,
-            language: "zh-CN",
-            escapeMarkup: function (markup) {
-                return markup;
-            }
-        });
-
-        $('.program').on('select2:select', function (e) {
-            replaceItem = e.params.data;  
-        });
-
-        $('#newBtn').on('click', function(e) {
+        $('#btnRollback').on('click', function(e) {
+            if(backupList.length == 0) return;
             if(sortEnabled) {
                 toastr.error("请先保存排序结果。");
                 return;
             }
-            var newItem = {
-                name: $('#sName').val(),
-                type: $(".type:checked").val(),
-                sort: dataList.length + 1,
-                category: $('#sCategory').val(),
-                data: $('#code').val()
-            }
+            //console.log("rollback data");
+            dataList = backupList.pop();
+            console.table(dataList);
+            reloadTree();
+            toastr.success("回退成功");
 
-            $.ajax({
+            if(backupList.length==0)
+                $('#btnRollback').attr('disabled', true);
+        });
+
+        $('#btnSort').on('click', function(e) {
+            if($('#btnSort').html() != '保存') {
+                $('#tree-programs').nestable({maxDepth: 1});
+                $('#tree-programs').on('change', function() {
+                    sortChanged = true;
+                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</'+'strong>');
+                });
+                sortEnabled = true;
+                $('#btnSort').html("保存");
+                $('#treeinfo').html('<small>可拖动排序</'+'small>');
+            } 
+            else {
+                var newList = [];
+                if(sortChanged) {
+                    var list = $('#tree-programs').nestable('serialize');
+                    
+                    for(var i=0;i<list.length;i++)
+                    {
+                        newList[i] = dataList[list[i].id];
+                    }
+                }
+                else {
+                    newList = dataList;     
+                }
+                
+                $.ajax({
                     method: 'post',
-                    url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
+                    url: '/admin/template/xkv/data/{!! $model->id !!}/save',
                     data: {
-                        data: JSON.stringify(newItem),
-                        action: "append",
+                        data: JSON.stringify(newList),
                         _token:LA.token,
                     },
                     success: function (data) {
                         $.pjax.reload('#pjax-container');
-                        toastr.success('新增成功 !');
-                    }
-                });
-        });
-
-        $('#editBtn').on('click', function(e) {
-            if(sortEnabled) {
-                toastr.error("请先保存排序结果。");
-                return;
-            }
-            if(selectedIndex > -1) {
-                
-                var newItem = {
-                    id: selectedIndex,
-                    name: $('#sName').val(),
-                    type: $(".type:checked").val(),
-                    category: $('#sCategory').val(),
-                    data: $('#code').val()
-                }
-                
-                swal({
-                    title: "确认要替换?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "确认",
-                    showLoaderOnConfirm: true,
-                    cancelButtonText: "取消",
-                    preConfirm: function() {
-                        return new Promise(function(resolve) {
-                            $.ajax({
-                                method: 'post',
-                                url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
-                                data: {
-                                    data: JSON.stringify(newItem),
-                                    action: "replace",
-                                    _token:LA.token,
-                                },
-                                success: function (data) {
-                                    $.pjax.reload('#pjax-container');
-                                    toastr.success('替换成功 !');
-                                    resolve(data);
-                                }
-                            });
-                        });
-                    }
-                }).then(function(result) {
-                    var data = result.value;
-                    if (typeof data === 'object') {
-                        if (data.status) {
-                            swal(data.message, '', 'success');
-                        } else {
-                            swal(data.message, '', 'error');
-                        }
+                        toastr.success('保存成功 !');
                     }
                 });
 
-                
+                sortEnabled = false;
             }
-            else {
-                toastr.error('请先选择节目！');
-            }
-            
         });
 
-        $('.tree_branch_delete').click(function() {
-            var id = $(this).data('id');
-            swal({
-                title: "确认删除?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确认",
-                showLoaderOnConfirm: true,
-                cancelButtonText: "取消",
-                preConfirm: function() {
-                    return new Promise(function(resolve) {
-                        $.ajax({
-                            method: 'post',
-                            url: '/admin/template/xkv/tree/{!! $model->id !!}/remove/'+id,
-                            data: {
-                                _method:'delete',
-                                _token:LA.token,
-                            },
-                            success: function (data) {
-                                $.pjax.reload('#pjax-container');
-                                toastr.success('删除成功 !');
-                                resolve(data);
-                            }
-                        });
-                    });
-                }
-            }).then(function(result) {
-                var data = result.value;
-                if (typeof data === 'object') {
-                    if (data.status) {
-                        swal(data.message, '', 'success');
-                    } else {
-                        swal(data.message, '', 'error');
+        $('#moreBtn').on('click', function(e) {
+            if(loadingMore) return;
+            loadingMore = true;
+            curPage ++;
+            $.ajax({
+                url: "/admin/api/tree/programs",
+                dataType: 'json',
+                data: {
+                    q: keyword,
+                    p: curPage
+                },
+                success: function (data) {
+                    loadingMore = false;
+                    var items = data.result;
+                    
+                    var idx = cachedPrograms.length;
+                    cachedPrograms = cachedPrograms.concat(items);
+                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
+                    else $('#moreBtn').hide();
+                    var html = '';
+                    for(i=0;i<items.length;i++)
+                    {
+                        item = items[i];
+                        tr = '';
+                        if(item.black) tr = ' danger';
+                        if(item.artist==null) item.artist='';
+                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+idx+')"><td>'+(idx+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                        idx ++;
                     }
+                    
+                    $('.table-search').append(html);
+                },
+                error: function() {
+                    loadingMore = false;
                 }
-            });
-        });
-
-        $('#replaceBtn').on('click', function(e) {
-            if(replaceItem) {
-                $('#sName').val(replaceItem.name);
-                $('#code').val(replaceItem.unique_no);
-            }
-            if(replaceCategory) ('#sCategory').val(replaceCategory.category);
+            })
         });
         
-    });
-    function selectProgram (idx) {
-        var repo = dataList[idx];
-        $("#sName").val(repo.name);
-        $(".type[value="+repo.type+"]").iCheck("check");
-        $("#code").val(repo.data);
-        $('#sCategory').val(repo.category);
-        selectedItem = repo;
-        selectedIndex = repo.id;
-    }
-
-    function editProgram(idx) {
-        var repo = dataList[idx];
-        $("#sName").val(repo.name);
-        $(".type[value="+repo.type+"]").iCheck("check");
-        $("#code").val(repo.data);
-        $('#sCategory').val(repo.category);
-        selectedItem = repo;
-        selectedIndex = repo.id;
-    }
-
-    function copyProgram (idx) {
-        var repo = dataList[idx];
-        repo.sort = dataList.length + 1;
-        $.ajax({
-            method: 'post',
-            url: '/admin/template/xkv/tree/{!! $model->id !!}/save',
-            data: {
-                data: JSON.stringify(repo),
-                action: "append",
-                _token:LA.token,
-            },
-            success: function (data) {
-                $.pjax.reload('#pjax-container');
-                toastr.success('复制成功 !');
-            }
+        $("#keyword").on('change', function(e) {
+            searchKeywords(e.currentTarget.value);
         });
+
+        $('#btnSearch').on('click', function(e) {
+            searchKeywords($('#keyword').val());
+        });
+
+        $('#confirmBtn').on('click', function(e) {
+            if(!selectedItem) {
+                toastr.error('请先选择节目！');
+            }
+
+            $(this).attr('disabled', 'true');
+
+            $('#searchModal').modal('hide');
+
+            backupData();
+
+            var item = {
+                id: selectedIndex == 'new' ? 0 : dataList[selectedIndex].id,
+                name: selectedItem.name,
+                category: selectedItem.category,
+                type: $('input[name=datatype]:checked').val(),
+                data: selectedItem.unique_no,
+                sort: selectedIndex,
+                ischange: 1
+            };
+            if(item.type == 0) {
+                item.data = '';
+                item.name = '';
+            }
+
+            if(selectedIndex == 'new') selectedIndex = dataList.length;
+            dataList[selectedIndex] = item;
+
+            reloadTree();
+            
+            $('#btnSort').html("保存");
+            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+            selectedItem = false;
+            $('.search-item').removeClass('info');
+            
+        });
+        
+        reloadTree();
+    });
+
+    function searchKeywords(keyword)
+    {
+        if(uniqueAjax) uniqueAjax.abort();
+            //keyword = e.currentTarget.value;
+            cachedPrograms = [];
+            curPage = 1
+            uniqueAjax = $.ajax({
+                url: "/admin/api/tree/programs",
+                dataType: 'json',
+                data: {
+                    q: keyword,
+                    p: curPage,
+                    o: $('#onlycategory').prop('checked') ? 1 : 0
+                },
+                success: function (data) {
+                    uniqueAjax = null;
+                    var items = data.result;
+                    cachedPrograms = cachedPrograms.concat(items);
+                    selectedItem = null;
+
+                    if(data.total == 0) {
+                        $('#noitem').show();
+                        $('#totalSpan').html('');
+                        return;
+                    }
+                    $('#noitem').hide();
+                    $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
+                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
+                    else $('#moreBtn').hide();
+                    for(i=0;i<items.length;i++)
+                    {
+                        item = items[i];
+                        tr = '';
+                        if(item.black) tr = ' danger';
+                        if(item.artist==null) item.artist='';
+                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                    }
+                    
+                    $('.table-search').html(html);
+                },
+                error: function() {
+                    uniqueAjax = null;
+                }
+            });
+    }
+
+    function backupData() {
+        backupList.push(JSON.parse(JSON.stringify(dataList)));
+        console.log("backupData()");
+        $('#btnRollback').removeAttr('disabled');
+    }
+
+
+    function showSearchModal(idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
+        selectedIndex = idx;
+        $('#searchModal').modal('show');
+        $('#confirmBtn').removeAttr('disabled');
+    }
+
+    function selectProgram (idx) {
+        var repo = cachedPrograms[idx];
+        if(repo.black) {
+            toastr.error("该节目以上黑名单");
+        }
+        if(repo.category) {
+            repo.category = repo.category.toString().split(',')[0];
+        }
+        
+        selectedItem = repo;
+
+        $('.search-item').removeClass('info');
+        $('.search-item').eq(idx).addClass('info');
+    }
+
+    function deleteProgram (idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
+        dataList.splice(idx, 1);
+        //reCalculate(idx);
+        reloadTree();
+    }
+
+    function reloadTree()
+    {
+        var html = '<ol class="dd-list">';
+        var total = 0;
+        for(i=0;i<dataList.length;i++)
+        {
+            var style = '';
+            //if(in_array(dataList[i].unique_no, replaceItem)) style = 'bg-danger';
+            html += createItem(i, dataList[i], style);
+        }
+        html += '</'+'ol>';
+
+        $('#tree-programs').html(html);
+        $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
+    }
+
+    function reCalculate(idx) {
+
+        var start = idx == 0 ? Date.parse('{{$model->start_at}}') : Date.parse('2020-1-1 ' + dataList[idx-1].end_at);
+        console.log("start:"+dataList[idx-1].end_at);
+        for(i=idx;i<dataList.length;i++)
+        {
+            dataList[i].start_at = formatTime(start);
+            start += parseDuration(dataList[i].duration) * 1000;
+            dataList[i].end_at = formatTime(start);
+        }
+    }
+
+    function formatTime($time) {
+        var d = new Date($time);
+        var a = [];
+        a[0] = d.getHours() > 9 ? d.getHours().toString() : '0'+d.getHours().toString();
+        a[1] = d.getMinutes() > 9 ? d.getMinutes().toString() : '0'+d.getMinutes().toString();
+        a[2] = d.getSeconds() > 9 ? d.getSeconds().toString() : '0'+d.getSeconds().toString();
+        return a.join(':');
+    }
+
+    function createItem(idx, item, style) {
+        var html = $('#template').html();
+        var textstyle = "";
+        if(style == '') style = parseBg(item.category, item.data);
+        labelstyle = category.labels[item.type];
+
+        return html.replace(/idx/g, idx).replace('name', item.name).replace('categorytype', category.types[item.type])
+                    .replace('labelstyle', labelstyle).replace('category', item.category).replace('unique_no', item.data).replace('bgstyle', style);
+    }
+
+    function parseBg($no, $code)
+    {
+        if($no == 'm1') return 'bg-warning';
+        if($no == 'v1') return 'bg-default';
+        if($code.match(/VCNM(\w+)/)) return 'bg-info';
+        return '';
+    }
+    function parseDuration($dur)
+    {
+        $d = $dur.toString().split(':');
+        return parseInt($d[0])*3600+parseInt($d[1])*60+parseInt($d[2]);
+    }
+
+    function in_array(search,array){
+        for(var i in array){
+            if(array[i]==search){
+                return true;
+            }
+        }
+        return false;
     }
 </script>

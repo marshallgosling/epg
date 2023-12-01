@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Template;
 
+use App\Admin\Actions\Template\Advanced;
 use App\Admin\Actions\Template\BatchReplicate;
 use App\Admin\Actions\Template\Replicate;
 use App\Models\Category;
@@ -57,6 +58,13 @@ class XkvProgramsController extends AdminController
 
         $grid->batchActions(function ($actions) {
             $actions->add(new BatchReplicate);
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $advanced = new Advanced();
+            $advanced->group = 'xkv';
+            $advanced->template_id = $_REQUEST['template_id'];
+            $tools->append($advanced);
         });
 
         return $grid;
@@ -121,6 +129,26 @@ class XkvProgramsController extends AdminController
 
         $list = Template::where('group_id', 'xkv')->get();
 
+        $template = <<<TMP
+        <li class="dd-item" data-id="idx">
+        <div class="dd-handle bgstyle">
+            <input type="checkbox" class="grid-row-checkbox" data-id="id" autocomplete="off">&nbsp;
+            <span style="display:inline-block;width:80px;"><small>类型：</small>
+            <span class="label label-labelstyle">categorytype</span></span> 
+            <span style="display:inline-block;width:80px;"><small>栏目：</small>
+            <a href="javascript:showSearchModal(idx);" class="dd-nodrag" title="">category</a></span>
+            <small> 别名：</small> name&nbsp;
+            <small class="text-warning">unique_no</small>
+            <span class="pull-right dd-nodrag">
+                <a href="javascript:showSearchModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
+                <a href="javascript:copyProgram(idx);" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
+                
+                <a href="javascript:deleteProgram(idx);" title="删除"><i class="fa fa-trash"></i></a>
+            </span>
+        </div>
+    </li>
+TMP;
+
         $form = new \Encore\Admin\Widgets\Form();
         
         $form->action(admin_url("template/xkv/$id/edit"));
@@ -129,10 +157,13 @@ class XkvProgramsController extends AdminController
         $form->hidden('start_at')->default($model->start_at);
         $form->hidden('duration')->default($model->duration);
         $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
+
+        $json = str_replace("'","\\'", json_encode($data->toArray()));
         
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整模版内容")
-            ->body(view('admin.template.xkv', ['model'=>$model,'data'=>$data, 'list'=>$list]));
+            ->body(view('admin.template.xkv', ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
+                    'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
     }
 
     public function save($id, Request $request)

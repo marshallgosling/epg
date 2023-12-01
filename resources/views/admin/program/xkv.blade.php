@@ -63,12 +63,17 @@
         <h4 class="modal-title">搜索</h4>
       </div>
       <div class="modal-body">
-        <div class="fields-group">
-                    <div class="form-group">                     
-                        <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
-                    </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group">                     
+                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="button">搜索</button>
+                    </span>
                 </div>
-        <div class="fields-group">
+            </div>
+        </div>
+        <div class="row">
                     <div class="table-responsive" style="height:500px; overflow-y:scroll">
                         <table class="table table-search table-hover table-striped">
                             
