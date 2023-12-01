@@ -11,11 +11,12 @@ use App\Models\TemplatePrograms;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Grid\Filter;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 
-class XkcProgramsController extends AdminController
+class XkvProgramsController extends AdminController
 {
     /**
      * Title for current resource.
@@ -23,6 +24,8 @@ class XkcProgramsController extends AdminController
      * @var string
      */
     protected $title = '普通模版编排 【 XKC 】';
+
+    private $group = 'xkc';
 
     /**
      * Make a grid builder.
@@ -36,17 +39,18 @@ class XkcProgramsController extends AdminController
         $grid->column('id', __('Id'));
         
         $grid->column('sort', __('Sort'));
-        $grid->column('category', __('Category'))->display(function($category) {
-            return "<span class='label label-info'>{$category}</span>";
-        });
-        $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
+
+        $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
+        
+        $grid->column('category', __('Category'));
         
         $grid->column('name', __('Name'));
         //$grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
-        $grid->filter(function ($filter) {
-            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', 'xkc')->get()->pluck('name', 'id'));
+        $grid->filter(function (Filter $filter) {
+            
+            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
             
         });
 
@@ -97,7 +101,7 @@ class XkcProgramsController extends AdminController
     {
         $form = new Form(new TemplatePrograms());
 
-        $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
+        $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
         
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->text('category', __('Category'));
@@ -124,7 +128,7 @@ class XkcProgramsController extends AdminController
 
         $model = Template::find($id);
 
-        $list = Template::where('group_id', 'xkv')->get();
+        $list = Template::where('group_id', $this->group)->get();
 
         $template = <<<TMP
         <li class="dd-item" data-id="idx">
@@ -137,7 +141,7 @@ class XkcProgramsController extends AdminController
             <small> 别名：</small> name&nbsp;
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
-                <a href="/admin/template/xkv/programs/idx/edit" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
+                <a href="javascript:showEditorModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
                 <a href="javascript:copyProgram(idx);" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
                 
                 <a href="javascript:deleteProgram(idx);" title="删除"><i class="fa fa-trash"></i></a>
@@ -148,17 +152,13 @@ TMP;
 
         $form = new \Encore\Admin\Widgets\Form();
         
-        $form->action(admin_url("template/xkc/$id/edit"));
-        $form->hidden('_token')->default(csrf_token());
-        $form->hidden('name')->default($model->name);
-        $form->hidden('start_at')->default($model->start_at);
-        $form->hidden('duration')->default($model->duration);
+        $form->action(admin_url("template/xkv/$id/edit"));
         $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
 
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
         return $content->title('高级编排模式')->description("编排调整模版内容")
-            ->body(view('admin.template.xkc', ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
+            ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
                     'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
     }
 
@@ -166,7 +166,7 @@ TMP;
     {
         $action = $request->post('action');
 
-        if(in_array($action, ['append','replace','sort']))
+        if(in_array($action, ['modify','sort']))
             return $this->$action($id, $request);
     }
 
@@ -191,6 +191,54 @@ TMP;
 
         return response()->json($response);
 
+    }
+
+    private function modify($id, Request $request)
+    {
+        $data = $request->post('data');
+        $items = json_decode($data, true);
+        $deleted = json_decode($request->post('deleted'), true);
+        $list = [];
+
+        foreach($items as $item)
+        {
+            if($item['id'] != '0') {
+                $list[] = $item['id'];
+                $program = TemplatePrograms::find($item['id']);
+                if($program) {
+                    $program->name = $item['name'];
+                    $program->type = $item['type'];
+                    $program->category = $item['category'];
+                    $program->data = $item['data'];
+                    if($program->isDirty()) $program->save();
+                }
+            }
+            else {
+                $program = new TemplatePrograms();
+                $program->name = $item['name'];
+                $program->type = $item['type'];
+                $program->category = $item['category'];
+                $program->data = $item['data'];
+                $program->template_id = $id;
+                $program->sort = $item['sort'];
+                $program->save();
+            }
+            
+        }
+
+        foreach($deleted as $item) {
+            if(in_array($item['id'], $list)) continue;
+
+            $program = TemplatePrograms::findOrFail($item['id']);
+            if($program->template_id == $id) $program->delete();
+        }
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.create_succeeded'),
+        ];
+
+        return response()->json($response);
     }
 
     private function replace($id, Request $request)
@@ -220,14 +268,11 @@ TMP;
 
         foreach($list as $item)
         {
-            if(key_exists('haschanged', $item)) {
-                TemplatePrograms::where('id', $item['id'])->update([
-                    //'name' => $item['name'],
-                    //'type' => $item['type'],
-                    //'category' => implode(',', $item['category']),
-                    'sort' => $item['sort']
-                ]);
-            }
+            
+            $template =  TemplatePrograms::find($item['id']);
+            $template->sort = $item['sort'];
+            if($template->isDirty())
+                $template->save();
         }
 
         $response = [
@@ -241,7 +286,7 @@ TMP;
     public function remove($id, $idx)
     {
         $ids = explode('_', $idx);
-        
+
         foreach($ids as $idx) {
             $item = TemplatePrograms::find($idx);
 

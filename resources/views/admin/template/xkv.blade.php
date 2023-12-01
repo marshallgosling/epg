@@ -479,8 +479,21 @@
         reloadTree();
     }
 
+    function copyProgram (idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
+        backupData();
+        var repo = dataList[idx];
+        repo.id = 0;
+        dataList.splice(idx+1, 0, repo);
+        reloadTree();
+    }
+
     function reloadTree()
     {
+  
         var html = '<ol class="dd-list">';
         var total = 0;
         for(i=0;i<dataList.length;i++)
@@ -493,6 +506,7 @@
 
         $('#tree-programs').html(html);
         $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
+        
     }
 
     function reCalculate(idx) {

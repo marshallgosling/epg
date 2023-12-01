@@ -25,6 +25,8 @@ class XkvProgramsController extends AdminController
      */
     protected $title = '普通模版编排 【 XKV 】';
 
+    private $group = 'xkv';
+
     /**
      * Make a grid builder.
      *
@@ -48,7 +50,7 @@ class XkvProgramsController extends AdminController
 
         $grid->filter(function (Filter $filter) {
             
-            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', 'xkv')->get()->pluck('name', 'id'));
+            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
             
         });
 
@@ -99,7 +101,7 @@ class XkvProgramsController extends AdminController
     {
         $form = new Form(new TemplatePrograms());
 
-        $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
+        $form->select('template_id', __('Template'))->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
         
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
         $form->text('category', __('Category'));
@@ -126,7 +128,7 @@ class XkvProgramsController extends AdminController
 
         $model = Template::find($id);
 
-        $list = Template::where('group_id', 'xkv')->get();
+        $list = Template::where('group_id', $this->group)->get();
 
         $template = <<<TMP
         <li class="dd-item" data-id="idx">
@@ -151,16 +153,12 @@ TMP;
         $form = new \Encore\Admin\Widgets\Form();
         
         $form->action(admin_url("template/xkv/$id/edit"));
-        $form->hidden('_token')->default(csrf_token());
-        $form->hidden('name')->default($model->name);
-        $form->hidden('start_at')->default($model->start_at);
-        $form->hidden('duration')->default($model->duration);
         $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
 
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
         return $content->title('高级编排模式')->description("编排调整模版内容")
-            ->body(view('admin.template.xkv', ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
+            ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
                     'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
     }
 
@@ -206,12 +204,14 @@ TMP;
         {
             if($item['id'] != '0') {
                 $list[] = $item['id'];
-                $program = TemplatePrograms::findOrFail($item['id']);
-                $program->name = $item['name'];
-                $program->type = $item['type'];
-                $program->category = $item['category'];
-                $program->data = $item['data'];
-                if($program->isDirty()) $program->save();
+                $program = TemplatePrograms::find($item['id']);
+                if($program) {
+                    $program->name = $item['name'];
+                    $program->type = $item['type'];
+                    $program->category = $item['category'];
+                    $program->data = $item['data'];
+                    if($program->isDirty()) $program->save();
+                }
             }
             else {
                 $program = new TemplatePrograms();
