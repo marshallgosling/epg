@@ -135,7 +135,7 @@ class XkcController extends AdminController
         $form->text('start_at', __('Start at'))->inputmask(['mask' => '99:99:99'])->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
 
-        $form->number('sort', __('Sort'))->default(0);
+        $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->text('comment', __('Comment'));
 
         $form->hidden('group_id', __('Group'))->default('xkc');

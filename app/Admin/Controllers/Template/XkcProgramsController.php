@@ -108,17 +108,18 @@ class XkvProgramsController extends AdminController
     {
         $form = new Form(new TemplatePrograms());
 
-        $form->select('template_id', __('Template'))->default($_REQUEST['template_id'])
-                ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)
-                ->get()->pluck('name', 'id'));
-        
-        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
-        $form->select('category', __('Category'))->ajax('/admin/api/category');
-        $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
-        
-        $form->text('name', __('Alias'));
+        if(key_exists('template_id', $_REQUEST)) $form->queryString = '?template_id='.$_REQUEST['template_id'];
 
-        $form->number('sort', __('Sort'))->default(0);
+        $form->select('template_id', __('Template'))->default(key_exists('template_id', $_REQUEST) ? $_REQUEST['template_id']:'')
+                ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)
+                ->get()->pluck('name', 'id'))->required();
+        $form->number('sort', __('Sort'))->min(0)->default(0);
+        $form->select('category', __('Category'))->ajax('/admin/api/category')->required();
+        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required()
+        ->when(TemplatePrograms::TYPE_CLIP, function (Form $form) { 
+            $form->text('name', __('Alias'));
+            $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
+        });
     
         $form->saved(function (Form $form) {
             $temp = Template::find($form->template_id);
