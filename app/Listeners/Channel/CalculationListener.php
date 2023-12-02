@@ -36,6 +36,7 @@ class CalculationListener
             
                 $items = json_decode($pro->data);
                 $duration = 0;
+                $pro->start_at = date('Y/m/d H:i:s', $start);
                 foreach($items as $item) {
                     $duration += ChannelGenerator::parseDuration($item->duration);
                 }
