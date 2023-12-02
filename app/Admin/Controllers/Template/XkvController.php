@@ -13,6 +13,7 @@ use Encore\Admin\Widgets\Table;
 use Encore\Admin\Widgets\InfoBox;
 use App\Admin\Actions\Template\Programs;
 use App\Admin\Actions\Template\ReplicateTemplate;
+use App\Tools\ChannelGenerator;
 
 class XkvController extends AdminController
 {
@@ -128,16 +129,24 @@ class XkvController extends AdminController
         $form = new Form(new Template());
 
         $form->text('version', __('Version'))->disable();
-        $form->text('name', __('Name'));
-        $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES);
+        $form->text('name', __('Name'))->required();
+        $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES)->required();
         
-        $form->text('start_at', __('Start at'));
-        $form->text('duration', __('Duration'));
+        $form->text('start_at', __('Start at'))->inputmask(['mask' => '99:99:99'])->required();
+        $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
 
-        $form->text('sort', __('Sort'));
+        $form->number('sort', __('Sort'))->default(0);
         $form->text('comment', __('Comment'));
         $form->hidden('group_id', __('Group'))->default('xkv');
         
+        $form->saving(function(Form $form) {
+
+            $start = strtotime('2020/01/01 '.$form->start_at);
+            $start += ChannelGenerator::parseDuration($form->duration);
+
+            $form->end_at = date('H:i:s', $start);
+            
+        });
 
         return $form;
     }

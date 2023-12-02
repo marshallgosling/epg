@@ -98,7 +98,7 @@ class MaterialController extends AdminController
         $form->text('name', __('Name'))->required();
         $form->text('unique_no', __('Unique no'))->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
-        $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:00'])->required();
+        $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('frames', __('Frames'))->default(0);
         $form->text('size', __('Size'))->default(0);
         
@@ -162,7 +162,7 @@ $('input[name=unique_no]').on('change', function(e) {
 $('input[name=duration]').on('change', function(e) {
     var duration = e.currentTarget.value;
     var items = duration.split(":");
-    var seconds = items[0] * 3600 + items[1] * 60 + items[2];
+    var seconds = parseInt(items[0]) * 3600 + parseInt(items[1]) * 60 + parseInt(items[2]);
 
     $('input[name=frames]').val(seconds * FRAMES);
 });
