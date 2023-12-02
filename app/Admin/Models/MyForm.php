@@ -4,7 +4,7 @@ namespace App\Admin\Models;
 
 use Encore\Admin\Form;
 
-class Myform extends Form
+class MyForm extends Form
 {
     public $queryString = '';
 
