@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Channel;
 
+use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
@@ -70,17 +71,15 @@ class XkvController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->equal('uuid', __('Uuid'));
             $filter->date('air_date', __('Air date'));
             
         });
 
         $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchAudit());
             $tools->append(new ToolExporter());
+            //
         });
 
         return $grid;
@@ -136,6 +135,10 @@ class XkvController extends AdminController
 
         $form->date('distribution_date', __('Distribution date'));
 
+        if($form->isEditing()) {
+            
+        }
+
         $form->saving(function(Form $form) {
 
             if($form->isCreating()) {
@@ -158,6 +161,14 @@ class XkvController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
     
+                if($form->model()->audit_status == Channel::AUDIT_PASS) {
+                    $error = new MessageBag([
+                        'title'   => '修改节目单失败',
+                        'message' => '该日期 '. $form->air_date.' 节目单已锁定，无法修改。请先取消审核通过状态。',
+                    ]);
+                    return back()->with(compact('error'));
+                }
+
                 if(Channel::where('air_date', $form->air_date)->where('id','<>',$form->model()->id)->exists())
                 {
                     return back()->with(compact('error'));

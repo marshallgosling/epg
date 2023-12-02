@@ -8,7 +8,7 @@ use App\Admin\Actions\ChannelProgram\ToolCalculate;
 use App\Events\Channel\CalculationEvent;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
-use App\Models\Program;
+use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -146,7 +146,15 @@ class XkvProgramController extends AdminController
             if($form->isEditing()) {
                 
                 $form->version = (int)$form->version + 1;
-                
+                $channel = Channel::find($form->model()->channel_id);
+                if($channel && $channel->audit_status == Channel::AUDIT_PASS)
+                {
+                    $error = new MessageBag([
+                        'title'   => '修改节目单失败',
+                        'message' => '该日期 '. $channel->air_date.' 的节目单已锁定，无法修改。请先取消审核通过状态。',
+                    ]);
+                    return back()->with(compact('error'));
+                }
             }
         });
 
@@ -164,13 +172,6 @@ class XkvProgramController extends AdminController
 
         $list = ChannelPrograms::where("channel_id", $model->channel_id)->orderBy('id')->get();
 
-        // $code = [];
-        // foreach($data as $item) {
-        //     $code[] = $item['unique_no'];
-        // }
-
-        //$artists = Program::whereIn('unique_no', $code)->select('unique_no', 'artist')->get()->pluck('artist', 'unique_no')->toArray();
-
         $template = <<<TMP
 <li class="dd-item" data-id="idx">
     <div class="dd-handle bgstyle">
@@ -180,7 +181,7 @@ class XkvProgramController extends AdminController
         <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis"><strong>name</strong></span>
         <span class="textstyle" style="display:inline-block;width:80px;"><small>duration</small></span>
         <span class="textstyle" style="display:inline-block;width:60px;">【category】</span>
-        <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>
+        <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis">artist &nbsp;</span>
         <span class="pull-right dd-nodrag">
             <a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
         </span>
@@ -194,15 +195,33 @@ TMP;
         $form->hidden('_token')->default(csrf_token());
 
         $json = str_replace("'","\\'", json_encode($data));
+        $view = 'admin.program.xkv';
+        $channel = Channel::find($model->channel_id);
 
+        if($channel->audit_status == Channel::AUDIT_PASS) {
+            $view = 'admin.program.lock';
+            $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
+        }
+           
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view('admin.program.xkv', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
+            ->body(view($view, ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {
+
         $data = $request->all(['data']);
         $model = ChannelPrograms::findOrFail($id);
+
+        $channel = Channel::findOrFail($model->channel_id);
+
+        if($channel->audit_status == Channel::AUDIT_PASS) {
+            $response = [
+                'status'  => false,
+                'message' => trans('admin.save_failed'),
+            ];
+            return response()->json($response);
+        }
 
         $model->data = $data['data'];
         /*$model->start_at = $data['start_at'];
@@ -225,34 +244,34 @@ TMP;
 
     public function remove($id, $idx)
     {
-        $model = ChannelPrograms::findOrFail($id);
+        // $model = ChannelPrograms::findOrFail($id);
         
-        $ids = explode('_', $idx);
-        if(count($ids)>1) {
-            sort($ids, SORT_NUMERIC);
-            $ids = array_reverse($ids);    
-        }
+        // $ids = explode('_', $idx);
+        // if(count($ids)>1) {
+        //     sort($ids, SORT_NUMERIC);
+        //     $ids = array_reverse($ids);    
+        // }
         
-        $list = json_decode($model->data, true);
+        // $list = json_decode($model->data, true);
 
-        foreach($ids as $idx) {
-            array_splice($list, (int)$idx, 1);
-        }
+        // foreach($ids as $idx) {
+        //     array_splice($list, (int)$idx, 1);
+        // }
         
-        $model->data = json_encode($list);
+        // $model->data = json_encode($list);
 
-        //$model->version = $model->version + 1;
+        // //$model->version = $model->version + 1;
 
-        $model->save();
+        // $model->save();
 
-        CalculationEvent::dispatch($model->channel_id);
+        // CalculationEvent::dispatch($model->channel_id);
 
-        $response = [
-            'status'  => true,
-            'message' => trans('admin.delete_succeeded'),
-        ];
+        // $response = [
+        //     'status'  => true,
+        //     'message' => trans('admin.delete_succeeded'),
+        // ];
 
-        return response()->json($response);
+        // return response()->json($response);
         
     }
 

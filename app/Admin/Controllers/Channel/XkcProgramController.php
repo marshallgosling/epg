@@ -194,10 +194,16 @@ TMP;
         $form->hidden('_token')->default(csrf_token());
 
         $json = str_replace("'","\\'", json_encode($data));
+        $view = 'admin.program.xkc';
+        $channel = Channel::find($model->channel_id);
 
+        if($channel->audit_status == Channel::AUDIT_PASS) {
+            $view = 'admin.program.lock';
+            $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
+        }
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view('admin.program.xkc', ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
+            ->body(view($view, ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
     }
 
     public function save($id, Request $request) {

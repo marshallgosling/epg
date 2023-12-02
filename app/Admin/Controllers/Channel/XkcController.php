@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Channel;
 
+use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
@@ -80,6 +81,7 @@ class XkcController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchAudit);
             $tools->append(new ToolExporter());
         });
 

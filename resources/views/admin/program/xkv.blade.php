@@ -133,6 +133,7 @@
                 toastr.error("请先勾选需要删除的节目。");
                 return;
             }
+            backupData();
             for(i=selected.length-1;i>=0;i--)
             {
                 dataList.splice(selected[i], 1);
@@ -362,6 +363,7 @@
             toastr.error("请先保存排序结果。");
             return;
         }
+        backupData();
         dataList.splice(idx, 1);
         reCalculate(idx);
         reloadTree();
