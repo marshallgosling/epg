@@ -17,7 +17,7 @@ use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 
-class XkvProgramsController extends AdminController
+class XkcProgramsController extends AdminController
 {
     /**
      * Title for current resource.
