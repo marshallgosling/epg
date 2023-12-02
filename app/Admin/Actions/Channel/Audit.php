@@ -6,9 +6,9 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use Encore\Admin\Actions\RowAction;
 
-class Clean extends RowAction
+class Audit extends RowAction
 {
-    public $name = '清空编单';
+    public $name = '审核';
 
     public function handle(Channel $model)
     {

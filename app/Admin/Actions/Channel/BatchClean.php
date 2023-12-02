@@ -15,7 +15,11 @@ class BatchClean extends BatchAction
     {
         foreach ($collection as $model) 
         {
-            if($model->status != Channel::STATUS_READY) {
+            // if($model->status != Channel::STATUS_READY) {
+            //     continue;
+            // }
+
+            if($model->audit_status == Channel::AUDIT_PASS) {
                 continue;
             }
             

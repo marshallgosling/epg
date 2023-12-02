@@ -59,7 +59,9 @@
     "ChannelProgramIndexDesc" : "每日节目编单具体编排数据，可以编辑及排序",
 
     "Replicate Success message" : "复制记录成功。",
+    "Replicate Failed message" : "复制记录成功。",
     "BatchReplicate Success message" : "批量复制记录成功。",
+    "BatchReplicate Failed message" : "批量复制记录失败。",
     "Generator start success message." : "生成节目单任务发起成功。",
     "Generator start failed message." : "生成节目单任务发起失败。",
     "Clean success message.": "清空节目单成功",

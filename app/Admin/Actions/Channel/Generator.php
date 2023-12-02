@@ -18,6 +18,10 @@ class Generator extends RowAction
             return $this->response()->error(__('Generator start failed message.'))->refresh();
         }
 
+        if($model->audit_status == Channel::AUDIT_PASS) {
+            return $this->response()->error(__('Generator start failed message.'))->refresh();
+        }
+
         ProgramsJob::dispatch($model->uuid);
         $model->status = Channel::STATUS_RUNNING;
         $model->save();

@@ -26,6 +26,10 @@ class CalculationListener
         $this->log_print = false;
 
         $channel = Channel::find($event->getChannelId());
+        if($channel->audit_status = Channel::AUDIT_PASS) {
+            $this->warn("Channel {$event->getChannelId()} is locked.");
+            return;
+        }
         $programs = $channel->programs()->get();
 
         $start = strtotime($channel->air_date . ' 06:00:00');

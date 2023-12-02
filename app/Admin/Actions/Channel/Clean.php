@@ -12,8 +12,12 @@ class Clean extends RowAction
 
     public function handle(Channel $model)
     {
-        if($model->status != Channel::STATUS_READY) {
-            $this->response()->error(__('Clean failed message.'))->refresh();
+        // if($model->status != Channel::STATUS_READY) {
+        //     return $this->response()->error(__('Clean failed message.'))->refresh();
+        // }
+
+        if($model->audit_status == Channel::AUDIT_PASS) {
+            return $this->response()->error(__('Clean failed message.'))->refresh();
         }
             
         ChannelPrograms::where('channel_id', $model->id)->delete();
