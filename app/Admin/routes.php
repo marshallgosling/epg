@@ -25,7 +25,8 @@ Route::group([
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
     $router->post('/media/programs/unique', 'Media\\ProgramController@unique')->name('media.material.unique');
     $router->resource('/media/programs', 'Media\\ProgramController')->names('media.program');
-    
+    $router->resource('/media/blacklist', 'Media\\BlackListController')->names('media.blacklist');
+
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');
     $router->resource('/channel/xkc/programs', 'Channel\\XkcProgramController')->names('channel.xkc.programs');
     $router->resource('/channel/xkc', 'Channel\\XkcController')->names('channel.xkc');
@@ -55,8 +56,7 @@ Route::group([
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/list', 'ExportListController')->names('export.list');
     
-    $router->resource('/media/blacklist', BlackListController::class)->names('tools.blacklist');
-
+    
     $router->get('/api/tree/programs', function (Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);

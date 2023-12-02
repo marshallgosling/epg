@@ -164,7 +164,7 @@ $('input[name=duration]').on('change', function(e) {
     var items = duration.split(":");
     var seconds = parseInt(items[0]) * 3600 + parseInt(items[1]) * 60 + parseInt(items[2]);
 
-    $('input[name=frames]').val(seconds * FRAMES);
+    $('input[name=frames]').val(seconds * FRAMES + parseInt(items[3]));
 });
 EOF;
 }
