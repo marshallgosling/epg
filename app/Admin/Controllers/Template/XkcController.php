@@ -133,7 +133,7 @@ class XkcController extends AdminController
         $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES)->required();
         
         $form->text('start_at', __('Start at'))->required();
-        $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
+        $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99'])->required();
 
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->text('comment', __('Comment'));
