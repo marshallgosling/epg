@@ -544,7 +544,7 @@
     {
         if($no == 'm1') return 'bg-warning';
         if($no == 'v1') return 'bg-default';
-        if($code.match(/VCNM(\w+)/)) return 'bg-info';
+        if($code && $code.match(/VCNM(\w+)/)) return 'bg-info';
         return '';
     }
     function parseDuration($dur)

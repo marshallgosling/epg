@@ -6,6 +6,7 @@ use App\Admin\Models\MyGrid;
 use App\Admin\Actions\Template\Advanced;
 use App\Admin\Actions\Template\BatchReplicate;
 use App\Admin\Actions\Template\Replicate;
+use App\Admin\Models\Myform;
 use App\Models\Category;
 use App\Models\Template;
 use App\Models\TemplatePrograms;
@@ -39,7 +40,7 @@ class XkvProgramsController extends AdminController
 
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->hide();
         
         $grid->column('sort', __('Sort'));
 
@@ -48,8 +49,10 @@ class XkvProgramsController extends AdminController
         $grid->column('category', __('Category'));
         
         $grid->column('name', __('Alias'));
-        //$grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+
+        $grid->column('data', __('Unique no'));
+        $grid->column('created_at', __('Created at'));
+        $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->filter(function (Filter $filter) {
             
@@ -117,19 +120,26 @@ class XkvProgramsController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new TemplatePrograms());
+        $form = new MyForm(new TemplatePrograms());
 
-        $form->select('template_id', __('Template'))->default($_REQUEST['template_id'])
+        if(key_exists('template_id', $_REQUEST)) $form->queryString = '?template_id='.$_REQUEST['template_id'];
+
+        $form->select('template_id', __('Template'))->default(key_exists('template_id', $_REQUEST) ? $_REQUEST['template_id']:'')
                 ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)
-                ->get()->pluck('name', 'id'));
+                ->get()->pluck('name', 'id'))->required();
         
-        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES);
-        $form->select('category', __('Category'))->ajax('/admin/api/category');
+        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required();
+        $form->select('category', __('Category'))->ajax('/admin/api/category')->required();
         $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
         
         $form->text('name', __('Alias'));
 
         $form->number('sort', __('Sort'))->default(0);
+
+        $form->saving(function (Form $form) {
+            if($form->name == null) $form->name = '';
+            if($form->data == null) $form->data = '';
+        });
 
         $form->saved(function (Form $form) {
             $temp = Template::find($form->template_id);
