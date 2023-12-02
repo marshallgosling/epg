@@ -20,7 +20,7 @@
 
 Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
     $grid->disableExport();
-    $grid->paginate(50);
+    $grid->paginate(30);
     $grid->filter(function (Encore\Admin\Grid\Filter $filter) {
         $filter->disableIdFilter();
         if(array_key_exists('expand', $_REQUEST))$filter->expand();
@@ -38,6 +38,5 @@ Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
 
     $form->disableViewCheck();
 
-    $form->disableReset();
     
 });
