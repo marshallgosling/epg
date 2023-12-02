@@ -18,6 +18,7 @@ class ToolCalculate extends Action
         $id = $request->get('channel');
 
         if($id) {
+            
             CalculationEvent::dispatch($id[0]);
             return $this->response()->success('计算时间完成。')->refresh();
         }
