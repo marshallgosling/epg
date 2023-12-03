@@ -48,11 +48,15 @@ class statisticTool extends Command
 
         $results = $statistic->scan();
 
-        print_r($results);
+        if($results['result']){
+            $this->info("统计成功");
+            $statistic->store();
+        }
+        else {
+            $this->error($results['msg']);
+        }
 
-        $statistic->print();
-
-        $statistic->store();
+        
 
 
         return 0;

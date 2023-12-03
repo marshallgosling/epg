@@ -132,7 +132,7 @@ class ChannelGenerator
                 }
                 else
                 {
-                    $this->error("栏目 {$p->category} 内没有任何节目");
+                    $this->warn("栏目 {$p->category} 内没有任何节目");
                 }
             }
             $c->data = json_encode($data);
