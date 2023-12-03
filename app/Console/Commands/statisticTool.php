@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Channel;
 use App\Tools\Statistic\StatisticProgram;
 use Illuminate\Console\Command;
 
@@ -40,24 +41,25 @@ class statisticTool extends Command
     {
         $id = $this->argument('id') ?? "";
         $model = $this->argument('model') ?? "";
-
         $statistic = new StatisticProgram();
-        $statistic->load();
 
-        //print_r($statistic->channels->toArray());
-
-        $results = $statistic->scan();
-
-        if($results['result']){
-            $this->info("统计成功");
-            $statistic->store();
-        }
-        else {
-            $this->error($results['msg']);
-        }
-
+        $channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
         
+        foreach($channels as $channel)
+        {
+            $this->info("loading channel {$channel->air_date}");
+            $statistic->load($channel);
+            $results = $statistic->scan();
 
+            if($results['result']){
+                $this->info("统计成功");
+                $statistic->store();
+            }
+            else {
+                $this->error($results['msg']);
+            }
+
+        }
 
         return 0;
     }

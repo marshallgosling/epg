@@ -11,6 +11,8 @@ class StatisticProgram implements IStatistic
 
     public $channels;
 
+    private $channel;
+
     private $data;
 
     public $sample = [
@@ -21,8 +23,9 @@ class StatisticProgram implements IStatistic
         "type" => Statistic::TYPE_DAILY
     ];
 
-    public function load() {
-        $this->channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
+    public function load($channel) {
+        //$this->channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
+        $this->channel = $channel;
     }
 
     public function loadSample($sample=false)
@@ -37,18 +40,19 @@ class StatisticProgram implements IStatistic
 
         $statistic = [];
 
-        if(!$this->channels) {
+        $channel = $this->channel;
+
+        if(!$channel) {
             return ["result"=>false, "msg"=>"Please run load function before run scan."];
         }
 
-        if(count($this->channels) == 0) {
-            return ["result"=>false, "msg"=>"Channel array is empty. Nothing to scan."];
+        $programs = $channel->programs()->get();
+
+        if(count($programs) == 0) {
+            return ["result"=>false, "msg"=>"Channel is empty. Nothing to scan."];
         }
 
-        foreach($this->channels as $channel)
-        {
-            $programs = $channel->programs()->get();
-
+        
             foreach($programs as $pro) {
                 $data = json_decode($pro->data, true);
 
@@ -69,7 +73,7 @@ class StatisticProgram implements IStatistic
                     }
                 }
             }
-        }
+        
 
         $this->data = [];
         
