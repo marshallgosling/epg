@@ -55,6 +55,8 @@ Route::group([
 
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/list', 'ExportListController')->names('export.list');
+
+    $router->resource('/export/xml', 'ChannelXmlController')->names('export.xml');
     
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
 
