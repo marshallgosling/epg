@@ -68,8 +68,10 @@ class channelTool extends Command
         $start = strtotime($start. " 06:00:00");
         for($i=0;$i<$days;$i++)
         {
-            if(Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->exists()) continue;
-
+            if(Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->exists()) {
+                $start += 3600*24;
+                continue;
+            }
             $channel = new Channel();
             $channel->name = $group;
             $channel->uuid = (string) Str::uuid();
