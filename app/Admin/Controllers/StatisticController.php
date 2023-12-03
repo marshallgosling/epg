@@ -80,7 +80,7 @@ class StatisticController extends AdminController
         $show = new Show(Statistic::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('model', __('Model'))->using(Statistic::MODELS);
+        $show->field('model', __('Model'));
         $show->field('column', __('Column'));
         $show->field('value', __('Value'));
         $show->field('type', __('Type'))->using(Statistic::TYPES);
@@ -100,7 +100,7 @@ class StatisticController extends AdminController
     {
         $form = new Form(new Statistic());
 
-        $form->radio('model', __('Model'))->options(Statistic::MODELS);
+        $form->radio('model', __('Model'));
         $form->text('column', __('Column'));
         $form->number('value', __('Value'));
         $form->switch('type', __('Type'))->options(Statistic::TYPES);
