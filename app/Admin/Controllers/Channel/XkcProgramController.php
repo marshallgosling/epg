@@ -70,10 +70,6 @@ class XkcProgramController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkc')->orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
             
         });

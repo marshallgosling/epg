@@ -70,9 +70,10 @@ class XkvController extends AdminController
         });
 
         $grid->filter(function($filter){
-
-            $filter->equal('uuid', __('Uuid'));
-            $filter->date('air_date', __('Air date'));
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('uuid', __('Uuid'));
+                $filter->date('air_date', __('Air date'));
+            });
             
         });
 

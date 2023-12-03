@@ -11,7 +11,7 @@ use App\Models\TemplatePrograms;
 use App\Tools\CnvSpider;
 use Illuminate\Support\Facades\Storage;
 
-class crawler extends Command
+class crawlerTool extends Command
 {
     /**
      * The name and signature of the console command.

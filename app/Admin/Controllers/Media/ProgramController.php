@@ -77,13 +77,11 @@ class ProgramController extends AdminController
         $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
-            $filter->like('name', __('Name'));
-            $filter->like('artist', __('Artist'));
-            $filter->like('unique_no', __('Unique_no'));
-            $filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true));
-
+            $filter->column(6, function(Grid\Filter $filter) { $filter->like('name', __('Name'));$filter->like('unique_no', __('Unique_no'));});
+            $filter->column(6, function(Grid\Filter $filter) { $filter->like('artist', __('Artist'));$filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); });
+    
         });
 
         return $grid;

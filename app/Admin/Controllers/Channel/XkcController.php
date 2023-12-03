@@ -69,14 +69,12 @@ class XkcController extends AdminController
             $actions->add(new BatchClean);
         });
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
-            $filter->equal('uuid', __('Uuid'));
-            $filter->date('air_date', __('Air date'));
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('uuid', __('Uuid'));
+                $filter->date('air_date', __('Air date'));
+            });
             
         });
 

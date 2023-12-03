@@ -14,10 +14,17 @@ class BatchAudit extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
+        $audit = (int)$request->get('audit');
+        $comment = $request->get('comment');
         foreach ($collection as $model) 
         {
-            $model->audit_status = $request->get('audit');
-            $model->comment = $request->get('comment');
+            
+            if($audit == Channel::AUDIT_PASS && $model->status != Channel::STATUS_READY) {
+                // 空编单和停止使用的编单不能通过审核
+                continue;
+            }
+            $model->audit_status = $audit;
+            $model->comment = $comment;
             $model->save();
             // Channel::where('id', $model->id)->update(['audit_status', $request->get('audit'), 'comment'=>$request->get('comment')]);
 
@@ -30,6 +37,7 @@ class BatchAudit extends BatchAction
     {
         $this->radio('audit', '状态')->options(Channel::AUDIT)->rules('required');
         $this->textarea('comment', '审核意见')->rules('required');
+        $this->text("help", "注意说明")->default('空编单和停止使用的编单不能通过审核')->disable();
     }
 
     public function html()

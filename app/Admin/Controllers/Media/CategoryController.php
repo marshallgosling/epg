@@ -38,11 +38,14 @@ class CategoryController extends AdminController
 
         $grid->filter(function($filter){
 
-            $filter->like('name', __('Name'));
-            $filter->like('no', __('CategoryNo'));
-            $filter->equal('type', __('CategoryType'))->select(Category::TYPES);
-            $filter->in('duration', __('Duration'))->checkbox(TemplatePrograms::TYPES);
-
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->like('name', __('Name'));
+                $filter->like('no', __('CategoryNo'));
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('type', __('CategoryType'))->select(Category::TYPES);
+                $filter->in('duration', __('Duration'))->checkbox(TemplatePrograms::TYPES);
+            });
         });
 
         /*$grid->rows(function (Grid\Tools $tools) {

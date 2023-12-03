@@ -74,11 +74,6 @@ class TemplateController extends AdminController
         $grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function($filter){
-
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
             $filter->in('status',  __('Status'))->checkbox(Template::STATUSES);

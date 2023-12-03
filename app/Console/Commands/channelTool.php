@@ -5,13 +5,13 @@ namespace App\Console\Commands;
 use App\Events\Channel\CalculationEvent;
 use App\Models\Category;
 use App\Models\ChannelPrograms;
-use App\Models\Channel as Modal;
+use App\Models\Channel;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class channel extends Command
+class channelTool extends Command
 {
     /**
      * The name and signature of the console command.
@@ -72,7 +72,7 @@ class channel extends Command
     private function generateChannel($id, $group='default')
     {
     
-        $channel = Modal::where('id', $id)->first();
+        $channel = Channel::where('id', $id)->first();
 
         if(!$channel) {
             $this->error("Channel is null.");
@@ -89,7 +89,7 @@ class channel extends Command
 
         $generator->generate($channel);
 
-        $channel->status = Modal::STATUS_READY;
+        $channel->status = Channel::STATUS_READY;
         $channel->save();
 
         $this->info("Generate programs date: {$channel->air_date} succeed. ");
