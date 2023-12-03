@@ -19,7 +19,7 @@ class BatchGenerator extends BatchAction
                 continue;
             }
 
-            if($model->audit_status != Channel::AUDIT_PASS) {
+            if($model->audit_status == Channel::AUDIT_PASS) {
                 continue;
             }
             ProgramsJob::dispatch($model->uuid);
