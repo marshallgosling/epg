@@ -35,7 +35,7 @@ class ToolExporter extends Action
 
         ExportJob::dispatch($model->id);
 
-        return $this->response()->success('批量生成Excel任务添加成功。')->redirect(admin_url('export/jobs'));
+        return $this->response()->success('批量生成Excel任务添加成功。')->redirect(admin_url('export/list'));
     }
 
     public function form()
