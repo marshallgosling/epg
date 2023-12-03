@@ -10,7 +10,7 @@ use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Str;
 class channelTool extends Command
 {
     /**
@@ -44,32 +44,59 @@ class channelTool extends Command
      */
     public function handle()
     {
-        $group = $this->argument('group') ?? "default";
+        $group = $this->argument('group') ?? "xkv";
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        if($action == 'list') $this->generateChannel($id, $group);
+        $actions = ['generate', 'create', 'export', 'calculate'];
 
-        if($action == 'export') $this->exportChannel($id);
+        if(!in_array($action, $actions)) {
+            $this->error("action param's value only supports ".implode(',', $actions));
+            return 0;
+        }
 
-        if($action == 'calculate') $this->calculateChannel($id, $group);
+        $this->$action($id, $group);
 
         return 0;
     }
 
-    private function calculateChannel($id, $pid)
+    private function create($id, $group)
+    {
+        $start = explode(':',$id)[0];
+        $days = (int)explode(':',$id)[1];
+
+        $start = strtotime($start. " 06:00:00");
+        for($i=0;$i<$days;$i++)
+        {
+            if(Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->exists()) continue;
+
+            $channel = new Channel();
+            $channel->name = $group;
+            $channel->uuid = (string) Str::uuid();
+            $channel->air_date = date('Y-m-d', $start);
+            $channel->version = 1;
+
+            $channel->save();
+
+            $start += 3600*24;
+
+            $this->info("Create channel {$channel->air_date} success.");
+        }
+    }
+
+    private function calculate($id, $pid)
     {
         $this->info("start calcution: $id $pid");
         CalculationEvent::dispatch($id, $pid);
     }
 
-    private function exportChannel($id)
+    private function export($id, $pid)
     {
         Exporter::generate($id);
         Exporter::exportXml(true);
     }
 
-    private function generateChannel($id, $group='default')
+    private function generate($id, $group='default')
     {
     
         $channel = Channel::where('id', $id)->first();
