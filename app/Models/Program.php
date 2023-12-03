@@ -57,7 +57,8 @@ class Program extends Model
             ->select("program.unique_no", "program.name", "program.artist", "material.duration","material.frames")->first();
 
         $black = false;
-        foreach(self::$blacklist as $keyword) {
+
+        if($program->artist)foreach(self::$blacklist as $keyword) {
             if(Str::contains($program->artist, $keyword)) {
                 $black = true;
                 break;
