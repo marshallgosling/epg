@@ -44,7 +44,7 @@ class Program extends Model
 
     public static function findRandom($key)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('program.unique_no')->join('material', 'program.unique_no', '=', 'material.unique_no')->where('program.category','like',"%$key%")->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   
 
