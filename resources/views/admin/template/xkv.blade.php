@@ -134,7 +134,7 @@
                     <table class="table table-search table-hover table-striped">
                                 
                     </table>
-                    <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
+                    <div id="noitem" style="margin:30px;display:block"><strong>没有找到任何记录</strong></div>
                 </div>
             </div>
         </div>

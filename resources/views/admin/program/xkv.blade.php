@@ -54,7 +54,6 @@
         </div>
     </div>
 </div></div>
-<!-- Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -63,23 +62,30 @@
         <h4 class="modal-title">搜索</h4>
       </div>
       <div class="modal-body">
+        
         <div class="row">
-            <div class="col-lg-6">
-                <div class="input-group">                     
+            <div class="col-lg-8">
+                <div class="input-group">    
+                    <span class="input-group-addon">
+                        <label><input type="checkbox" id="onlycategory" autocomplete="off"> 只搜索栏目字段</label>
+                    </span>
                     <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
                     <span class="input-group-btn">
-                        <button class="btn btn-success" type="button">搜索</button>
+                        <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
                     </span>
                 </div>
             </div>
+            
         </div>
         <div class="row">
-                    <div class="table-responsive" style="height:500px; overflow-y:scroll">
-                        <table class="table table-search table-hover table-striped">
-                            
-                        </table>
-                        <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
-                    </div>
+            <div class="col-lg-12">
+                <div class="table-responsive" style="margin-top:10px;height:500px; overflow-y:scroll">
+                    <table class="table table-search table-hover table-striped">
+                                
+                    </table>
+                    <div id="noitem" style="margin:30px;display:block"><strong>没有找到任何记录</strong></div>
+                </div>
+            </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -90,6 +96,7 @@
                 </li>
             </ul>
         </div>
+        
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
         
@@ -237,51 +244,17 @@
                 }
             })
         });
+
+        $("#keyword").on('change', function(e) {
+            searchKeywords(e.currentTarget.value);
+        });
+
+        $('#btnSearch').on('click', function(e) {
+            searchKeywords($('#keyword').val());
+        });
         
         $("#keyword").on('change', function(e) {
-            if(uniqueAjax) uniqueAjax.abort();
-            keyword = e.currentTarget.value;
-            cachedPrograms = [];
-            curPage = 1
-            uniqueAjax = $.ajax({
-                url: "/admin/api/tree/programs",
-                dataType: 'json',
-                data: {
-                    q: keyword,
-                    p: curPage
-                },
-                success: function (data) {
-                    uniqueAjax = null;
-                    var items = data.result;
-                    cachedPrograms = cachedPrograms.concat(items);
-                    selectedItem = null;
-
-                    if(data.total == 0) {
-                        $('#noitem').show();
-                        $('#totalSpan').html('');
-                        return;
-                    }
-                    $('#noitem').hide();
-                    $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
-                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
-                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
-                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
-                    else $('#moreBtn').hide();
-                    for(i=0;i<items.length;i++)
-                    {
-                        item = items[i];
-                        tr = '';
-                        if(item.black) tr = ' danger';
-                        if(item.artist==null) item.artist='';
-                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
-                    }
-                    
-                    $('.table-search').html(html);
-                },
-                error: function() {
-                    uniqueAjax = null;
-                }
-            })
+            
         });
 
         $('#confirmBtn').on('click', function(e) {
@@ -324,6 +297,53 @@
         
         reloadTree();
     });
+
+    function searchKeywords(keyword)
+    {
+        if(uniqueAjax) uniqueAjax.abort();
+            keyword = keyword;
+            cachedPrograms = [];
+            curPage = 1
+            uniqueAjax = $.ajax({
+                url: "/admin/api/tree/programs",
+                dataType: 'json',
+                data: {
+                    q: keyword,
+                    p: curPage
+                },
+                success: function (data) {
+                    uniqueAjax = null;
+                    var items = data.result;
+                    cachedPrograms = cachedPrograms.concat(items);
+                    selectedItem = null;
+
+                    if(data.total == 0) {
+                        $('#noitem').show();
+                        $('#totalSpan').html('');
+                        return;
+                    }
+                    $('#noitem').hide();
+                    $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
+                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
+                    else $('#moreBtn').hide();
+                    for(i=0;i<items.length;i++)
+                    {
+                        item = items[i];
+                        tr = '';
+                        if(item.black) tr = ' danger';
+                        if(item.artist==null) item.artist='';
+                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                    }
+                    
+                    $('.table-search').html(html);
+                },
+                error: function() {
+                    uniqueAjax = null;
+                }
+            });
+    }
 
     function backupData() {
         backupList.push(JSON.parse(JSON.stringify(dataList)));

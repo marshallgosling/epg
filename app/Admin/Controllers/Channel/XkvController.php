@@ -122,22 +122,18 @@ class XkvController extends AdminController
         $form = new Form(new Channel());
 
         $form->hidden('name', __('Name'))->default('xkv');
-        $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
+        $form->display('uuid', __('Uuid'))->default('自动生成');
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
-        $form->text('version', __('Version'))->default('1')->required();
+        $form->display('version', __('Version'))->default('1');
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
         $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
         $form->date('audit_date', __('Audit date'));
-        $form->text('comment', __('Comment'));
+        $form->textarea('comment', __('Comment'));
 
         $form->date('distribution_date', __('Distribution date'));
-
-        if($form->isEditing()) {
-            
-        }
 
         $form->saving(function(Form $form) {
 
@@ -147,7 +143,8 @@ class XkvController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
 
-                //$form->name = 'channelv';
+                $form->uuid = (string) Str::uuid();
+                $form->version = 1;
     
                 if(Channel::where('air_date', $form->air_date)->exists())
                 {
