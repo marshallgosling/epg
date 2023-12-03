@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Channel;
+use App\Models\ExportList;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -41,9 +42,9 @@ class ChannelXmlController extends AdminController
         $grid->column('id', __('ID'));
         $grid->column('name', __('Group'));
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="channelv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+            return '<a href="#">'.$uuid.'</a>';
         });
-        $grid->column('air_date', __('Air date'));
+        $grid->column('air_date', __('Air date'))->sortable();
         //$grid->column('name', __('Name'));
         $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['warning','danger','success','danger']);
         //$grid->column('comment', __('Comment'));
@@ -67,10 +68,14 @@ class ChannelXmlController extends AdminController
             $actions->disableAll();
         });
 
-        $grid->filter(function($filter){
-
-            $filter->equal('uuid', __('Uuid'));
-            $filter->date('air_date', __('Air date'));
+        $grid->filter(function(Grid\Filter $filter){
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('name', __('Group'))->select(ExportList::GROUPS);
+                $filter->date('air_date', __('Air date'));
+            });
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('uuid', __('Uuid'));
+            });
             
         });
 
