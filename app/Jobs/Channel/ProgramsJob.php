@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Tools\ChannelGenerator;
-
+use App\Tools\LoggerTrait;
 
 class ProgramsJob implements ShouldQueue, ShouldBeUnique
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
     // Channel UUID;
     private $uuid;
@@ -31,6 +31,8 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
     public function __construct($uuid)
     {
         $this->uuid = $uuid;
+        $this->log_channel = 'channel';
+        $this->log_print = false;
     }
 
     public function uniqueId()
@@ -49,12 +51,12 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $channel = Channel::where('uuid', $this->uuid)->first();
 
         if(!$channel) {
-            $this->error("Channel is null.");
+            $this->error("频道 {$this->uuid} 不存在");
             return 0;
         }
 
         if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-            $this->error("Programs exist.");
+            $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
             return 0;
         }
 
@@ -66,21 +68,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $channel->status = Channel::STATUS_READY;
         $channel->save();
 
-        $this->info("Generate programs date: {$channel->air_date} succeed. ");
-    }
-    
-    private function error($msg)
-    {
-        $msg = date('Y/m/d H:i:s ') . "Channel ".$this->uuid. " error: " . $msg;
-        echo $msg.PHP_EOL;
-        Log::channel('channel')->error($msg);
-    }
-
-    private function info($msg)
-    {
-        $msg = date('Y/m/d H:i:s ')."Channel ".$this->uuid. " info: " . $msg;
-        echo $msg.PHP_EOL;
-        Log::channel('channel')->info($msg);
+        $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
     }
 
     /**

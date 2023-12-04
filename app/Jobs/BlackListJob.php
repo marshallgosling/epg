@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Tools\ChannelGenerator;
+use App\Tools\LoggerTrait;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
 
 class BlackListJob implements ShouldQueue, ShouldBeUnique
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
     // Job ID;
     private $id;
@@ -36,6 +37,8 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
     {
         $this->id = $id;
         $this->action = $action;
+        $this->log_channel = 'black';
+        $this->log_print = false;
     }
 
     public function uniqueId()

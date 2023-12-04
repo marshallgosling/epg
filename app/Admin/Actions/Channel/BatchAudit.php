@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Channel;
 
+use App\Jobs\StatisticJob;
 use App\Models\Channel;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,6 +32,9 @@ class BatchAudit extends BatchAction
             $model->save();
             // Channel::where('id', $model->id)->update(['audit_status', $request->get('audit'), 'comment'=>$request->get('comment')]);
 
+            if($audit == Channel::AUDIT_PASS) {
+                StatisticJob::dispatch($model->id);
+            }
         }
         
         return $this->response()->success(__('Clean success message.'))->refresh();

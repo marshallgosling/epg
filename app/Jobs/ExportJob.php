@@ -6,6 +6,7 @@ use App\Models\ExportList;
 use Illuminate\Support\Facades\Storage;
 use App\Tools\Exporter;
 use App\Tools\ExcelWriter;
+use App\Tools\LoggerTrait;
 use App\Tools\PHPExcel\Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -13,13 +14,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ExportJob implements ShouldQueue, ShouldBeUnique
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
     // Job ID;
     private $id;
@@ -32,6 +32,8 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
     public function __construct($id)
     {
         $this->id = $id;
+        $this->log_channel = 'export';
+        $this->log_print = false;
     }
 
     public function uniqueId()
@@ -48,12 +50,14 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
     {
         $export = ExportList::findOrFail($this->id);
 
+        $this->info('导出Excel串联单任务: '.$export->name.' 日期: '.$export->start_at .' '.$export->end_at);
         $lines = Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {
             $export->status = ExportList::STATUS_ERROR;
             $export->reason = "串联单数据为空";
             $export->save();
+            $this->warn('节目串联单数据为空，直接退出。');
             return;
         }
 
@@ -69,6 +73,7 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
             $export->status = ExportList::STATUS_ERROR;
             $export->reason = $e->getMessage(); 
             $export->save();
+            $this->error("保存节目串联单数据出错，Excel模版错误或磁盘读写错误。{文件名:{$filename}\n错误:".$e->getMessage());
         }
              
     }
