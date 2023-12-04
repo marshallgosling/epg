@@ -30,9 +30,10 @@ class ExportListController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('name', __('Name'))->display(function ($name) {
-            return '<span class="label label-default">'.ExportList::GROUPS[$this->group_id].'</span> <b>'.$name.'</b>';
-        });
+        $grid->column('group_id', __('Group'))->using(ExportList::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
+        
+        $grid->column('name', __('Name'));
+        
         $grid->column('start_at', __('Start at'))->sortable();
         $grid->column('end_at', __('End at'))->sortable();
 
@@ -46,10 +47,6 @@ class ExportListController extends AdminController
 
         $grid->filter(function($filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->like('name', __('Name'));
             $filter->date('start_at', __('Start at'));
             $filter->date('end_at', __('End at'));
@@ -57,6 +54,11 @@ class ExportListController extends AdminController
 
             
         });
+
+        $grid->disableCreateButton();
+        $grid->disableBatchActions();
+        $grid->disableActions();
+
 
         return $grid;
     }

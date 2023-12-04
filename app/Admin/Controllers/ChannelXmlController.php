@@ -65,7 +65,7 @@ class ChannelXmlController extends AdminController
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             // $actions->add(new Generator);
             // $actions->add(new Clean);
-            $actions->disableAll();
+            //$actions->disableAll();
         });
 
         $grid->filter(function(Grid\Filter $filter){
@@ -85,7 +85,7 @@ class ChannelXmlController extends AdminController
 
         $grid->disableCreateButton();
         $grid->disableBatchActions();
-        
+        $grid->disableActions();
 
         return $grid;
     }
