@@ -88,6 +88,20 @@ return [
             'days' => 7,
         ],
 
+        'black' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/black.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 7,
+        ],
+
+        'export' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/export.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 7,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
