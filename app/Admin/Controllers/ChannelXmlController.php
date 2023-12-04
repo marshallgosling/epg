@@ -40,10 +40,10 @@ class ChannelXmlController extends AdminController
         $grid->model()->orderBy('air_date', 'desc');
 
         $grid->column('id', __('ID'));
-        $grid->column('name', __('Group'));
+        $grid->column('name', __('Group'))->using(ExportList::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="#">'.$uuid.'</a>';
-        });
+        })->hide();
         $grid->column('air_date', __('Air date'))->sortable();
         //$grid->column('name', __('Name'));
         $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['warning','danger','success','danger']);
