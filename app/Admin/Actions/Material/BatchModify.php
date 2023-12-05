@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Actions\Channel;
+namespace App\Admin\Actions\Material;
 
 use App\Models\Category;
 use Encore\Admin\Actions\BatchAction;

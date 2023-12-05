@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
-use App\Admin\Actions\Channel\BatchModify;
+use App\Admin\Actions\Material\BatchModify;
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
 use App\Models\Material;
