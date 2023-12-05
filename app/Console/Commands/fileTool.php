@@ -56,6 +56,8 @@ class fileTool extends Command
 
             $xml = simplexml_load_file(Storage::disk('data')->path($f));
 
+            if(!$xml || !$xml->Object) continue;
+
             $attributes = $xml->Object[0]->attributes();
             if(!$attributes) continue;
 
