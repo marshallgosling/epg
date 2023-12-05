@@ -74,11 +74,12 @@ class MaterialController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
+        $show->field('group', __('Group'));
         $show->field('unique_no', __('Unique no'));
         $show->field('category', __('Category'))->using(Category::getFormattedCategories());
         $show->field('duration', __('Duration'));
-        $show->field('size', __('Size'));
         $show->field('frames', __('Frames'));
+        $show->field('md5', __('MD5'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -102,6 +103,8 @@ class MaterialController extends AdminController
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('frames', __('Frames'))->default(0);
+        $form->text('group', __('Group'))->default('');
+        $form->text('md5', __('MD5'))->default('');
         $form->text('size', __('Size'))->default(0);
         
         $form->saving(function(Form $form) {
