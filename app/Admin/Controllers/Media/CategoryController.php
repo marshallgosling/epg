@@ -36,7 +36,7 @@ class CategoryController extends AdminController
         $grid->column('type', __('CategoryType'))->using(Category::TYPES);
         $grid->column('duration', __('Duration'))->using(TemplatePrograms::TYPES);
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->like('name', __('Name'));

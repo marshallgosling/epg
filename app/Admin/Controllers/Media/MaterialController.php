@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Channel\BatchModify;
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
 use App\Models\Material;
@@ -51,7 +52,11 @@ class MaterialController extends AdminController
             $actions->add(new Importor);
         });
 
-        $grid->filter(function($filter){
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchModify);
+        });
+
+        $grid->filter(function(Grid\Filter $filter){
 
             $filter->like('name', __('Name'));
             $filter->like('unique_no', __('Unique_no'));

@@ -45,7 +45,7 @@ class ExportListController extends AdminController
         $grid->column('created_at', __('Created at'))->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
             $filter->like('name', __('Name'));
             $filter->date('start_at', __('Start at'));

@@ -63,12 +63,8 @@ class ChannelProgramsController extends AdminController
         //$grid->column('created_at', __('Created at'));
         //$grid->column('updated_at', __('Updated at'));
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
             $filter->equal('channel_id', __('Air date'))->select(Channel::orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
             
         });

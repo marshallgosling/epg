@@ -44,7 +44,7 @@ class BlackListController extends AdminController
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
             $filter->like('keyword', __('Keyword'));
             $filter->in('status', __('Status'))->checkbox(BlackList::STATUS);

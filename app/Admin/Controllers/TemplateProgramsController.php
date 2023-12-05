@@ -44,11 +44,8 @@ class TemplateProgramsController extends AdminController
         //$grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
-        $grid->filter(function ($filter) {
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
-        
-            // 在这里添加字段过滤器
+        $grid->filter(function (Grid\Filter $filter) {
+
             $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->get()->pluck('name', 'id'));
             
         });
