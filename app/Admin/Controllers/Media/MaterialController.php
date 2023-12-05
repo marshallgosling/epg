@@ -33,12 +33,14 @@ class MaterialController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique_no'))->sortable();
-        $grid->column('name', __('Name'))->sortable();  
+        $grid->column('name', __('Name'))->sortable(); 
+        $grid->column('group', __('Group'))->hide();  
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
         });
-        $grid->column('duration', __('Duration'))->sortable();
-        $grid->column('size', __('Size'));
+        $grid->column('duration', __('Duration'));
+        $grid->column('size', __('Size'))->hide();
+        $grid->column('md5', __('MD5'))->hide();
         $grid->column('frames', __('Frames'))->sortable();
         $grid->column('created_at', __('Created at'))->sortable();
         //$grid->column('updated_at', __('Updated at'));

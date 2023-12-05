@@ -177,4 +177,21 @@ class ChannelGenerator
         return $seconds;
     }
 
+    public static function parseFrames($frames)
+    {
+        $seconds = floor($frames / config("FRAMES", 25));
+
+        $hour = floor($seconds / 3600);
+        $minute = floor(($seconds % 3600)/60);
+        $second = $seconds % 60;
+
+
+        return self::format($hour).':'.self::format($minute).':'.self::format($second).':'.self::format($frames % config("FRAMES", 25));
+    }
+
+    public static function format($num)
+    {
+        return $num>9?$num:'0'.$num;
+    }
+
 }

@@ -18,7 +18,9 @@ class Material extends Model
         'category',
         'duration',
         'size',
-        'frames'
+        'frames',
+        'group',
+        'comment'
     ];
 
     protected $casts = [
