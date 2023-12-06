@@ -49,7 +49,7 @@ class BatchAudit extends BatchAction
 
     public function html()
     {
-        return "<a class='audit-channel btn btn-sm btn-warning'><i class='fa fa-info-circle'></i>批量审核</a>";
+        return "<a class='audit-channel btn btn-sm btn-warning'><i class='fa fa-info-circle'></i> 批量审核</a>";
     }
 
 }
