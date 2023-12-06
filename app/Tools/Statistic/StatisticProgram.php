@@ -86,6 +86,9 @@ class StatisticProgram implements IStatistic
 
     public function store($force=false)
     {
+        if($force) {
+            Statistic::where('date', $this->channel->air_date)->delete();
+        }
         Statistic::upsert($this->data, ['date', 'column', 'group', 'model', 'type'], ['value', 'comment', 'category']);
     }
 

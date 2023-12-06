@@ -43,23 +43,24 @@ class statisticTool extends Command
         $model = $this->argument('model') ?? "";
         $statistic = new StatisticProgram();
 
-        $channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
+        //$channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
+        $channel = Channel::find($id);
         
-        foreach($channels as $channel)
-        {
+        // foreach($channels as $channel)
+        // {
             $this->info("loading channel {$channel->air_date}");
             $statistic->load($channel);
             $results = $statistic->scan();
 
             if($results['result']){
                 $this->info("统计成功");
-                $statistic->store();
+                $statistic->store(true);
             }
             else {
                 $this->error($results['msg']);
             }
 
-        }
+        // }
 
         return 0;
     }
