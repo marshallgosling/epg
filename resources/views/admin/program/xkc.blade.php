@@ -133,6 +133,8 @@
             }
             reCalculate(0);
             reloadTree();
+            $('#btnSort').html("保存");
+            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
         });
 
         $('#btnRollback').on('click', function(e) {
@@ -358,6 +360,8 @@
         dataList.splice(idx, 1);
         reCalculate(idx);
         reloadTree();
+        $('#btnSort').html("保存");
+        $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
     }
 
     function reloadTree()
