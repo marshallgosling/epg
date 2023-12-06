@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -41,15 +42,16 @@ class StatisticController extends AdminController
         $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->filter(function(Grid\Filter $filter){
-            $filter->column(8, function (Grid\Filter $filter) {
+            $filter->column(6, function (Grid\Filter $filter) {
                 $filter->equal('column', __('Column'));
                 $filter->equal('date', __('Air date'))->date('Y-m-d');
-                $filter->equal('type',  __('Type'))->radio(Statistic::TYPES);
+                $filter->in('category', __('Category'))->multipleSelect(Category::getFormattedCategories());
             });
 
-            $filter->column(4, function (Grid\Filter $filter) {
+            $filter->column(6, function (Grid\Filter $filter) {
                 $filter->in('model', __('Model'))->checkbox(Statistic::MODELS);
                 $filter->equal('group', __('Group'))->radio(Statistic::GROUPS);
+                $filter->equal('type',  __('Type'))->radio(Statistic::TYPES);
                 
             });
         });
