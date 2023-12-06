@@ -3,23 +3,37 @@
 namespace App\Admin\Actions\Material;
 
 use App\Models\Program;
+use App\Models\Record;
+use App\Models\Material;
 use Encore\Admin\Actions\RowAction;
-use Illuminate\Database\Eloquent\Model;
 
 class Importor extends RowAction
 {
     public $name = '导入节目库';
 
-    public function handle(\App\Models\Material $model)
+    public function handle(Material $model)
     {
-        // $model ...
-        $program = new Program();
+        $class = '\App\Models\Program';
+        $program = new $class();
+        if(in_array($model->category, ['tvshow', 'tvseries', 'movie','starmade','cartoon']))
+        {
+            $class = '\App\Models\Record';
+            $program = new $class();
+            
+            $program->episodes = $model->group;
+            if(preg_match('/(\d+)$/', $model->name, $matches))
+            {
+                $program->ep = (int) $matches[1];
+                
+            }
+        }
+        
         $program->unique_no = $model->unique_no;
         $program->name = $model->name;
         $program->duration = $model->duration;
         $program->category = [$model->category];
         
-        if(Program::where('unique_no', $model->unique_no)->exists())
+        if($class::where('unique_no', $model->unique_no)->exists())
         {
             return $this->response()->error(__('Import failed message'));
         }

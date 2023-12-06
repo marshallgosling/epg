@@ -17,7 +17,14 @@ class ProgramController extends AdminController
      *
      * @var string
      */
-    protected $title = '节目管理';
+    protected $title = 'XKV 节目库管理';
+
+    protected $description = [
+        'index'  => "XKV 节目库数据",
+//        'show'   => 'Show',
+//        'edit'   => 'Edit',
+//        'create' => 'Create',
+    ];
 
     /**
      * Make a grid builder.
@@ -144,7 +151,8 @@ class ProgramController extends AdminController
 
         $form->text('air_date', __('Air date'));
         $form->text('product_date', __('Product date'));
-          
+        $form->switch('black', __('BlackList'));
+        
         $form->divider(__('TagsInfo'));
         
         $form->select('mood', __('Mood'))->options(Category::getCategories('mood'));

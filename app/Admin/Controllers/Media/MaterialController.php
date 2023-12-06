@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
@@ -50,6 +51,10 @@ class MaterialController extends AdminController
         $grid->actions(function ($actions) {
             $actions->disableView();
             $actions->add(new Importor);
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchImportor);
         });
 
         $grid->tools(function (Grid\Tools $tools) {

@@ -20,7 +20,7 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
-    $router->resource('/records', 'RecordsController')->names('records');
+    $router->resource('/media/records', 'Media\\RecordController')->names('media.records');
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
     $router->post('/media/programs/unique', 'Media\\ProgramController@unique')->name('media.material.unique');

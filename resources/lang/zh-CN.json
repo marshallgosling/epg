@@ -41,6 +41,8 @@
     "Model"         : "模型维度",
     "Column"        : "关键字",
     "Value"         : "统计值",
+    "Episodes"      : "剧集",
+    "Ep"            : "集号",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Schedule start at": "计划开始时间",
