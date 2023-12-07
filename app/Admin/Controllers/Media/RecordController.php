@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Program\BatchModify;
 use App\Models\Record;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
@@ -64,6 +65,10 @@ class RecordController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { $filter->like('name', __('Name'));$filter->like('unique_no', __('Unique_no'));});
             $filter->column(6, function(Grid\Filter $filter) { $filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); });
     
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchModify);
         });
 
         return $grid;
