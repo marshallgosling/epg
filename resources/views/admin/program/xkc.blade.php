@@ -63,23 +63,27 @@
         <h4 class="modal-title">搜索</h4>
       </div>
       <div class="modal-body">
-        <div class="fields-group">
-            <span class="input-group-addon">
-                <label><input type="checkbox" id="onlyrecords" autocomplete="off" checked> XKC 节目库</label>
-            </span>
-            <div class="form-group">                     
-                <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
-            </div>
-            <span class="input-group-btn">
-                <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
-            </span>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="input-group">    
+                        <span class="input-group-addon">
+                            <label><input type="checkbox" id="onlyrecords" checked> XKC 节目库</label>
+                        </span>
+                        <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
+                        <span class="input-group-btn">
+                            <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
+                        </span>
+                </div>
+            </div>  
         </div>
-        <div class="fields-group">
-            <div class="table-responsive" style="height:500px; overflow-y:scroll">
-                <table class="table table-search table-hover table-striped">
-                            
-                </table>
-                <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive" style="height:500px; overflow-y:scroll">
+                    <table class="table table-search table-hover table-striped">
+                                
+                    </table>
+                    <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
+                </div>
             </div>
         </div>
       </div>
