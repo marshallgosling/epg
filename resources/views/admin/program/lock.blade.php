@@ -80,7 +80,7 @@
             }
 
             //If the shift button is held while clicking a box
-            if (e.shiftKey) {
+            if (e.ctrlKey) {
                 var start = $chkboxes.index(this);
                 var end = $chkboxes.index(lastChecked);
 
