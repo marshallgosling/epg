@@ -19,12 +19,13 @@ class BatchModify extends BatchAction
         //$group = $request->get('group');
         foreach ($collection as $model) 
         {
-            
+            $categories = $model->category;
             if($category) {
-                if(in_array($category, $model->category))
-                     array_splice($model->category, array_search($category, $model->category), 1);
+                if(in_array($category, $categories))
+                    array_splice($categories, array_search($category, $categories), 1);
                 else
-                    $model->category[] = $category;
+                    $categories[] = $category;
+                $model->category = $categories;
             }
             
 
