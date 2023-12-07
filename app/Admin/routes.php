@@ -92,7 +92,7 @@ Route::group([
 
         if($o == 1) {
             $model = DB::table('records');
-            $sql = 'id, unique_no, duration, name, category, `group` as artist, ep, black';
+            $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
         }
         else {
             $model = DB::table('program');
