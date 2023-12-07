@@ -203,6 +203,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
+                    o: $('#onlycategory').prop('checked') ? 1 : 0,
                     p: curPage
                 },
                 success: function (data) {
@@ -231,51 +232,13 @@
                 }
             })
         });
-        
-        $("#keyword").on('change', function(e) {
-            if(uniqueAjax) uniqueAjax.abort();
-            keyword = e.currentTarget.value;
-            cachedPrograms = [];
-            curPage = 1
-            uniqueAjax = $.ajax({
-                url: "/admin/api/tree/programs",
-                dataType: 'json',
-                data: {
-                    q: keyword,
-                    p: curPage
-                },
-                success: function (data) {
-                    uniqueAjax = null;
-                    var items = data.result;
-                    cachedPrograms = cachedPrograms.concat(items);
-                    selectedItem = null;
 
-                    if(data.total == 0) {
-                        $('#noitem').show();
-                        $('#totalSpan').html('');
-                        return;
-                    }
-                    $('#noitem').hide();
-                    $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
-                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
-                    var html = '<tr><th>'+head.join('</'+'th><th>')+'</'+'th></'+'tr>';
-                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
-                    else $('#moreBtn').hide();
-                    for(i=0;i<items.length;i++)
-                    {
-                        item = items[i];
-                        tr = '';
-                        if(item.black) tr = ' danger';
-                        if(item.artist==null) item.artist='';
-                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
-                    }
-                    
-                    $('.table-search').html(html);
-                },
-                error: function() {
-                    uniqueAjax = null;
-                }
-            })
+        $("#keyword").on('change', function(e) {
+            searchKeywords(e.currentTarget.value);
+        });
+
+        $('#btnSearch').on('click', function(e) {
+            searchKeywords($('#keyword').val());
         });
 
         $('#confirmBtn').on('click', function(e) {
@@ -318,6 +281,55 @@
         
         reloadTree();
     });
+
+    function searchKeywords(keyword)
+    {
+        if(uniqueAjax) uniqueAjax.abort();
+            keyword = keyword;
+            $('.table-search').html('');
+            cachedPrograms = [];
+            curPage = 1
+            uniqueAjax = $.ajax({
+                url: "/admin/api/tree/programs",
+                dataType: 'json',
+                data: {
+                    q: keyword,
+                    o: $('#onlycategory').prop('checked') ? 1 : 0,
+                    p: curPage
+                },
+                success: function (data) {
+                    uniqueAjax = null;
+                    var items = data.result;
+                    cachedPrograms = cachedPrograms.concat(items);
+                    selectedItem = null;
+
+                    if(data.total == 0) {
+                        $('#noitem').show();
+                        $('#totalSpan').html('');
+                        return;
+                    }
+                    $('#noitem').hide();
+                    $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
+                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    if(data.total > cachedPrograms.length) $('#moreBtn').show();
+                    else $('#moreBtn').hide();
+                    for(i=0;i<items.length;i++)
+                    {
+                        item = items[i];
+                        tr = '';
+                        if(item.black) tr = ' danger';
+                        if(item.artist==null) item.artist='';
+                        html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
+                    }
+                    
+                    $('.table-search').html(html);
+                },
+                error: function() {
+                    uniqueAjax = null;
+                }
+            });
+    }
 
     function backupData() {
         backupList.push(JSON.parse(JSON.stringify(dataList)));

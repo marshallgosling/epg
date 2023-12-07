@@ -219,6 +219,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
+                    o: $('#onlycategory').prop('checked') ? 1 : 0,
                     p: curPage
                 },
                 success: function (data) {
@@ -254,10 +255,6 @@
 
         $('#btnSearch').on('click', function(e) {
             searchKeywords($('#keyword').val());
-        });
-        
-        $("#keyword").on('change', function(e) {
-            
         });
 
         $('#confirmBtn').on('click', function(e) {
@@ -305,6 +302,7 @@
     {
         if(uniqueAjax) uniqueAjax.abort();
             keyword = keyword;
+            $('.table-search').html('');
             cachedPrograms = [];
             curPage = 1
             uniqueAjax = $.ajax({
@@ -312,6 +310,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
+                    o: $('#onlycategory').prop('checked') ? 1 : 0,
                     p: curPage
                 },
                 success: function (data) {

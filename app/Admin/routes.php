@@ -64,10 +64,10 @@ Route::group([
     $router->get('/api/tree/programs', function (Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        $o = (int)$request->get('o', 1);
+        $o = (int)$request->get('o', 0);
         $size = 20;$start = ($p-1)*$size;
 
-        $model = new Program();
+        $model = DB::table('program');
         if($o) {
             $model = $model->where('category', 'like', "%$q%");
         }
@@ -77,6 +77,7 @@ Route::group([
 
         return response()->json([
             'total' => $model->count(),
+            //'sql' => $model->dump(),
             'result'=> $model->select(DB::raw('id, unique_no, duration, name, category, artist, black'))->orderByDesc('id')->offset($start)
                 ->limit($size)->get()->toArray()
             ]);      
