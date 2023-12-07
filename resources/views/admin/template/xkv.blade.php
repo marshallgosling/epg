@@ -534,7 +534,7 @@
     function reCalculate(idx) {
 
         var start = idx == 0 ? Date.parse('{{$model->start_at}}') : Date.parse('2020-1-1 ' + dataList[idx-1].end_at);
-        console.log("start:"+dataList[idx-1].end_at);
+        
         for(i=idx;i<dataList.length;i++)
         {
             dataList[i].start_at = formatTime(start);
