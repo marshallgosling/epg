@@ -44,7 +44,7 @@ class XkcController extends AdminController
         $grid->model()->where('name', 'xkc')->orderBy('air_date', 'desc');
 
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="xkv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+            return '<a href="xkc/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
         $grid->column('air_date', __('Air date'));
         $grid->column('name', __('Group'))->hide();
