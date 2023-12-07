@@ -64,18 +64,24 @@
       </div>
       <div class="modal-body">
         <div class="fields-group">
-                    <div class="form-group">                     
-                        <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
-                    </div>
-                </div>
-                <div class="fields-group">
-                    <div class="table-responsive" style="height:500px; overflow-y:scroll">
-                        <table class="table table-search table-hover table-striped">
+            <span class="input-group-addon">
+                <label><input type="checkbox" id="onlyrecords" autocomplete="off" checked> XKC 节目库</label>
+            </span>
+            <div class="form-group">                     
+                <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
+            </div>
+            <span class="input-group-btn">
+                <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
+            </span>
+        </div>
+        <div class="fields-group">
+            <div class="table-responsive" style="height:500px; overflow-y:scroll">
+                <table class="table table-search table-hover table-striped">
                             
-                        </table>
-                        <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
-                    </div>
-                </div>
+                </table>
+                <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
+            </div>
+        </div>
       </div>
       <div class="modal-footer">
         <div class="pull-left">
@@ -199,11 +205,11 @@
             loadingMore = true;
             curPage ++;
             $.ajax({
-                url: "/admin/api/tree/programs",
+                url: "/admin/api/tree/records",
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    o: $('#onlycategory').prop('checked') ? 1 : 0,
+                    o: $('#onlyrecords').prop('checked') ? 1 : 0,
                     p: curPage
                 },
                 success: function (data) {
@@ -290,11 +296,11 @@
             cachedPrograms = [];
             curPage = 1
             uniqueAjax = $.ajax({
-                url: "/admin/api/tree/programs",
+                url: "/admin/api/tree/records",
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    o: $('#onlycategory').prop('checked') ? 1 : 0,
+                    o: $('#onlyrecords').prop('checked') ? 1 : 0,
                     p: curPage
                 },
                 success: function (data) {
