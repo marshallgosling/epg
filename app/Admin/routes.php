@@ -91,7 +91,7 @@ Route::group([
         $size = 20;$start = ($p-1)*$size;
 
         if($o == 1) {
-            $model = DB::table('record');
+            $model = DB::table('records');
             $sql = 'id, unique_no, duration, name, category, group as artist, ep, black';
         }
         else {

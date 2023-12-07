@@ -320,7 +320,7 @@
                     }
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
-                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var head = ['序号','播出编号','名称','其他','时长','栏目'];
                     var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
