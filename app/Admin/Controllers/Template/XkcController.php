@@ -72,6 +72,8 @@ class XkcController extends AdminController
             Template::STATUS_SYNCING => 'success',
             Template::STATUS_STOPED => 'danger'
         ]);
+
+        
         $grid->column('updated_at', __('Updated at'));
 
         $grid->filter(function($filter){

@@ -506,7 +506,29 @@
 
         $('#tree-programs').html(html);
         $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
-        
+        //Set the lastChecked box to null
+        var lastChecked = null;
+        var $chkboxes = $('.grid-row-checkbox');
+        //When any check box is clicked
+        $chkboxes.click(function(e) {
+
+            //Set the last checkbox checked if it didnt exist before
+            if (!lastChecked) {
+                lastChecked = this;
+            }
+
+            //If the shift button is held while clicking a box
+            if (e.shiftKey) {
+                var start = $chkboxes.index(this);
+                var end = $chkboxes.index(lastChecked);
+
+                var selectedChecks = $chkboxes.slice(Math.min(start,end), Math.max(start,end)+ 1)
+                selectedChecks.prop('checked', lastChecked.checked);
+            }
+
+            //Set the last checked button to 
+            lastChecked = this;
+        });
     }
 
     function reCalculate(idx) {
@@ -561,4 +583,9 @@
         }
         return false;
     }
+
+    //Reset the checkValArray to empty
+    let checkValArray = []
+
+    
 </script>
