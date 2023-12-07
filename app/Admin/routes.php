@@ -99,15 +99,15 @@ Route::group([
             $sql = 'id, unique_no, duration, name, category, artist, black';
         }
             
-        if($o) {
-            $model = $model->where('category', 'like', "%$q%");
-        }
-        else {
+        // if($o) {
+        //     $model = $model->where('category', 'like', "%$q%");
+        // }
+        // else {
             $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%");
             if($o == 0) {
                 $model = $model->orWhere('artist', 'like', "%$q%");
             }
-        }
+        // }
 
         return response()->json([
             'total' => $model->count(),
