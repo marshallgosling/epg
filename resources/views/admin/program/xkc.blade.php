@@ -392,7 +392,7 @@
             }
 
             //If the shift button is held while clicking a box
-            if (e.ctrlKey) {
+            if (e.shiftKey) {
                 var start = $chkboxes.index(this);
                 var end = $chkboxes.index(lastChecked);
 
