@@ -54,18 +54,18 @@ class Program extends Model
 
         $program = Program::where('program.unique_no', $id)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
-            ->select("program.unique_no", "program.name", "program.artist", "material.duration","material.frames")->first();
+            ->select("program.unique_no", "program.name", "program.artist", "program.black", "material.duration","material.frames")->first();
 
-        $black = false;
+        // $black = false;
 
-        if($program->artist)foreach(self::$blacklist as $keyword) {
-            if(Str::contains($program->artist, $keyword)) {
-                $black = true;
-                break;
-            }
-        };
+        // if($program->artist)foreach(self::$blacklist as $keyword) {
+        //     if(Str::contains($program->artist, $keyword)) {
+        //         $black = true;
+        //         break;
+        //     }
+        // };
 
-        if($black) return self::findRandom($key);
+        if($program->black) return self::findRandom($key);
         else return $program;
     }
 

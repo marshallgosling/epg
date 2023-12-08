@@ -68,9 +68,11 @@ class ChannelGenerator
             return ["satus" =>false, "message"=>"Channel is null"];
         }
 
+        $class = $channel->name == 'xkv' ? '\App\Models\Program' : '\App\Models\Record';
+
         $air = strtotime($channel->air_date." 06:00:00");
         $schecule = strtotime($channel->air_date." 06:00:00");
-        Program::loadBlackList();
+        $class::loadBlackList();
 
         foreach($this->daily as $t) {
             
@@ -97,11 +99,11 @@ class ChannelGenerator
                 $item = false;
 
                 if($p->type == TemplatePrograms::TYPE_PROGRAM) {
-                    $item = Program::findRandom($p->category);
+                    $item = $class::findRandom($p->category);
                     
                 }
                 else {
-                    $item = Program::findUnique($p->data);
+                    $item = $class::findUnique($p->data);
 
                     if(!$item) {
                         $item = Material::findUnique($p->data);
@@ -157,7 +159,7 @@ class ChannelGenerator
             "duration" => $program->duration,
             "category" => $category,
             "start_at" => $air,
-            "artist" => $program instanceof Program ? $program->artist : '',
+            "artist" => $program instanceof Program ? $program->artist : $program->episodes,
             "end_at" => ''
         ];
     }

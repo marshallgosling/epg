@@ -8,7 +8,7 @@ use App\Admin\Actions\ChannelProgram\ToolCalculate;
 use App\Events\Channel\CalculationEvent;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
-use App\Models\Program;
+use Encore\Admin\Widgets\Table;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -45,6 +45,25 @@ class XkcProgramController extends AdminController
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
             return "<a href=\"tree/{$this->id}\">$this->name</a>"; 
+        });
+
+        $grid->column('ex', __(" "))->display(function() {
+            return "预览";
+        })->expand(function ($model) {
+            $data = json_decode($model->data); $items=[];
+            for($i=0;$i<count($data);$i++)
+            {
+                $item = $data[$i];
+                if($i==10)break;
+                $items[] = [$item->start_at, $item->end_at, $item->unique_no, $item->name, $item->category, $item->artist];
+            }
+            
+            if(count($items) == 0) $info = "没有节目记录，请点击添加";
+            else $info = '当前最多只显示10条记录，请点击查看';
+
+            $infoBox = '<div class="small-box bg-aqua" style="margin-bottom:0"><a href="xkc/tree/'.$this->id.'" class="small-box-footer">'.$info.'<i class="fa fa-arrow-circle-right"></i></a></div>';
+            
+            return $infoBox.(new Table(['开始','结束', '播出编号', '名称', '时长', '栏目', '剧集'], $items))->render();
         });
         
         $grid->column('start_at', __('Start at'));
