@@ -103,7 +103,7 @@ Route::group([
         //     $model = $model->where('category', 'like', "%$q%");
         // }
         // else {
-            $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%");
+            $model = $model->where('name', 'like', "%$q%")->orWhere('category', 'like' ,"%$q%")->orWhere('unique_no', 'like', "$q%");
             if($o == 0) {
                 $model = $model->orWhere('artist', 'like', "%$q%");
             }
