@@ -53,13 +53,10 @@ class MaterialController extends AdminController
             $actions->disableView();
             //$actions->add(new Importor);
         });
-
-        $grid->batchActions(function ($actions) {
-            $actions->add(new BatchImportor);
-        });
-
+        
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
+            $tools->append(new BatchImportor);
         });
 
         $grid->filter(function(Grid\Filter $filter){
