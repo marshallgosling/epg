@@ -3,8 +3,9 @@
     "Unique no"     : "播出编号",
     "Name"          : "标题",
     "Category"      : "分类标签",
+    "Channel"       : "频道号",
     "Duration"      : "时长",
-    "Size"          : "文件长度",
+    "Size"          : "文件大小",
     "Frames"        : "帧数",
     "Created at"    : "创建时间",
     "Updated at"    : "上次修改时间",
@@ -43,6 +44,7 @@
     "Value"         : "统计值",
     "Episodes"      : "剧集",
     "Ep"            : "集号",
+    "Filepath"      : "文件路径",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Schedule start at": "计划开始时间",
@@ -80,5 +82,6 @@
     "No data selected!": "请先选择内容！",
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息",
+    "FileInfo": "文件信息",
     "AuditInfo": "审核信息"
 }

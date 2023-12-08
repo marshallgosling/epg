@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Channel;
 use App\Models\ExportList;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -30,7 +31,7 @@ class ExportListController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('group_id', __('Group'))->using(ExportList::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
+        $grid->column('group_id', __('Group'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         
         $grid->column('name', __('Name'));
         
@@ -103,7 +104,7 @@ class ExportListController extends AdminController
         $show->field('start_at', __('Start at'));
         $show->field('end_at', __('End at'));
         $show->field('filename', __('Filename'));
-        $show->field('group_id', __('Group id'))->using(ExportList::GROUPS);
+        $show->field('group_id', __('Group id'))->using(Channel::GROUPS);
         $show->field('status', __('Status'))->using(ExportList::STATUS);
         $show->field('reason', __('Reason'));
         $show->field('created_at', __('Created at'));
@@ -125,7 +126,7 @@ class ExportListController extends AdminController
         $form->date('start_at', __('Start at'))->required();
         $form->date('end_at', __('End at'))->required();
         $form->text('filename', __('Filename'));
-        $form->radio('group_id', __('Group id'))->default('xkv')->options(ExportList::GROUPS);
+        $form->radio('group_id', __('Group id'))->default('xkv')->options(Channel::GROUPS);
         $form->radio('status', __('Status'))->default(0)->options(ExportList::STATUS);
         $form->textarea('reason', __('Reason'));
 

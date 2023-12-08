@@ -6,6 +6,7 @@ use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
+use App\Models\Channel;
 use App\Models\Material;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -33,7 +34,7 @@ class MaterialController extends AdminController
         $grid = new Grid(new Material());
 
         $grid->model()->orderBy('id', 'desc');
-        //$grid->column('id', __('Id'));
+        $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('unique_no', __('Unique_no'))->sortable();
         $grid->column('name', __('Name'))->sortable(); 
         $grid->column('group', __('Group'))->hide();  
@@ -50,7 +51,7 @@ class MaterialController extends AdminController
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->add(new Importor);
+            //$actions->add(new Importor);
         });
 
         $grid->batchActions(function ($actions) {
@@ -83,13 +84,18 @@ class MaterialController extends AdminController
         $show = new Show(Material::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field('channel', __('Channel'))->using(Channel::GROUPS);
         $show->field('name', __('Name'));
         $show->field('group', __('Group'));
         $show->field('unique_no', __('Unique no'));
         $show->field('category', __('Category'))->using(Category::getFormattedCategories());
         $show->field('duration', __('Duration'));
         $show->field('frames', __('Frames'));
+
+        $show->field('filepath', __('Filepath'));
+        $show->field('size', __('Size'));
         $show->field('md5', __('MD5'));
+
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -108,15 +114,20 @@ class MaterialController extends AdminController
 
         $form = new Form(new Material());
 
+        $form->divider(__('BasicInfo'));
+        $form->radio('channel', __('Channel'))->options(Channel::GROUPS)->required();
         $form->text('name', __('Name'))->required();
         $form->text('unique_no', __('Unique no'))->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
-        $form->text('frames', __('Frames'))->default(0);
         $form->text('group', __('Group'))->default('');
-        $form->text('md5', __('MD5'))->default('');
+
+        $form->divider(__('FileInfo'));
+        $form->text('frames', __('Frames'))->default(0);
+        $form->text('filepath', __('Filepath'))->default('');
         $form->text('size', __('Size'))->default(0);
-        
+        $form->text('md5', __('MD5'))->default('');
+
         $form->saving(function(Form $form) {
 
             if($form->isCreating()) {

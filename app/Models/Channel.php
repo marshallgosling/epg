@@ -21,6 +21,8 @@ class Channel extends Model
     public const STATUS = ['未编单', '运行中', '正常', '下线'];
     public const AUDIT = ['未审核', '通过', '不通过'];
 
+    public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
+
     protected $table = 'channel';
 
     protected $fillable = [
