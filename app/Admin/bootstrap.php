@@ -18,6 +18,14 @@
  *
  */
 
+Encore\Admin\Facades\Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+
+    //$navbar->left(view('admin.search'));
+
+    $navbar->right(view('admin.right'));
+
+});
+
 Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
     $grid->disableExport();
     $grid->paginate(30);
