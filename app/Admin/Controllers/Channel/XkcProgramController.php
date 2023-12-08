@@ -55,7 +55,7 @@ class XkcProgramController extends AdminController
             {
                 $item = $data[$i];
                 if($i==10)break;
-                $items[] = [$item->start_at, $item->end_at, $item->unique_no, $item->name, $item->category, $item->artist];
+                $items[] = [$item->start_at, $item->end_at, $item->unique_no, $item->name, $item->duration, $item->category, $item->artist];
             }
             
             if(count($items) == 0) $info = "没有节目记录，请点击添加";
@@ -63,7 +63,7 @@ class XkcProgramController extends AdminController
 
             $infoBox = '<div class="small-box bg-aqua" style="margin-bottom:0"><a href="xkc/tree/'.$this->id.'" class="small-box-footer">'.$info.'<i class="fa fa-arrow-circle-right"></i></a></div>';
             
-            return $infoBox.(new Table(['开始','结束', '播出编号', '名称', '时长', '栏目', '剧集'], $items))->render();
+            return (new Table(['开始','结束', '播出编号', '名称', '时长', '栏目', '剧集'], $items))->render();
         });
         
         $grid->column('start_at', __('Start at'));
