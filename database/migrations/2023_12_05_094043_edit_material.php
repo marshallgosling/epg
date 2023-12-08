@@ -16,6 +16,8 @@ class EditMaterial extends Migration
         Schema::table('material', function(Blueprint $table) {
             $table->string('group', 50)->after('category')->nullable();
             $table->string('md5', 32)->after('frames')->nullable();
+            $table->string('channel', 10)->after('duration')->nullable();
+            $table->string('filepath', 10)->after('size')->nullable();
         });
     }
 

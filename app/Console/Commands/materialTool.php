@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel;
 use App\Models\Material;
+use App\Models\Program;
+use App\Models\Record;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use Illuminate\Console\Command;
@@ -50,7 +52,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import'];
+        $actions = ['import','move'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -60,6 +62,26 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function move($id)
+    {
+        $models = Program::where('id', '>', $id)->get();
+        foreach($models as $model)
+        {
+            $record = new Record();
+            $record->name = $model->name;
+            $record->unique_no = $model->unique_no;
+            $record->duration = $model->duration;
+            $record->category = $model->category;
+            if(Record::where('unique_no', $model->unique_no)->exists())
+            {
+                continue;
+            }
+            else {
+                $record->save();
+            }
+        }
     }
 
     private function import($id)

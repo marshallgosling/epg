@@ -20,6 +20,7 @@ class Material extends Model
         'size',
         'frames',
         'group',
+        'md5',
         'comment'
     ];
 
