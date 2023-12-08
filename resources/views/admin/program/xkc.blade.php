@@ -292,10 +292,10 @@
         reloadTree();
     });
 
-    function searchKeywords(keyword)
+    function searchKeywords(k)
     {
         if(uniqueAjax) uniqueAjax.abort();
-            keyword = keyword;
+            keyword = k;
             $('.table-search').html('');
             cachedPrograms = [];
             curPage = 1
