@@ -126,15 +126,20 @@ class TemplateController extends AdminController
         $form = new Form(new Template());
 
         $form->text('version', __('Version'))->disable();
-        $form->text('name', __('Name'));
-        $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES);
+        $form->text('name', __('Name'))->required();
+        $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES)->required();
         
-        $form->text('start_at', __('Start at'));
-        $form->text('duration', __('Duration'));
+        $form->text('start_at', __('Start at'))->inputmask(['mask'=>'99:99:99'])->required();
+        $form->text('duration', __('Duration'))->inputmask(['mask'=>'99:99:99'])->required();
 
-        $form->text('sort', __('Sort'));
+        $form->text('sort', __('Sort'))->required();
         $form->text('comment', __('Comment'));
         $form->hidden('group_id', __('Group'))->default('default');
+
+        $form->saving(function(Form $form) {
+            $t = strtotime('2020/01/01 '.$form->start_at)
+            $form->end_at = 
+        });
         
 
         return $form;

@@ -64,6 +64,7 @@ class XkcController extends AdminController
             if( $air < $today ) $html .= ' <span class="label label-default">次日</span>';
             return $html;
         });
+        $grid->column('end_at', __('End at'))->hide();
         $grid->column('duration', __('Duration'));
         $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);
         $grid->column('sort', __('Sort'));
@@ -134,13 +135,14 @@ class XkcController extends AdminController
         $form->text('name', __('Name'))->required();
         $form->radio('schedule', __('Schedule'))->options(Template::SCHEDULES)->required();
         
-        $form->text('start_at', __('Start at'))->required();
+        $form->text('start_at', __('Start at'))->inputmask(['mask' => '99:99:99'])->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99'])->required();
 
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->text('comment', __('Comment'));
 
         $form->hidden('group_id', __('Group'))->default('xkc');
+        $form->hidden('end_at', __('End at'));
 
         $form->saving(function(Form $form) {
 
