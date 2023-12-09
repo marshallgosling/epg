@@ -149,7 +149,7 @@ class ChannelGenerator
         if($this->special) {
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('sort')->get();
             $sort = $t->sort + 1;
-            foreach($this->special as $t) {
+            foreach($this->special as $idx=>$t) {
                 foreach($programs as $program)
                 {
                     $p = $program->replicate();
@@ -166,6 +166,9 @@ class ChannelGenerator
                     
                     $p->sort = $sort;
 
+                    $p->schedule_start_at = self::scheduleTime($p->schedule_start_at, $t->duration, ($idx+1));
+                    $p->schedule_end_at = self::scheduleTime($p->schedule_end_at, $t->duration, ($idx+1));
+
                     $p->save();
 
                     $sort ++;
@@ -175,6 +178,14 @@ class ChannelGenerator
         
     }
 
+
+    public static function scheduleTime($origin, $duration, $multi=1)
+    {
+        $time = strtotime('2020/01/01 '.$origin);
+        $seconds = self::parseDuration($duration);
+        $time += $seconds * $multi;
+        return date("H:i:s", $time);
+    }
 
 
     /**

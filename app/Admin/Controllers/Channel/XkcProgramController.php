@@ -79,7 +79,13 @@ class XkcProgramController extends AdminController
             //if(abs($duration - 3600)>300) $erro = '&nbsp;<span class="label label-danger">需处理</span>';
             return  ChannelGenerator::formatDuration($duration);
         });
-        $grid->column('schedule_start_at', __('Schedule start at'));
+        $grid->column('schedule_start_at', __('Schedule start at'))->display(function($start_at) {
+            $today = strtotime(date('Y-m-d 17:00:00'));
+            $air = strtotime(date('Y-m-d '.$start_at));
+            $html = $start_at;
+            if( $air < $today ) $html .= ' <span class="label label-default">次日</span>';
+            return $html;
+        });
         $grid->column('schedule_end_at', __('Schedule end at'))->hide();
         $grid->column('version', __('Version'));
         
