@@ -16,7 +16,7 @@ class Template extends Model
     public const DAILY = 0;
     public const WEEKENDS = 1;
     public const SPECIAL = 2;
-    public const SCHEDULES = ["日常", "周末", "特殊日"];
+    public const SCHEDULES = ["日常", "周末", "特殊"];
     public const STATUSES = ["未启用", "使用中", "已停用"];
 
     protected $table = 'template';

@@ -70,14 +70,17 @@ class ChannelGenerator
 
         $class = $channel->name == 'xkv' ? '\App\Models\Program' : '\App\Models\Record';
 
-        $air = strtotime($channel->air_date." 06:00:00");
-        $schecule = strtotime($channel->air_date." 06:00:00");
+        //if($this->daily)
+        $air = 0;//strtotime($channel->air_date." 06:00:00");
+        $schecule = 0;//strtotime($channel->air_date." 06:00:00");
         $class::loadBlackList();
 
-        foreach($this->daily as $t) {
-            
+        foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
-            $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
+            // $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
+            if($air == 0) {
+                $air = strtotime($channel->air_date.' '.$t->start_at); 
+            }
 
             $c = new ChannelPrograms();
             $c->name = $t->name;
@@ -142,7 +145,37 @@ class ChannelGenerator
             $c->save();
 
         }
+
+        if($this->special) {
+            $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('sort')->get();
+            $sort = $t->sort + 1;
+            foreach($this->special as $t) {
+                foreach($programs as $program)
+                {
+                    $p = $program->replicate();
+
+                    $p->name .= ' (复制)';
+
+                    $p->data = json_encode(['replicate'=>$program->id]);
+
+                    $p->start_at = date('Y-m-d H:i:s', $air);
+
+                    $air += self::parseDuration($p->duration);
+
+                    $p->end_at = date('Y-m-d H:i:s', $air);
+                    
+                    $p->sort = $sort;
+
+                    $p->save();
+
+                    $sort ++;
+                }
+            }
+        }
+        
     }
+
+
 
     /**
      * create an Item obj
