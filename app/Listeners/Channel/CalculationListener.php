@@ -37,22 +37,30 @@ class CalculationListener
         
         foreach($programs as $pro)
         {
-            
-                $items = json_decode($pro->data);
+            $items = json_decode($pro->data);
+            if(array_key_exists('replicate', $items))
+            {
+                $duration = (int) ChannelPrograms::where('id', $items->replicate)->value('duration');
+                $this->info( "replicate {$items->replicate} {$pro->name}, duration: $duration");
+            }
+            else {
                 $duration = 0;
-                $pro->start_at = date('Y/m/d H:i:s', $start);
+                
                 foreach($items as $item) {
                     $duration += ChannelGenerator::parseDuration($item->duration);
                 }
-                $start += $duration;
-                $pro->end_at = date('Y/m/d H:i:s', $start);
-                $pro->duration = $duration;
+            }
 
-                if($pro->isDirty()) {
-                    $pro->version = $pro->version + 1;
-                    $pro->save();
-                    $this->info( "re-calculate {$pro->id} {$pro->name}, start:". $pro->start_at.' end:'. $pro->end_at.' duration:'.$pro->duration);
-                }
+            $pro->start_at = date('Y/m/d H:i:s', $start);
+            $start += $duration;
+            $pro->end_at = date('Y/m/d H:i:s', $start);
+            $pro->duration = $duration;
+
+            if($pro->isDirty()) {
+                $pro->version = $pro->version + 1;
+                $pro->save();
+                $this->info( "re-calculate {$pro->id} {$pro->name}, start:". $pro->start_at.' end:'. $pro->end_at.' duration:'.$pro->duration);
+            }
 
         }
         $channel->version = $channel->version + 1;

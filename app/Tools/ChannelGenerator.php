@@ -155,24 +155,19 @@ class ChannelGenerator
                     $p = $program->replicate();
 
                     $p->name .= ' (复制)';
-
                     $p->data = json_encode(['replicate'=>$program->id]);
-
                     $p->start_at = date('Y-m-d H:i:s', $air);
-
                     $air += $p->duration;
-
-                    $p->end_at = date('Y-m-d H:i:s', $air);
-                    
+                    $p->end_at = date('Y-m-d H:i:s', $air);                   
                     $p->sort = $sort;
 
                     $p->schedule_start_at = self::scheduleTime($p->schedule_start_at, $t->duration, ($idx+1));
                     $p->schedule_end_at = self::scheduleTime($p->schedule_end_at, $t->duration, ($idx+1));
 
                     $p->save();
-
                     $sort ++;
                 }
+                $this->info("复制节目 {$t->name} {$t->start_at} {$t->end_at}");
             }
         }
         

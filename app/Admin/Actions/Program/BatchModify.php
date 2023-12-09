@@ -42,7 +42,7 @@ class BatchModify extends BatchAction
         $this->select('category', __('Category'))->options(Category::getFormattedCategories());
         //$this->text('group', __('Group'));
 
-        $this->textarea("help", "注意说明")->default('批量添加或删除栏目标签'.PHP_EOL.'默认为增加标签，如果已存在相同的标签，则会进行溢出操作')->disable();
+        $this->textarea("help", "注意说明")->default('批量添加或删除栏目标签'.PHP_EOL.'默认为增加标签，如果已存在相同的标签，则会进行移除操作')->disable();
     }
 
     public function html()
