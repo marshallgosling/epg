@@ -58,7 +58,7 @@ class XkcController extends AdminController
             return '<span class="label label-default">'.$version.'</span>';
         });
         $grid->column('start_at', __('Start at'))->display(function($start_at) {
-            $today = strtotime(date('Y-m-d 6:00:00'));
+            $today = strtotime(date('Y-m-d 17:00:00'));
             $air = strtotime(date('Y-m-d '.$start_at));
             $html = $start_at;
             if( $air < $today ) $html .= ' <span class="label label-default">次日</span>';

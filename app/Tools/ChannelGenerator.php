@@ -187,8 +187,16 @@ class ChannelGenerator
         $minute = floor(($seconds % 3600)/60);
         $second = $seconds % 60;
 
-
         return self::format($hour).':'.self::format($minute).':'.self::format($second).':'.self::format($frames % config("FRAMES", 25));
+    }
+
+    public static function formatDuration($seconds)
+    {
+        $hour = floor($seconds / 3600);
+        $minute = floor(($seconds % 3600)/60);
+        $second = $seconds % 60;
+
+        return self::format($hour).':'.self::format($minute).':'.self::format($second);
     }
 
     public static function format($num)

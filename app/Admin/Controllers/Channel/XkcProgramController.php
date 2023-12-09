@@ -8,6 +8,8 @@ use App\Admin\Actions\ChannelProgram\ToolCalculate;
 use App\Events\Channel\CalculationEvent;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use App\Tools\ChannelGenerator;
+use App\Tools\Exporter;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -48,7 +50,7 @@ class XkcProgramController extends AdminController
         });
 
         $grid->column('ex', __(" "))->display(function() {
-            return "预览";
+            return "编排";
         })->expand(function ($model) {
             $data = json_decode($model->data); $items=[];
             for($i=0;$i<count($data);$i++)
@@ -69,15 +71,10 @@ class XkcProgramController extends AdminController
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
         $grid->column('duration', __('Duration'))->display(function($duration) {
-            $seconds = $duration;
-            $hour = floor($seconds / 3600);
-            $min = floor(($seconds%3600)/60);
-            $sec = ($seconds%60);
-            $min = $min>9?$min:'0'.$min;
-            $sec = $sec>9?$sec:'0'.$sec;
             $erro = '';
-            if(abs($duration - 3600)>300) $erro = '&nbsp;<span class="label label-danger">需处理</span>';
-            return  "$hour:$min:$sec ". $erro;
+            
+            //if(abs($duration - 3600)>300) $erro = '&nbsp;<span class="label label-danger">需处理</span>';
+            return  ChannelGenerator::formatDuration($duration);
         });
         $grid->column('schedule_start_at', __('Schedule start at'));
         $grid->column('schedule_end_at', __('Schedule end at'))->hide();
