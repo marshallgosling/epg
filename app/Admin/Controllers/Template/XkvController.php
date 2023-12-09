@@ -49,6 +49,7 @@ class XkvController extends AdminController
             if( $air < $today ) $html .= ' <span class="label label-default">次日</span>';
             return $html;
         });
+        $grid->column('end_at', __('End at'))->hide();
         $grid->column('duration', __('Duration'));
         $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);
         $grid->column('sort', __('Sort'));
