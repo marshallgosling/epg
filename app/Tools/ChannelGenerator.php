@@ -160,7 +160,7 @@ class ChannelGenerator
 
                     $p->start_at = date('Y-m-d H:i:s', $air);
 
-                    $air += self::parseDuration($p->duration);
+                    $air += $p->duration;
 
                     $p->end_at = date('Y-m-d H:i:s', $air);
                     
