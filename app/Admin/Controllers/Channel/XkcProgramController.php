@@ -54,7 +54,7 @@ class XkcProgramController extends AdminController
             return "编排";
         })->expand(function ($model) {
             $data = json_decode($model->data); $items=[];
-            if($data->replicate) {
+            if(array_key_exists('replicate', $data)) {
                 return new InfoBox('这是一个副本节目','','aqua','','');
             }
             for($i=0;$i<count($data);$i++)
