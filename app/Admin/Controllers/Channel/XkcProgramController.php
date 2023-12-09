@@ -178,7 +178,7 @@ class XkcProgramController extends AdminController
         $replicate = 0;
 
         if(array_key_exists('replicate', $data)) {
-            $replicate = $data->replicate;
+            $replicate = $data['replicate'];
             $data = ChannelPrograms::where('id', $replicate)->value('data');
             $data = json_decode($data, true);
         }
