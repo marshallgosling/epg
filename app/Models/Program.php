@@ -69,6 +69,14 @@ class Program extends Model
         else return $program;
     }
 
+    public static function loadBumpers() {
+
+    }
+
+    public static function findBumper($key) {
+
+    }
+
     public static function findUnique($no)
     {
         return Program::where('program.unique_no', $no)

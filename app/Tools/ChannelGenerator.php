@@ -142,6 +142,7 @@ class ChannelGenerator
         $schedule_duration = 0;//strtotime($channel->air_date." 06:00:00");
         $schedule_end = 0;
         //$class::loadBlackList();
+        $class::loadBumpers();
 
         foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
@@ -170,21 +171,21 @@ class ChannelGenerator
             $programs = $t->programs()->get();
             $data = $this->addProgramItem($programs, $class);
 
-            $break_count = 5;
+            $break_level = 3;
             while(abs($schedule_duration - $this->duration) > 300)
             {
                 // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
                 // 凑时间，凑节目数
-                $res = $this->addBumperItem($schedule_end, $class);
+                $res = $this->addBumperItem($schedule_end, $break_level, $class);
                 if($res) {
                     $data[] = $res;
                 }
                 else {
-                    // 5次循环后，还是没有找到匹配的节目，则跳出循环
-                    $break_count --;
+                    // 4次循环后，还是没有找到匹配的节目，则跳出循环
+                    $break_level --;
                 }
 
-                if($break_count == 0) {
+                if($break_level < 0) {
                     $this->warn(" 没有找到合适的Bumper，强制跳出循环.");
                     break;
                 }
@@ -256,9 +257,9 @@ class ChannelGenerator
 
     }
 
-    public function addBumperItem($schedule_end, $class, $category='m1')
+    public function addBumperItem($schedule_end, $break_level, $class, $category='m1')
     {
-        $item = $class::findRandom($category);
+        $item = $class::findBumper($category);
 
         $this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);

@@ -36,6 +36,7 @@ class Record extends Model
 
     private static $cache = [];
     private static $blacklist = [];
+    private static $bumper = [];
 
     public static function loadBlackList()
     {
@@ -56,16 +57,28 @@ class Record extends Model
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
             ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
 
-        $black = false;
+        if($program && $program->black) return self::findRandom($key);
+        else return $program;
+    }
 
-        // if($program->episodes)foreach(self::$blacklist as $keyword) {
-        //     if(Str::contains($program->artist, $keyword)) {
-        //         $black = true;
-        //         break;
-        //     }
-        // };
+    public static function loadBumpers($category='m1') {
+        self::$bumper = [];
+        self::$bumper[] = Record::where('category', $category)->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('category', $category)->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('category', $category)->where('seconds','>', 300)->where('seconds','<=', 600)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('category', $category)->where('seconds','>', 600)->where('seconds','<=', 1200)->select('unique_no')->pluck('unique_no')->toArray();
+    }
 
-        if($program->black) return self::findRandom($key);
+    public static function findBumper($key) {
+        self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
+        $id = Arr::random(self::$bumper[$key]);
+        self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
+
+        $program = Record::where('records.unique_no', $id)
+            ->join('material', 'records.unique_no', '=', 'material.unique_no')
+            ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
+
+        if($program && $program->black) return self::findBumper($key);
         else return $program;
     }
 
