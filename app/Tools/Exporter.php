@@ -7,12 +7,68 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use Faker\ChanceGenerator;
 use Illuminate\Support\Facades\DB;
 
 class Exporter
 {
     private static $json;
     private static $xml;
+
+    public static function generateSimple($channel, $programs)
+    {
+        $jsonstr = Storage::disk('data')->get('template.json');
+
+        $json = json_decode($jsonstr);
+
+        $json->ChannelName = $channel->name;
+        $json->PgmDate = $channel->air_date;
+        $json->Version = $channel->version;
+        $json->Count = count($programs);
+
+        foreach($programs as $idx=>$program)
+        {
+            $date = Carbon::parse($channel->air_date . ' '. $program->start_at);
+            // if not exist, just copy one 
+            if(!array_key_exists($idx, $json->ItemList)) {
+                $json->ItemList[] = clone $json->ItemList[$idx-1];
+                $cl = [$json->ItemList[$idx]->ClipsItem[0]];
+                $json->ItemList[$idx]->ClipsItem = $cl;
+
+                $itemList = &$json->ItemList[$idx];
+
+                $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
+                $duration = ChannelPrograms::caculateFrames($program->duration);
+                        
+                    $itemList->StartTime = $start;
+                    $itemList->SystemTime = $date->format('Y-m-d H:i:s');
+                    $itemList->Name = $program->name;
+                    $itemList->BillType = $date->format('md').'新建';
+                    $itemList->LimitLen = $duration;
+                    $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
+                    $itemList->PlayType = $idx == 0 ? 1 : 0;
+
+                $clips = &$itemList->ClipsItem;
+                $n = 0;
+                $c = &$clips[$n];
+                $c->FileName = $program->unique_no;
+                $c->Name = $program->name;
+                $c->Id = $program->unique_no;
+                $c->LimitDuration = $duration;
+                $c->Duration = $duration;              
+
+                //$duration += ChannelPrograms::caculateSeconds($program->duration);
+
+                $itemList->Length = $duration;
+                $itemList->LimitLen = $duration;
+                $itemList->ID = (string)Str::uuid();
+                $itemList->Pid = (string)Str::uuid();
+                $itemList->ClipsCount = 1;
+            }
+        }
+
+        self::$json = $json;
+    }
 
     public static function generate($id)
     {
@@ -92,7 +148,7 @@ class Exporter
         return self::$xml;
     }
 
-    public static function gatherLines($start_at, $end_at, $group_id)
+    public static function gatherLines($start_at, $end_at, $group_id, $mode='excel')
     {
         
         $channels = DB::table('channel')->whereBetween('air_date', [$start_at, $end_at])
@@ -108,28 +164,67 @@ class Exporter
         if($channels)foreach($channels as $channel)
         {
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('id')->get();
-            $air = strtotime($channel->air_date.' 06:00:00');
+            //$air = strtotime($channel->air_date.' 06:00:00');
+            $air = $channel->air_date;
             if($programs)foreach($programs as $p)
             {
                 $items = json_decode($p->data);
+                if(array_key_exists('replicate', $items)) {
+                    $items = json_decode(
+                        ChannelPrograms::where('id', $items->replicate)->value('data')
+                    );
+                    $items = ChannelGenerator::caculateDuration($items, strtotime($p->start_at));
+                }
                 if($items)foreach($items as $item)
                 {
-                    $end = $air + ChannelGenerator::parseDuration($item->duration);
-                    $l = [
-                        $no, $p->name, $item->name, $item->unique_no, date('y-m-d', $air),
-                        date('H:i:s', $air).':00', date('H:i:s', $end).':00', $item->duration, '00:00:00:00', ''
-                    ];
-                    $no ++;
-                    $air = $end; 
+                    // $end = $air + ChannelGenerator::parseDuration($item->duration);
+                    // $l = [
+                    //     $no, $p->name, $item->name, $item->unique_no, date('y-m-d', $air),
+                    //     date('H:i:s', $air).':00', date('H:i:s', $end).':00', $item->duration, '00:00:00:00', ''
+                    // ];
+                    if($mode == 'excel') {
+                        $l = ChannelGenerator::createExcelItem($item, $p->name, $no, $air);
+                        $no ++;
+                        $lines[] = $l;
+                    }
 
-                    $lines[] = $l;
+                    if($mode == 'xml') {
+                        
+                        $lines[] = $item;
+                    }
+                    
                 }
+
+                
                 
             }
         }
 
         return $lines;
     }
+
+    public static function gatherData($air_date, $group) 
+    {
+        
+        $end_at = $air_date;
+        $start_at = date('Y-m-d', (strtotime($end_at.' 06:00:00') - 86400));
+
+        $lines = self::gatherLines($start_at, $end_at, $group, 'xml');
+
+        $found = false;
+        $data = [];
+
+        foreach($lines as $l)
+        {
+            if($l->start_at == '06:00:00') $found = true;
+            if($found) $data[] = $l;
+            if($l->end_at == '06:00:00') $found = false;
+        }
+
+        return $data;
+
+    }
+
 
 
 }

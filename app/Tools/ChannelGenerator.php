@@ -203,6 +203,27 @@ class ChannelGenerator
         ];
     }
 
+    public static function createExcelItem($item, $name, $no, $air)
+    {
+        return [
+            $no, $name, $item->name, $item->unique_no, date('y-m-d', $air),
+            $item->start_at.':00', $item->end_at.':00', $item->duration, '00:00:00:00', ''
+        ];
+    }
+
+    public static function createXmlItem($item)
+    {
+        return [
+            "unique_no" => $item->unique_no,
+            "name" => $item->name,
+            "duration" => $item->duration,
+            "category" => $item->category,
+            "start_at" => $item->start_at,
+            "artist" => $item->artist,
+            "end_at" => $item->end_at
+        ];
+    }
+
     /**
      * Parse duration format 00:00:00:00 to seconds (int).
      * 
@@ -241,6 +262,23 @@ class ChannelGenerator
     public static function format($num)
     {
         return $num>9?$num:'0'.$num;
+    }
+
+    public static function caculateDuration($data, $start=0)
+    {
+        foreach($data as &$item)
+        {
+            $seconds = self::parseDuration($item->duration);
+
+            $item->start_at = date('H:i:s', $start);
+            $start += $seconds;
+            $item->end_at = date('H:i:s', $start);
+
+            
+            
+        }
+
+        return $data;
     }
 
 }

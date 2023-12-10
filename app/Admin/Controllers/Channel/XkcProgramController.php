@@ -86,7 +86,7 @@ class XkcProgramController extends AdminController
             if( $air < $today ) $html .= ' <span class="label label-default">次日</span>';
             return $html;
         });
-        $grid->column('schedule_end_at', __('Schedule end at'))->hide();
+        $grid->column('schedule_end_at', __('Schedule end at'));
         $grid->column('version', __('Version'));
         
         //$grid->column('data', __('Data'));
@@ -179,26 +179,20 @@ class XkcProgramController extends AdminController
     {
         $model = ChannelPrograms::findOrFail($id);
 
-        $data = json_decode($model->data, true);
+        $data = json_decode($model->data);
 
         $replicate = 0;
 
         if(array_key_exists('replicate', $data)) {
-            $replicate = $data['replicate'];
+            $replicate = $data->replicate;
             $data = ChannelPrograms::where('id', $replicate)->value('data');
-            $data = json_decode($data, true);
+            $data = json_decode($data);
+
+            // re-calculate replicated items' start/end time
+            $data = ChannelGenerator::caculateDuration($data, strtotime($model->start_at));
         }
 
-        $data = $this->caculateDuration($data, strtotime($model->start_at));
-
         $list = ChannelPrograms::where("channel_id", $model->channel_id)->orderBy('id')->get();
-
-        // $code = [];
-        // foreach($data as $item) {
-        //     $code[] = $item['unique_no'];
-        // }
-
-        //$artists = Program::whereIn('unique_no', $code)->select('unique_no', 'artist')->get()->pluck('artist', 'unique_no')->toArray();
 
         $template = <<<TMP
 <li class="dd-item" data-id="idx">

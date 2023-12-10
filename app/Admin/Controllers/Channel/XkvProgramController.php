@@ -61,7 +61,7 @@ class XkvProgramController extends AdminController
             return  "$hour:$min:$sec ". $erro;
         });
         $grid->column('schedule_start_at', __('Schedule start at'));
-        $grid->column('schedule_end_at', __('Schedule end at'))->hide();
+        $grid->column('schedule_end_at', __('Schedule end at'));
         $grid->column('version', __('Version'));
         
         //$grid->column('data', __('Data'));

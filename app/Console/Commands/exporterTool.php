@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Channel;
 use App\Models\ExportList;
 use App\Tools\ExcelWriter;
+use App\Tools\Exporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +19,7 @@ class exporterTool extends Command
      *
      * @var string
      */
-    protected $signature = 'export:excel {id}';
+    protected $signature = 'tools:export {action?} {id?}';
 
     /**
      * The console command description.
@@ -47,10 +49,32 @@ class exporterTool extends Command
         $end_at = '2023-12-31';
 
         $id = $this->argument('id') ?? "";
+        $action = $this->argument('action') ?? "";
         
+        if(in_array($action, ['excel', 'xml'])) {
+            $this->$action($id);
+        }
+        
+        return 0;
+    }
+
+    private function xml($id)
+    {
+        
+        //Exporter::generate($id);
+        $channel = Channel::findOrFail($id);
+        $data = Exporter::gatherData($channel->air_date, $channel->name);
+        Exporter::generateSimple($channel, $data);
+        Exporter::exportXml(true);
+    
+
+    }
+
+    private function excel($id)
+    {
         $export = ExportList::findOrFail($id);
 
-        $lines = \App\Tools\Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
+        $lines = Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {
             $export->status = ExportList::STATUS_ERROR;
@@ -72,7 +96,6 @@ class exporterTool extends Command
             $export->reason = $e->getMessage(); 
             $export->save();
         }
-        return 0;
     }
 
     private function printToExcel($data, $filename, $disk)
