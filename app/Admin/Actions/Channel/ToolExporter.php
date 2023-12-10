@@ -12,12 +12,20 @@ class ToolExporter extends Action
 {
     protected $selector = '.export-channels';
     public $name = '批量导出';
+    public $group = '';
+
+    public function __construct($group)
+    {
+        $this->group = $group;
+        parent::__construct();
+    }
 
     public function handle(Request $request)
     {
         $start_at = $request->get('start_at');
         $end_at = $request->get('end_at') ?? $start_at;
         $name = $request->get('name') ?? "{$start_at}-{$end_at}";
+        $group = $request->get('group');
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
@@ -30,7 +38,7 @@ class ToolExporter extends Action
         $model->end_at = $end_at;
         $model->status = ExportList::STATUS_RUNNING;
         $model->name = $name;
-        $model->group_id = 'xkv';
+        $model->group_id = $group;
         $model->save();
 
         ExportJob::dispatch($model->id);
@@ -43,6 +51,7 @@ class ToolExporter extends Action
         $this->date('start_at', '开始日期')->required();
         $this->date('end_at', '结束日期');
         $this->text('name', '别名');
+        $this->hidden('group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default('只会导出的状态为正常的节目单。')->disable();
     }
 

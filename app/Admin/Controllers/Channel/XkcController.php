@@ -82,7 +82,7 @@ class XkcController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new ToolCreator('xkc'));
             $tools->append(new BatchAudit);
-            $tools->append(new ToolExporter);
+            $tools->append(new ToolExporter('xkc'));
         });
 
         return $grid;

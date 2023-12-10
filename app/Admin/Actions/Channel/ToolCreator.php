@@ -21,11 +21,12 @@ class ToolCreator extends Action
         parent::__construct();
     }
 
-    public function handle(Collection $collection, Request $request)
+    public function handle(Request $request)
     {
         $start_at = $request->get('start_at');
         $end_at = $request->get('end_at') ?? $start_at;
         $generate = $request->get('generate') ?? "0";
+        $group = $request->get('group');
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
@@ -35,12 +36,12 @@ class ToolCreator extends Action
 
         for($i=0;$i<100;$i++) {
             
-            if(Channel::where('air_date', date('Y-m-d', $s))->where('name', $this->group)->exists())
+            if(Channel::where('air_date', date('Y-m-d', $s))->where('name', $group)->exists())
                 continue;
             
             $ch = new Channel();
 
-            $ch->name = $this->group;
+            $ch->name = $group;
             $ch->air_date = date('Y-m-d', $s);
             $ch->uuid = (string) Str::uuid();
             $ch->version = 1;
@@ -70,6 +71,7 @@ class ToolCreator extends Action
         $this->date('start_at', '开始日期')->required();
         $this->date('end_at', '结束日期')->required();
         $this->checkbox('generate', '同时生成节目单')->options([1=>'生成']);
+        $this->hidden('group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default('根据日期范围创建节目单。')->disable();
     }
 

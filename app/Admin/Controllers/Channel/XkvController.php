@@ -81,7 +81,7 @@ class XkvController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new ToolCreator('xkv'));
             $tools->append(new BatchAudit());
-            $tools->append(new ToolExporter());
+            $tools->append(new ToolExporter('xkv'));
             
         });
 
