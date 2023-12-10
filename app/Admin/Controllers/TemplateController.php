@@ -138,7 +138,7 @@ class TemplateController extends AdminController
 
         $form->saving(function(Form $form) {
             $t = strtotime('2020/01/01 '.$form->start_at)
-            $form->end_at = 
+            
         });
         
 

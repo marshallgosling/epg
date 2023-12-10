@@ -149,7 +149,7 @@
         </div>
         <span>模版类型</span>
         <label><input type="radio" name="datatype" value="0" checked> 节目</label>
-        <label><input type="radio" name="datatype" value="2"> 垫片</label>
+        <label><input type="radio" name="datatype" value="2"> 固定</label>
         <label><input type="radio" name="datatype" value="1"> 广告</label>
         &nbsp;
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      

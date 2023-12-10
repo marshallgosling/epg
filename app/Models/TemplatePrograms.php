@@ -11,8 +11,8 @@ class TemplatePrograms extends Model
 
     public const TYPE_PROGRAM = 0;
     public const TYPE_ADVERTISE = 1;
-    public const TYPE_CLIP = 2;
-    public const TYPES = ['节目','广告','垫片'];
+    public const TYPE_STATIC = 2;
+    public const TYPES = ['节目','广告','固定'];
     public const LABELS = ['info', 'warning', 'default'];
 
     protected $table = 'template_programs';
@@ -24,7 +24,7 @@ class TemplatePrograms extends Model
         'data',
         'type',
         'template_id',
-        'sort',
+        'sort'
     ];
 
     protected $casts = [

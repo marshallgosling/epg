@@ -64,6 +64,7 @@ class exporterTool extends Command
         //Exporter::generate($id);
         $channel = Channel::findOrFail($id);
         $data = Exporter::gatherData($channel->air_date, $channel->name);
+        print_r($data);exit;
         Exporter::generateSimple($channel, $data);
         Exporter::exportXml(true);
     

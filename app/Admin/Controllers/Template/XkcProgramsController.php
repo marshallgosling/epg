@@ -53,7 +53,12 @@ class XkcProgramsController extends AdminController
 
         $grid->filter(function (Filter $filter) {
             
-            $filter->equal('template_id', __('Template'))->select(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)->get()->pluck('name', 'id'));
+            $filter->equal('template_id', __('Template'))->select(
+                Template::selectRaw("concat(start_at, ' ', name) as name, id")
+                    ->where('group_id', $this->group)
+                    ->orderBy('sort', 'asc')
+                    ->get()->pluck('name', 'id')
+                );
             
         });
 
@@ -116,7 +121,7 @@ class XkcProgramsController extends AdminController
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->select('category', __('Category'))->ajax('/admin/api/category')->required();
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required()
-        ->when(TemplatePrograms::TYPE_CLIP, function (Form $form) { 
+        ->when(TemplatePrograms::TYPE_STATIC, function (Form $form) { 
             $form->text('name', __('Alias'));
             $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
         });

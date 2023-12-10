@@ -130,7 +130,7 @@ class XkvProgramsController extends AdminController
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->select('category', __('Category'))->ajax('/admin/api/category')->required();
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required()
-        ->when(TemplatePrograms::TYPE_CLIP, function (Form $form) { 
+        ->when(TemplatePrograms::TYPE_STATIC, function (Form $form) { 
             $form->text('name', __('Alias'));
             $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
         });
