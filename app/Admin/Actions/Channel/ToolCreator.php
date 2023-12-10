@@ -5,7 +5,6 @@ namespace App\Admin\Actions\Channel;
 use App\Models\Channel;
 use App\Jobs\Channel\ProgramsJob;
 use Encore\Admin\Actions\Action;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -37,8 +36,11 @@ class ToolCreator extends Action
         for($i=0;$i<100;$i++) {
             
             if(Channel::where('air_date', date('Y-m-d', $s))->where('name', $group)->exists())
+            {
+                $s += 86400;
                 continue;
-            
+            }
+
             $ch = new Channel();
 
             $ch->name = $group;
