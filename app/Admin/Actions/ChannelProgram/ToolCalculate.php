@@ -13,7 +13,7 @@ class ToolCalculate extends Action
     public $name = '确认要重新计算节目单时间？';
     public $channel_id;
 
-    public function __construct($channel_id)
+    public function __construct($channel_id='')
     {
         $this->channel_id = $channel_id;
         parent::__construct();

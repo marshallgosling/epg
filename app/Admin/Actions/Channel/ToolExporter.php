@@ -14,7 +14,7 @@ class ToolExporter extends Action
     public $name = '批量导出';
     public $group = '';
 
-    public function __construct($group)
+    public function __construct($group='')
     {
         $this->group = $group;
         parent::__construct();

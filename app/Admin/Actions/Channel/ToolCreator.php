@@ -15,7 +15,7 @@ class ToolCreator extends Action
     protected $selector = '.create-channel';
     public $group = '';
 
-    public function __construct($group)
+    public function __construct($group='')
     {
         $this->group = $group;
         parent::__construct();
