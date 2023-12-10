@@ -4,16 +4,16 @@ namespace App\Admin\Actions\Channel;
 
 use App\Models\Channel;
 use App\Jobs\Channel\ProgramsJob;
-use Encore\Admin\Actions\BatchAction;
+use Encore\Admin\Actions\Action;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ToolCreator extends BatchAction
+class ToolCreator extends Action
 {
     public $name = '批量新增';
     protected $selector = '.create-channel';
-    public $group = 'xkc';
+    public $group = '';
 
     public function __construct($group)
     {
@@ -75,7 +75,7 @@ class ToolCreator extends BatchAction
 
     public function html()
     {
-        return "<a class='audit-channel btn btn-sm btn-success'><i class='fa fa-plus'></i> {$this->name}</a>";
+        return "<a class='create-channel btn btn-sm btn-success'><i class='fa fa-plus'></i> {$this->name}</a>";
     }
 
 }
