@@ -116,7 +116,10 @@ class channelTool extends Command
         $generator = new ChannelGenerator();
         $generator->loadTemplate($channel, $channel->name);
 
-        $generator->generate($channel);
+        if($channel->name == 'xkc')
+            $generator->generateXkc($channel);
+        else
+            $generator->generate($channel);
 
         $channel->status = Channel::STATUS_READY;
         $channel->save();
