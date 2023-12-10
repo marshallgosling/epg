@@ -84,9 +84,7 @@ class XkvProgramController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            $calculate = new ToolCalculate();
-            $calculate->channel_id = $_REQUEST['channel_id'];
-            $tools->append($calculate);
+            if(key_exists('channel_id', $_REQUEST))$tools->append(new ToolCalculate($_REQUEST['channel_id']));
         });
 
         $grid->disableCreateButton();
