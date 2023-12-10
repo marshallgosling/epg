@@ -140,6 +140,7 @@ class ChannelGenerator
         //if($this->daily)
         $this->air = 0;//strtotime($channel->air_date." 06:00:00");
         $schedule_duration = 0;//strtotime($channel->air_date." 06:00:00");
+        $schedule_end = 0;
         //$class::loadBlackList();
 
         foreach($this->daily as $t) {    
@@ -161,6 +162,8 @@ class ChannelGenerator
             $c->sort = $t->sort;
 
             $schedule_duration = self::parseDuration($t->duration);
+            $schedule_end = strtotime($channel->air_date.' '.$t->end_at); 
+            if($schedule_end < $this->air) $schedule_end += 86400;
 
             $this->info("开始生成节目单: {$t->name} {$t->start_at}");
             
@@ -172,7 +175,7 @@ class ChannelGenerator
             {
                 // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
                 // 凑时间，凑节目数
-                $res = $this->addBumperItem($schedule_duration, $class);
+                $res = $this->addBumperItem($schedule_end, $class);
                 if($res) {
                     $data[] = $res;
                 }
@@ -253,7 +256,7 @@ class ChannelGenerator
 
     }
 
-    public function addBumperItem($schedule_duration, $class, $category='m1')
+    public function addBumperItem($schedule_end, $class, $category='m1')
     {
         $item = $class::findRandom($category);
 
@@ -262,8 +265,8 @@ class ChannelGenerator
 
         $air = $this->air + $seconds;
 
-        $this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".$schedule_duration);
-        if($air > ($schedule_duration+300)) return false;
+        $this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
+        if($air > ($schedule_end+300)) return false;
 
         $this->duration += $seconds;
                     

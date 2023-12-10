@@ -52,7 +52,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move'];
+        $actions = ['import','move', 'seconds'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -62,6 +62,14 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function seconds() {
+        $records = Record::select('id','duration','seconds')->get();
+        foreach($records as $r) {
+            $r->seconds = ChannelGenerator::parseDuration($r->duration);
+            $r->save();
+        }
     }
 
     private function move($id)
