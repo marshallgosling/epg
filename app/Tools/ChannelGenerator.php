@@ -259,7 +259,7 @@ class ChannelGenerator
 
     public function addBumperItem($schedule_end, $break_level, $class, $category='m1')
     {
-        $item = $class::findBumper($category);
+        $item = $class::findBumper($break_level);
 
         $this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
