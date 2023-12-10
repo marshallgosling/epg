@@ -172,7 +172,7 @@ class ChannelGenerator
             $data = $this->addProgramItem($programs, $class);
 
             $break_level = 3;
-            while(abs($schedule_duration - $this->duration) > 300)
+            while(abs($schedule_duration - $this->duration) > (int)config('GENERATE_GAP', 300))
             {
                 // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
                 // 凑时间，凑节目数
@@ -267,7 +267,7 @@ class ChannelGenerator
         $air = $this->air + $seconds;
 
         $this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
-        if($air > ($schedule_end+300)) return false;
+        if($air > ($schedule_end + (int)config('GENERATE_GAP', 300))) return false;
 
         $this->duration += $seconds;
                     
