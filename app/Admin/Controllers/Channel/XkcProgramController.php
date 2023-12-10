@@ -47,7 +47,7 @@ class XkcProgramController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return "<a href=\"tree/{$this->id}\">$this->name</a>"; 
+            return "<a href=\"tree/{$this->id}\">{$this->name}</a>"; 
         });
 
         $grid->column('ex', __(" "))->display(function() {

@@ -8,6 +8,7 @@ use App\Admin\Actions\Template\BatchReplicate;
 use App\Admin\Actions\Template\Replicate;
 use App\Admin\Models\MyForm;
 use App\Models\Category;
+use App\Models\Channel;
 use App\Models\Template;
 use App\Models\TemplatePrograms;
 use Encore\Admin\Controllers\AdminController;
@@ -128,7 +129,7 @@ class XkvProgramsController extends AdminController
                 ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)
                 ->get()->pluck('name', 'id'))->required();
         $form->number('sort', __('Sort'))->min(0)->default(0);
-        $form->select('category', __('Category'))->ajax('/admin/api/category')->required();
+        $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required()
         ->when(TemplatePrograms::TYPE_STATIC, function (Form $form) { 
             $form->text('name', __('Alias'));
