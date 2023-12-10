@@ -257,10 +257,12 @@ class ChannelGenerator
     {
         $item = $class::findRandom($category);
 
+        $this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
 
         $air = $this->air + $seconds;
 
+        $this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".$schedule_duration);
         if($air > ($schedule_duration+300)) return false;
 
         $this->duration += $seconds;
