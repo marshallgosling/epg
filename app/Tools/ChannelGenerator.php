@@ -226,7 +226,7 @@ class ChannelGenerator
                         if(!$item) {
                             $item = $class::findRandomEpisode($p->category);
 
-                            $p->name = $item->artist;
+                            $p->name = $item->episodes;
                             $p->data = $item->unique_no;
                             $p->save();
                         }
@@ -234,7 +234,7 @@ class ChannelGenerator
                     else {
                         $item = $class::findRandomEpisode($p->category);
 
-                        $p->name = $item->artist;
+                        $p->name = $item->episodes;
                         $p->data = $item->unique_no;
                         $p->save();
                     }
