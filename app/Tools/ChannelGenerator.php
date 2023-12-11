@@ -315,7 +315,7 @@ class ChannelGenerator
             {
                 $p = $program->replicate();
 
-                $p->name .= ' (复制)';
+                $p->name .= ' (副本)';
                 $p->data = json_encode(['replicate'=>$program->id]);
                 $p->start_at = date('Y-m-d H:i:s', $this->air);
                 $this->air += $p->duration;

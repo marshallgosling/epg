@@ -135,7 +135,7 @@ class XkvProgramController extends AdminController
         $form->text('duration', __('Duration'))->disable();
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
-        $form->json('data', __('Data'));
+        $form->json('data', '编单数据');
 
         $form->saving(function(Form $form) {
             if($form->isEditing()) {
