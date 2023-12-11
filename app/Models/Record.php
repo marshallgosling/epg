@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Record extends Model
@@ -59,6 +60,38 @@ class Record extends Model
 
         if($program && $program->black) return self::findRandom($key);
         else return $program;
+    }
+
+    public static function findNextEpisode($name, $code='', $category='')
+    {
+        $list = Record::where('episodes', $name)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'durtion')->get();
+        foreach($list as $idx=>$l)
+        {
+            if($code == '') return $l[$idx];
+            if($l->unique_no == $code) {
+                $idx ++;
+                if($idx == count($l)) {
+                    return false;
+                }
+                else {
+                    return $l[$idx];
+                }
+            }
+        }
+        return false;
+    }
+
+    public static function findRandomEpisode($c)
+    {
+        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('category', 'like', "%$c%")->get()->toArray();
+
+        $list = Arr::shuffle($list);
+        $list = Arr::shuffle($list);
+
+        $name = $list[0];
+
+        return self::findNextEpisode($name);
+
     }
 
     public static function loadBumpers($category='m1') {

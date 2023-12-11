@@ -169,6 +169,7 @@ class ChannelGenerator
             $this->info("开始生成节目单: {$t->name} {$t->start_at}");
             
             $programs = $t->programs()->get();
+
             $data = $this->addProgramItem($programs, $class);
 
             $break_level = 3;
@@ -214,7 +215,30 @@ class ChannelGenerator
             $item = false;
 
             if($p->type == TemplatePrograms::TYPE_PROGRAM) {
-                $item = $class::findRandom($p->category);
+
+                if($p->category == 'movie')
+                    $item = $class::findRandom($p->category);
+                else {
+                    if($p->name) {
+
+                        $item = $class::findNextEpisode($p->name, $p->data);
+
+                        if(!$item) {
+                            $item = $class::findRandomEpisode($p->category);
+
+                            $p->name = $item->artist;
+                            $p->data = $item->unique_no;
+                            $p->save();
+                        }
+                    }
+                    else {
+                        $item = $class::findRandomEpisode($p->category);
+
+                        $p->name = $item->artist;
+                        $p->data = $item->unique_no;
+                        $p->save();
+                    }
+                }
                 
             }
             else {
