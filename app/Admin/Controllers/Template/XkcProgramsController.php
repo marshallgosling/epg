@@ -120,11 +120,11 @@ class XkcProgramsController extends AdminController
                 ->get()->pluck('name', 'id'))->required();
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
-        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required()
-        ->when(TemplatePrograms::TYPE_STATIC, function (Form $form) { 
-            $form->text('name', __('Alias'));
-            $form->select('data', __('Unique no'))->ajax('/admin/api/programs');
-        });
+        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required();
+       
+        $form->text('name', __('Alias'));
+        $form->text('data', __('Unique no'));
+        
     
         $form->saved(function (Form $form) {
             $temp = Template::find($form->template_id);
