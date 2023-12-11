@@ -2,7 +2,9 @@
 
 namespace App\Tools\PHPExcel\CachedObjectStorage;
 
+use App\Tools\PHPExcel\Cell;
 use App\Tools\PHPExcel\Exception;
+use App\Tools\PHPExcel\Worksheet;
 
 /**
  * Wincache

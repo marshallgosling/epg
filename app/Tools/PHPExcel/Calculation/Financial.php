@@ -42,7 +42,7 @@ class Financial
      *
      * Returns a boolean TRUE/FALSE indicating if this date is the last date of the month
      *
-     * @param    DateTime    $testDate    The date for testing
+     * @param    \DateTime    $testDate    The date for testing
      * @return    boolean
      */
     private static function isLastDayOfMonth($testDate)
@@ -56,7 +56,7 @@ class Financial
      *
      * Returns a boolean TRUE/FALSE indicating if this date is the first date of the month
      *
-     * @param    DateTime    $testDate    The date for testing
+     * @param    \DateTime    $testDate    The date for testing
      * @return    boolean
      */
     private static function isFirstDayOfMonth($testDate)

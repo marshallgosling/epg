@@ -4,6 +4,7 @@ namespace App\Tools\PHPExcel\CachedObjectStorage;
 
 use App\Tools\PHPExcel\Cell;
 use App\Tools\PHPExcel\Exception;
+use App\Tools\PHPExcel\Worksheet;
 
 /**
  * Memcache
@@ -49,7 +50,7 @@ class Memcache extends CacheBase implements ICache
     /**
      * Memcache interface
      *
-     * @var resource
+     * @var object
      */
     private $memcache = null;
 
@@ -263,7 +264,7 @@ class Memcache extends CacheBase implements ICache
             $this->cachePrefix = substr(md5($baseUnique), 0, 8) . '.';
 
             //    Set a new Memcache object and connect to the Memcache server
-            $this->memcache = new Memcache();
+            $this->memcache = new Memcache($parent, $arguments);
             if (!$this->memcache->addServer($memcacheServer, $memcachePort, false, 50, 5, 5, true, array($this, 'failureCallback'))) {
                 throw new Exception("Could not connect to MemCache server at {$memcacheServer}:{$memcachePort}");
             }

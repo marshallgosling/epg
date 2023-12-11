@@ -1,4 +1,16 @@
 <?php
+
+namespace App\Tools\PHPExcel\Writer\OpenDocument;
+
+use App\Tools\PHPExcel;
+use App\Tools\PHPExcel\Cell;
+use App\Tools\PHPExcel\Cell\DataType;
+use App\Tools\PHPExcel\Shared\XMLWriter;
+use App\Tools\PHPExcel\Worksheet;
+use App\Tools\PHPExcel\Worksheet\Row;
+use App\Tools\PHPExcel\Writer\OpenDocument\Cell\Comment;
+use App\Tools\PHPExcel\Writer\WriterException;
+
 /**
  * PHPExcel
  *
@@ -27,14 +39,14 @@
 
 
 /**
- * PHPExcel_Writer_OpenDocument_Content
+ * Content
  *
  * @category   PHPExcel
  * @package    PHPExcel_Writer_OpenDocument
  * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @author     Alexander Pervakov <frost-nzcr4@jagmort.com>
  */
-class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_WriterPart
+class Content extends WriterPart
 {
     const NUMBER_COLS_REPEATED_MAX = 1024;
     const NUMBER_ROWS_REPEATED_MAX = 1048576;
@@ -44,7 +56,7 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
      *
      * @param   PHPExcel                   $pPHPExcel
      * @return  string                     XML Output
-     * @throws  PHPExcel_Writer_Exception
+     * @throws  WriterException
      */
     public function write(PHPExcel $pPHPExcel = null)
     {
@@ -54,9 +66,9 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
 
         $objWriter = null;
         if ($this->getParentWriter()->getUseDiskCaching()) {
-            $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
+            $objWriter = new XMLWriter(XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
         } else {
-            $objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_MEMORY);
+            $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
         }
 
         // XML header
@@ -117,9 +129,9 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write sheets
      *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
+     * @param XMLWriter $objWriter
      */
-    private function writeSheets(PHPExcel_Shared_XMLWriter $objWriter)
+    private function writeSheets(XMLWriter $objWriter)
     {
         $pPHPExcel = $this->getParentWriter()->getPHPExcel(); /* @var $pPHPExcel PHPExcel */
 
@@ -140,10 +152,10 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write rows of the specified sheet
      *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
-     * @param PHPExcel_Worksheet $sheet
+     * @param XMLWriter $objWriter
+     * @param Worksheet $sheet
      */
-    private function writeRows(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Worksheet $sheet)
+    private function writeRows(XMLWriter $objWriter, Worksheet $sheet)
     {
         $number_rows_repeated = self::NUMBER_ROWS_REPEATED_MAX;
         $span_row = 0;
@@ -176,37 +188,37 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write cells of the specified row
      *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
-     * @param PHPExcel_Worksheet_Row $row
-     * @throws PHPExcel_Writer_Exception
+     * @param XMLWriter $objWriter
+     * @param Row $row
+     * @throws WriterException
      */
-    private function writeCells(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Worksheet_Row $row)
+    private function writeCells(XMLWriter $objWriter, Row $row)
     {
         $number_cols_repeated = self::NUMBER_COLS_REPEATED_MAX;
         $prev_column = -1;
         $cells = $row->getCellIterator();
         while ($cells->valid()) {
             $cell = $cells->current();
-            $column = PHPExcel_Cell::columnIndexFromString($cell->getColumn()) - 1;
+            $column = Cell::columnIndexFromString($cell->getColumn()) - 1;
 
             $this->writeCellSpan($objWriter, $column, $prev_column);
             $objWriter->startElement('table:table-cell');
 
             switch ($cell->getDataType()) {
-                case PHPExcel_Cell_DataType::TYPE_BOOL:
+                case DataType::TYPE_BOOL:
                     $objWriter->writeAttribute('office:value-type', 'boolean');
                     $objWriter->writeAttribute('office:value', $cell->getValue());
                     $objWriter->writeElement('text:p', $cell->getValue());
                     break;
 
-                case PHPExcel_Cell_DataType::TYPE_ERROR:
-                    throw new PHPExcel_Writer_Exception('Writing of error not implemented yet.');
+                case DataType::TYPE_ERROR:
+                    throw new WriterException('Writing of error not implemented yet.');
                     break;
 
-                case PHPExcel_Cell_DataType::TYPE_FORMULA:
+                case DataType::TYPE_FORMULA:
                     try {
                         $formula_value = $cell->getCalculatedValue();
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         $formula_value = $cell->getValue();
                     }
                     $objWriter->writeAttribute('table:formula', 'of:' . $cell->getValue());
@@ -219,22 +231,22 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
                     $objWriter->writeElement('text:p', $formula_value);
                     break;
 
-                case PHPExcel_Cell_DataType::TYPE_INLINE:
-                    throw new PHPExcel_Writer_Exception('Writing of inline not implemented yet.');
+                case DataType::TYPE_INLINE:
+                    throw new WriterException('Writing of inline not implemented yet.');
                     break;
 
-                case PHPExcel_Cell_DataType::TYPE_NUMERIC:
+                case DataType::TYPE_NUMERIC:
                     $objWriter->writeAttribute('office:value-type', 'float');
                     $objWriter->writeAttribute('office:value', $cell->getValue());
                     $objWriter->writeElement('text:p', $cell->getValue());
                     break;
 
-                case PHPExcel_Cell_DataType::TYPE_STRING:
+                case DataType::TYPE_STRING:
                     $objWriter->writeAttribute('office:value-type', 'string');
                     $objWriter->writeElement('text:p', $cell->getValue());
                     break;
             }
-            PHPExcel_Writer_OpenDocument_Cell_Comment::write($objWriter, $cell);
+            Comment::write($objWriter, $cell);
             $objWriter->endElement();
             $prev_column = $column;
             $cells->next();
@@ -254,11 +266,11 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
     /**
      * Write span
      *
-     * @param PHPExcel_Shared_XMLWriter $objWriter
+     * @param XMLWriter $objWriter
      * @param integer $curColumn
      * @param integer $prevColumn
      */
-    private function writeCellSpan(PHPExcel_Shared_XMLWriter $objWriter, $curColumn, $prevColumn)
+    private function writeCellSpan(XMLWriter $objWriter, $curColumn, $prevColumn)
     {
         $diff = $curColumn - $prevColumn - 1;
         if (1 === $diff) {

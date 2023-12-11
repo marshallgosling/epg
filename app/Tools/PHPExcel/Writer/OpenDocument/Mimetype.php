@@ -1,9 +1,13 @@
 <?php
+namespace App\Tools\PHPExcel\Writer\OpenDocument;
+
+use App\Tools\PHPExcel;
+use App\Tools\PHPExcel\Writer\WriterException;
 
 /**
  * PHPExcel
  *
- * PHPExcel_Writer_OpenDocument_Mimetype
+ * Mimetype
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,14 +29,14 @@
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
  */
-class PHPExcel_Writer_OpenDocument_Mimetype extends PHPExcel_Writer_OpenDocument_WriterPart
+class Mimetype extends WriterPart
 {
     /**
      * Write mimetype to plain text format
      *
      * @param     PHPExcel    $pPHPExcel
      * @return     string         XML Output
-     * @throws     PHPExcel_Writer_Exception
+     * @throws     WriterException
      */
     public function write(PHPExcel $pPHPExcel = null)
     {

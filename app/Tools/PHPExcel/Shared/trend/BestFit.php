@@ -1,4 +1,5 @@
 <?php
+namespace App\Tools\PHPExcel\Shared\Trend;
 
 /**
  * PHPExcel_Best_Fit
@@ -25,7 +26,7 @@
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
  */
-class PHPExcel_Best_Fit
+class BestFit
 {
     /**
      * Indicator flag for a calculation error

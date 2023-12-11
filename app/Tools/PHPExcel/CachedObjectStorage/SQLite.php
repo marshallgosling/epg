@@ -2,7 +2,9 @@
 
 namespace App\Tools\PHPExcel\CachedObjectStorage;
 
+use App\Tools\PHPExcel\Cell;
 use App\Tools\PHPExcel\Exception;
+use App\Tools\PHPExcel\Worksheet;
 
 /**
  * SQLite
@@ -41,7 +43,7 @@ class SQLite extends CacheBase implements ICache
     /**
      * Database handle
      *
-     * @var resource
+     * @var object
      */
     private $DBHandle = null;
 
@@ -273,7 +275,7 @@ class SQLite extends CacheBase implements ICache
             $this->TableName = str_replace('.', '_', $this->getUniqueID());
             $_DBName = ':memory:';
 
-            $this->DBHandle = new SQLiteDatabase($_DBName);
+            $this->DBHandle = new \SQLiteDatabase($_DBName);
             if ($this->DBHandle === false) {
                 throw new Exception(sqlite_error_string($this->DBHandle->lastError()));
             }

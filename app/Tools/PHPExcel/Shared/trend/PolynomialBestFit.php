@@ -1,7 +1,7 @@
 <?php
+namespace App\Tools\PHPExcel\Shared\Trend;
 
-require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php';
-require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/JAMA/Matrix.php';
+use App\Tools\PHPExcel\Shared\JAMA\Matrix;
 
 /**
  * PHPExcel_Polynomial_Best_Fit
@@ -28,7 +28,7 @@ require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/JAMA/Matrix.php';
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
  */
-class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
+class PolynomialBestFit extends BestFit
 {
     /**
      * Algorithm type to use for best-fit
@@ -151,7 +151,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
         // calculate sums
         $x_sum = array_sum($xValues);
         $y_sum = array_sum($yValues);
-        $xx_sum = $xy_sum = 0;
+        $xx_sum = $xy_sum = $yy_sum = 0;
         for ($i = 0; $i < $this->valueCount; ++$i) {
             $xy_sum += $xValues[$i] * $yValues[$i];
             $xx_sum += $xValues[$i] * $xValues[$i];
@@ -212,10 +212,10 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
                 $this->order = $order;
                 $this->polynomialRegression($order, $yValues, $xValues, $const);
                 if (($this->getGoodnessOfFit() < 0.0) || ($this->getGoodnessOfFit() > 1.0)) {
-                    $this->_error = true;
+                    $this->error = true;
                 }
             } else {
-                $this->_error = true;
+                $this->error = true;
             }
         }
     }

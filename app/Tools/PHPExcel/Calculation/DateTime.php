@@ -450,7 +450,7 @@ class DateTime
                     $dayAdjust = floor($hour / 24);
                     $hour = $hour % 24;
                 }
-                $phpDateObject = new DateTime('1900-01-01 '.$hour.':'.$minute.':'.$second);
+                $phpDateObject = new \DateTime('1900-01-01 '.$hour.':'.$minute.':'.$second);
                 if ($dayAdjust != 0) {
                     $phpDateObject->modify($dayAdjust.' days');
                 }

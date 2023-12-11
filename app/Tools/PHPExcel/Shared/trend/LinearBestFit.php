@@ -1,6 +1,5 @@
 <?php
-
-require_once(PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php');
+namespace App\Tools\PHPExcel\Shared\Trend;
 
 /**
  * PHPExcel_Linear_Best_Fit
@@ -27,7 +26,7 @@ require_once(PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php');
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    ##VERSION##, ##DATE##
  */
-class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
+class LinearBestFit extends BestFit
 {
     /**
      * Algorithm type to use for best-fit

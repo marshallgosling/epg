@@ -1,4 +1,9 @@
 <?php
+namespace App\Tools\PHPExcel\Writer\OpenDocument\Cell;
+
+use App\Tools\PHPExcel\Cell;
+use App\Tools\PHPExcel\Shared\XMLWriter;
+
 /**
  * PHPExcel
  *
@@ -27,16 +32,16 @@
 
 
 /**
- * PHPExcel_Writer_OpenDocument_Cell_Comment
+ * Comment
  *
  * @category   PHPExcel
  * @package    PHPExcel_Writer_OpenDocument
  * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @author     Alexander Pervakov <frost-nzcr4@jagmort.com>
  */
-class PHPExcel_Writer_OpenDocument_Cell_Comment
+class Comment
 {
-    public static function write(PHPExcel_Shared_XMLWriter $objWriter, PHPExcel_Cell $cell)
+    public static function write(XMLWriter $objWriter, Cell $cell)
     {
         $comments = $cell->getWorksheet()->getComments();
         if (!isset($comments[$cell->getCoordinate()])) {
