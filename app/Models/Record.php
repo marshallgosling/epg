@@ -90,7 +90,7 @@ class Record extends Model
 
         $name = $list[0];
 
-        return self::findNextEpisode($name);
+        return self::findNextEpisode($name->episodes);
 
     }
 
