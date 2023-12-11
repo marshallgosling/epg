@@ -60,9 +60,9 @@ class channelTool extends Command
         return 0;
     }
 
-    private function fixer()
+    private function fixer($id)
     {
-        $channels = Channel::where('status', Channel::STATUS_READY)->where('name', 'xkc')->get();
+        $channels = Channel::where('status', Channel::STATUS_READY)->where('name', $id)->get();
 
         foreach($channels as $channel)
         {
