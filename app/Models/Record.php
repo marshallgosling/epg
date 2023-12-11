@@ -70,7 +70,7 @@ class Record extends Model
             if($code == '') return $l;
             if($l->unique_no == $code) {
                 $idx ++;
-                if($idx == count($l)) {
+                if($idx == count($list)) {
                     return false;
                 }
                 else {

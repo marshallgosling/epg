@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class BatchGenerator extends BatchAction
 {
-    public $name = '生成编单';
+    public $name = '批量生成编单';
 
     public function handle(Collection $collection)
     {
