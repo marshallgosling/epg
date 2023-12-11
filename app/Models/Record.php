@@ -88,9 +88,7 @@ class Record extends Model
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
 
-        //$name = $list[0];
-
-        print_r($list);exit;
+        $name = $list[0];
 
         return self::findNextEpisode($name->episodes);
 
