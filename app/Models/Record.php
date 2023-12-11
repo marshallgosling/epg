@@ -67,14 +67,14 @@ class Record extends Model
         $list = Record::where('episodes', $name)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         foreach($list as $idx=>$l)
         {
-            if($code == '') return $l[$idx];
+            if($code == '') return $l;
             if($l->unique_no == $code) {
                 $idx ++;
                 if($idx == count($l)) {
                     return false;
                 }
                 else {
-                    return $l[$idx];
+                    return $list[$idx];
                 }
             }
         }
