@@ -47,6 +47,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
+        return 0;
         
         $channel = Channel::where('uuid', $this->uuid)->first();
 
