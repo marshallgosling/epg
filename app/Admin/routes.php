@@ -32,6 +32,7 @@ Route::group([
     $router->resource('/channel/xkc', 'Channel\\XkcController')->names('channel.xkc');
     $router->delete('/channel/xkc/data/{id}/remove/{idx}', 'Channel\\XkcProgramController@remove')->name('channel.xkc.programs.delete');
     $router->post('/channel/xkc/data/{id}/save', 'Channel\\XkcProgramController@save')->name('channel.xkc.programs.save');
+    $router->post('/channel/xkc/data/{id}/open', 'Channel\\XkcProgramController@open')->name('channel.xkc.programs.open');
 
     $router->get('/channel/xkv/tree/{id}', 'Channel\\XkvProgramController@tree')->name('channel.xkv.programs.tree');
     $router->resource('/channel/xkv/programs', 'Channel\\XkvProgramController')->names('channel.xkv.programs');

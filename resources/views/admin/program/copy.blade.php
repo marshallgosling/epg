@@ -27,8 +27,8 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
-                    
-                    <span class="text-danger"><b>该栏目节目编单为副本。如需更改，需要去原始栏目进行修改 <a href="./{{$replicate}}">跳转至原始编单</a> </b></span>
+                    <span class="text-danger"><b>该栏目节目编单为副本，原始编单链接<a href="./{{$replicate}}">跳转至原始编单</a>, 如需更改该副本，点击</b></span>
+                    <a id="btnOpen" class="btn btn-danger btn-sm">开启编辑</a>
                     
                     <span id="total" class="pull-right"></span>
                 </div>
@@ -48,7 +48,44 @@
     
     $(function () {   
         reloadTree();
-        
+        $("#btnOpen").on('click', function(e) {
+            swal({
+                title: "确认要开启编辑模式吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                showLoaderOnConfirm: true,
+                cancelButtonText: "取消",
+                preConfirm: function() {
+                    return new Promise(function(resolve) {
+                        $.ajax({
+                            method: 'post',
+                            url: '/admin/channel/xkc/data/{!! $model->id !!}/open',
+                            data: {
+                                data: JSON.stringify(dataList),
+                                _token:LA.token,
+                            },
+                            success: function (data) {
+                                $.pjax.reload('#pjax-container');
+                                toastr.success('开启编辑功能成功 !');
+                                resolve(data);
+                            }
+                        });
+                    });
+                }
+            }).then(function(result) {
+                var data = result.value;
+                if (typeof data === 'object') {
+                    if (data.status) {
+                        swal(data.message, '', 'success');
+                    } else {
+                        swal(data.message, '', 'error');
+                    }
+                }
+            });
+
+        });
     });
  
     function reloadTree()

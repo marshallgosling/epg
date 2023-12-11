@@ -203,7 +203,7 @@ class XkcProgramController extends AdminController
         <span class="textstyle" style="display:inline-block;width:80px;">【category】</span>
         <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>
         <span class="pull-right dd-nodrag">
-            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete"><i class="fa fa-trash"></i></a>
+            <a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>
         </span>
     </div>
 </li>
@@ -232,6 +232,22 @@ TMP;
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
             ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate')));
+    }
+
+    public function open($id, Request $request) {
+        $data = $request->all(['data']);
+        $model = ChannelPrograms::findOrFail($id);
+
+        $model->data = $data['data'];
+        $model->name = str_replace('(复制)','',$model->name);
+
+        $model->save();
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.save_succeeded'),
+        ];
+        return response()->json($response);    
     }
 
     public function save($id, Request $request) {
