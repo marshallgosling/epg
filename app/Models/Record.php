@@ -16,7 +16,7 @@ class Record extends Model
 
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',
-        'duration', 'air_date', 'expired_date', 
+        'duration', 'air_date', 'expired_date', 'seconds',
         'ep', 'episodes', 'black'
     ];
 
@@ -64,7 +64,7 @@ class Record extends Model
 
     public static function findNextEpisode($name, $code='', $category='')
     {
-        $list = Record::where('episodes', $name)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'durtion')->get();
+        $list = Record::where('episodes', $name)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         foreach($list as $idx=>$l)
         {
             if($code == '') return $l[$idx];
