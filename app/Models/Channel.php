@@ -36,6 +36,7 @@ class Channel extends Model
         'reviewer',
         'audit_status',
         'audit_date',
+        'start_end',
         'distribution_date'
     ];
 

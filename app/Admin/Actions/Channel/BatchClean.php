@@ -25,6 +25,7 @@ class BatchClean extends BatchAction
             
             ChannelPrograms::where('channel_id', $model->id)->delete();
             $model->status = Channel::STATUS_EMPTY;
+            $model->start_end = '';
             $model->save();
         }
         

@@ -48,7 +48,7 @@ class channelTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['generate', 'create', 'export', 'calculate'];
+        $actions = ['generate', 'create', 'export', 'calculate', 'fixer'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -58,6 +58,23 @@ class channelTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function fixer()
+    {
+        $channels = Channel::where('status', Channel::STATUS_READY)->where('name', 'xkc')->get();
+
+        foreach($channels as $channel)
+        {
+            $pros = ChannelPrograms::where('channel_id', $channel->id)->orderBy('id')->get()->toArray();
+            if($pros)
+            {
+                
+                $start_end = $pros[0]['start_at']. ' - '.$pros[count($pros) - 1]['end_at'];
+                $channel->start_end = $start_end;
+                $channel->save();
+            }
+        }
     }
 
     private function create($id, $group)

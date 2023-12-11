@@ -82,12 +82,14 @@ class ChannelGenerator
         $this->air = 0;//strtotime($channel->air_date." 06:00:00");
         $schecule = 0;//strtotime($channel->air_date." 06:00:00");
         $class::loadBlackList();
+        $start_end = '';
 
         foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
             $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
             if($this->air == 0) {
                 $this->air = strtotime($channel->air_date.' '.$t->start_at); 
+                $start_end = $t->start_at;
             }
 
             $this->duration = 0;
@@ -121,8 +123,11 @@ class ChannelGenerator
         if($this->special) {
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('sort')->get();
             $sort = $t->sort + 1;
-            $this->addSpecial($programs, $sort);
         }
+
+        $start_end .= ' - '. date('H:i:s', $this->air);
+
+        return $start_end;
         
     }
 
@@ -139,6 +144,7 @@ class ChannelGenerator
         $this->air = 0;//strtotime($channel->air_date." 06:00:00");
         $schedule_duration = 0;//strtotime($channel->air_date." 06:00:00");
         $schedule_end = 0;
+        $start_end = '';
         //$class::loadBlackList();
         $class::loadBumpers();
 
@@ -146,7 +152,8 @@ class ChannelGenerator
             // check Date using Weekends Template or not.
             // $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
             if($this->air == 0) {
-                $this->air = strtotime($channel->air_date.' '.$t->start_at); 
+                $this->air = strtotime($channel->air_date.' '.$t->start_at);
+                $start_end = ' - '. date('H:i:s', $this->air);
             }
 
             $this->duration = 0;
@@ -202,7 +209,11 @@ class ChannelGenerator
             $sort = $t->sort + 1;
             $this->addSpecial($programs, $sort);
         }
-        
+
+        $start_end .= ' - '. date('H:i:s', $this->air);
+
+        return $start_end;
+
     }
 
     public function addProgramItem($programs, $class)
@@ -319,6 +330,8 @@ class ChannelGenerator
             }
             $this->info("复制节目 {$t->name} {$t->start_at} {$t->end_at}");
         }
+
+        return date('H:i:s', $this->air);
     }
 
     public static function scheduleTime($origin, $duration, $multi=1)

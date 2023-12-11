@@ -64,13 +64,14 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
                 return 0;
             }
-            
+
             if($channel->name == 'xkc')
-                $generator->generateXkc($channel);
+                $start_end = $generator->generateXkc($channel);
             else
-                $generator->generate($channel);
+                $start_end = $generator->generate($channel);
             
             $channel->status = Channel::STATUS_READY;
+            $channel->start_end = $start_end;
             $channel->save();
 
             $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
