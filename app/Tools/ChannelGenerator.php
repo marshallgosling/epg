@@ -153,7 +153,7 @@ class ChannelGenerator
             // $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
             if($this->air == 0) {
                 $this->air = strtotime($channel->air_date.' '.$t->start_at);
-                $start_end = ' - '. date('H:i:s', $this->air);
+                $start_end = $t->start_at;
             }
 
             $this->duration = 0;

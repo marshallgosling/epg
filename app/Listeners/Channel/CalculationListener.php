@@ -32,9 +32,9 @@ class CalculationListener
         }
         $programs = $channel->programs()->get();
 
-        $start = strtotime($channel->air_date . ' 06:00:00');
+        $start = $channel->name == 'xkv' ? strtotime($channel->air_date . ' 06:00:00') : strtotime($channel->air_date . ' 17:00:00');
         $this->info("process program re-calculation: ".$event->getChannelId().' '.$event->getChannelProgramId());
-        
+        $start_end = date('H:i:s', $start);
         foreach($programs as $pro)
         {
             $items = json_decode($pro->data);
@@ -63,7 +63,12 @@ class CalculationListener
             }
 
         }
-        $channel->version = $channel->version + 1;
-        $channel->save();
+        
+        $channel->start_end = $start_end . ' - '. date('H:i:s', $start);
+        if($channel->isDirty())
+        {
+            $channel->version = $channel->version + 1;
+            $channel->save();
+        }
     }
 }
