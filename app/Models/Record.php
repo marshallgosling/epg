@@ -83,12 +83,14 @@ class Record extends Model
 
     public static function findRandomEpisode($c)
     {
-        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('category', 'like', "%$c%")->get();
+        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('category', 'like', "%$c%")->get()->toArray();
 
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
 
-        $name = $list[0];
+        //$name = $list[0];
+
+        print_r($list);exit;
 
         return self::findNextEpisode($name->episodes);
 
