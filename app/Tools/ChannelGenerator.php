@@ -220,24 +220,16 @@ class ChannelGenerator
                     $item = $class::findRandom($p->category);
                 else {
                     if($p->name) {
-
-                        $item = $class::findNextEpisode($p->name, $p->data);
-
-                        if(!$item) {
-                            $item = $class::findRandomEpisode($p->category);
-
-                            $p->name = $item->episodes;
-                            $p->data = $item->unique_no;
-                            $p->save();
-                        }
+                        $item = $class::findNextEpisode($p->name, $p->data);       
                     }
-                    else {
+                    
+                    if(!$item) {
                         $item = $class::findRandomEpisode($p->category);
+                    }  
 
-                        $p->name = $item->episodes;
-                        $p->data = $item->unique_no;
-                        $p->save();
-                    }
+                    $p->name = $item->episodes;
+                    $p->data = $item->unique_no;
+                    $p->save();
                 }
                 
             }
