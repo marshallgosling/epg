@@ -15,7 +15,7 @@ use App\Models\ChannelPrograms;
 use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
 
-class ProgramsJob implements ShouldQueue, ShouldBeUnique
+class RecordJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
@@ -37,7 +37,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId()
     {
-        return "Channel-".$this->uuid;
+        return "BatchChannel-".$this->uuid;
     }
 
     /**
@@ -48,30 +48,33 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         
-        $channel = Channel::where('uuid', $this->uuid)->first();
+        $channels = Channel::where('name', $this->uuid)->where('status', Channel::STATUS_RUNNING)->orderBy('air_date')->get();
 
-        if(!$channel) {
+        if(!$channels) {
             $this->error("频道 {$this->uuid} 不存在");
             return 0;
         }
 
-        if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-            $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
-            return 0;
-        }
-
         $generator = new ChannelGenerator();
-        $generator->loadTemplate($channel->name);
+        $generator->loadTemplate($this->uuid);
 
-        if($channel->name == 'xkc')
-            $generator->generateXkc($channel);
-        else
-            $generator->generate($channel);
-        
-        $channel->status = Channel::STATUS_READY;
-        $channel->save();
+        foreach($channels as $channel) {
 
-        $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+            if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
+                $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
+                return 0;
+            }
+            
+            if($channel->name == 'xkc')
+                $generator->generateXkc($channel);
+            else
+                $generator->generate($channel);
+            
+            $channel->status = Channel::STATUS_READY;
+            $channel->save();
+
+            $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+        }
     }
 
     /**

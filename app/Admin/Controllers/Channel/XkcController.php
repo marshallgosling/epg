@@ -66,7 +66,7 @@ class XkcController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchGenerator);
+            $actions->add(new BatchGenerator('xkc'));
             $actions->add(new BatchClean);
         });
 

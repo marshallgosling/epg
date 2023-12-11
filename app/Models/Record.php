@@ -37,7 +37,7 @@ class Record extends Model
 
     private static $cache = [];
     private static $blacklist = [];
-    private static $bumper = [];
+    private static $bumper = false;
 
     public static function loadBlackList()
     {
@@ -95,6 +95,8 @@ class Record extends Model
     }
 
     public static function loadBumpers($category='m1') {
+        if(self::$bumper) return;
+
         self::$bumper = [];
         self::$bumper[] = Record::where('category', $category)->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
         self::$bumper[] = Record::where('category', $category)->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();

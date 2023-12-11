@@ -43,13 +43,11 @@ class ChannelGenerator
      * @param string $group
      * 
      */
-    public function loadTemplate($channel, $group='default')
+    public function loadTemplate($group='default')
     {
-        $this->channel = $channel;
         $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->with('programs')->orderBy('sort', 'asc')->get();
         $this->weekends = Template::where(['group_id'=>$group,'schedule'=>Template::WEEKENDS,'status'=>Template::STATUS_SYNCING])->with('programs')->orderBy('sort', 'asc')->get();
         $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->with('programs')->orderBy('sort', 'asc')->get();
-        
     }
 
     private function loadWeekendsTemplate($date, $daily)
