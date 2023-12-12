@@ -162,7 +162,7 @@ class XkvProgramController extends AdminController
     {
         $model = ChannelPrograms::findOrFail($id);
 
-        $data = json_decode($model->data, true);
+        $data = json_decode($model->data);
 
         $replicate = 0;
 
