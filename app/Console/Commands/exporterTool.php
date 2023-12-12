@@ -53,11 +53,17 @@ class exporterTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
         
-        if(in_array($action, ['excel', 'xml'])) {
+        if(in_array($action, ['excel', 'xml', 'test'])) {
             $this->$action($id);
         }
         
         return 0;
+    }
+
+    private function test()
+    {
+        $d = DB::table('notification')->selectRaw("`type`, count(`type`) as total")->where('viewed', 0)->groupBy('type')->pluck('total', 'type')->toArray();
+        print_r($d);
     }
 
     private function xml($id)

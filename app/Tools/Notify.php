@@ -32,6 +32,7 @@ class Notify
     public static function isReady()
     {
         return (int)Cache::get('notify_ready');
+        
     }
 
     public static function getNotificationNumber($type=-1)
