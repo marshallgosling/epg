@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0eb0b19fc5b19b76a6876f6b101af20",
+    "content-hash": "0d6e9a6fe352bb79e12f1f08b1dffd19",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2497,6 +2497,51 @@
                 }
             ],
             "time": "2023-10-17T14:13:20+00:00"
+        },
+        {
+            "name": "marshallgosling/php-excel",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marshallgosling/php-excel.git",
+                "reference": "78419fc2861085bb917cd2cd99cc96f3ccc411d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marshallgosling/php-excel/zipball/78419fc2861085bb917cd2cd99cc96f3ccc411d1",
+                "reference": "78419fc2861085bb917cd2cd99cc96f3ccc411d1",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nathan\\PhpExcel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nathan Gao",
+                    "email": "marshall.goslin@gmail.com"
+                }
+            ],
+            "description": "phpExcel for Laravel",
+            "keywords": [
+                "excel",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/marshallgosling/php-excel/issues",
+                "source": "https://github.com/marshallgosling/php-excel/tree/master"
+            },
+            "time": "2023-12-12T06:07:28+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -9026,12 +9071,14 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "marshallgosling/php-excel": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

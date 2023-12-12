@@ -65,11 +65,8 @@ class materialTool extends Command
     }
 
     private function seconds() {
-        $records = Record::select('id','duration','seconds')->get();
-        foreach($records as $r) {
-            $r->seconds = ChannelGenerator::parseDuration($r->duration);
-            $r->save();
-        }
+        Record::loadBumpers();
+        
     }
 
     private function move($id)

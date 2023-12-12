@@ -2,7 +2,9 @@
 
 namespace App\Tools;
 
-use App\Tools\PHPExcel\IOFactory;
+//use App\Tools\PHPExcel\IOFactory;
+use Nathan\PHPExcel\IOFactory;
+use Nathan\PHPExcel\PHPExcel;
 
 /**
  * Excel 文档生成器
