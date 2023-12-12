@@ -149,7 +149,7 @@ class XkvController extends AdminController
                 $form->uuid = (string) Str::uuid();
                 $form->version = 1;
     
-                if(Channel::where('air_date', $form->air_date)->exists())
+                if(Channel::where('air_date', $form->air_date)->where('name', 'xkv')->exists())
                 {
                     return back()->with(compact('error'));
                 }
@@ -169,7 +169,7 @@ class XkvController extends AdminController
                     return back()->with(compact('error'));
                 }
 
-                if(Channel::where('air_date', $form->air_date)->where('id','<>',$form->model()->id)->exists())
+                if(Channel::where('air_date', $form->air_date)->where('name', 'xkv')->where('id','<>',$form->model()->id)->exists())
                 {
                     return back()->with(compact('error'));
                 }

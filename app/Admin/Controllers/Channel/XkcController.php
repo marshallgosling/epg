@@ -149,7 +149,7 @@ class XkcController extends AdminController
                 $form->uuid = (string) Str::uuid();
                 $form->version = 1;
     
-                if(Channel::where('air_date', $form->air_date)->exists())
+                if(Channel::where('air_date', $form->air_date)->where('name', 'xkc')->exists())
                 {
                     return back()->with(compact('error'));
                 }
@@ -161,7 +161,7 @@ class XkcController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
     
-                if(Channel::where('air_date', $form->air_date)->where('id','<>',$form->model()->id)->exists())
+                if(Channel::where('air_date', $form->air_date)->where('name', 'xkc')->where('id','<>',$form->model()->id)->exists())
                 {
                     return back()->with(compact('error'));
                 }

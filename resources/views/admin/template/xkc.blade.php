@@ -180,6 +180,11 @@
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
+        $('body').on('mouseup', function(e) {
+            //console.log('stop ');
+            startmove = false;
+            templist = [];
+        });
         $('.minimal').iCheck({radioClass:'iradio_minimal-blue'});
         $('#btnDelete').on('click', function(e) {
 
@@ -497,29 +502,46 @@
 
         $('#tree-programs').html(html);
         $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
-        //Set the lastChecked box to null
-        var lastChecked = null;
-        var $chkboxes = $('.grid-row-checkbox');
-        //When any check box is clicked
-        $chkboxes.click(function(e) {
 
-            //Set the last checkbox checked if it didnt exist before
-            if (!lastChecked) {
-                lastChecked = this;
-            }
+        $chkboxes = $('.grid-row-checkbox');
+        
+        setupMouseEvents()
+    }
 
-            //If the shift button is held while clicking a box
-            if (e.shiftKey) {
-                var start = $chkboxes.index(this);
-                var end = $chkboxes.index(lastChecked);
-
-                var selectedChecks = $chkboxes.slice(Math.min(start,end), Math.max(start,end)+ 1)
-                selectedChecks.prop('checked', lastChecked.checked);
-            }
-
-            //Set the last checked button to 
-            lastChecked = this;
+    var $chkboxes;
+    var startmove = false;
+    var templist = [];
+    function setupMouseEvents()
+    {
+        templist = [];
+        $('.dd-item').on('mousedown', function(e) {
+            e.preventDefault();
+            let idx = parseInt($(this).data('id'));
+            startmove = true;
+            let ch = $chkboxes.eq(idx);
+            ch.prop('checked', !ch.prop('checked'));
+            
         });
+        $('.dd-item').on('mouseenter', function(e) {
+            if(startmove) {
+                var idx = parseInt($(this).data('id'));
+                
+                if(templist.indexOf(idx) == -1) {
+                    templist.push(idx);
+                    var ch = $chkboxes.eq(idx);
+                    ch.prop('checked', !ch.prop('checked'));
+                }
+                else {
+                    let t = templist.splice(templist.indexOf(idx));
+
+                    for(i=0;i<t.length;i++) {
+                        var ch = $chkboxes.eq(t[i]);
+                        ch.prop('checked', !ch.prop('checked'));
+                    }
+                }
+            }
+        });
+
     }
 
     function reCalculate(idx) {
