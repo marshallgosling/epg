@@ -16,7 +16,7 @@ function setupHTML(data)
         $('.notify-head').html('共有 '+data.total+' 个通知');
     }
     else {
-        $('.notify-total').html(data.total);
+        $('.notify-total').html('');
         $('.notify-head').html("没有未读通知");
     }
     var html = "";
