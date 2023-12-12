@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Tools\Exporter;
 use App\Tools\ExcelWriter;
 use App\Tools\LoggerTrait;
-use App\Tools\PHPExcel\Exception;
+use Nathan\PHPExcel\Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;

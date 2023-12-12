@@ -2,32 +2,32 @@
 
 namespace App\Tools;
 
-//use App\Tools\PHPExcel\IOFactory;
 use Nathan\PHPExcel\IOFactory;
 use Nathan\PHPExcel\PHPExcel;
 
 /**
  * Excel 文档生成器
- * @package iPHP
+ * @package App\Tools
  * @author 高祺
  *
  */
 class ExcelWriter {
 	/**
 	 * 列
-	 * @var unknown
+	 * @var array 
 	 */
 	public static $columns = [];
 	
 	/**
 	 * excel静态对象
-	 * @var phpExcel
+	 * 
+	 * @var PHPExcel
 	 */
 	public static $objPHPExcel = null;
 	
 	/**
 	 * 初始化Excel文档属性
-	 * @param unknown $title
+	 * @param string $title
 	 * @param string $subject
 	 * @param string $creator
 	 * @param string $description
@@ -50,13 +50,19 @@ class ExcelWriter {
 		self::$objPHPExcel->setActiveSheetIndex(0);
 	}
 
+	/**
+	 * 载入模版Excel文件
+	 * 
+	 * @param string $template 模版文件名
+	 */
 	public static function loadTemplate($template='')
 	{
 		//$template = dirname(__FILE__).'/template.xls';          //使用模板  
     	self::$objPHPExcel = IOFactory::load($template);     //加载excel文件,设置模板  
 	}
 	/**
-	 * 设定列
+	 * 设定列名称
+	 * 
 	 * @param Array $columns 列数组
 	 */
 	public static function setupColumns($columns) 
@@ -75,6 +81,7 @@ class ExcelWriter {
 	}
 	/**
 	 * 打印数据至phpExcel对象
+	 * 
 	 * @param Array $data 数组, key和columns数组对应
 	 */
 	public static function printData($data, $offset=2)
@@ -93,8 +100,10 @@ class ExcelWriter {
 			$offset++;
 		}
 	}
+
 	/**
 	 * 输出到流或文件
+	 * 
 	 * @param string $filename
 	 * @param string $mode file|stream
 	 */

@@ -9,7 +9,7 @@ use App\Tools\Exporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Tools\PHPExcel\Exception;
+use Nathan\PHPExcel\Exception;
 use Illuminate\Support\Str;
 
 class exporterTool extends Command
