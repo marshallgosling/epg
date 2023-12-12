@@ -11,6 +11,7 @@ use App\Admin\Actions\Channel\BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
