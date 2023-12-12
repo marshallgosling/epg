@@ -25,14 +25,14 @@ function setupHTML(data)
     //}
 
     //if(data.excel > 0) {
-        html += '<li><a href="/notifications"> &nbsp; &nbsp;<i class="fa fa-users text-red"></i> &nbsp;' + data.audit + ' 个审核通知</a></li>';
+        html += '<li><a href="/notifications"> &nbsp; &nbsp;<i class="fa fa-users text-yellow"></i> &nbsp;' + data.audit + ' 个审核通知</a></li>';
     //}
 
     html += '<li><a href="/notifications"> &nbsp; &nbsp;<i class="fa fa-file-excel-o text-green"></i> &nbsp;' + data.excel + ' 个Excel导出通知</a></li>';
     
     html += '<li><a href="/notifications"> &nbsp; &nbsp;<i class="fa fa-play"></i> &nbsp;' + data.xml + ' 个导出串联单通知</a></li>';
     
-    html += '<li><a href="/notifications"> &nbsp; &nbsp;<i class="fa fa-calculator text-yellow"></i> &nbsp;' + data.statistic + ' 个统计数据通知</a></li>';
+    html += '<li><a href="/notifications"> &nbsp; &nbsp;<i class="fa fa-calculator text-read"></i> &nbsp;' + data.statistic + ' 个统计数据通知</a></li>';
     
     $('#notification_list').html(html);
 }
