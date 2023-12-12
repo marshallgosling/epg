@@ -4,8 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\Channel;
 use App\Models\ExportList;
+use App\Models\Notification;
 use App\Tools\ExcelWriter;
 use App\Tools\Exporter;
+use App\Tools\Notify;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -68,7 +70,13 @@ class exporterTool extends Command
         Exporter::generateSimple($channel, $data);
         Exporter::exportXml(true);
     
-
+        Notify::fireNotify(
+            $channel->name,
+            Notification::TYPE_XML, 
+            "生成 XML {$channel->air_date} 成功. ", 
+            "",
+            Notification::LEVEL_INFO
+        );
     }
 
     private function excel($id)

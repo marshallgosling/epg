@@ -160,7 +160,7 @@ class Exporter
         $no = 1;
         $lines = [];
 
-        echo "find channel: ".count($channels).PHP_EOL;
+        //echo "find channel: ".count($channels).PHP_EOL;
 
         if($channels)foreach($channels as $channel)
         {
@@ -169,7 +169,7 @@ class Exporter
             $air = $channel->air_date;
             if($programs)foreach($programs as $p)
             {
-                echo "find program: ".$p->name.PHP_EOL;
+                //echo "find program: ".$p->name.PHP_EOL;
                 $items = json_decode($p->data);
                 if(array_key_exists('replicate', $items)) {
                     $items = json_decode(
@@ -184,7 +184,7 @@ class Exporter
                     //     $no, $p->name, $item->name, $item->unique_no, date('y-m-d', $air),
                     //     date('H:i:s', $air).':00', date('H:i:s', $end).':00', $item->duration, '00:00:00:00', ''
                     // ];
-                    echo "find item: ".$item->name.PHP_EOL;
+                    //echo "find item: ".$item->name.PHP_EOL;
 
                     if($mode == 'excel') {
                         $l = ChannelGenerator::createExcelItem($item, $p->name, $no, $air);
