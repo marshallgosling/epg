@@ -54,11 +54,14 @@ class Notify
 
     public static function readNotifications()
     {
-        if(!self::isReady()) self::writeAllNotificationToRedis();
-        $data = ['total'=>(int)Cache::get('notify_total')];
+        //if(!self::isReady()) self::writeAllNotificationToRedis();
+        $notify = DB::table('notification')->selectRaw("`type`, count(`type`) as total")->groupBy('type')->pluck('total', 'type')->toArray();
+    
+        $data = ['total'=>0];//['total'=>(int)Cache::get('notify_total')];
         foreach(Notification::TYPES as $key=>$type)
         {
-            $data[$type] = (int)Cache::get("notify_$type");
+            $data[$type] = (int)$notify[$key];//(int)Cache::get("notify_$type");
+            $data['total'] += (int)$notify[$key];
         }
         return $data;
     }
