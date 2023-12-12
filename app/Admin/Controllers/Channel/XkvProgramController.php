@@ -14,6 +14,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
+use App\Tools\ChannelGenerator;
 use Illuminate\Http\Request;
 
 class XkvProgramController extends AdminController
@@ -163,7 +164,18 @@ class XkvProgramController extends AdminController
 
         $data = json_decode($model->data, true);
 
-        $data = $this->caculateDuration($data, strtotime($model->start_at));
+        $replicate = 0;
+
+        if(array_key_exists('replicate', $data)) {
+            $replicate = $data->replicate;
+            $data = ChannelPrograms::where('id', $replicate)->value('data');
+            $data = json_decode($data);
+
+            // re-calculate replicated items' start/end time
+            $data = ChannelGenerator::caculateDuration($data, strtotime($model->start_at));
+        }
+
+        // $data = $this->caculateDuration($data, strtotime($model->start_at));
 
         $list = ChannelPrograms::where("channel_id", $model->channel_id)->orderBy('id')->get();
 
@@ -197,10 +209,16 @@ TMP;
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
         }
+        else {
+            if($replicate) {
+                $view = 'admin.program.copy';
+                $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
+            }
+        }
            
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view($view, ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
+            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate')));
     }
 
     public function open($id, Request $request) {
