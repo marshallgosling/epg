@@ -37,4 +37,5 @@ function setupHTML(data)
     $('#notification_list').html(html);
 }
 
+setInterval('loadNotifications()', 30000);
 loadNotifications();
