@@ -225,21 +225,25 @@ class ChannelGenerator
             $item = false;
 
             if($p->type == TemplatePrograms::TYPE_PROGRAM) {
+                if($class == '\App\Models\Record') {
+                    if($p->category == 'movie')
+                        $item = $class::findRandom($p->category);
+                    else {
+                        if($p->name) {
+                            $item = $class::findNextEpisode($p->name, $p->data);       
+                        }
+                        
+                        if(!$item) {
+                            $item = $class::findRandomEpisode($p->category);
+                        }  
 
-                if($p->category == 'movie')
-                    $item = $class::findRandom($p->category);
-                else {
-                    if($p->name) {
-                        $item = $class::findNextEpisode($p->name, $p->data);       
+                        $p->name = $item->episodes;
+                        $p->data = $item->unique_no;
+                        $p->save();
                     }
-                    
-                    if(!$item) {
-                        $item = $class::findRandomEpisode($p->category);
-                    }  
-
-                    $p->name = $item->episodes;
-                    $p->data = $item->unique_no;
-                    $p->save();
+                }
+                else {
+                    $item = $class::findRandom($p->category);
                 }
                 
             }
