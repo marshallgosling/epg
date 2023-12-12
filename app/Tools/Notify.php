@@ -60,8 +60,8 @@ class Notify
         $data = ['total'=>0];//['total'=>(int)Cache::get('notify_total')];
         foreach(Notification::TYPES as $key=>$type)
         {
-            $data[$type] = (int)$notify[$key];//(int)Cache::get("notify_$type");
-            $data['total'] += (int)$notify[$key];
+            $data[$type] = key_exists($key, $notify) ? (int)$notify[$key] : 0;//(int)Cache::get("notify_$type");
+            $data['total'] += $data[$type];
         }
         return $data;
     }
