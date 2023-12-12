@@ -20,7 +20,7 @@ class Notify
         foreach(Notification::TYPES as $key=>$type)
             Cache::add("notify_$type", self::getNotificationNumber($key));
 
-        Cache::add('notify_ready', 1);
+        Cache::add('notify_ready', 1, 300);
     }
 
     public static function isReady()
@@ -42,6 +42,7 @@ class Notify
         $notify->level = $level;
         $notify->group_id = $group;
         $notify->save();
+        Cache::add('notify_ready', 0, 300);
     }
 
     public static function readNotifications()
