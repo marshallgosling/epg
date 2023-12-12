@@ -99,11 +99,25 @@ class exporterTool extends Command
             $export->status = ExportList::STATUS_READY;
             $export->filename = $filename;
             $export->save();
+            Notify::fireNotify(
+                $export->group_id,
+                Notification::TYPE_EXCEL, 
+                "生成 Excel {$export->name} 成功. ", 
+                "文件名:{$filename}",
+                Notification::LEVEL_INFO
+            );
         }catch(Exception $e)
         {
             $export->status = ExportList::STATUS_ERROR;
             $export->reason = $e->getMessage(); 
             $export->save();
+            Notify::fireNotify(
+                $export->group_id,
+                Notification::TYPE_EXCEL, 
+                "生成 Excel {$export->name} 失败. ", 
+                "保存节目串联单数据出错，Excel模版错误或磁盘读写错误。文件名:{$filename}",
+                Notification::LEVEL_WARN
+            );
         }
     }
 
