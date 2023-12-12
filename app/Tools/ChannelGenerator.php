@@ -371,7 +371,7 @@ class ChannelGenerator
     public static function createExcelItem($item, $name, $no, $air)
     {
         return [
-            $no, $name, $item->name, $item->unique_no, date('y-m-d', $air),
+            $no, $name, $item->name, $item->unique_no, substr($air, 2),
             $item->start_at.':00', $item->end_at.':00', $item->duration, '00:00:00:00', ''
         ];
     }
