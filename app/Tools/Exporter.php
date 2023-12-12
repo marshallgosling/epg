@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
-use Faker\ChanceGenerator;
 use Illuminate\Support\Facades\DB;
 
 class Exporter

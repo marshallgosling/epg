@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Channel;
+use App\Models\Notification;
 use App\Tools\LoggerTrait;
+use App\Tools\Notify;
 use App\Tools\Statistic\StatisticProgram;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -64,9 +66,18 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
         if($results['result']){
             $this->info("统计数据成功，保存数据库并将替换已有数据（如存在）。");
             $statistic->store();
+
+            Notify::fireNotify(
+                Notification::TYPE_STATISTIC, 
+                "统计数据成功", "统计数据成功，保存数据库并将替换已有数据（如存在）。"
+            );
         }
         else {
             $this->error($results['msg']);
+            Notify::fireNotify(
+                Notification::TYPE_STATISTIC, 
+                "统计数据失败", $results['msg'], Notification::LEVEL_ERROR
+            );
         }
 
         

@@ -6,8 +6,10 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel;
+use App\Models\Notification;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
+use App\Tools\Notify;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -134,15 +136,20 @@ class channelTool extends Command
         $generator->loadTemplate($channel->name);
 
         if($channel->name == 'xkc')
-            $generator->generateXkc($channel);
+            $start_end = $generator->generateXkc($channel);
         else
-            $generator->generate($channel);
+            $start_end = $generator->generate($channel);
 
         $channel->status = Channel::STATUS_READY;
         $channel->save();
 
         $this->info("Generate programs date: {$channel->air_date} succeed. ");
         
+        Notify::fireNotify(
+            Notification::TYPE_GENERATE, 
+            "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
+            "频道节目时间 $start_end"
+        );
     }
 
     private function parseDuration($str)

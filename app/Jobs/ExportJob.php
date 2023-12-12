@@ -3,10 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\ExportList;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 use App\Tools\Exporter;
 use App\Tools\ExcelWriter;
 use App\Tools\LoggerTrait;
+use App\Tools\Notify;
 use Nathan\PHPExcel\Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -58,6 +60,14 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
             $export->reason = "串联单数据为空";
             $export->save();
             $this->warn('节目串联单数据为空，直接退出。');
+
+            Notify::fireNotify(
+                Notification::TYPE_EXCEL, 
+                "生成 Excel {$export->name} 失败. ", 
+                "{$export->start_at} {$export->end_at} 节目串联单数据为空，直接退出。",
+                Notification::LEVEL_WARN
+            );
+
             return;
         }
 
@@ -68,13 +78,30 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
             $export->status = ExportList::STATUS_READY;
             $export->filename = $filename;
             $export->save();
+
+            Notify::fireNotify(
+                Notification::TYPE_EXCEL, 
+                "生成 Excel {$export->name} 成功. ", 
+                "文件名:{$filename}",
+                Notification::LEVEL_INFO
+            );
+            
         }catch(Exception $e)
         {
             $export->status = ExportList::STATUS_ERROR;
             $export->reason = $e->getMessage(); 
             $export->save();
-            $this->error("保存节目串联单数据出错，Excel模版错误或磁盘读写错误。{文件名:{$filename}\n错误:".$e->getMessage());
+            $this->error("保存节目串联单数据出错，Excel模版错误或磁盘读写错误。文件名:{$filename}\n错误:".$e->getMessage());
+
+            Notify::fireNotify(
+                Notification::TYPE_EXCEL, 
+                "生成 Excel {$export->name} 失败. ", 
+                "保存节目串联单数据出错，Excel模版错误或磁盘读写错误。文件名:{$filename}",
+                Notification::LEVEL_WARN
+            );
         }
+
+        
              
     }
 

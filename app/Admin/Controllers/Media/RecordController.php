@@ -49,7 +49,7 @@ class RecordController extends AdminController
 
             $black = $this->black ? "<span class='label label-danger'>黑名单</span>" : '';
             return $black.'&nbsp;'.join('&nbsp;', $category);
-        })->sortable();
+        });
         $grid->column('episodes', __('Episodes'))->sortable();
         $grid->column('ep', __('Ep'))->sortable();
         $grid->column('duration', __('Duration'))->sortable();

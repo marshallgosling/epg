@@ -22,7 +22,7 @@ Encore\Admin\Facades\Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navba
 
     //$navbar->left(view('admin.search'));
 
-    $navbar->right(view('admin.right'));
+    $navbar->right(view('admin.notification'));
 
 });
 

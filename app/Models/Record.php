@@ -14,6 +14,8 @@ class Record extends Model
 
     protected $table = 'records';
 
+    public const CATEGORIES = ['movie'=>'电影','starmade'=>'灿星制作','tvshow'=>'综艺','cartoon'=>'卡通','tvseries'=>'电视剧','docu'=>'纪实'];
+
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',
         'duration', 'air_date', 'expired_date', 'seconds',

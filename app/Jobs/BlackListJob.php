@@ -6,9 +6,11 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\BlackList;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use App\Models\Notification;
 use App\Models\Program;
 use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
+use App\Tools\Notify;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -85,6 +87,13 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         if(!$hasdata) {
             $model->status = BlackList::STATUS_READY;
             $model->save();
+
+            Notify::fireNotify(
+                Notification::TYPE_BLACKLIST, 
+                "应用 {$model->keyword} 完成. ", 
+                "数据为空，直接退出。",
+                Notification::LEVEL_WARN
+            );
             return;
         }
 
@@ -127,6 +136,12 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         $model->status = BlackList::STATUS_READY;
         $model->data = json_encode($data);
         $model->save();
+
+        Notify::fireNotify(
+            Notification::TYPE_BLACKLIST, 
+            "应用黑名单 {$model->keyword} 完成. "
+        );
+        
     }
 
     private function scan($model)
@@ -200,6 +215,11 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         $model->data = json_encode($data);
         $model->scaned_at = date('Y/m/d H:i:s');
         $model->save();
+
+        Notify::fireNotify(
+            Notification::TYPE_BLACKLIST, 
+            "扫描黑名单 {$model->keyword} 完成. "
+        );
     }
 
     /**

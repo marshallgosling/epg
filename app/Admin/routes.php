@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Encore\Admin\Facades\Admin;
 use App\Models\Program;
 use App\Models\Category;
+use App\Tools\Notify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -62,6 +63,11 @@ Route::group([
     
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
 
+    $router->resource('/notifications', 'NotificationController')->names('notification');
+
+    $router->get('/api/notifications', function (Request $request) {
+        return response()->json(Notify::readNotifications());
+    });
     
     $router->get('/api/tree/programs', function (Request $request) {
         $q = $request->get('q');

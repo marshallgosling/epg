@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use App\Models\Notification;
 use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
+use App\Tools\Notify;
 
 class RecordJob implements ShouldQueue, ShouldBeUnique
 {
@@ -62,6 +64,12 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
 
             if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
                 $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
+                Notify::fireNotify(
+                    Notification::TYPE_GENERATE, 
+                    "生成节目编单 {$channel->name}_{$channel->air_date} 失败. ", 
+                    "频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
+                    Notification::LEVEL_WARN
+                );
                 return 0;
             }
 
@@ -74,7 +82,13 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             $channel->start_end = $start_end;
             $channel->save();
 
-            $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+            Notify::fireNotify(
+                Notification::TYPE_GENERATE, 
+                "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
+                "频道节目时间 $start_end"
+            );
+
+            $this->info("生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ");
         }
     }
 

@@ -51,9 +51,9 @@ class XkvController extends AdminController
         });
         $grid->column('end_at', __('End at'))->hide();
         $grid->column('duration', __('Duration'));
-        $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES);
+        $grid->column('schedule', __('Schedule'))->using(Template::SCHEDULES)->filter(Template::SCHEDULES);
         $grid->column('sort', __('Sort'));
-        $grid->column('status', __('Status'))->using(Template::STATUSES)->label([
+        $grid->column('status', __('Status'))->using(Template::STATUSES)->filter(Template::STATUSES)->label([
             Template::STATUS_NOUSE => 'default',
             Template::STATUS_SYNCING => 'success',
             Template::STATUS_STOPED => 'danger'

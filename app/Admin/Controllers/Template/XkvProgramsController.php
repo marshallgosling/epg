@@ -45,7 +45,7 @@ class XkvProgramsController extends AdminController
         
         $grid->column('sort', __('Sort'));
 
-        $grid->column('type', __('Type'))->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
+        $grid->column('type', __('Type'))->filter(TemplatePrograms::TYPES)->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
         
         $grid->column('category', __('Category'));
         
