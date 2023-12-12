@@ -49,7 +49,7 @@ class Notify
         $data = ['total'=>(int)Cache::get('notify_total')];
         foreach(Notification::TYPES as $key=>$type)
         {
-            $data[$type] = ["key"=>$key, "value"=>(int)Cache::get("notify_$type")];
+            $data[$type] = (int)Cache::get("notify_$type");
         }
         return $data;
     }

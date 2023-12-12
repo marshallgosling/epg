@@ -38,15 +38,15 @@ class NotificationController extends AdminController
         $grid->column('created_at', __('Created at'))->filter('range', 'datetime');
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        $grid->disableCreateButton();
+        //$grid->disableCreateButton();
 
         $grid->filter(function(Grid\Filter $filter){
-            $filter->column(6, function (Grid\Filter $filter) {
+            $filter->column(4, function (Grid\Filter $filter) {
                 $filter->equal('group_id', __('Group'))->radio(Notification::GROUPS);
                 $filter->like('name', __('Name'));
                 
             });
-            $filter->column(6, function (Grid\Filter $filter) {
+            $filter->column(8, function (Grid\Filter $filter) {
                 $filter->equal('type', __('Type'))->radio(Notification::TYPES);
                 $filter->equal('level', __('Level'))->radio(Notification::LEVELS);
             });
@@ -91,11 +91,11 @@ class NotificationController extends AdminController
     {
         $form = new Form(new Notification());
 
-        $form->radio('group_id', __('Group'));
+        $form->radio('group_id', __('Group'))->options(Notification::GROUPS);
         $form->text('name', __('Name'));
         $form->text('message', __('Message'));
-        $form->switch('type', __('Type'));
-        $form->text('level', __('Level'));
+        $form->radio('type', __('Type'))->options(Notification::TYPES);
+        $form->radio('level', __('Level'))->options(Notification::LEVELS);
         $form->text('user', __('User'));
         $form->switch('viewed', __('Viewed'));
         
