@@ -23,6 +23,12 @@ class Notify
         Cache::add('notify_ready', 1, 300);
     }
 
+    public static function setViewed()
+    {
+        Notification::where('viewed', 0)->update(['viewed'=>1]);
+        Cache::add('notify_ready', 0, 300);
+    }
+
     public static function isReady()
     {
         return (int)Cache::get('notify_ready');

@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Notification;
+use App\Tools\Notify;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -38,7 +39,7 @@ class NotificationController extends AdminController
         $grid->column('created_at', __('Created at'))->filter('range', 'datetime');
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        //$grid->disableCreateButton();
+        $grid->disableCreateButton();
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(4, function (Grid\Filter $filter) {
@@ -53,6 +54,7 @@ class NotificationController extends AdminController
             
         });
 
+        Notify::setViewed();
 
         return $grid;
     }
