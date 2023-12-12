@@ -68,6 +68,7 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
             $statistic->store();
 
             Notify::fireNotify(
+                $channel->name,
                 Notification::TYPE_STATISTIC, 
                 "统计数据成功", "统计数据成功，保存数据库并将替换已有数据（如存在）。"
             );
@@ -75,6 +76,7 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
         else {
             $this->error($results['msg']);
             Notify::fireNotify(
+                $channel->name,
                 Notification::TYPE_STATISTIC, 
                 "统计数据失败", $results['msg'], Notification::LEVEL_ERROR
             );

@@ -33,13 +33,14 @@ class Notify
         return $type==-1 ? array_sum(self::$data) : (key_exists($type, self::$data) ? self::$data[$type] : 0);
     }
 
-    public static function fireNotify($type, $name, $message='', $level='info')
+    public static function fireNotify($group, $type, $name, $message='', $level='info')
     {
         $notify = new Notification();
         $notify->name = $name;
         $notify->type = $type;
         $notify->message = $message;
         $notify->level = $level;
+        $notify->group_id = $group;
         $notify->save();
     }
 

@@ -60,6 +60,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
             $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
             Notify::fireNotify(
+                $channel->name,
                 Notification::TYPE_GENERATE, 
                 "生成节目编单 {$channel->name}_{$channel->air_date} 失败. ", 
                 "频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
@@ -81,6 +82,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $channel->save();
 
         Notify::fireNotify(
+            $channel->name,
             Notification::TYPE_GENERATE, 
             "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
             "频道节目时间 $start_end"

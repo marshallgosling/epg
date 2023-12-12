@@ -89,6 +89,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
             $model->save();
 
             Notify::fireNotify(
+                'all',
                 Notification::TYPE_BLACKLIST, 
                 "应用 {$model->keyword} 完成. ", 
                 "数据为空，直接退出。",
@@ -138,6 +139,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         $model->save();
 
         Notify::fireNotify(
+            'all',
             Notification::TYPE_BLACKLIST, 
             "应用黑名单 {$model->keyword} 完成. "
         );

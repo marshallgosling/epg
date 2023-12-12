@@ -62,6 +62,7 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
             $this->warn('节目串联单数据为空，直接退出。');
 
             Notify::fireNotify(
+                $export->group_id,
                 Notification::TYPE_EXCEL, 
                 "生成 Excel {$export->name} 失败. ", 
                 "{$export->start_at} {$export->end_at} 节目串联单数据为空，直接退出。",
@@ -80,12 +81,13 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
             $export->save();
 
             Notify::fireNotify(
+                $export->group_id,
                 Notification::TYPE_EXCEL, 
                 "生成 Excel {$export->name} 成功. ", 
                 "文件名:{$filename}",
                 Notification::LEVEL_INFO
             );
-            
+
         }catch(Exception $e)
         {
             $export->status = ExportList::STATUS_ERROR;
@@ -94,6 +96,7 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
             $this->error("保存节目串联单数据出错，Excel模版错误或磁盘读写错误。文件名:{$filename}\n错误:".$e->getMessage());
 
             Notify::fireNotify(
+                $export->group_id,
                 Notification::TYPE_EXCEL, 
                 "生成 Excel {$export->name} 失败. ", 
                 "保存节目串联单数据出错，Excel模版错误或磁盘读写错误。文件名:{$filename}",
