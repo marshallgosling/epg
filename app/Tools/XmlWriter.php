@@ -50,8 +50,8 @@ class XmlWriter
     }
     private function escape($value)
     {
-        // TODO:
-        return $value;
+        // TODO: htmlspecialchars
+        return htmlspecialchars($value);
     }
     private function getArrayName($parentName)
     {
