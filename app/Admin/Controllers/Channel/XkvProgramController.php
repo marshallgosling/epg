@@ -203,6 +203,22 @@ TMP;
             ->body(view($view, ['model'=>$model,'data'=>$data,'list'=>$list,'json'=>$json, 'template'=>$template, 'form'=>$form->render()]));
     }
 
+    public function open($id, Request $request) {
+        $data = $request->all(['data']);
+        $model = ChannelPrograms::findOrFail($id);
+
+        $model->data = $data['data'];
+        $model->name = str_replace('(副本)','',$model->name);
+
+        $model->save();
+
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.save_succeeded'),
+        ];
+        return response()->json($response);    
+    }
+
     public function save($id, Request $request) {
 
         $data = $request->all(['data']);

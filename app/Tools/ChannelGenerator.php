@@ -123,6 +123,7 @@ class ChannelGenerator
         if($this->special) {
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('sort')->get();
             $sort = $t->sort + 1;
+            $this->addSpecial($programs, $sort);
         }
 
         $start_end .= ' - '. date('H:i:s', $this->air);

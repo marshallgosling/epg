@@ -61,7 +61,7 @@
                     return new Promise(function(resolve) {
                         $.ajax({
                             method: 'post',
-                            url: '/admin/channel/xkc/data/{!! $model->id !!}/open',
+                            url: '/admin/channel/open/data/{!! $model->id !!}',
                             data: {
                                 data: JSON.stringify(dataList),
                                 _token:LA.token,
