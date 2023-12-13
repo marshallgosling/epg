@@ -15,6 +15,8 @@ class TemplateRecords extends Model
     public const TYPES = ['节目','广告','固定'];
     public const LABELS = ['info', 'warning', 'default'];
 
+    public const DAYS = ['1'=>'周一','2'=>'周二','3'=>'周三','4'=>'周四','5'=>'周五','6'=>'周六','7'=>'周日'];
+
     protected $table = 'template_programs';
 
     protected $fillable = [

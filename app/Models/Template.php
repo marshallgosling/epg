@@ -44,6 +44,11 @@ class Template extends Model
         return $this->hasMany(TemplatePrograms::class, 'template_id', 'id');
     }
 
+    public function records()
+    {
+        return $this->hasMany(TemplateRecords::class, 'template_id', 'id');
+    }
+
     public static function getFormattedTemplate($group='default')
     {
         if($group == 'all')

@@ -13,6 +13,7 @@ use Encore\Admin\Widgets\Table;
 use Encore\Admin\Widgets\InfoBox;
 use App\Admin\Actions\Template\Programs;
 use App\Admin\Actions\Template\ReplicateTemplate;
+use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 
 class XkcController extends AdminController
@@ -41,17 +42,28 @@ class XkcController extends AdminController
         $grid->column('ex', __(" "))->display(function() {
             return "编排";
         })->expand(function ($model) {
-            $programs = $model->programs()->take(10)->get()->map(function ($program) {  
-                return $program->only(['id', 'category', 'type', 'name']);
-            });
-
-            $items = $programs->toArray();
+            $programs = $model->records()->take(10)->get();
+            $items = [];
+            if($programs)foreach($programs as $p)
+            {
+                if($p->data != null) {
+                    $days = [];
+                    
+                    if($p->data['dayofweek'])
+                        foreach($p->data['dayofweek'] as $d) $days[] = TemplateRecords::DAYS[$d];
+                    $items[] = [ $p->sort, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['start_at'].'/'.$p->data['end_at'], implode(',', $days), $p->data['unique_no'], '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>'];
+                
+                }
+                else {
+                    $items[] = [ $p->sort, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>' ];
+                
+                }
+            }
             
             if(count($items) == 0) $info = "没有模版条目记录，请点击添加";
             else $info = '当前最多只显示10条记录，请点击查看';
 
-            
-            return new Table(['ID', '栏目', '类型', '别名'], $items);
+            return new Table(['序号', '栏目', '类型', '剧集', '播出时间', '播出日', '当前选集', '操作'], $items);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';

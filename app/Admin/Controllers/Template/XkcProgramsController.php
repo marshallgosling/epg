@@ -74,7 +74,7 @@ class XkcProgramsController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             $advanced = new Advanced();
             $advanced->template_id = $_REQUEST['template_id'];
-            $tools->append($advanced);
+            //$tools->append($advanced);
         });
 
         return $grid;
@@ -128,9 +128,7 @@ class XkcProgramsController extends AdminController
         $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
             $form->text('episodes', __('Episodes'))->rules('required');
             $form->dateRange('start_at', 'end_at', '日期范围')->rules('required');
-            $form->checkbox('dayofweek', '日期')->options(
-                [1=>'周一',2=>'周二',3=>'周三',4=>'周四',5=>'周五',6=>'周六',7=>'周日']
-            )->rules('required');
+            $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS)->rules('required');
             $form->text('unique_no', '播出编号');
             
         });
