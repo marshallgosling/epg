@@ -41,17 +41,17 @@ class PlanController extends AdminController
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
         
-        $grid->column('category', __('Category'));
+        $grid->column('category', __('Category'))->hide();
         $grid->column('daysofweek', __('Daysofweek'))->display(function ($days) {
             $html = []; foreach($days as $d) $html[] = TemplateRecords::DAYS[$d];
             return implode(',', $html);
         });
-        $grid->column('episodes', __('Episodes'));
+        $grid->column('episodes', __('Episodes'))->hide();
         $grid->column('status', __('Status'))->filter(Plan::STATUS)->using(Plan::STATUS)->label(['default','success','warning','danger']);
         
         $grid->column('type', __('Type'))->filter(TemplateRecords::TYPES)->using(TemplateRecords::TYPES);
         
-        $grid->column('created_at', __('Created at'));
+        $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
         return $grid;
