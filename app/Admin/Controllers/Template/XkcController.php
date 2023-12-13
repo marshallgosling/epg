@@ -42,7 +42,7 @@ class XkcController extends AdminController
             return "编排";
         })->expand(function ($model) {
             $programs = $model->programs()->take(10)->get()->map(function ($program) {  
-                return $program->only(['id', 'category', 'type', 'name', 'data']);
+                return $program->only(['id', 'category', 'type', 'name']);
             });
 
             $items = $programs->toArray();
@@ -51,7 +51,7 @@ class XkcController extends AdminController
             else $info = '当前最多只显示10条记录，请点击查看';
 
             
-            return new Table(['ID', '栏目', '类型', '别名', '数据'], $items);
+            return new Table(['ID', '栏目', '类型', '别名'], $items);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';

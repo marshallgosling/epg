@@ -8,9 +8,10 @@ use App\Admin\Actions\Template\Replicate;
 use App\Admin\Models\MyGrid;
 use App\Models\Category;
 use App\Models\Template;
-use App\Models\TemplatePrograms;
+use App\Models\TemplateRecords;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
+use Encore\Admin\Form\EmbeddedForm;
 use Encore\Admin\Grid;
 use Encore\Admin\Grid\Filter;
 use Encore\Admin\Show;
@@ -35,7 +36,7 @@ class XkcProgramsController extends AdminController
      */
     protected function grid()
     {
-        $grid = new MyGrid(new TemplatePrograms());
+        $grid = new MyGrid(new TemplateRecords());
 
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
@@ -43,7 +44,7 @@ class XkcProgramsController extends AdminController
         
         $grid->column('sort', __('Sort'));
 
-        $grid->column('type', __('Type'))->filter(TemplatePrograms::TYPES)->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
+        $grid->column('type', __('Type'))->filter(TemplateRecords::TYPES)->using(TemplateRecords::TYPES, 0)->label(TemplateRecords::LABELS);
         
         $grid->column('category', __('Category'));
         
@@ -87,16 +88,16 @@ class XkcProgramsController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(TemplatePrograms::findOrFail($id));
+        $show = new Show(TemplateRecords::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('sort', __('Sort'));
 
-        $show->field('type', __('Type'))->using(TemplatePrograms::TYPES, 0);
+        $show->field('type', __('Type'))->using(TemplateRecords::TYPES, 0);
         $show->field('category', __('Category'));
         
         $show->field('name', __('Alias'));
-        $show->field('data', __('Unique no'));
+        $show->field('data', __('Data'))->json();
 
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -111,7 +112,7 @@ class XkcProgramsController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new TemplatePrograms());
+        $form = new Form(new TemplateRecords());
 
         if(key_exists('template_id', $_REQUEST)) $form->queryString = '?template_id='.$_REQUEST['template_id'];
 
@@ -120,10 +121,19 @@ class XkcProgramsController extends AdminController
                 ->get()->pluck('name', 'id'))->required();
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
-        $form->radio('type', __('Type'))->options(TemplatePrograms::TYPES)->required();
+        $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->required();
        
         $form->text('name', __('Alias'));
-        $form->text('data', __('Unique no'));
+        //$form->text('data', __('Unique no'));
+        $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
+            $form->text('episodes', __('Episodes'))->rules('required');
+            $form->dateRange('start_at', 'end_at', '日期范围')->rules('required');
+            $form->checkbox('dayofweek', '日期')->options(
+                [1=>'周一',2=>'周二',3=>'周三',4=>'周四',5=>'周五',6=>'周六',7=>'周日']
+            )->rules('required');
+            $form->text('unique_no', '播出编号');
+            
+        });
         
     
         $form->saved(function (Form $form) {
@@ -139,7 +149,7 @@ class XkcProgramsController extends AdminController
 
     public function tree($id, Content $content)
     {
-        $data = TemplatePrograms::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','sort','data')->get();
+        $data = TemplateRecords::where('template_id', $id)->orderBy('sort')->select('id','name','type','category','sort','data')->get();
 
         $model = Template::find($id);
 
@@ -165,16 +175,11 @@ class XkcProgramsController extends AdminController
     </li>
 TMP;
 
-        $form = new \Encore\Admin\Widgets\Form();
-        
-        $form->action(admin_url("template/xkv/$id/edit"));
-        $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
-
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
         return $content->title('高级编排模式')->description("编排调整模版内容")
             ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
-                    'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
+                    'category'=>['types'=>TemplateRecords::TYPES,'labels'=>TemplateRecords::LABELS], 'list'=>$list]));
     }
 
     public function save($id, Request $request)
@@ -183,29 +188,6 @@ TMP;
 
         if(in_array($action, ['modify','sort']))
             return $this->$action($id, $request);
-    }
-
-    private function append($id, Request $request)
-    {
-        $data = $request->post('data');
-        $item = json_decode($data, true);
-        
-        $program = new TemplatePrograms();
-        $program->name = $item['name'];
-        $program->type = $item['type'];
-        $program->category = $item['category'];
-        $program->sort = $item['sort'];
-        $program->template_id = $id;
-        $program->data = $item['data'];
-        $program->save();
-
-        $response = [
-            'status'  => true,
-            'message' => trans('admin.create_succeeded'),
-        ];
-
-        return response()->json($response);
-
     }
 
     private function modify($id, Request $request)
@@ -219,21 +201,21 @@ TMP;
         {
             if($item['id'] != '0') {
                 $list[] = $item['id'];
-                $program = TemplatePrograms::find($item['id']);
+                $program = TemplateRecords::find($item['id']);
                 if($program) {
                     $program->name = $item['name'];
                     $program->type = $item['type'];
                     $program->category = $item['category'];
-                    $program->data = $item['data'];
+                    //$program->data = $item['data'];
                     if($program->isDirty()) $program->save();
                 }
             }
             else {
-                $program = new TemplatePrograms();
+                $program = new TemplateRecords();
                 $program->name = $item['name'];
                 $program->type = $item['type'];
                 $program->category = $item['category'];
-                $program->data = $item['data'];
+                //$program->data = $item['data'];
                 $program->template_id = $id;
                 $program->sort = $item['sort'];
                 $program->save();
@@ -244,7 +226,7 @@ TMP;
         foreach($deleted as $item) {
             if(in_array($item['id'], $list)) continue;
 
-            $program = TemplatePrograms::findOrFail($item['id']);
+            $program = TemplateRecords::findOrFail($item['id']);
             if($program->template_id == $id) $program->delete();
         }
 
@@ -256,27 +238,6 @@ TMP;
         return response()->json($response);
     }
 
-    private function replace($id, Request $request)
-    {
-        $data = $request->post('data');
-        $item = json_decode($data, true);
-        
-        $program = TemplatePrograms::findOrFail($item['id']);
-        $program->name = $item['name'];
-        $program->type = $item['type'];
-        $program->category = $item['category'];
-        $program->data = $item['data'];
-        $program->save();
-
-        $response = [
-            'status'  => true,
-            'message' => trans('admin.save_succeeded'),
-        ];
-
-        return response()->json($response);
-
-    }
-
     private function sort($id, Request $request) {
         $data = $request->post('data');
         $list = json_decode($data, true);
@@ -284,7 +245,7 @@ TMP;
         foreach($list as $item)
         {
             
-            $template =  TemplatePrograms::find($item['id']);
+            $template =  TemplateRecords::find($item['id']);
             $template->sort = $item['sort'];
             if($template->isDirty())
                 $template->save();
@@ -303,7 +264,7 @@ TMP;
         $ids = explode('_', $idx);
 
         foreach($ids as $idx) {
-            $item = TemplatePrograms::find($idx);
+            $item = TemplateRecords::find($idx);
 
             if($item && $item->template_id == $id) {
                 $item->delete();
