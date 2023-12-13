@@ -39,7 +39,7 @@ class RecordController extends AdminController
         
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->sortable();
+        $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
         $grid->column('name', __('Name'))->sortable();
         $grid->column('category', __('Category'))->display(function($category) {
             $category = array_map(function ($c) {

@@ -68,6 +68,10 @@ class ChannelXmlController extends AdminController
             //$actions->disableAll();
         });
 
+        $grid->header(function () {
+            return false;
+        });
+
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function (Grid\Filter $filter) {
                 $filter->equal('name', __('Group'))->select(ExportList::GROUPS);

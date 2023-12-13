@@ -56,6 +56,10 @@ class ExportListController extends AdminController
             
         });
 
+        $grid->header(function () {
+            return false;
+        });
+
         $grid->disableCreateButton();
         $grid->disableBatchActions();
         $grid->disableActions();

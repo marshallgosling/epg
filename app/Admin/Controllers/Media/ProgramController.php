@@ -37,7 +37,7 @@ class ProgramController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->sortable();
+        $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
         $grid->column('name', __('Name'))->expand(function() {
             
             $table = '<tr><td width="200px">'.__('Artist').'</td><td colspan="3">'.$this->artist.'</td></tr>'.

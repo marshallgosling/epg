@@ -13,11 +13,11 @@ function setupHTML(data)
 {
     if(data.total > 0) {
         $('.notify-total').html(data.total).addClass('label label-danger');
-        $('.notify-head').html('共有 '+data.total+' 个通知');
+        $('.notify-head').html(' &nbsp; &nbsp;共有 '+data.total+' 个通知');
     }
     else {
         $('.notify-total').html('');
-        $('.notify-head').html("没有未读通知");
+        $('.notify-head').html(" &nbsp; &nbsp;没有未读通知");
     }
     var html = "";
     //if(data.generate > 0) {
