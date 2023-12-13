@@ -38,7 +38,15 @@ Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
     $js = <<<JS
     var startmove = false;
     var templist = [];
+    var shift = false;
+    $('body').on('keydown', function(e) {
+        if(e.shiftKey) shift = true;
+    });
+    $('body').on('keyup', function(e) {
+        shift = false;
+    });
     $('tbody > tr').on('mousedown', function(e) {
+        if(!shift) return;
         e.preventDefault();
         let idx = $(this).data('key');
         
