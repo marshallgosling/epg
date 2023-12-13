@@ -22,7 +22,7 @@ class BatchModify extends BatchAction
             if($category) {
                 $model->category = $category;
             }
-            if($group && in_array($model->category, ['tvseries', 'tvshow','cartoon','starmade'])) {
+            if($group && in_array($model->category, ['CanXin', 'drama','Entertainm','cartoon'])) {
                 $model->group = $group;
             }
 

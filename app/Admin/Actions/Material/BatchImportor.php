@@ -27,7 +27,7 @@ class BatchImportor extends BatchAction
             
             $program = new $class();
             
-            if(in_array($model->category, ['tvshow', 'tvseries', 'movie','starmade','cartoon']))
+            if(in_array($model->category, ['CanXin', 'drama', 'movie','Entertainm','cartoon']))
             {
                 $class = '\App\Models\Record';
                 $program = new $class();
