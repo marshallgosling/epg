@@ -12,7 +12,7 @@ function loadNotifications()
 function setupHTML(data)
 {
     if(data.total > 0) {
-        $('.notify-total').html(data.total).addClass('label label-warning');
+        $('.notify-total').html(data.total).addClass('label label-danger');
         $('.notify-head').html('共有 '+data.total+' 个通知');
     }
     else {

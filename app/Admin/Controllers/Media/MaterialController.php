@@ -37,7 +37,7 @@ class MaterialController extends AdminController
         $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('unique_no', __('Unique_no'))->sortable();
         $grid->column('name', __('Name'))->sortable(); 
-        $grid->column('group', __('Group'))->hide();  
+        $grid->column('group', __('Group'));  
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
         });

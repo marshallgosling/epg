@@ -7,6 +7,8 @@ use App\Tools\ChannelGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPSTORM_META\elementType;
+
 class fileTool extends Command
 {
     /**
@@ -48,7 +50,7 @@ class fileTool extends Command
 
         foreach($files as $f)
         {
-            $this->info("File name:".$f);
+            //$this->info("File name:".$f);
 
             $item = [
                 'name' => '', 'md5'=>'', 'duration'=>'', 'frames'=>0,'unique_no'=>'','category'=>'','group'=>''
@@ -81,19 +83,25 @@ class fileTool extends Command
 
             $name = (string) $xml->Object[0]->MetaData[0]->sAttribute[0];
             $item['name'] = $name;
-
+            $item['channel'] = 'xkc';
             
 
             if(preg_match('/(\d+)$/', $name, $matches))
             {
                 $ep = (int) $matches[1];
                 if($ep > 1000) {
-                    $item['category'] = 'tvshow';
+                    $item['category'] = 'Entertainm';
                 }
                 else {
-                    $item['category'] = 'tvseries';
-                    $group = str_replace($matches[1], "", $name);
-                    $item['group'] = trim(trim($group), '-');
+                    if($item['frames']<30000)
+                        $item['category'] = 'cartoon';
+                    else if($item['frames'] > 90000)
+                        $item['category'] = 'CanXin';
+                    else
+                        $item['category'] = 'drama';
+                    //$group = str_replace($matches[1], "", $name);
+                    $group = preg_replace('/(\d+)$/', "", $name);
+                    $item['group'] = trim(trim($group), '_-');
                 }
 
                 
@@ -106,11 +114,22 @@ class fileTool extends Command
             
             $item['duration'] = ChannelGenerator::parseFrames($item['frames']);
 
-            $items[] = $item;
+            //$items[] = $item;
+
+            if(! Material::where('unique_no', $item['unique_no'])->exists())
+            {
+                //Material::insert()
+                $items[] = $item;
+
+            }
+            else {
+                $this->error("File name:".$f);
+            }
+
         }
 
-        Material::upsert($items, ['unique_no'], ['frames', 'group', 'category','duration','md5','name']);
-   
+        //Material::upsert($items, ['unique_no'], ['frames', 'group', 'category','duration','md5','name']);
+        Material::insert($items);
         
         return 0;
     }
