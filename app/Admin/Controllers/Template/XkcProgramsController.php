@@ -127,8 +127,8 @@ class XkcProgramsController extends AdminController
         //$form->text('data', __('Unique no'));
         $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
             $form->text('episodes', __('Episodes'))->rules('required');
-            $form->dateRange('start_at', 'end_at', '日期范围')->rules('required');
-            $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS)->rules('required');
+            $form->dateRange('date_from', 'date_to', '日期范围')->rules('required');
+            $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS);
             $form->text('unique_no', '播出编号');
             
         });

@@ -22,6 +22,7 @@ class Channel extends Model
     public const AUDIT = ['未审核', '通过', '不通过'];
 
     public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
+    public const DOTS = ['xkv'=>'info','xkc'=>'warning','xki' =>'success'];
 
     protected $table = 'channel';
 

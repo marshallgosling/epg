@@ -65,6 +65,8 @@ Route::group([
 
     $router->resource('/notifications', 'NotificationController')->names('notification');
 
+    $router->resource('/plans', 'PlanController')->names('plans');
+
     $router->get('/api/notifications', function (Request $request) {
         return response()->json(Notify::readNotifications());
     });
