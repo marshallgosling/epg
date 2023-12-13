@@ -50,7 +50,7 @@ class ChannelXmlController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
-        $grid->column('audit_status', __('Audit status'))->using(Channel::AUDIT)->label(['info','success','danger']);;
+        $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
         /*$grid->column('audit_date', __('Audit date'));
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'));

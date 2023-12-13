@@ -49,11 +49,11 @@ class XkvController extends AdminController
         });
         $grid->column('air_date', __('Air date'));
         $grid->column('name', __('Group'))->hide();
-        $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['warning','danger','success','danger']);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['warning','danger','success','danger']);
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
-        $grid->column('audit_status', __('Audit status'))->using(Channel::AUDIT)->label(['info','success','danger']);;
+        $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
         /*$grid->column('audit_date', __('Audit date'));
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'));
