@@ -40,13 +40,13 @@ class ChannelXmlController extends AdminController
         $grid->model()->orderBy('air_date', 'desc');
 
         $grid->column('id', __('ID'));
-        $grid->column('name', __('Group'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
+        $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="#">'.$uuid.'</a>';
         })->hide();
         $grid->column('air_date', __('Air date'))->sortable();
         //$grid->column('name', __('Name'));
-        $grid->column('status', __('Status'))->using(Channel::STATUS)->label(['warning','danger','success','danger']);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['warning','danger','success','danger']);
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
