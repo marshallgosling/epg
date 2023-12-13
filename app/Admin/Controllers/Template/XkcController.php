@@ -51,11 +51,11 @@ class XkcController extends AdminController
                     
                     if($p->data['dayofweek'])
                         foreach($p->data['dayofweek'] as $d) $days[] = TemplateRecords::DAYS[$d];
-                    $items[] = [ $p->sort, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['unique_no'], '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>'];
+                    $items[] = [ $p->sort, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['unique_no'], '<a href="xkc/programs/'.$p->id.'/edit?template_id='.$this->id.'">编辑</a>'];
                 
                 }
                 else {
-                    $items[] = [ $p->sort, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>' ];
+                    $items[] = [ $p->sort, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit?template_id='.$this->id.'">编辑</a>' ];
                 
                 }
             }
