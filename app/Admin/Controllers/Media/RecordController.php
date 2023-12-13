@@ -36,7 +36,7 @@ class RecordController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Record());
-
+        
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->sortable();

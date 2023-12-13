@@ -34,7 +34,9 @@ Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
         if(array_key_exists('expand', $_REQUEST))$filter->expand();
         $filter->setAction('?expand=1');
     });
-
+    $grid->header(function ($query) {
+        return '<small>按住 shift 键可进行多选操作</small>';
+    });
     $js = <<<JS
     var startmove = false;
     var templist = [];
