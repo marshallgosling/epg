@@ -62,8 +62,8 @@ class RecordController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
 
-            $filter->column(6, function(Grid\Filter $filter) { $filter->like('name', __('Name')); $filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); });
-            $filter->column(6, function(Grid\Filter $filter) { $filter->like('unique_no', __('Unique_no')); });
+            $filter->column(6, function(Grid\Filter $filter) { $filter->olike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); $filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); });
+            $filter->column(6, function(Grid\Filter $filter) { $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配'); });
     
         });
 

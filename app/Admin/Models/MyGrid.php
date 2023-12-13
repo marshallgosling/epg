@@ -16,4 +16,5 @@ class MyGrid extends Grid
             $this->queryString ? ('?'.$this->queryString) : ''
         );
     }
+
 }
