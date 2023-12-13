@@ -70,15 +70,24 @@ class PlanController extends AdminController
         $show->field('id', __('Id'));
         $show->field('group_id', __('Group'));
         $show->field('name', __('Name'));
+
+        $show->divider('播出节目信息');
+        $show->field('type', __('Type'));
+        $show->field('category', __('Category'));
+        $show->field('episodes', __('Episodes'));
+
+        $show->divider('播出时间及周期');
         $show->field('start_at', __('Start at'));
         $show->field('end_at', __('End at'));
         $show->field('date_from', __('Date from'));
         $show->field('date_to', __('Date to'));
-        $show->field('category', __('Category'));
-        $show->field('daysofweek', __('Daysofweek'));
-        $show->field('episodes', __('Episodes'));
+        $show->field('daysofweek', __('Daysofweek'))->as(function($days) {
+            $html = []; foreach($days as $d) $html[] = TemplateRecords::DAYS[$d];
+            return implode(',', $html);
+        });
+        
+        $show->divider('状态及数据');
         $show->field('status', __('Status'));
-        $show->field('type', __('Type'));
         $show->field('data', __('Data'))->json();
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));

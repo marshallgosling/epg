@@ -61,7 +61,7 @@ class MaterialController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
 
-            $filter->olike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
+            $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
             $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
         

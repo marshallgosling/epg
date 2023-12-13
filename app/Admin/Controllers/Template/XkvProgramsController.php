@@ -2,11 +2,11 @@
 
 namespace App\Admin\Controllers\Template;
 
-use App\Admin\Models\MyGrid;
+use App\Admin\Extensions\MyGrid;
 use App\Admin\Actions\Template\Advanced;
 use App\Admin\Actions\Template\BatchReplicate;
 use App\Admin\Actions\Template\Replicate;
-use App\Admin\Models\MyForm;
+use App\Admin\Extensions\MyForm;
 use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Template;

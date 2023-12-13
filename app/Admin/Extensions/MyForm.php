@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Models;
+namespace App\Admin\Extensions;
 
 use Encore\Admin\Form;
 

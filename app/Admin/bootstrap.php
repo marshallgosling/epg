@@ -90,8 +90,6 @@ JS;
     \Encore\Admin\Facades\Admin::script($js);
 });
 
-Encore\Admin\Form::forget(['map', 'editor']);
-
 Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
 
     $form->disableEditingCheck();
@@ -107,3 +105,7 @@ Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
     });
     
 });
+
+Encore\Admin\Form::forget(['map', 'editor']);
+Encore\Admin\Grid\Filter::extend('mlike', \App\Admin\Extensions\MyLike::class);
+
