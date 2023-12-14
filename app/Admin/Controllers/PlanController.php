@@ -71,7 +71,7 @@ class PlanController extends AdminController
         $show->field('group_id', __('Group'));
         $show->field('name', __('Name'));
 
-        $show->divider('播出节目信息');
+        $show->divider();
         $show->field('type', __('Type'));
         $show->field('category', __('Category'));
         $show->field('episodes', __('Episodes'));
