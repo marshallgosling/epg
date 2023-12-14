@@ -127,7 +127,7 @@ class XkcProgramsController extends AdminController
         //$form->text('data', __('Unique no'));
         $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
             $form->select('category', __('Category'))->options(Category::getFormattedCategories())
-                ->load('episodes','/admin/api/episodes')->required();
+                ->load('data_episodes','/admin/api/episodes')->required();
 
             $form->select('episodes', __('Episodes'));
             $form->dateRange('date_from', 'date_to', '日期范围');
