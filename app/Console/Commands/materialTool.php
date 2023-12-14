@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel;
 use App\Models\Material;
+use App\Models\Notification;
 use App\Models\Program;
 use App\Models\Record;
 use App\Tools\ChannelGenerator;
@@ -66,7 +67,16 @@ class materialTool extends Command
     }
 
     private function seconds() {
-        echo Cache::get('notify_ready');
+        
+        $data = ['total'=>(int)Cache::get('notify_total')];
+        foreach(Notification::TYPES as $type)
+        {
+            $data[$type] = (int)Cache::get("notify_$type");
+            $this->info("notify_$type : ".$data[$type]);
+        }
+        
+        $type = 'total';
+        $this->info("notify_$type : ".$data[$type]);
         
     }
 
