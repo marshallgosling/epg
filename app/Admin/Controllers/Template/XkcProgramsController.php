@@ -125,12 +125,11 @@ class XkcProgramsController extends AdminController
        
         $form->text('name', __('Alias'));
         //$form->text('data', __('Unique no'));
-        $form->select('category', __('Category'))->options(Category::getFormattedCategories())
-                ->load('data_episodes','/admin/api/episodes')->required();
+        $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
 
         $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
             
-            $form->select('episodes', __('Episodes'));
+            $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
             $form->dateRange('date_from', 'date_to', '日期范围');
             $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS);
             $form->text('unique_no', '播出编号');
