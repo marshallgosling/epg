@@ -27,13 +27,14 @@ class NotificationController extends AdminController
     {
         $grid = new Grid(new Notification());
 
+        $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
         $grid->column('group_id', __('Group'))->using(Notification::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('name', __('Name'));
         $grid->column('message', __('Message'))->style('max-width:200px;word-break:break-all;');
         $grid->column('type', __('Type'))->using(Notification::TYPES);
         $grid->column('level', __('Level'))->using(Notification::LEVELS);
-        $grid->column('user', __('User'));
+        $grid->column('user', __('User'))->hide();
         $grid->column('viewed', __('Viewed'))->bool();
         
         $grid->column('created_at', __('Created at'))->filter('range', 'datetime');
