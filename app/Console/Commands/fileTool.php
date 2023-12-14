@@ -100,11 +100,11 @@ class fileTool extends Command
                     else
                         $item['category'] = 'drama';
                     //$group = str_replace($matches[1], "", $name);
-                    $group = preg_replace('/(\d+)$/', "", $name);
-                    $item['group'] = trim(trim($group), '_-');
+                    
                 }
 
-                
+                $group = preg_replace('/(\d+)$/', "", $name);
+                $item['group'] = trim(trim($group), '_-');
             }
             else {
                 $item['category'] = 'movie';
