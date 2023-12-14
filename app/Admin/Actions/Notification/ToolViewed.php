@@ -14,12 +14,17 @@ class ToolViewed extends Action
     {
         Notify::setViewed();
         
-        return $this->response()->success(__('Clean success message.'))->refresh();
+        return $this->response()->success(__('Viewed success message.'))->refresh();
     }
 
     public function html()
     {
-        return '<a class="all-viewed btn btn-sm btn-danger"><i class="fa fa-eye"></i> '.$this->name.'</a>';
+        return '<a class="all-viewed btn btn-sm btn-danger"><i class="fa fa-eye"></i> '.__($this->name).'</a>';
+    }
+
+    public function dialog()
+    {
+        $this->confirm(__('Confirm all viewed?'));
     }
 
 }
