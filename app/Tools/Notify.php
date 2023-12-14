@@ -39,7 +39,7 @@ class Notify
                 $notify->viewed = 1;
                 if($notify->isDirty()) {
                     $notify->save();
-                    self::writeNotificationToRedis($notify->type);
+                    self::writeNotificationToRedis((int)$notify->type);
                 }
             }
         }
@@ -72,8 +72,7 @@ class Notify
         $notify->group_id = $group;
         $notify->save();
 
-        
-        
+        self::writeNotificationToRedis((int)$type);   
     }
 
     public static function readDBNotifications()
