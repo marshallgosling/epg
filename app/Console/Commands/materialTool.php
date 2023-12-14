@@ -12,6 +12,7 @@ use App\Models\Record;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -65,7 +66,7 @@ class materialTool extends Command
     }
 
     private function seconds() {
-        Record::loadBumpers();
+        echo Cache::get('notify_ready');
         
     }
 
