@@ -3,6 +3,7 @@
 namespace App\Tools\Statistic;
 
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\Statistic;
 
 class StatisticProgram implements IStatistic
@@ -56,6 +57,12 @@ class StatisticProgram implements IStatistic
             foreach($programs as $pro) {
                 $data = json_decode($pro->data, true);
 
+                if(array_key_exists('replicate', $data)) {
+                    $replicate = $data['replicate'];
+                    $data = ChannelPrograms::where('id', $replicate)->value('data');
+                    $data = json_decode($data, true);
+                }
+                
                 foreach($data as $item)
                 {
                     if(array_key_exists($item['unique_no'], $statistic))
