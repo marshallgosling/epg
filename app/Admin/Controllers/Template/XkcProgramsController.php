@@ -121,12 +121,14 @@ class XkcProgramsController extends AdminController
                 ->options(Template::selectRaw("concat(start_at, ' ', name) as name, id")->where('group_id', $this->group)
                 ->get()->pluck('name', 'id'))->required();
         $form->number('sort', __('Sort'))->min(0)->default(0);
-        $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->required();
        
         $form->text('name', __('Alias'));
         //$form->text('data', __('Unique no'));
         $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
+            $form->select('category', __('Category'))->options(Category::getFormattedCategories())
+                ->load('episodes','/admin/api/episodes')->required();
+
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
             $form->dateRange('date_from', 'date_to', '日期范围');
             $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS);
