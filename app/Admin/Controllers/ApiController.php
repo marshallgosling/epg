@@ -97,7 +97,8 @@ class ApiController extends Controller
         $list = [];
         foreach($items as $item)
         {
-            $list[] = ['id'=>$item->episodes, 'text'=>$item->episodes];
+            if($item->episodes)
+                $list[] = ['id'=>$item->episodes, 'text'=>$item->episodes];
         }
 
         return response()->json($list);
