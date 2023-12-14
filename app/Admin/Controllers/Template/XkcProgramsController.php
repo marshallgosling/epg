@@ -127,12 +127,12 @@ class XkcProgramsController extends AdminController
         //$form->text('data', __('Unique no'));
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
 
-        $form->embeds('data', '模版数据', function (EmbeddedForm $form) {
+        $form->embeds('data', __('TemplateInfo'), function (EmbeddedForm $form) {
             
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
-            $form->dateRange('date_from', 'date_to', '日期范围');
-            $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS);
-            $form->text('unique_no', '播出编号');
+            $form->dateRange('date_from', 'date_to', __('DateRange'));
+            $form->checkbox('dayofweek', __('Daysofweek'))->options(TemplateRecords::DAYS)->canCheckAll();
+            $form->text('unique_no', __('Unique no'));
             
         });
     
@@ -159,11 +159,11 @@ class XkcProgramsController extends AdminController
         <li class="dd-item" data-id="idx">
         <div class="dd-handle bgstyle">
             <input type="checkbox" class="grid-row-checkbox" data-id="id" autocomplete="off">&nbsp;
-            <span style="display:inline-block;width:80px;"><small>类型：</small>
+            <span style="display:inline-block;width:80px;"><small>类型:</small>
             <span class="label label-labelstyle">categorytype</span></span> 
-            <span style="display:inline-block;width:80px;"><small>栏目：</small>
+            <span style="display:inline-block;width:80px;"><small>栏目:</small>
             <a href="javascript:showSearchModal(idx);" class="dd-nodrag" title="">category</a></span>
-            <small> 别名：</small> name&nbsp;
+            <small> 别名:</small> name&nbsp;
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
                 <a href="javascript:showEditorModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
@@ -177,7 +177,7 @@ TMP;
 
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
-        return $content->title('高级编排模式')->description("编排调整模版内容")
+        return $content->title(__('Advanced Mode'))->description(__('Modify Template Content'))
             ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
                     'category'=>['types'=>TemplateRecords::TYPES,'labels'=>TemplateRecords::LABELS], 'list'=>$list]));
     }

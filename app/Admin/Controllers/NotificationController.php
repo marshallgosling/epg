@@ -54,8 +54,6 @@ class NotificationController extends AdminController
             
         });
 
-        Notify::setViewed();
-
         return $grid;
     }
 
@@ -67,6 +65,8 @@ class NotificationController extends AdminController
      */
     protected function detail($id)
     {
+        Notify::setViewed($id);
+
         $show = new Show(Notification::findOrFail($id));
 
         $show->field('id', __('Id'));

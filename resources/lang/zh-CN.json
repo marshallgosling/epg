@@ -50,6 +50,10 @@
     "Date to"       : "至",
     "DateRange"     : "日期范围",
     "Filepath"      : "文件路径",
+    "Select"        : "选择",
+    "Copy"          : "复制",
+    "Del"           : "删除",
+    "Save"          : "保存",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Schedule start at": "计划开始时间",
@@ -62,7 +66,9 @@
     "Data":     "原始数据",
     "ChannelController" : "Channel【V】节目单",
     "ChannelIndexDesc" : "查看和编辑每日节目单数据",
-
+    
+    "Advanced Mode": "高级编排模式",
+    "Modify Template Content": "调整模版编排内容",
     "CategoryController" : "分类管理",
     "MaterialController" : "物料管理",
     "ProgramController" : "节目管理",
@@ -85,8 +91,20 @@
     "Scanner start failed message.": "扫描编单任务启动失败",
     "Scanner start success message.": "扫描编单任务启动成功",
     "No data selected!": "请先选择内容！",
+    "Rollback success": "回退成功",
+    "Please save new ordered list.": "请先保存排序结果。",
+    "PleaseDonotForgotSave": "请别忘记保存修改！",
+    "Drag and Sort": "可拖动排序",
+
     "BasicInfo": "基础信息",
     "TagsInfo": "标签信息",
     "FileInfo": "文件信息",
-    "AuditInfo": "审核信息"
+    "AuditInfo": "审核信息",
+    "TemplateInfo": "模版数据",
+
+
+
+    "具体节目编排": "具体节目编排",
+    "返回普通模式": "返回普通模式"
+
 }

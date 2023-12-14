@@ -20,13 +20,35 @@ class Notify
         foreach(Notification::TYPES as $key=>$type)
             Cache::add("notify_$type", self::getNotificationNumber($key));
 
-        Cache::add('notify_ready', 1, 300);
+        Cache::add('notify_ready', 1);
     }
 
-    public static function setViewed()
+    public static function writeNotificationToRedis($type)
     {
-        Notification::where('viewed', 0)->update(['viewed'=>1]);
-        Cache::add('notify_ready', 0, 300);
+        Cache::add("notify_$type", Notification::where('type', $type)->where('viewed', 0)->count());
+        Cache::add("notify_total", Notification::where('viewed', 0)->count());
+    }
+
+    public static function setViewed($id=0)
+    {
+        if($id) {
+            $notify = Notification::find($id);
+            if($notify)
+            {
+                $notify->viewed = 1;
+                if($notify->isDirty()) {
+                    $notify->save();
+                    self::writeNotificationToRedis($notify->type);
+                }
+            }
+        }
+        else {
+            Notification::where('viewed', '0')->update(['viewed'=>1]);
+            Cache::add('notify_total', 0);
+            foreach(Notification::TYPES as $type)
+                Cache::add("notify_$type", 0);
+        }
+        
     }
 
     public static function isReady()
@@ -49,10 +71,12 @@ class Notify
         $notify->level = $level;
         $notify->group_id = $group;
         $notify->save();
-        Cache::add('notify_ready', 0, 300);
+
+        
+        
     }
 
-    public static function readNotifications()
+    public static function readDBNotifications()
     {
         //if(!self::isReady()) self::writeAllNotificationToRedis();
         $notify = DB::table('notification')->selectRaw("`type`, count(`type`) as total")->groupBy('type')->pluck('total', 'type')->toArray();
@@ -62,6 +86,18 @@ class Notify
         {
             $data[$type] = key_exists($key, $notify) ? (int)$notify[$key] : 0;//(int)Cache::get("notify_$type");
             $data['total'] += $data[$type];
+        }
+        return $data;
+    }
+
+    public static function readCacheNotifications()
+    {
+        if(!self::isReady()) self::writeAllNotificationToRedis();
+        
+        $data = ['total'=>(int)Cache::get('notify_total')];
+        foreach(Notification::TYPES as $type)
+        {
+            $data[$type] = (int)Cache::get("notify_$type");
         }
         return $data;
     }

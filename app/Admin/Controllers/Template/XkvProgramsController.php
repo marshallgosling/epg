@@ -160,21 +160,22 @@ class XkvProgramsController extends AdminController
 
         $list = Template::where('group_id', $this->group)->get();
 
+        $type = __('Type');$cate = __('Category');$name = __('Alias');$select = __('Select');$copy=__('Copy');$del = __('Delete');
         $template = <<<TMP
         <li class="dd-item" data-id="idx">
         <div class="dd-handle bgstyle">
             <input type="checkbox" class="grid-row-checkbox" data-id="id" autocomplete="off">&nbsp;
-            <span style="display:inline-block;width:80px;"><small>类型：</small>
+            <span style="display:inline-block;width:80px;"><small>{$type}:</small>
             <span class="label label-labelstyle">categorytype</span></span> 
-            <span style="display:inline-block;width:80px;"><small>栏目：</small>
+            <span style="display:inline-block;width:80px;"><small>{$cate}:</small>
             <a href="javascript:showSearchModal(idx);" class="dd-nodrag" title="">category</a></span>
-            <small> 别名：</small> name&nbsp;
+            <small> {$name}:</small> name&nbsp;
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
-                <a href="javascript:showEditorModal(idx);" title="选择"><i class="fa fa-edit"></i></a>&nbsp;
-                <a href="javascript:copyProgram(idx);" title="复制"><i class="fa fa-copy"></i></a>&nbsp;
+                <a href="javascript:showEditorModal(idx);" title="{$select}"><i class="fa fa-edit"></i></a>&nbsp;
+                <a href="javascript:copyProgram(idx);" title="{$copy}"><i class="fa fa-copy"></i></a>&nbsp;
                 
-                <a href="javascript:deleteProgram(idx);" title="删除"><i class="fa fa-trash"></i></a>
+                <a href="javascript:deleteProgram(idx);" title="{$del}"><i class="fa fa-trash"></i></a>
             </span>
         </div>
     </li>
@@ -187,7 +188,7 @@ TMP;
 
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
-        return $content->title('高级编排模式')->description("编排调整模版内容")
+        return $content->title(__('Advanced Mode'))->description(__('Modify Template Content'))
             ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
                     'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
     }

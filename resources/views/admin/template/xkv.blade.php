@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
-                <div class="btn-group"><b>具体节目编排</b>&nbsp; &nbsp;</div>
+                <div class="btn-group"><b>{{__('具体节目编排')}}</b>&nbsp; &nbsp;</div>
                 
                 <div class="btn-group">
                     <div class="dropdown">
@@ -20,7 +20,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回普通模式" href="../programs?template_id={{$model->id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回普通模式</span></a>
+                    <a class="btn btn-warning btn-sm" title="{{__('返回普通模式')}}" href="../programs?template_id={{$model->id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> {{__('返回普通模式')}}</span></a>
                 </div>
                 
             </div>
@@ -189,7 +189,7 @@
         $('#btnDelete').on('click', function(e) {
 
             if(sortEnabled) {
-                toastr.error("请先保存排序结果。");
+                toastr.error("{{__('Please save new ordered list.')}}");
                 return;
             }
             var selected = [];
@@ -206,8 +206,8 @@
             {
                 deletedItem.push(dataList.splice(selected[i], 1)[0]);
             }
-            $('#btnSort').html("保存");
-            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+            $('#btnSort').html("{{ __('Save') }}");
+            $('#treeinfo').html('<strong class="text-danger">{{ __("PleaseDonotForgotSave") }}</'+'strong>');
 
             reloadTree();
         });
@@ -215,7 +215,7 @@
         $('#btnRollback').on('click', function(e) {
             if(backupList.length == 0) return;
             if(sortEnabled) {
-                toastr.error("请先保存排序结果。");
+                toastr.error("{{__('Please save new ordered list.')}}");
                 return;
             }
 
@@ -223,7 +223,7 @@
             dataList = backupList.pop();
             
             reloadTree();
-            toastr.success("回退成功");
+            toastr.success("{{__('Rollback success')}}");
 
             if(backupList.length==0)
                 $('#btnRollback').attr('disabled', true);
@@ -239,22 +239,22 @@
             tmp.data = $('#inputData').val();
             dataList[editorIndex] = tmp;
 
-            $('#btnSort').html("保存");
-            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+            $('#btnSort').html("{{ __('Save') }}");
+            $('#treeinfo').html('<strong class="text-danger">{{ __("PleaseDonotForgotSave") }}</'+'strong>');
 
             reloadTree();
         });
 
         $('#btnSort').on('click', function(e) {
-            if($('#btnSort').html() != '保存') {
+            if($('#btnSort').html() != "{{ __('Save') }}") {
                 $('#tree-programs').nestable({maxDepth: 1});
                 $('#tree-programs').on('change', function() {
                     sortChanged = true;
-                    $('#treeinfo').html('<strong class="text-danger">请别忘记保存排序！</'+'strong>');
+                    $('#treeinfo').html('<strong class="text-danger">{{ __("PleaseDonotForgotSave") }}</'+'strong>');
                 });
                 sortEnabled = true;
-                $('#btnSort').html("保存");
-                $('#treeinfo').html('<small>可拖动排序</'+'small>');
+                $('#btnSort').html("{{ __('Save') }}");
+                $('#treeinfo').html('<small>{{ __("Drag and Sort") }}</'+'small>');
             } 
             else {
                 var action = "";
@@ -369,8 +369,8 @@
 
             reloadTree();
             
-            $('#btnSort').html("保存");
-            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+            $('#btnSort').html("{{ __('Save') }}");
+            $('#treeinfo').html('<strong class="text-danger">{{ __("PleaseDonotForgotSave") }}</'+'strong>');
             selectedItem = false;
             $('.search-item').removeClass('info');
             
@@ -434,7 +434,7 @@
 
     function showEditorModal(idx) {
         if(sortEnabled) {
-            toastr.error("请先保存排序结果。");
+            toastr.error("{{__('Please save new ordered list.')}}");
             return;
         }
         editorIndex = idx;
@@ -449,7 +449,7 @@
 
     function showSearchModal(idx) {
         if(sortEnabled) {
-            toastr.error("请先保存排序结果。");
+            toastr.error("{{__('Please save new ordered list.')}}");
             return;
         }
         selectedIndex = idx;
@@ -474,12 +474,12 @@
 
     function deleteProgram (idx) {
         if(sortEnabled) {
-            toastr.error("请先保存排序结果。");
+            toastr.error("{{__('Please save new ordered list.')}}");
             return;
         }
         backupData();
         deletedItem.push(dataList.splice(idx, 1)[0]);
-        $('#btnSort').html("保存");
+        $('#btnSort').html("{{ __('Save') }}");
         $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
         reloadTree();
     }
