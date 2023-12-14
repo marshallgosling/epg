@@ -23,9 +23,10 @@ class Notify
         Cache::add('notify_ready', 1);
     }
 
-    public static function writeNotificationToRedis($type)
+    public static function writeNotificationToRedis($key)
     {
-        Cache::add("notify_$type", Notification::where('type', $type)->where('viewed', 0)->count());
+        $type = Notification::TYPES[$key];
+        Cache::add("notify_{$type}", Notification::where('type', $key)->where('viewed', 0)->count());
         Cache::add("notify_total", Notification::where('viewed', 0)->count());
     }
 
@@ -54,7 +55,6 @@ class Notify
     public static function isReady()
     {
         return (int)Cache::get('notify_ready');
-        
     }
 
     public static function getNotificationNumber($type=-1)
