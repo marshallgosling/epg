@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Tools\Statistic;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
@@ -87,11 +88,35 @@ HTML;
     public static function title() {
         $links = [
             '物料管理' => admin_url('/media/material'),
-            '节目管理' => admin_url('/media/programs'),
-            'XKV' => admin_url('/channel/xkv'),
-            '模版库' => admin_url('/template/xkv'),
+            '黑名单' => admin_url('media/blacklist'),
+            '播出计划' => admin_url('plans'),
+            '播出串联单' => admin_url('export/xml'),
+            '通知' => admin_url('notifications')
         ];
-        return view('admin.dashboard', ['title'=>'', 'links'=>$links]);
+
+        $templates = Statistic::countTemplate();
+        $channellist = Statistic::countChannelXml();
+
+        $channels =[
+          '频道 XKV' => [
+            '节目库内容数量 <span class="badge">'.Statistic::countPrograms().'</span>' => admin_url('/media/programs'),
+            '模版库数量 <span class="badge">'.$templates['xkv'].'</span>' => admin_url('/template/xkv'),
+            '编单数量 <span class="badge">'.$channellist['xkv'].'</span>' => admin_url('/channel/xkv'),
+          ],
+          '频道 XKC' => [
+            '节目库内容数量 <span class="badge">'.Statistic::countRecords().'</span>' => admin_url('/media/records'),
+            '模版库数量 <span class="badge">'.$templates['xkc'].'</span>' => admin_url('/template/xkc'),
+            '编单数量 <span class="badge">'.$channellist['xkc'].'</span>' => admin_url('/channel/xkc'),
+          ],
+          '频道 XKI' => [
+            '节目库' => '#',
+            '模版库' => '#',
+            '编单列表' => '#',
+          ]
+        ];
+
+        $title = '';
+        return view('admin.dashboard', compact('title', 'links', 'channels'));
     }
 
     public static function environment()
