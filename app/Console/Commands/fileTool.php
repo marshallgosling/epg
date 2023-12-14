@@ -16,7 +16,7 @@ class fileTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:file {path?}';
+    protected $signature = 'tools:file {path?} {tags?}';
 
     /**
      * The console command description.
@@ -43,6 +43,7 @@ class fileTool extends Command
     public function handle()
     {
         $path = $this->argument('path') ?? "xml";
+        $tags = $this->argument('tags') ?? "";
 
         $files = Storage::disk('data')->files($path);
 
@@ -85,7 +86,6 @@ class fileTool extends Command
             $item['name'] = $name;
             $item['channel'] = 'xkc';
             
-
             if(preg_match('/(\d+)$/', $name, $matches))
             {
                 $ep = (int) $matches[1];
@@ -110,7 +110,7 @@ class fileTool extends Command
                 $item['category'] = 'movie';
             }
 
-
+            if($tags != "") $item['category'] = $tags;
             
             $item['duration'] = ChannelGenerator::parseFrames($item['frames']);
 
