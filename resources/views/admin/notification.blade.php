@@ -11,7 +11,7 @@
       
     </ul>
   </li>
-  <li class="footer"><a href="/notifications">查看所有</a></li>
+  <li class="footer"><a href="/admin/notifications">查看所有</a></li>
 </ul>
 </li>
 <script src="/vendor/laravel-admin/notification.js"></script>
