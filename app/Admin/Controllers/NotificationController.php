@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Notification\BatchViewed;
+use App\Admin\Actions\Notification\ToolViewed;
 use App\Models\Notification;
 use App\Tools\Notify;
 use Encore\Admin\Controllers\AdminController;
@@ -30,7 +32,7 @@ class NotificationController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
         $grid->column('viewed', __('Viewed'))->bool();
-        
+
         $grid->column('group_id', __('Group'))->using(Notification::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('name', __('Name'));
         $grid->column('message', __('Message'))->style('max-width:200px;word-break:break-all;');
@@ -55,6 +57,14 @@ class NotificationController extends AdminController
                 $filter->equal('level', __('Level'))->radio(Notification::LEVELS);
             });
             
+        });
+
+        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
+            $actions->add(new BatchViewed);
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new ToolViewed);
         });
 
         return $grid;
