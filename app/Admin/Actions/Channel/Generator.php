@@ -22,6 +22,8 @@ class Generator extends RowAction
             return $this->response()->error(__('Generator start failed message.'))->refresh();
         }
 
+        if($model->name == 'xkc') return $this->response()->success(__('Generator closed.'))->refresh();
+
         ProgramsJob::dispatch($model->uuid);
         $model->status = Channel::STATUS_RUNNING;
         $model->save();

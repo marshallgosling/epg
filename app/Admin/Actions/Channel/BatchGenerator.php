@@ -14,6 +14,8 @@ class BatchGenerator extends BatchAction
 
     public function handle(Collection $collection)
     {
+        return $this->response()->success(__('Generator closed.'))->refresh();
+        
         $group = '';
         foreach ($collection as $model) 
         {
