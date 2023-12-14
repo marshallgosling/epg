@@ -11,7 +11,7 @@ class ApiController extends Controller
 {
     public function notifications()
     {
-        return response()->json(Notify::readCacheNotifications());
+        return response()->json(Notify::readDBNotifications());
     }
 
     public function treePrograms(Request $request) {

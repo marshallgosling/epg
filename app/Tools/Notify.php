@@ -78,7 +78,7 @@ class Notify
     public static function readDBNotifications()
     {
         //if(!self::isReady()) self::writeAllNotificationToRedis();
-        $notify = DB::table('notification')->selectRaw("`type`, count(`type`) as total")->groupBy('type')->pluck('total', 'type')->toArray();
+        $notify = DB::table('notification')->where('viewed', 0)->selectRaw("`type`, count(`type`) as total")->groupBy('type')->pluck('total', 'type')->toArray();
     
         $data = ['total'=>0];//['total'=>(int)Cache::get('notify_total')];
         foreach(Notification::TYPES as $key=>$type)
