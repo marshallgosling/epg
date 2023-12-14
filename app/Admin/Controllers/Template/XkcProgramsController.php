@@ -129,7 +129,7 @@ class XkcProgramsController extends AdminController
             $form->select('category', __('Category'))->options(Category::getFormattedCategories())
                 ->load('episodes','/admin/api/episodes')->required();
 
-            $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
+            $form->select('episodes', __('Episodes'));
             $form->dateRange('date_from', 'date_to', '日期范围');
             $form->checkbox('dayofweek', '日期')->options(TemplateRecords::DAYS);
             $form->text('unique_no', '播出编号');
