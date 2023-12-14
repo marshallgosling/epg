@@ -135,7 +135,6 @@ class XkcProgramsController extends AdminController
             $form->text('unique_no', '播出编号');
             
         });
-        
     
         $form->saved(function (Form $form) {
             $temp = Template::find($form->template_id);

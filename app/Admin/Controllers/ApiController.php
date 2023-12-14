@@ -92,7 +92,8 @@ class ApiController extends Controller
         
         $q = $request->get('q');
 
-        $items = DB::table('records')->where('category', 'like', "%$q%")->selectRaw('distinct(episodes)')->get()->toArray();
+        $items = DB::table('records')->where('category', 'like', "%$q%")->selectRaw('distinct(episodes)')
+                ->orderBy('episodes')->get()->toArray();
 
         $list = [];
         foreach($items as $item)
