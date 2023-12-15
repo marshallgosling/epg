@@ -116,11 +116,11 @@ class RecordController extends AdminController
         
         $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories('tags', true))->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
-        $form->text('air_date', __('Air date'));
-        $form->text('expired_date', __('Expired date'));
-        
         $form->text('episodes', __('Episodes'));
         $form->text('ep', __('Ep'));
+
+        $form->text('air_date', __('Air date'));
+        $form->text('expired_date', __('Expired date'));
 
         $form->switch('black', __('BlackList'));
 

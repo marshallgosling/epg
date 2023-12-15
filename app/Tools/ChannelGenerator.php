@@ -152,7 +152,7 @@ class ChannelGenerator
         $schedule_end = 0;
         $start_end = '';
         //$class::loadBlackList();
-        $class::loadBumpers();
+        Record::loadBumpers();
         
 
         foreach($this->daily as $t) {    
@@ -246,7 +246,7 @@ class ChannelGenerator
         foreach($templates as $p) {
             $item = false;
 
-            if(!in_array($dayofweek, $p->data['daysofweek'])) continue;
+            if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
 
             if($p->type == TemplateRecords::TYPE_RANDOM) {
                 $item = Record::findNextAvaiable($p, $maxduration);

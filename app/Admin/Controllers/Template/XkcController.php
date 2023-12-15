@@ -93,7 +93,7 @@ class XkcController extends AdminController
         });
 
         $grid->actions(function ($actions) {
-            $actions->add(new Programs);
+            //$actions->add(new Programs);
             $actions->add(new ReplicateTemplate);
         });
 
