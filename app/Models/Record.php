@@ -87,6 +87,8 @@ class Record extends Model
             
             $data['episodes'] = $item->episodes;
             $data['unique_no'] = $item->unique_no;
+            $data['name'] = $item->name;
+            $data['result'] = '编排中';
 
             $template->data = $data;
             $template->save();
@@ -115,7 +117,7 @@ class Record extends Model
             $data['episodes'] = $item->episodes;
             $data['unique_no'] = $item->unique_no;
             $data['result'] = '编排中';
-
+            $data['name'] = $item->name;
         }
 
         $template->data = $data;

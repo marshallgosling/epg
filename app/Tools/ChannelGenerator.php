@@ -254,6 +254,7 @@ class ChannelGenerator
                     $data = $p->data;
                     $data['episodes'] = null;
                     $data['unique_no'] = '';
+                    $data['name'] = '';
                     $data['result'] = '';
                     $p->data = $data;
  
@@ -390,7 +391,7 @@ class ChannelGenerator
         //$air = $this->air + $seconds;
 
         $this->duration += $seconds;
-        
+
         $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $this->air));
                     
         $this->air += $seconds;
