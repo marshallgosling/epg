@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Tools\ChannelGenerator;
 use App\Tools\Notify;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,7 @@ class Record extends Model
     private static $cache = [];
     private static $blacklist = [];
     private static $bumper = false;
+    private static $pr = false;
     public static $daysofweek = '0';
 
     public static function loadBlackList()
@@ -48,7 +50,7 @@ class Record extends Model
         self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
     }
 
-    public static function findRandom($key)
+    public static function findRandom($key, $maxduration)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('records.unique_no')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('records.category','like',"%$key%")->pluck('unique_no')->toArray();
 
@@ -62,7 +64,9 @@ class Record extends Model
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
             ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
 
-        if($program && $program->black) return self::findRandom($key);
+        $seconds = ChannelGenerator::parseDuration($program->duration);
+        if($seconds > $maxduration) return self::findRandom($key, $maxduration);
+        if($program && $program->black) return self::findRandom($key, $maxduration);
         else return $program;
     }
 
@@ -72,13 +76,13 @@ class Record extends Model
      * 
      * @param TemplateRecords $template
      */
-    public static function findNextAvaiable(TemplateRecords $template) {
+    public static function findNextAvaiable(TemplateRecords $template, int $maxduration) {
         if($template->category == 'movie')
-            return self::findRandom($template->category);
+            return self::findRandom($template->category, $maxduration);
        
         //$data = json_decode(json_encode($template->data));
         if($template->data['episodes'] == null) {
-            $item = self::findRandomEpisode($template->category);
+            $item = self::findRandomEpisode($template->category, $maxduration);
             $template->data['episodes'] = $item->episodes;
             $template->data['unique_no'] = $item->unique_no;
 
@@ -118,7 +122,7 @@ class Record extends Model
 
     public static function findNextEpisode($episodes, $unique_no='', $category='')
     {
-        if($episodes == null) return self::findRandomEpisode($category);
+        //if($episodes == null) return self::findRandomEpisode($category);
         $list = Record::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         foreach($list as $idx=>$l)
         {
@@ -136,9 +140,9 @@ class Record extends Model
         return 'empty';
     }
 
-    public static function findRandomEpisode($c)
+    public static function findRandomEpisode($c, $maxduration)
     {
-        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('category', 'like', "%$c%")->get()->toArray();
+        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('category', 'like', "%$c%")->get()->toArray();
 
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
@@ -169,6 +173,20 @@ class Record extends Model
             ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findBumper($key);
+        else return $program;
+    }
+
+    public static function findPR($category) {
+        if(!self::$pr) self::$pr = Record::where('category', $category)->select('unique_no')->pluck('unique_no')->toArray();
+
+        self::$pr = Arr::shuffle(self::$pr);
+        $id = Arr::random(self::$pr);
+
+        $program = Record::where('records.unique_no', $id)
+        ->join('material', 'records.unique_no', '=', 'material.unique_no')
+        ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
+
+        if($program && $program->black) return self::findPR($category);
         else return $program;
     }
 

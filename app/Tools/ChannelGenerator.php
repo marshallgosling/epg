@@ -33,6 +33,8 @@ class ChannelGenerator
      * 统计一档节目的时长，更换新节目时重新计算
      */
     private $duration;
+
+    private $maxDuration = 0;
     
     public function __construct()
     {
@@ -135,7 +137,7 @@ class ChannelGenerator
         
     }
 
-    public function generateXkc($channel)
+    public function generateXkc(Channel $channel)
     {
         if(!$channel) {
                 
@@ -151,6 +153,7 @@ class ChannelGenerator
         $start_end = '';
         //$class::loadBlackList();
         $class::loadBumpers();
+        
 
         foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
@@ -158,6 +161,7 @@ class ChannelGenerator
             if($this->air == 0) {
                 $this->air = strtotime($channel->air_date.' '.$t->start_at);
                 $start_end = $t->start_at;
+                $dayofweek = date('N', $this->air);
             }
 
             $this->duration = 0;
@@ -170,7 +174,7 @@ class ChannelGenerator
             $c->start_at = date('Y-m-d H:i:s', $this->air);
             $c->version = '1';
             $c->sort = $t->sort;
-
+            
             $schedule_duration = self::parseDuration($t->duration);
             $schedule_end = strtotime($channel->air_date.' '.$t->end_at); 
             if($schedule_end < $this->air) $schedule_end += 86400;
@@ -179,10 +183,25 @@ class ChannelGenerator
             
             $programs = $t->records()->get();
 
-            $data = $this->addRecordItem($programs);
+            $this->maxDuration = $schedule_duration + (int)config('MAX_DURATION_GAP', 600);
+            $data = $this->addRecordItem($programs, $this->maxDuration, $dayofweek);
+
+            $break_level = 5;
+            while(abs($schedule_duration - $this->duration) > (int)config('MAX_GENERATION_GAP', 300))
+            {
+                $pr = $this->addPRItem();
+                if($pr) {
+                    $data[] = $pr;
+                }
+                $break_level --;
+                if($break_level < 0) {
+                    
+                    break;
+                }
+            }
 
             $break_level = 3;
-            while(abs($schedule_duration - $this->duration) > (int)config('GENERATE_GAP', 300))
+            while(abs($schedule_duration - $this->duration) > (int)config('MAX_GENERATION_GAP', 300))
             {
                 // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
                 // 凑时间，凑节目数
@@ -220,21 +239,23 @@ class ChannelGenerator
 
     }
 
-    public function addRecordItem($programs)
+    public function addRecordItem($templates, $maxduration, $dayofweek='')
     {
         $data = [];
         
-        foreach($programs as $p) {
+        foreach($templates as $p) {
             $item = false;
 
+            if(!in_array($dayofweek, $p->data['daysofweek'])) continue;
+
             if($p->type == TemplateRecords::TYPE_RANDOM) {
-                $item = Record::findNextAvaiable($p);
+                $item = Record::findNextAvaiable($p, $maxduration);
                 if(!$item) {
                     $p->data['episodes'] = null;
                     $p->data['unique_no'] = '';
                     $p->data['result'] = '';
  
-                    $item = Record::findNextAvaiable($p);
+                    $item = Record::findNextAvaiable($p, $maxduration);
                 }
 
                 if(!$item) {
@@ -242,7 +263,9 @@ class ChannelGenerator
                 }
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
-                $item = Record::findNextAvaiable($p);
+
+
+                $item = Record::findNextAvaiable($p, $maxduration);
 
                 if(!$item) continue;
             }
@@ -263,8 +286,8 @@ class ChannelGenerator
                         
                     $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
 
-                    // Only save once;
-                    continue;
+                    // Only add once;
+                    break;
                 }
                 else {
 
@@ -278,7 +301,7 @@ class ChannelGenerator
             }
         }
 
-        if(count($data) == 0) {
+        if(!count($data)) {
             $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
         }
         return $data;
@@ -353,6 +376,26 @@ class ChannelGenerator
 
         return $data;
 
+    }
+
+    public function addPRItem($category='XK PR')
+    {
+        $item = Record::findPR($category);
+
+        $this->info("find bumper: {$item->name} {$item->duration}");
+        $seconds = ChannelGenerator::parseDuration($item->duration);
+
+        //$air = $this->air + $seconds;
+
+        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $this->air));
+                    
+        $this->air += $seconds;
+
+        $line['end_at'] = date('H:i:s', $this->air);
+
+        $this->info("添加PR 节目: {$category} {$item->name} {$item->duration}");
+
+        return $line;
     }
 
     public function addBumperItem($schedule_end, $break_level, $class, $category='m1')
