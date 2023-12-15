@@ -45,13 +45,14 @@ class fileTool extends Command
         $path = $this->argument('path') ?? "xml";
         $tags = $this->argument('tags') ?? "";
 
-        $files = Storage::disk('data')->files($path);
+        $files = Storage::disk('data')->files($path, true);
 
         $items = [];
 
         foreach($files as $f)
         {
             //$this->info("File name:".$f);
+            if(!strpos($f, ".xml")) continue;
 
             $item = [
                 'name' => '', 'md5'=>'', 'duration'=>'', 'frames'=>0,'unique_no'=>'','category'=>'','group'=>''
