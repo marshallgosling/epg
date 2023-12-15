@@ -60,7 +60,7 @@ class XkcController extends AdminController
                 }
             }
 
-            return new Table(['序号', '别名', '栏目', '类型', '剧集', '播出时间', '播出日', '当前选集', '操作'], $items);
+            return new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '操作'], $items);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';
@@ -81,7 +81,6 @@ class XkcController extends AdminController
             Template::STATUS_SYNCING => 'success',
             Template::STATUS_STOPED => 'danger'
         ]);
-
         
         $grid->column('updated_at', __('Updated at'));
 
