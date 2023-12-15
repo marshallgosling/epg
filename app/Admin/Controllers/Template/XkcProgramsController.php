@@ -159,10 +159,10 @@ class XkcProgramsController extends AdminController
             }
         });
 
-        $form->tools(function (Form\Tools $tools) {
-            $tools->disableDelete(false);
-        });
-
+        // $form->tools(function (Form\Tools $tools) {
+        //     $tools->disableDelete(false);
+        // });
+        
         return $form;
     }
 
