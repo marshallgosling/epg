@@ -119,8 +119,8 @@ class fileTool extends Command
 
             if(! Material::where('unique_no', $item['unique_no'])->exists())
             {
-                //Material::insert()
-                $items[] = $item;
+                Material::create($item);
+                //$items[] = $item;
 
             }
             else {
@@ -130,7 +130,7 @@ class fileTool extends Command
         }
 
         //Material::upsert($items, ['unique_no'], ['frames', 'group', 'category','duration','md5','name']);
-        Material::insert($items);
+        //Material::insert($items);
         
         return 0;
     }
