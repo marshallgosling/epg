@@ -146,6 +146,7 @@ class channelTool extends Command
         $this->info("Generate programs date: {$channel->air_date} succeed. ");
         
         Notify::fireNotify(
+            $channel->name,
             Notification::TYPE_GENERATE, 
             "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
             "频道节目时间 $start_end"

@@ -389,9 +389,12 @@ class ChannelGenerator
 
         //$air = $this->air + $seconds;
 
+        $this->duration += $seconds;
+        
         $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $this->air));
                     
         $this->air += $seconds;
+        
 
         $line['end_at'] = date('H:i:s', $this->air);
 
