@@ -67,6 +67,15 @@ class materialTool extends Command
     }
 
     private function seconds() {
+        $items = Record::where('seconds', 0)->select('id','duration','seconds')->get();
+        foreach($items as $item)
+        {
+            $item->seconds = ChannelGenerator::parseDuration($item->duration);
+            $item->save();
+        }
+    }
+
+    private function notify() {
         
         $data = ['total'=>(int)Cache::get('notify_total')];
         foreach(Notification::TYPES as $type)
