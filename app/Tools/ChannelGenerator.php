@@ -7,8 +7,11 @@ use App\Models\Channel;
 use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
+use App\Models\Notification;
 use App\Models\Program;
+use App\Models\Record;
 use App\Models\TemplatePrograms;
+use App\Models\TemplateRecords;
 use Carbon\Carbon;
 
 class ChannelGenerator
@@ -45,9 +48,9 @@ class ChannelGenerator
      */
     public function loadTemplate($group='default')
     {
-        $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->with('programs')->orderBy('sort', 'asc')->get();
-        $this->weekends = Template::where(['group_id'=>$group,'schedule'=>Template::WEEKENDS,'status'=>Template::STATUS_SYNCING])->with('programs')->orderBy('sort', 'asc')->get();
-        $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->with('programs')->orderBy('sort', 'asc')->get();
+        $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $this->weekends = Template::where(['group_id'=>$group,'schedule'=>Template::WEEKENDS,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
     }
 
     private function loadWeekendsTemplate($date, $daily)
@@ -174,9 +177,9 @@ class ChannelGenerator
 
             $this->info("开始生成节目单: {$t->name} {$t->start_at}");
             
-            $programs = $t->programs()->get();
+            $programs = $t->records()->get();
 
-            $data = $this->addProgramItem($programs, $class);
+            $data = $this->addRecordItem($programs);
 
             $break_level = 3;
             while(abs($schedule_duration - $this->duration) > (int)config('GENERATE_GAP', 300))
@@ -216,6 +219,71 @@ class ChannelGenerator
         return $start_end;
 
     }
+
+    public function addRecordItem($programs)
+    {
+        $data = [];
+        
+        foreach($programs as $p) {
+            $item = false;
+
+            if($p->type == TemplateRecords::TYPE_RANDOM) {
+                $item = Record::findNextAvaiable($p);
+                if(!$item) {
+                    $p->data['episodes'] = null;
+                    $p->data['unique_no'] = '';
+                    $p->data['result'] = '';
+ 
+                    $item = Record::findNextAvaiable($p);
+                }
+
+                if(!$item) {
+                    Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
+                }
+            }
+            else if($p->type == TemplateRecords::TYPE_STATIC) {
+                $item = Record::findNextAvaiable($p);
+
+                if(!$item) continue;
+            }
+            
+            if($item) {
+                $seconds = self::parseDuration($item->duration);
+                if($seconds > 0) {
+                    
+                    $this->duration += $seconds;
+                    
+                    $line = ChannelGenerator::createItem($item, $p->category, date('H:i:s', $this->air));
+                    
+                    $this->air += $seconds;
+
+                    $line['end_at'] = date('H:i:s', $this->air);
+
+                    $data[] = $line;
+                        
+                    $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
+
+                    // Only save once;
+                    continue;
+                }
+                else {
+
+                    $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+
+                }
+            }
+            else
+            {
+                $this->warn("栏目 {$p->id} {$p->category} 内没有任何节目");
+            }
+        }
+
+        if(count($data) == 0) {
+            $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
+        }
+        return $data;
+    }
+
 
     public function addProgramItem($programs, $class)
     {

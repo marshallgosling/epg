@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Tools\Notify;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -40,6 +41,7 @@ class Record extends Model
     private static $cache = [];
     private static $blacklist = [];
     private static $bumper = false;
+    public static $daysofweek = '0';
 
     public static function loadBlackList()
     {
@@ -64,23 +66,74 @@ class Record extends Model
         else return $program;
     }
 
-    public static function findNextEpisode($name, $code='', $category='')
+    /**
+     * 根据模版数据寻找匹配的节目，并更新模版数据
+     * 这里假设模版条件已经符合要求
+     * 
+     * @param TemplateRecords $template
+     */
+    public static function findNextAvaiable(TemplateRecords $template) {
+        if($template->category == 'movie')
+            return self::findRandom($template->category);
+       
+        //$data = json_decode(json_encode($template->data));
+        if($template->data['episodes'] == null) {
+            $item = self::findRandomEpisode($template->category);
+            $template->data['episodes'] = $item->episodes;
+            $template->data['unique_no'] = $item->unique_no;
+
+            $template->save();
+            return $item;
+        }
+
+        $item = self::findNextEpisode($template->data['episodes'], $template->data['unique_no']);
+
+        if($item == 'finished') {
+            if($template->type == TemplateRecords::TYPE_STATIC) {
+                Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
+
+                $template->data['result'] = '编排完';
+                $template->save();
+            }
+            $item = false;
+        }
+        else if($item == 'empty') {
+            if($template->type == TemplateRecords::TYPE_STATIC) {
+                Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
+
+                $template->data['result'] = '未找到';
+                $template->save();
+            }
+            $item = false;
+        }
+        else {
+            $template->data['episodes'] = $item->episodes;
+            $template->data['unique_no'] = $item->unique_no;
+            $template->data['result'] = '编排中';
+            $template->save();
+        }
+ 
+        return $item;
+    }
+
+    public static function findNextEpisode($episodes, $unique_no='', $category='')
     {
-        $list = Record::where('episodes', $name)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
+        if($episodes == null) return self::findRandomEpisode($category);
+        $list = Record::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         foreach($list as $idx=>$l)
         {
-            if($code == '') return $l;
-            if($l->unique_no == $code) {
+            if($unique_no == '') return $l;
+            if($l->unique_no == $unique_no) {
                 $idx ++;
-                if($idx == count($list)) {
-                    return false;
+                if($idx == count($list)) {            
+                    return 'finished';
                 }
                 else {
                     return $list[$idx];
                 }
             }
         }
-        return false;
+        return 'empty';
     }
 
     public static function findRandomEpisode($c)
