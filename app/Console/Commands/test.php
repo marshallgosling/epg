@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Record;
 use Illuminate\Console\Command;
 
 class test extends Command
@@ -28,7 +29,10 @@ class test extends Command
     public function handle()
     {
         $v = $this->argument('v') ?? "";
-        $this->info('Day of week:'.date('N', strtotime($v.' 17:00:00')));
+        
+        $d = Record::findRandomEpisode($v, 1800);
+
+        print_r($d);
         return 0;
     }
 }
