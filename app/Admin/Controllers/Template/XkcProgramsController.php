@@ -41,15 +41,30 @@ class XkcProgramsController extends AdminController
 
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->hide();
         
         $grid->column('sort', __('Sort'));
 
-        $grid->column('type', __('Type'))->filter(TemplateRecords::TYPES)->using(TemplateRecords::TYPES, 0)->label(TemplateRecords::LABELS);
-        
-        $grid->column('category', __('Category'));
-        
         $grid->column('name', __('Alias'));
+
+        $grid->column('type', __('Type'))->filter(TemplateRecords::TYPES)->using(TemplateRecords::TYPES, 0)->label(TemplateRecords::LABELS);
+        $grid->column('category', __('Category'));
+
+        $grid->column('daysofweek', __('Daysofweek'))->display(function () {
+            if($this->data != null) {
+                $days = [];
+                if(count($this->data['dayofweek']) == 7) return __('全天');
+                if($this->data['dayofweek'])
+                    foreach($this->data['dayofweek'] as $d) $days[] = TemplateRecords::DAYS[$d];
+                return implode(',', $days);
+            }
+        });
+        $grid->column('daterange', __('DateRange'))->display(function () {
+            if($this->data != null) {return $this->data['date_from'].'/'.$this->data['date_to'];}
+        });
+        $grid->column('episodes', __('Episodes'))->display(function () {
+            if($this->data != null) {return $this->data['episodes'];}
+        });
         //$grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 

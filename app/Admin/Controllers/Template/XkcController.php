@@ -48,9 +48,9 @@ class XkcController extends AdminController
             {
                 if($p->data != null) {
                     $days = [];
-                    
-                    if($p->data['dayofweek'])
-                        foreach($p->data['dayofweek'] as $d) $days[] = TemplateRecords::DAYS[$d];
+                    if(count($p->data['dayofweek']) == 7) $days[] = __('全天');
+                    else if($p->data['dayofweek'])
+                        foreach($p->data['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
                     $items[] = [ $p->sort, $p->name, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['unique_no'], '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>'];
                 
                 }
