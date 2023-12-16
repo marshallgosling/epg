@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Record;
+use App\Tools\ChannelGenerator;
 use Illuminate\Console\Command;
 
 class test extends Command
@@ -30,9 +31,10 @@ class test extends Command
     {
         $v = $this->argument('v') ?? "";
         
-        $d = Record::findRandomEpisode($v, 1800);
+        $n = new ChannelGenerator('xkc');
+        $n->makeCopyTemplate();
 
-        print_r($d);
+        //print_r($d);
         return 0;
     }
 }

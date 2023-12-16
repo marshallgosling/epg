@@ -54,7 +54,7 @@ class ChannelGenerator
      */
     public function loadTemplate($group=false)
     {
-        $group = $group ?? $this->group;
+        $group = $this->group;
         $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->weekends = Template::where(['group_id'=>$group,'schedule'=>Template::WEEKENDS,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
@@ -62,7 +62,7 @@ class ChannelGenerator
 
     public function makeCopyTemplate($group=false)
     {
-        $group = $group ?? $this->group;
+        $group = $this->group;
 
         DB::table('temp_template')->where('group_id', $group)->delete();
         DB::table('temp_template')->insertUsing(Template::PROPS, 
