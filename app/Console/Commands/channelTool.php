@@ -9,6 +9,7 @@ use App\Models\Channel;
 use App\Models\Notification;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
+use App\Tools\GenerationException;
 use App\Tools\Notify;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -142,7 +143,7 @@ class channelTool extends Command
             else
                 $start_end = $generator->generate($channel);
 
-        }catch(\Exception $e)
+        }catch(GenerationException $e)
         {
             $this->error($e->getMessage());
             Notify::fireNotify(

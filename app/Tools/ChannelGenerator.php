@@ -298,7 +298,7 @@ class ChannelGenerator
 
                 if(!$item) {
                     Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
-                    throw new \Exception("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
+                    throw new GenerationException("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
                 }
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
@@ -330,19 +330,19 @@ class ChannelGenerator
                 else {
 
                     $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
-                    throw new \Exception("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
+                    throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
                 }
             }
             else
             {
                 $this->warn("栏目 {$p->id} {$p->category} 内没有任何节目");
-                throw new \Exception("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
+                throw new GenerationException("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
             }
         }
 
         if(!count($data)) {
             $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
-            throw new \Exception("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE);
+            throw new GenerationException("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE);
         }
         return $data;
     }

@@ -14,6 +14,7 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Tools\ChannelGenerator;
+use App\Tools\GenerationException;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
@@ -102,7 +103,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
 
             try {
                 $start_end = $generator->generateXkc($channel);
-            }catch(\Exception $e)
+            }catch(GenerationException $e)
             {
                 Notify::fireNotify(
                     $channel->name,
