@@ -292,12 +292,12 @@ class ChannelGenerator
             if($p->type == TemplateRecords::TYPE_RANDOM) {
                 $item = Record::findNextAvaiable($p, $maxduration);
                 if(!$item) {
-                    $data = $p->data;
-                    $data['episodes'] = null;
-                    $data['unique_no'] = '';
-                    $data['name'] = '';
-                    $data['result'] = '';
-                    $p->data = $data;
+                    $d = $p->data;
+                    $d['episodes'] = null;
+                    $d['unique_no'] = '';
+                    $d['name'] = '';
+                    $d['result'] = '';
+                    $p->data = $d;
  
                     $item = Record::findNextAvaiable($p, $maxduration);
                 }
