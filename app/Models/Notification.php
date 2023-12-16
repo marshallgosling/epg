@@ -23,7 +23,7 @@ class Notification extends Model
     public const LEVEL_ERROR = 'danger';
 
     public const TYPES = ['generate', 'excel', 'xml', 'audit', 'statistic', 'blacklist'];
-    public const LEVELS = ['info'=>'信息', 'warning'=>'警告', 'danger'=>'错误'];
+    public const LEVELS = ['info'=>'信息', 'warning'=>'警告', 'error'=>'错误'];
 
     public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
 
