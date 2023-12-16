@@ -64,7 +64,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
 
         $error = false;
 
-        $channels = Channel::where('name', $this->group)->where('status', Channel::STATUS_RUNNING)->orderBy('air_date')->get();
+        $channels = Channel::where('name', $this->group)->where('status', Channel::STATUS_WAITING)->orderBy('air_date')->get();
 
         if(!$channels) {
             $this->error("频道 {$this->group} 不存在");
@@ -86,6 +86,8 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                     "频道 {$channel->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
                     Notification::LEVEL_WARN
                 );
+                $channel->status = Channel::STATUS_ERROR;
+                $channel->save();
                 continue;
             }
 
