@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Template;
 
 use App\Admin\Actions\Template\BatchDisable;
 use App\Admin\Actions\Template\BatchEnable;
+use App\Admin\Actions\Template\FixStall;
 use App\Models\Temp\Template;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -103,7 +104,11 @@ class TempController extends AdminController
 
         $grid->disableCreateButton();
         $grid->disableBatchActions();
-        $grid->disableActions();
+        //$grid->disableActions();
+        $grid->tools(function (Grid\Tools $tools) {
+            
+            $tools->append(new FixStall());
+        });
 
         // $grid->actions(function ($actions) {
         //     //$actions->add(new Programs);
