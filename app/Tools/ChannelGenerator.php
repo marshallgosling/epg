@@ -222,7 +222,7 @@ class ChannelGenerator
             $programs = $t->records()->get();
 
             $this->maxDuration = $schedule_duration + (int)config('MAX_DURATION_GAP', 600);
-            $data = $this->addRecordItem($programs, $this->maxDuration, strtotime($channel->air_date. ' 17:00:00'), $dayofweek);
+            $data = $this->addRecordItem($programs, $this->maxDuration, strtotime($channel->air_date), $dayofweek);
 
             $break_level = 5;
             while(abs($schedule_duration - $this->duration) > (int)config('MAX_GENERATION_GAP', 300))
