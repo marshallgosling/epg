@@ -55,12 +55,12 @@ class NotificationController extends AdminController
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(4, function (Grid\Filter $filter) {
                 $filter->equal('group_id', __('Group'))->radio(Notification::GROUPS);
-                $filter->like('name', __('Name'));
-                
+                $filter->equal('level', __('Level'))->radio(Notification::LEVELS);
+              
             });
             $filter->column(8, function (Grid\Filter $filter) {
-                $filter->equal('type', __('Type'))->radio(Notification::TYPES);
-                $filter->equal('level', __('Level'))->radio(Notification::LEVELS);
+                $filter->equal('type', __('Type'))->radio(array_map(function ($t) { return __($t);}, Notification::TYPES));
+                $filter->like('name', __('Name'));
             });
             
         });
