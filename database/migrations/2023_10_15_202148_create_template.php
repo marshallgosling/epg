@@ -33,6 +33,7 @@ class CreateTemplate extends Migration
             $table->id();
             $table->string('name', 50)->default('')->comment('名称');
             $table->string("category", 20)->default('')->comment('栏目分类');
+            $table->unsignedTinyInteger('type')->default(0)->comment('类型');
             $table->text('data')->comment("数据")->nullable();
             $table->unsignedInteger('template_id')->default(0);
             $table->unsignedInteger('sort')->default(0)->comment('排序号');
