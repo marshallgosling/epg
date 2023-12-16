@@ -33,8 +33,8 @@ class test extends Command
     {
         $v = $this->argument('v') ?? "";
         
-        $data = ChannelPrograms::find($v)->data;
-        $data = json_decode($data, true);
+        $p = ChannelPrograms::find($v);
+        $data = json_decode($p->data, true);
         $list = [];
         for($i=0;$i<100;$i++)
         {
@@ -47,7 +47,8 @@ class test extends Command
             }
         }
 
-        print_r($list);
+        $p->data = json_encode($list);
+        $p->save();
         return 0;
     }
 }
