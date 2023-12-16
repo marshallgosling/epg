@@ -280,6 +280,7 @@ class ChannelGenerator
     public function addRecordItem($templates, $maxduration, $air, $dayofweek='')
     {
         $data = [];
+        $lasterror = '';
         
         foreach($templates as $p) {
             $item = false;
@@ -287,8 +288,10 @@ class ChannelGenerator
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
             $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
             $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 999999999999;
-            if($air < $begin || $air > $end) continue;
-
+            if($air < $begin || $air > $end) {
+                $lasterror = "{$p->id} {$p->category} 编排设定时间 {$p->data['date_from']}/{$p->data['date_to']} 已过期";
+                continue;
+            }
             if($p->type == TemplateRecords::TYPE_RANDOM) {
                 $item = Record::findNextAvaiable($p, $maxduration);
                 if(!$item) {
@@ -303,8 +306,8 @@ class ChannelGenerator
                 }
 
                 if(!$item) {
-                    Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
-                    throw new GenerationException("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
+                    //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
+                    throw new GenerationException("随机栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE, "{$p->id} {$p->category} {$p->name} 没有找到匹配的节目");
                 }
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
@@ -348,7 +351,7 @@ class ChannelGenerator
 
         if(!count($data)) {
             $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
-            throw new GenerationException("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE);
+            throw new GenerationException("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE, $lasterror);
         }
         return $data;
     }

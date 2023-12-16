@@ -10,11 +10,11 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
-use Encore\Admin\Widgets\InfoBox;
-use App\Admin\Actions\Template\Programs;
 use App\Admin\Actions\Template\ReplicateTemplate;
 use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
+use Illuminate\Support\Facades\Storage;
+use App\Admin\Actions\Template\FixStall;
 
 class XkcController extends AdminController
 {
@@ -100,6 +100,11 @@ class XkcController extends AdminController
         $grid->batchActions(function ($actions) {
             $actions->add(new BatchEnable);
             $actions->add(new BatchDisable);
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            if(Storage::disk('data')->exists('generate_stall'))
+                $tools->append(new FixStall());
         });
 
         return $grid;

@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers\Template;
 
-use App\Admin\Actions\Template\FixStall;
+
 use App\Models\Temp\Template;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -12,6 +12,7 @@ use Encore\Admin\Widgets\Table;
 use App\Models\Temp\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
+use App\Admin\Actions\Template\FixStall;
 
 class TempController extends AdminController
 {
@@ -104,7 +105,7 @@ class TempController extends AdminController
 
         $grid->disableCreateButton();
         $grid->disableBatchActions();
-        //$grid->disableActions();
+        $grid->disableActions();
         $grid->tools(function (Grid\Tools $tools) {
             if(Storage::disk('data')->exists('generate_stall'))
                 $tools->append(new FixStall());
