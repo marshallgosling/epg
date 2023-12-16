@@ -39,7 +39,11 @@ class NotificationController extends AdminController
         $grid->column('type', __('Type'))->display(function ($type) {
             return __(Notification::TYPES[$type]);
         });
-        $grid->column('level', __('Level'))->using(Notification::LEVELS)->label(['info','warning','danger']);
+        $grid->column('level', __('Level'))->using(Notification::LEVELS)->label([
+           'info' => 'info',
+            'warning' => 'warning',
+            'error' => 'danger'
+        ]);
         $grid->column('user', __('User'))->hide();
         
         
