@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers\Template;
 
-use App\Admin\Actions\Template\BatchDisable;
-use App\Admin\Actions\Template\BatchEnable;
 use App\Admin\Actions\Template\FixStall;
 use App\Models\Temp\Template;
 use Encore\Admin\Controllers\AdminController;
@@ -11,11 +9,9 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
-use Encore\Admin\Widgets\InfoBox;
-use App\Admin\Actions\Template\Programs;
-use App\Admin\Actions\Template\ReplicateTemplate;
 use App\Models\Temp\TemplateRecords;
 use App\Tools\ChannelGenerator;
+use Illuminate\Support\Facades\Storage;
 
 class TempController extends AdminController
 {
@@ -42,7 +38,11 @@ class TempController extends AdminController
         $grid = new Grid(new Template());
 
         $grid->header(function () {
-            return '<small>用于查看 【XKC】 自动编单问题，保存临时状态</small> <span class="label label-warning">不可修改</span>';
+            
+            if(Storage::disk('data')->exists('generate_stall'))
+                return '<small>用于查看 【XKC】 自动编单问题，保存临时状态</small> <span class="label label-warning">不可修改</span>';
+            else
+                return '<small>目前自动编单没有问题</small>';
         });
         $grid->model()->where('group_id', 'xkc')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
@@ -106,8 +106,8 @@ class TempController extends AdminController
         $grid->disableBatchActions();
         //$grid->disableActions();
         $grid->tools(function (Grid\Tools $tools) {
-            
-            $tools->append(new FixStall());
+            if(Storage::disk('data')->exists('generate_stall'))
+                $tools->append(new FixStall());
         });
 
         // $grid->actions(function ($actions) {

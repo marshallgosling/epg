@@ -39,7 +39,7 @@ class ChannelGenerator
 
     public $errors = [];
     
-    public function __construct($group='')
+    public function __construct($group)
     {
         $this->log_channel = 'channel';
         $this->group = $group;
@@ -52,7 +52,7 @@ class ChannelGenerator
      * @param string $group
      * 
      */
-    public function loadTemplate($group=false)
+    public function loadTemplate()
     {
         $group = $this->group;
         $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
@@ -60,7 +60,7 @@ class ChannelGenerator
         $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
     }
 
-    public function makeCopyTemplate($group=false)
+    public function makeCopyTemplate()
     {
         $group = $this->group;
 
@@ -85,6 +85,12 @@ class ChannelGenerator
         {
             \App\Models\TemplateRecords::find($id)->update(['data'=>$data]);
         }
+    }
+
+    public function cleanTempData()
+    {
+        DB::table('temp_template_programs')->whereIn('template_id', $this->templates)->delete();
+        DB::table('temp_template')->where('group_id', $this->group)->delete();
     }
 
     private function loadWeekendsTemplate($date, $daily)
