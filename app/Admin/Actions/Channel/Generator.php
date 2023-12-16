@@ -22,11 +22,13 @@ class Generator extends RowAction
             return $this->response()->error(__('Generator start failed message.'))->refresh();
         }
 
-        if($model->name == 'xkc') return $this->response()->success(__('Generator closed.'))->refresh();
+        if($model->name == 'xkc') return $this->response()->warning(__('Generator closed.'))->refresh();
+
+        
+        $model->status = Channel::STATUS_WAITING;
+        $model->save();
 
         ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
-        $model->status = Channel::STATUS_RUNNING;
-        $model->save();
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

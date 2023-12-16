@@ -62,6 +62,8 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             return 0;
         }
 
+        $error = false;
+
         $channels = Channel::where('name', $this->group)->where('status', Channel::STATUS_RUNNING)->orderBy('air_date')->get();
 
         if(!$channels) {
@@ -84,8 +86,17 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                     "频道 {$channel->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
                     Notification::LEVEL_WARN
                 );
-                return 0;
+                continue;
             }
+
+            if($error) {
+                $channel->status = Channel::STATUS_EMPTY;
+                $channel->save();
+                continue;
+            }
+
+            $channel->status = Channel::STATUS_RUNNING;
+            $channel->save();
 
             try {
                 $start_end = $generator->generateXkc($channel);
@@ -101,7 +112,8 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 $channel->status = Channel::STATUS_ERROR;
                 $channel->save();
                 Storage::disk('data')->put("generate_stall", date('Y-m-d H:i:s'));
-                break;
+                $error = true;
+                continue;
             }
 
             $generator->saveTemplateState();
@@ -119,6 +131,8 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
 
             $this->info("生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ");
         }
+
+
     }
 
     /**

@@ -33,7 +33,7 @@ class BatchGenerator extends BatchAction
                 continue;
             }
             
-            $model->status = Channel::STATUS_RUNNING;
+            $model->status = Channel::STATUS_WAITING;
             $model->save();
 
             $group = $model->name;
