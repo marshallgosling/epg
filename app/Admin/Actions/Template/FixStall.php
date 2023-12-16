@@ -17,7 +17,8 @@ class FixStall extends Action
 
     public function handle(Request $request)
     {
-
+        if(!Storage::disk('data')->exists('generate_stall'))
+            return $this->response()->success('无需处理');
         $desc = $request->get('desc') ?? "";
         $fixed = $request->get('fixed') ?? 0;
 
@@ -30,7 +31,11 @@ class FixStall extends Action
                 "处理日期时间: ".date('Y-m-d H:i:s').' 描述: '.$desc,
                 Notification::LEVEL_INFO
             );
+            return $this->response()->success('提交成功');
         }
+
+        return $this->response()->warning('问题未解决');
+        
     }
 
     public function form()
