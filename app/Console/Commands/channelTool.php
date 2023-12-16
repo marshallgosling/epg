@@ -172,6 +172,8 @@ class channelTool extends Command
             "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
             "频道节目时间 $start_end"
         );
+
+        $generator->cleanTempData();
     }
 
 }
