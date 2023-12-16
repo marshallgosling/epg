@@ -65,13 +65,13 @@ class ChannelGenerator
         $group = $this->group;
 
         DB::table('temp_template')->where('group_id', $group)->delete();
-        DB::table('temp_template')->insertUsing(Template::PROPS, 
+        DB::table('temp_template')->insertUsing(\App\Models\Template::PROPS, 
             DB::table('template')->selectRaw(implode(',', Template::PROPS)
         )->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING]));
         
         $this->templates = Template::select('id')->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING])->pluck('id')->toArray();
         DB::table('temp_template_programs')->whereIn('template_id', $this->templates)->delete();
-        DB::table('temp_template_programs')->insertUsing(TemplateRecords::PROPS, 
+        DB::table('temp_template_programs')->insertUsing(\App\Models\TemplateRecords::PROPS, 
             DB::table('template_programs')->selectRaw(implode(',', TemplateRecords::PROPS)
         )->whereIn('template_id', $this->templates));
 

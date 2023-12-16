@@ -20,16 +20,16 @@ class Template extends Model
     public const STATUSES = ["未启用", "使用中", "已停用"];
 
     public const PROPS = [
-        '`id`',
-        '`name`',
-        '`schedule`',
-        '`start_at`',
-        '`sort`',
-        '`duration`',
-        '`group_id`',
-        '`status`',
-        '`version`',
-        '`comment`'
+        'id',
+        'name',
+        'schedule',
+        'start_at',
+        'sort',
+        'duration',
+        'group_id',
+        'status',
+        'version',
+        'comment'
     ];
 
     protected $table = 'template';

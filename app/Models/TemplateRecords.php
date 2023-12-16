@@ -18,13 +18,13 @@ class TemplateRecords extends Model
     public const DAYS = ['1'=>'周一','2'=>'周二','3'=>'周三','4'=>'周四','5'=>'周五','6'=>'周六','7'=>'周日'];
 
     public const PROPS = [
-        '`id`',
-        '`name`',
-        '`category`',
-        '`data`',
-        '`type`',
-        '`template_id`',
-        '`sort`'
+        'id',
+        'name',
+        'category',
+        'data',
+        'type',
+        'template_id',
+        'sort'
     ];
 
     protected $table = 'template_programs';
