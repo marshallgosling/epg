@@ -271,14 +271,17 @@ class ChannelGenerator
 
     }
 
-    public function addRecordItem($templates, $maxduration, $dayofweek='')
+    public function addRecordItem($templates, $maxduration, $air, $dayofweek='')
     {
         $data = [];
         
         foreach($templates as $p) {
             $item = false;
-
+            
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
+            $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
+            $end = $p->data['date_to'] ? strtotime($p->dat['date_to']) : 999999999999;
+            if($air < $begin || $air > $end) continue;
 
             if($p->type == TemplateRecords::TYPE_RANDOM) {
                 $item = Record::findNextAvaiable($p, $maxduration);
@@ -339,6 +342,7 @@ class ChannelGenerator
 
         if(!count($data)) {
             $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
+            throw new \Exception("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE);
         }
         return $data;
     }
