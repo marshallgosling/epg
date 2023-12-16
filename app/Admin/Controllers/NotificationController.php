@@ -36,8 +36,10 @@ class NotificationController extends AdminController
         $grid->column('group_id', __('Group'))->using(Notification::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('name', __('Name'));
         $grid->column('message', __('Message'))->style('max-width:200px;word-break:break-all;');
-        $grid->column('type', __('Type'))->using(Notification::TYPES);
-        $grid->column('level', __('Level'))->using(Notification::LEVELS);
+        $grid->column('type', __('Type'))->display(function ($type) {
+            return __(Notification::TYPES[$type]);
+        });
+        $grid->column('level', __('Level'))->using(Notification::LEVELS)->label(['info','warning','danger']);
         $grid->column('user', __('User'))->hide();
         
         

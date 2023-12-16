@@ -109,7 +109,12 @@
     "AuditInfo": "审核信息",
     "TemplateInfo": "模版数据",
 
-
+    "generate" : "自动编单",
+    "statistic": "统计任务",
+    "excel": "excel导出",
+    "xml": "串联单导出",
+    "audit": "审核",
+    "blacklist": "黑名单",
 
     "具体节目编排": "具体节目编排",
     "返回普通模式": "返回普通模式"
