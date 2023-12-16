@@ -7,6 +7,7 @@ use App\Jobs\Channel\RecordJob;
 use App\Models\Channel;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class BatchGenerator extends BatchAction
 {
@@ -15,6 +16,11 @@ class BatchGenerator extends BatchAction
     public function handle(Collection $collection)
     {
         //return $this->response()->success(__('Generator closed.'))->refresh();
+
+        if(Storage::disk('data')->exists("generate_stall"))
+        {
+            return $this->response()->error(__('节目单自动生成工具遇到错误，需要人工干预.'))->refresh();
+        }
 
         $group = '';
         foreach ($collection as $model) 

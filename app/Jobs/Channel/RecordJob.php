@@ -16,6 +16,7 @@ use App\Models\Notification;
 use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
+use Illuminate\Support\Facades\Storage;
 
 class RecordJob implements ShouldQueue, ShouldBeUnique
 {
@@ -49,7 +50,18 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        
+        if(Storage::disk('data')->exists("generate_stall"))
+        {
+            Notify::fireNotify(
+                $this->group,
+                Notification::TYPE_GENERATE, 
+                "节目单自动生成工具遇到错误，需要人工干预", 
+                "您有未处理的节目单模版数据错误，请先进入临时模版页面，解决模版问题，然后点击解决问题。",
+                Notification::LEVEL_WARN
+            );
+            return 0;
+        }
+
         $channels = Channel::where('name', $this->group)->where('status', Channel::STATUS_RUNNING)->orderBy('air_date')->get();
 
         if(!$channels) {
@@ -88,6 +100,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 $channel->start_end = '';
                 $channel->status = Channel::STATUS_ERROR;
                 $channel->save();
+                Storage::disk('data')->put("generate_stall", date('Y-m-d H:i:s'));
                 break;
             }
 
