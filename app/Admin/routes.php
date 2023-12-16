@@ -51,6 +51,10 @@ Route::group([
     $router->resource('/template/xkv/programs', 'Template\\XkvProgramsController')->names('template.xkv.programs');
     $router->resource('/template/xkv', 'Template\\XkvController')->names('template.xkv');
 
+    $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
+    $router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
+
+
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/excel', 'ExportListController')->names('export.list');
 
