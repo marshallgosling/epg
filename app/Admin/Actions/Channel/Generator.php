@@ -24,7 +24,7 @@ class Generator extends RowAction
 
         if($model->name == 'xkc') return $this->response()->success(__('Generator closed.'))->refresh();
 
-        ProgramsJob::dispatch($model->uuid);
+        ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
         $model->status = Channel::STATUS_RUNNING;
         $model->save();
 

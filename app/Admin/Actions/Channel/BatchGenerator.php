@@ -31,9 +31,11 @@ class BatchGenerator extends BatchAction
             $model->save();
 
             $group = $model->name;
+            if($group == 'xkv')ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
         }
 
-        RecordJob::dispatch($group);
+        if($group == 'xkc')
+            RecordJob::dispatch($group)->onQueue('xkc');
         
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

@@ -132,16 +132,36 @@ class channelTool extends Command
             return 0;
         }
 
-        $generator = new ChannelGenerator();
-        $generator->loadTemplate($channel->name);
+        $generator = new ChannelGenerator($channel->name);
+        $generator->makeCopyTemplate();
+        $generator->loadTemplate();
 
-        if($channel->name == 'xkc')
-            $start_end = $generator->generateXkc($channel);
-        else
-            $start_end = $generator->generate($channel);
+        try {
+            if($channel->name == 'xkc')
+                $start_end = $generator->generateXkc($channel);
+            else
+                $start_end = $generator->generate($channel);
 
-        $channel->status = Channel::STATUS_READY;
-        $channel->save();
+        }catch(\Exception $e)
+        {
+            $this->error($e->getMessage());
+            Notify::fireNotify(
+                $channel->name,
+                Notification::TYPE_GENERATE, 
+                "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
+                "详细错误:".$e->getMessage(), 'error'
+            );
+            $channel->start_end = '';
+            $channel->status = Channel::STATUS_ERROR;
+            $channel->save();
+            return;
+        }
+        
+        $generator->saveTemplateState();
+
+            $channel->start_end = $start_end;
+            $channel->status = Channel::STATUS_READY;
+            $channel->save();
 
         $this->info("Generate programs date: {$channel->air_date} succeed. ");
         
@@ -153,12 +173,4 @@ class channelTool extends Command
         );
     }
 
-    private function parseDuration($str)
-    {
-        $duration = explode(':', $str);
-        
-        $seconds = count($duration )>= 3 ? (int)$duration[0]*3600 + (int)$duration[1]*60 + (int)$duration[2] : 0;
-
-        return $seconds;
-    }
 }

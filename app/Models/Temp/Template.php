@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Temp;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +32,8 @@ class Template extends Model
         'comment'
     ];
 
-    protected $table = 'template';
+    protected $table = 'temp_template';
+    public $incrementing = false;
 
     protected $fillable = [
         'id',

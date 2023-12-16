@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTemplate extends Migration
+class TempTemplate extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class CreateTemplate extends Migration
     public function up()
     {
         // 模版记录表
-        Schema::create('template', function (Blueprint $table) {
-            $table->id();
+        Schema::create('temp_template', function (Blueprint $table) {
+            $table->unsignedInteger('id');
             $table->string('name', 50)->default('')->comment('模版编号名称');
             $table->unsignedSmallInteger("schedule")->default(0)->comment('普通模版为0，计划模版则对应所在星期的数字');
             $table->string('start_at', 22)->default('')->comment("开始时间");
@@ -29,8 +29,8 @@ class CreateTemplate extends Migration
         });
 
         // 模版节目表
-        Schema::create('template_programs', function (Blueprint $table) {
-            $table->id();
+        Schema::create('temp_template_programs', function (Blueprint $table) {
+            $table->unsignedInteger('id');
             $table->string('name', 50)->default('')->comment('名称');
             $table->string("category", 20)->default('')->comment('栏目分类');
             $table->text('data')->comment("数据")->nullable();
@@ -38,7 +38,6 @@ class CreateTemplate extends Migration
             $table->unsignedInteger('sort')->default(0)->comment('排序号');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -48,7 +47,7 @@ class CreateTemplate extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('template');
-        Schema::dropIfExists('template_programs');
+        Schema::dropIfExists('temp_template');
+        Schema::dropIfExists('temp_template_programs');
     }
 }

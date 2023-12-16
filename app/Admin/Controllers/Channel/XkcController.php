@@ -63,12 +63,12 @@ class XkcController extends AdminController
         $grid->column('updated_at', __('Updated at'));
 
         $grid->actions(function ($actions) {
-            $actions->add(new Generator);
+            //$actions->add(new Generator);
             $actions->add(new Clean);
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchGenerator('xkc'));
+            $actions->add(new BatchGenerator());
             $actions->add(new BatchClean);
         });
 

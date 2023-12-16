@@ -4,15 +4,16 @@ namespace App\Tools;
 
 use App\Models\Category;
 use App\Models\Channel;
-use App\Models\Template;
+use App\Models\Temp\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\Record;
 use App\Models\TemplatePrograms;
-use App\Models\TemplateRecords;
+use App\Models\Temp\TemplateRecords;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ChannelGenerator
 {
@@ -23,7 +24,7 @@ class ChannelGenerator
     private $daily;
     private $weekends;
     private $special;
-
+    private $group;
     /**
      * 按24小时累加的播出时间，格式为 timestamp ，输出为 H:i:s
      */
@@ -35,10 +36,13 @@ class ChannelGenerator
     private $duration;
 
     private $maxDuration = 0;
+
+    public $errors = [];
     
-    public function __construct()
+    public function __construct($group='')
     {
         $this->log_channel = 'channel';
+        $this->group = $group;
     }
 
     /**
@@ -48,11 +52,39 @@ class ChannelGenerator
      * @param string $group
      * 
      */
-    public function loadTemplate($group='default')
+    public function loadTemplate($group=false)
     {
+        $group = $group ?? $this->group;
         $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->weekends = Template::where(['group_id'=>$group,'schedule'=>Template::WEEKENDS,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+    }
+
+    public function makeCopyTemplate($group=false)
+    {
+        $group = $group ?? $this->group;
+
+        DB::table('temp_template')->where('group_id', $group)->delete();
+        DB::table('temp_template')->insertUsing(Template::PROPS, 
+            DB::table('template')->selectRaw(implode(',', Template::PROPS)
+        )->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING]));
+        
+        $this->templates = Template::select('id')->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING])->pluck('id')->toArray();
+        DB::table('temp_template_programs')->whereIn('template_id', $this->templates)->delete();
+        DB::table('temp_template_programs')->insertUsing(TemplateRecords::PROPS, 
+            DB::table('template_programs')->selectRaw(implode(',', TemplateRecords::PROPS)
+        )->whereIn('template_id', $this->templates));
+
+    }
+
+    public function saveTemplateState() 
+    {
+        $list = TemplateRecords::whereIn('template_id', $this->templates)->select('id','data')->pluck('data', 'id')->toArray();
+
+        foreach($list as $id=>$data)
+        {
+            \App\Models\TemplateRecords::find($id)->update(['data'=>$data]);
+        }
     }
 
     private function loadWeekendsTemplate($date, $daily)
@@ -263,10 +295,10 @@ class ChannelGenerator
 
                 if(!$item) {
                     Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
+                    throw new \Exception("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
                 }
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
-
 
                 $item = Record::findNextAvaiable($p, $maxduration);
 
@@ -295,12 +327,13 @@ class ChannelGenerator
                 else {
 
                     $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
-
+                    throw new \Exception("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
                 }
             }
             else
             {
                 $this->warn("栏目 {$p->id} {$p->category} 内没有任何节目");
+                throw new \Exception("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
             }
         }
 

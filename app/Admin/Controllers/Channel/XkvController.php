@@ -66,7 +66,7 @@ class XkvController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchGenerator);
+            $actions->add(new BatchGenerator());
             $actions->add(new BatchClean);
         });
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Temp;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +27,8 @@ class TemplateRecords extends Model
         'sort'
     ];
 
-    protected $table = 'template_programs';
+    protected $table = 'temp_template_programs';
+    public $incrementing = false;
 
     protected $fillable = [
         'id',

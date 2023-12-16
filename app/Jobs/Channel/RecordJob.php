@@ -22,7 +22,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
     // Channel UUID;
-    private $uuid;
+    //private $uuid;
     private $group = 'default';
 
     /**
@@ -30,16 +30,16 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct($uuid)
+    public function __construct($group)
     {
-        $this->uuid = $uuid;
+        $this->group = $group;
         $this->log_channel = 'channel';
         $this->log_print = false;
     }
 
     public function uniqueId()
     {
-        return "BatchChannel-".$this->uuid;
+        return "BatchChannel-".$this->group;
     }
 
     /**
@@ -50,35 +50,49 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         
-        $channels = Channel::where('name', $this->uuid)->where('status', Channel::STATUS_RUNNING)->orderBy('air_date')->get();
+        $channels = Channel::where('name', $this->group)->where('status', Channel::STATUS_RUNNING)->orderBy('air_date')->get();
 
         if(!$channels) {
-            $this->error("频道 {$this->uuid} 不存在");
+            $this->error("频道 {$this->group} 不存在");
             return 0;
         }
 
-        $generator = new ChannelGenerator();
-        $generator->loadTemplate($this->uuid);
+        $generator = new ChannelGenerator($this->group);
+        $generator->makeCopyTemplate();
+        $generator->loadTemplate();
 
         foreach($channels as $channel) {
 
             if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-                $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
+                $this->error("频道 {$channel->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
                 Notify::fireNotify(
                     $channel->name,
                     Notification::TYPE_GENERATE, 
                     "生成节目编单 {$channel->name}_{$channel->air_date} 失败. ", 
-                    "频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
+                    "频道 {$channel->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
                     Notification::LEVEL_WARN
                 );
                 return 0;
             }
 
-            if($channel->name == 'xkc')
+            try {
                 $start_end = $generator->generateXkc($channel);
-            else
-                $start_end = $generator->generate($channel);
-            
+            }catch(\Exception $e)
+            {
+                Notify::fireNotify(
+                    $channel->name,
+                    Notification::TYPE_GENERATE, 
+                    "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
+                    "详细错误:".$e->getMessage(), 'error'
+                );
+                $channel->start_end = '';
+                $channel->status = Channel::STATUS_ERROR;
+                $channel->save();
+                break;
+            }
+
+            $generator->saveTemplateState();
+
             $channel->status = Channel::STATUS_READY;
             $channel->start_end = $start_end;
             $channel->save();
