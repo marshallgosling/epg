@@ -280,7 +280,7 @@ class ChannelGenerator
             
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
             $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
-            $end = $p->data['date_to'] ? strtotime($p->dat['date_to']) : 999999999999;
+            $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 999999999999;
             if($air < $begin || $air > $end) continue;
 
             if($p->type == TemplateRecords::TYPE_RANDOM) {
