@@ -41,7 +41,7 @@ class TempController extends AdminController
         $grid = new Grid(new Template());
 
         $grid->header(function () {
-            return '用于查看 【XKC】 自动编单问题，保存临时状态 <span class="label label-warning">不可修改</span>';
+            return '<small>用于查看 【XKC】 自动编单问题，保存临时状态</small> <span class="label label-warning">不可修改</span>';
         });
         $grid->model()->where('group_id', 'xkc')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
