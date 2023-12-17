@@ -77,7 +77,7 @@ class TempController extends AdminController
         }
         $group = 'temp';
         $error = Storage::disk('data')->exists('generate_stall') ? Storage::disk('data')->get('generate_stall') : "";
-        return $content->title(__('Preview Mode'))->description(__('Preview Template Content'))
+        return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group', 'error')));
     }
 
