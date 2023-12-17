@@ -114,7 +114,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 $channel->start_end = '';
                 $channel->status = Channel::STATUS_ERROR;
                 $channel->save();
-                Storage::disk('data')->put("generate_stall", date('Y-m-d H:i:s'));
+                Storage::disk('data')->put("generate_stall", $e->desc);
                 $error = true;
                 continue;
             }

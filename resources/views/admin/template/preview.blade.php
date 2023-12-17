@@ -67,7 +67,13 @@
     <div class="col-md-12"> 
         <div class="box">
             <div class="box-header">
-                <div class="btn-group"><b>{{@__('Preview Template Content')}}</b>&nbsp; &nbsp;</div>
+                <div class="btn-group">
+                @if($error)
+                    <b>{{@__('Preview Template Content')}}</b>
+                @else
+                    错误信息：<b class="text-danger">{{$error}}</b>
+                @endif
+                </div>
                 <div class="btn-group pull-right">
                     <a class="btn btn-primary btn-sm" title="返回编辑模式" href="../{{$group}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回编辑模式</span></a>
                 </div>
