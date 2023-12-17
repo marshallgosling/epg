@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Facades\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,6 +54,14 @@ class Template extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Model $model) {
+            if(Admin::user()->cannot('delete-template'))
+                throw new \Exception('您无权删除该模版');
+        });
+    }
 
     public function programs()
     {

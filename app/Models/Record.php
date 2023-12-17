@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Temp\TemplateRecords;
+use Encore\Admin\Facades\Admin;
 
 class Record extends Model
 {
@@ -29,6 +30,14 @@ class Record extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Model $model) {
+            if(Admin::user()->cannot('delete-xkc'))
+                throw new \Exception('您无权删除XKC节目库内容');
+        });
+    }
 
     public function getCategoryAttribute($value)
     {

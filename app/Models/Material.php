@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Facades\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -30,6 +31,14 @@ class Material extends Model
     ];
 
     private static $cache = [];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Model $model) {
+            if(Admin::user()->cannot('delete-material'))
+                throw new \Exception('您无权删除素材库内容');
+        });
+    }
 
     public static function findRandom($key)
     {

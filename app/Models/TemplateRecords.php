@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Facades\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,6 +46,14 @@ class TemplateRecords extends Model
         'data' => 'array'
     ];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Model $model) {
+            if(Admin::user()->cannot('delete-template'))
+                throw new \Exception('您无权删除该模版');
+        });
+    }
+
     /*public function getCategoryAttribute($value)
     {
         return explode(',', $value);
@@ -54,6 +63,7 @@ class TemplateRecords extends Model
     {
         $this->attributes['category'] = implode(',', $value);
     }*/
+
 
     public function template()
     {

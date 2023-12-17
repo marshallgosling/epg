@@ -5,7 +5,7 @@ namespace App\Admin\Controllers\Template;
 use App\Admin\Actions\Template\BatchDisable;
 use App\Admin\Actions\Template\BatchEnable;
 use App\Models\Template;
-use Encore\Admin\Controllers\AdminController;
+use App\Admin\Extensions\MyAdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -15,6 +15,9 @@ use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
+use Encore\Admin\Facades\Admin;
+use Illuminate\Support\MessageBag;
+use Encore\Admin\Controllers\AdminController;
 
 class XkcController extends AdminController
 {
@@ -24,6 +27,11 @@ class XkcController extends AdminController
      * @var string
      */
     protected $title = '【 XKC 】模版';
+
+    public function destroy($id)
+    {
+        dd($id);
+    }
 
     /**
      * Make a grid builder.
@@ -97,12 +105,14 @@ class XkcController extends AdminController
             $actions->add(new ReplicateTemplate);
         });
 
-        $grid->batchActions(function ($actions) {
+        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
+            
             $actions->add(new BatchEnable);
             $actions->add(new BatchDisable);
         });
 
         $grid->tools(function (Grid\Tools $tools) {
+            //$tools->disableBatchActions();
             if(Storage::disk('data')->exists('generate_stall'))
                 $tools->append(new FixStall());
         });
@@ -165,6 +175,24 @@ class XkcController extends AdminController
             
         });
 
+        $form->deleting(function ($id) {
+            dd($id);
+            throw new \Exception('您无权删除该模版');
+            // 没有`delete-image`权限的角色不显示删除按钮
+            if (true) {//Admin::user()->cannot('delete-template')) {
+                
+                $error = new MessageBag([
+                    'title'   => '删除失败',
+                    'message' => '您无权删除该模版',
+                ]);
+                return response()->json([
+                    'status'  => false,
+                    'message' => '您无权删除该模版',
+                ]);
+            }
+            
+        });
+        
         return $form;
     }
 }

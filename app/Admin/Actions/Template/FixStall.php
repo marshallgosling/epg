@@ -31,7 +31,7 @@ class FixStall extends Action
                 "处理日期时间: ".date('Y-m-d H:i:s').' 描述: '.$desc,
                 Notification::LEVEL_INFO
             );
-            return $this->response()->success('提交成功');
+            return $this->response()->success('提交成功')->refresh();
         }
 
         return $this->response()->warning('问题未解决');

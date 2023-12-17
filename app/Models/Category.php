@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Facades\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,14 @@ class Category extends Model
         'type',
         'duration'
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Model $model) {
+            if(Admin::user()->cannot('delete-category'))
+                throw new \Exception('您无权删除栏目标签');
+        });
+    }
 
     private static $categories = [];
 
