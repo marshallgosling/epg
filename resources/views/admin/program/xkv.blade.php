@@ -330,6 +330,7 @@
                     var items = data.result;
                     cachedPrograms = cachedPrograms.concat(items);
                     selectedItem = null;
+                    selectedItems = [];
 
                     if(data.total == 0) {
                         $('#noitem').show();
@@ -389,6 +390,7 @@
         if(repo.artist==null) repo.artist='';
         
         if(multi) {
+            console.log('multi:'+idx);
             if(selectedItems.indexOf(repo)==-1) {
                 selectedItems.push(repo);
                 $('.search-item').eq(idx).addClass('info');
