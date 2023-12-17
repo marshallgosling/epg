@@ -97,6 +97,11 @@ HTML;
         $templates = Statistic::countTemplate();
         $channels = Statistic::countChannelXml();
         $audit = Statistic::countAudit();
+        
+        foreach(['xkv','xkc'] as $k) {
+          if(!array_key_exists($k, $channels)) $channels[$k] = 0;
+          if(!array_key_exists($k, $audit)) $audit[$k] = 0;
+        }
 
         $channels =[
           '频道 XKV' => [
