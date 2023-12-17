@@ -35,7 +35,7 @@ Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
         $filter->setAction('?expand=1');
     });
     $grid->header(function ($query) {
-        return '<small>按住 shift 键可快速批量多选操作</small>';
+        return '<small>按住 <kbd>shift</kbd> 键可快速批量多选操作</small>';
     });
     $js = <<<JS
     var startmove = false;
