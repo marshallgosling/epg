@@ -27,7 +27,7 @@ class EpgController extends AdminController
     {
         $grid = new Grid(new Epg());
 
-        $grid->column('id', __('Id'))->hide();
+        $grid->column('id', __('Id'));
         
         $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         
@@ -50,7 +50,7 @@ class EpgController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(8, function (Grid\Filter $filter) {
-                $filter->equal('group_id', __('Group'))->radio(Channel::GROUPS);
+                //$filter->equal('group_id', __('Group'))->radio(Channel::GROUPS);
                 $filter->between('start_at', __('Air date'))->datetime();
             });
         });
