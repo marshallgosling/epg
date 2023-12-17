@@ -66,10 +66,14 @@ class channelTool extends Command
 
     private function epg($id)
     {
-        $channel = Channel::findOrFail($id);
+        
+        $channels = Channel::where('name', $id)->where('status', Channel::STATUS_READY)->orderBy('air_date')->get();
 
-        ChannelDatabase::removeEpg($channel);
-        ChannelDatabase::saveEpgToDatabase($channel);
+        foreach($channels as $channel) {
+            ChannelDatabase::saveEpgToDatabase($channel);
+        }
+        //ChannelDatabase::removeEpg($channel);
+        
     }
 
     private function fixer($id)
