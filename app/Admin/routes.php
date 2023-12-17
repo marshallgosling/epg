@@ -64,6 +64,7 @@ Route::group([
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
     $router->resource('/notifications', 'NotificationController')->names('notification');
     $router->resource('/plans', 'PlanController')->names('plans');
+    $router->resource('/epg', 'EpgController')->names('epg');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');

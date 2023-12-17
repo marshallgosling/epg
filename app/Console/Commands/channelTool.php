@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel;
 use App\Models\Notification;
+use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use App\Tools\GenerationException;
@@ -51,7 +52,7 @@ class channelTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['generate', 'create', 'export', 'calculate', 'fixer'];
+        $actions = ['generate', 'create', 'export', 'calculate', 'fixer','epg'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -61,6 +62,14 @@ class channelTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function epg($id)
+    {
+        $channel = Channel::findOrFail($id);
+
+        ChannelDatabase::removeEpg($channel);
+        ChannelDatabase::saveEpgToDatabase($channel);
     }
 
     private function fixer($id)
@@ -174,6 +183,7 @@ class channelTool extends Command
         );
 
         $generator->cleanTempData();
+
     }
 
 }
