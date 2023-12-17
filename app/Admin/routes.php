@@ -40,7 +40,8 @@ Route::group([
     $router->get('/template/xkc/tree/{id}', 'Template\\XkcProgramsController@tree')->name('template.xkc.programs.tree');
     $router->post('/template/xkc/data/{id}/save', 'Template\\XkcProgramsController@save')->name('template.xkc.programs.save');
     $router->delete('/template/xkc/data/{id}/remove/{idx}', 'Template\\XkcProgramsController@remove')->name('template.xkc.programs.delete');
-    $router->get('/template/xkc/preview', 'Template\\XkcProgramsController@preview')->name('template.xkc.preview');
+    
+    $router->get('/template/xkc/preview', 'Template\\XkcController@preview')->name('template.xkc.preview');
     $router->resource('/template/xkc/programs', 'Template\\XkcProgramsController')->names('template.xkc.programs');
     $router->resource('/template/xkc', 'Template\\XkcController')->names('template.xkc');
 
