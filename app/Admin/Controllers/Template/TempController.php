@@ -51,11 +51,11 @@ class TempController extends AdminController
                     if(count($p['data']['dayofweek']) == 7) $days[] = __('全天');
                     else if($p['data']['dayofweek'])
                         foreach($p['data']['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
-                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="programs/'.$p['id'].'/edit">查看</a>'];
+                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="programs/'.$p['id'].'">查看</a>'];
                 
                 }
                 else {
-                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="programs/'.$p->id.'/edit">查看</a>' ];
+                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="programs/'.$p->id.'">查看</a>' ];
                 
                 }
             }
