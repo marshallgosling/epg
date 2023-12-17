@@ -229,24 +229,6 @@ class XkcController extends AdminController
             $form->end_at = date('H:i:s', $start);
             
         });
-
-        $form->deleting(function ($id) {
-            dd($id);
-            throw new \Exception('您无权删除该模版');
-            // 没有`delete-image`权限的角色不显示删除按钮
-            if (true) {//Admin::user()->cannot('delete-template')) {
-                
-                $error = new MessageBag([
-                    'title'   => '删除失败',
-                    'message' => '您无权删除该模版',
-                ]);
-                return response()->json([
-                    'status'  => false,
-                    'message' => '您无权删除该模版',
-                ]);
-            }
-            
-        });
         
         return $form;
     }

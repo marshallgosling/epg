@@ -106,6 +106,14 @@ Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
     
 });
 
+\Encore\Admin\Show::init(function (\Encore\Admin\Show $show) {
+    $show->panel()->tools(function (\Encore\Admin\Show\Tools $tools) {
+        $tools->disableDelete();
+        $tools->disableEdit();
+        $tools->disableList();
+    });
+});
+
 Encore\Admin\Form::forget(['map', 'editor']);
 Encore\Admin\Grid\Filter::extend('mlike', \App\Admin\Extensions\MyLike::class);
 
