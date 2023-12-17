@@ -49,6 +49,7 @@
     "Date from"     : "从",
     "Date to"       : "至",
     "DateRange"     : "日期范围",
+    "TimeRange"     : "时间范围",
     "Filepath"      : "文件路径",
     "Select"        : "选择",
     "Copy"          : "复制",

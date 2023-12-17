@@ -31,9 +31,11 @@ class EpgController extends AdminController
         
         $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         
-        $grid->column('start_at', __('Start at'));
-        $grid->column('end_at', __('End at'))->display(function ($end_at) {
-            return substr($end_at, 11);
+        $grid->column('start_at', __('Air date'))->display(function ($start_at) {
+            return substr($start_at, 0, 10);
+        });;
+        $grid->column('end_at', __('TimeRange'))->display(function ($end_at) {
+            return substr($this->start_at, 11).' - '.substr($end_at, 11);
         });
         $grid->column('duration', __('Duration'));
 
