@@ -69,9 +69,9 @@
             <div class="box-header">
                 <div class="btn-group">
                 @if($error)
-                    <b>{{@__('Preview Template Content')}}</b>
+                  错误信息：<b class="text-danger">{{$error}}</b>
                 @else
-                    错误信息：<b class="text-danger">{{$error}}</b>
+                  <b>{{@__('Preview Template Content')}}</b>
                 @endif
                 </div>
                 <div class="btn-group pull-right">
