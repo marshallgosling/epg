@@ -16,7 +16,7 @@ class EpgController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Epg';
+    protected $title = '完整节目串联单查看器';
 
     /**
      * Make a grid builder.
@@ -26,6 +26,11 @@ class EpgController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Epg());
+
+        $grid->model()->orderBy('start_at');
+        $grid->header(function () {
+            return "";
+        });
 
         $grid->column('id', __('Id'));
         
