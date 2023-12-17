@@ -74,9 +74,9 @@ class XkcController extends AdminController
         
         }
         
-
+        $error = false;
         return $content->title(__('Preview Mode'))->description(__('Preview Template Content'))
-        ->body(view('admin.template.preview', compact('data', 'group')));
+        ->body(view('admin.template.preview', compact('data', 'group', 'error')));
     }
 
     private function getNextColor()
