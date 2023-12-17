@@ -43,7 +43,7 @@
             <!-- /.box-body -->
         </div>
     </div>
-</div></div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="editorModal" tabindex="-1" role="dialog">

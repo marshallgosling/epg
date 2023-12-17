@@ -179,7 +179,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
                 $_channel['programs'] = $_program;
             }
 
-            $data['xkv'][] = $_channel;
+            $data[$xkv->name][] = $_channel;
         }
 
  
@@ -219,6 +219,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         $model->save();
 
         Notify::fireNotify(
+            'all',
             Notification::TYPE_BLACKLIST, 
             "扫描黑名单 {$model->keyword} 完成. "
         );
