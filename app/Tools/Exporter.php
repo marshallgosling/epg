@@ -14,6 +14,8 @@ class Exporter
     private static $json;
     private static $xml;
 
+    public const TIMES = ['xkv'=>'06:00:00', 'xkc'=>'17:00:00'];
+
     public static function generateSimple($channel, $programs)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
@@ -207,11 +209,11 @@ class Exporter
         return $lines;
     }
 
-    public static function gatherData($air_date, $group) 
+    public static function gatherData($air_date, $group, $time='06:00:00') 
     {
         
         $end_at = $air_date;
-        $start_at = date('Y-m-d', (strtotime($end_at.' 06:00:00') - 86400));
+        $start_at = date('Y-m-d', (strtotime($end_at.' '.$time) - 86400));
 
         echo "$start_at - $end_at".PHP_EOL;
 
@@ -224,9 +226,9 @@ class Exporter
 
         foreach($lines as $l)
         {
-            if($l->start_at == '06:00:00') $found = true;
+            if($l->start_at == $time) $found = true;
             if($found) $data[] = $l;
-            if($l->end_at == '06:00:00') $found = false;
+            if($l->end_at == $time) $found = false;
         }
 
         return $data;

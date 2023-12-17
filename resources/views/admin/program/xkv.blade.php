@@ -375,6 +375,8 @@
         selectedIndex = idx;
         multi = idx == 'new';
         
+        console.log('multi:'+multi);
+
         $('#searchModal').modal('show');
         $('#confirmBtn').removeAttr('disabled');
     }
