@@ -14,6 +14,7 @@ use App\Models\TemplatePrograms;
 use App\Models\Temp\TemplateRecords;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ChannelGenerator
 {
@@ -607,6 +608,21 @@ class ChannelGenerator
         }
 
         return $data;
+    }
+
+    public static function writeTextMark($group, $date)
+    {
+        try {
+            
+            $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
+            $d2 = strtotime($date);
+            if($d2 > $d)
+                Storage::put($group.'.txt', $date);
+        }
+        catch(\Exception $e)
+        {
+
+        }
     }
 
 }

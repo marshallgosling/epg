@@ -133,6 +133,9 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             );
 
             $this->info("生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ");
+
+            ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+                  
         }
 
         if(!$error) {
