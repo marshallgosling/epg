@@ -15,7 +15,7 @@ use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
-use Encore\Admin\Facades\Admin;
+use Encore\Admin\Layout\Content;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
 
@@ -27,10 +27,64 @@ class XkcController extends AdminController
      * @var string
      */
     protected $title = '【 XKC 】模版';
+    private $colorIdx = 0;
 
-    public function destroy($id)
+    public function preview(Content $content)
     {
-        dd($id);
+        $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+
+        $data = [];
+        $colors = [];
+        foreach($templates as $t) {
+
+            $temp = $t->toArray();
+
+            $items = [];
+            $programs = $t['records'];
+            if($programs)foreach($programs as $p)
+            {
+                if($p['data'] != null) {
+                    $days = [];
+                    if(count($p['data']['dayofweek']) == 7) $days[] = __('全天');
+                    else if($p['data']['dayofweek'])
+                        foreach($p['data']['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
+                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="temp/programs/'.$p['id'].'/edit">查看</a>'];
+                
+                }
+                else {
+                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="temp/programs/'.$p->id.'/edit">查看</a>' ];
+                
+                }
+            }
+
+            if($t['schedule'] == Template::SPECIAL) $temp['color'] = 'default';
+            else {
+                if(array_key_exists($t['name'], $colors)) $temp['color'] = $colors[$t['name']];
+                else {
+                    $c = $this->getNextColor();
+                    $colors[$t['name']] = $c;
+                    $temp['color'] = $c;
+                }
+
+            }
+
+            $temp['table'] = (new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items))->render();
+            $data[] = $temp; 
+        
+        }
+        $group = 'temp';
+
+        return $content->title(__('Preview Mode'))->description(__('Preview Template Content'))
+        ->body(view('admin.template.preview', compact('data', 'group')));
+    }
+
+    private function getNextColor()
+    {
+        $colors = ['warning', 'info', 'primary', 'success','danger'];
+        $c = $colors[$this->colorIdx];
+        $this->colorIdx ++;
+        if($this->colorIdx == count($colors)) $this->colorIdx = 0;
+        return $c;
     }
 
     /**
@@ -42,7 +96,7 @@ class XkcController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->where('group_id', 'xkc')->orderBy('sort', 'asc');
+        $grid->model()->with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->display(function($name) {
             return '<a href="xkc/programs?template_id='.$this->id.'">'.$name.'</a>'; 

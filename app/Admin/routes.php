@@ -40,7 +40,7 @@ Route::group([
     $router->get('/template/xkc/tree/{id}', 'Template\\XkcProgramsController@tree')->name('template.xkc.programs.tree');
     $router->post('/template/xkc/data/{id}/save', 'Template\\XkcProgramsController@save')->name('template.xkc.programs.save');
     $router->delete('/template/xkc/data/{id}/remove/{idx}', 'Template\\XkcProgramsController@remove')->name('template.xkc.programs.delete');
-    
+    $router->get('/template/xkc/preview', 'Template\\XkcProgramsController@preview')->name('template.xkc.preview');
     $router->resource('/template/xkc/programs', 'Template\\XkcProgramsController')->names('template.xkc.programs');
     $router->resource('/template/xkc', 'Template\\XkcController')->names('template.xkc');
 
@@ -51,9 +51,10 @@ Route::group([
     $router->resource('/template/xkv/programs', 'Template\\XkvProgramsController')->names('template.xkv.programs');
     $router->resource('/template/xkv', 'Template\\XkvController')->names('template.xkv');
 
+    $router->get('/template/temp/preview', 'Template\\TempController@preview')->name('template.temp.preview');
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
     $router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
-
+    
 
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/excel', 'ExportListController')->names('export.list');
