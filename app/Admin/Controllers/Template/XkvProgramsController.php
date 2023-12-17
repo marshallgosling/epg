@@ -164,7 +164,7 @@ class XkvProgramsController extends AdminController
         $template = <<<TMP
         <li class="dd-item" data-id="idx">
         <div class="dd-handle bgstyle">
-            <input type="checkbox" class="grid-row-checkbox" data-id="id" autocomplete="off">&nbsp;
+            <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">&nbsp;
             <span style="display:inline-block;width:80px;"><small>{$type}:</small>
             <span class="label label-labelstyle">categorytype</span></span> 
             <span style="display:inline-block;width:80px;"><small>{$cate}:</small>

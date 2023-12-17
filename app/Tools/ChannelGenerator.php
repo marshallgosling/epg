@@ -603,8 +603,6 @@ class ChannelGenerator
             $start += $seconds;
             $item->end_at = date('H:i:s', $start);
 
-            
-            
         }
 
         return $data;
