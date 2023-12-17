@@ -28,11 +28,12 @@ class XkcController extends AdminController
      */
     protected $title = '【 XKC 】模版';
     private $colorIdx = 0;
+    private $group = 'xkc';
 
     public function preview(Content $content)
     {
         $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
-
+        $group = $this->group;
         $data = [];
         $colors = [];
         foreach($templates as $t) {
@@ -48,11 +49,11 @@ class XkcController extends AdminController
                     if(count($p['data']['dayofweek']) == 7) $days[] = __('全天');
                     else if($p['data']['dayofweek'])
                         foreach($p['data']['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
-                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="temp/programs/'.$p['id'].'/edit">查看</a>'];
+                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="'.$group.'/programs/'.$p['id'].'/edit">查看</a>'];
                 
                 }
                 else {
-                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="temp/programs/'.$p->id.'/edit">查看</a>' ];
+                    $items[] = [ $p['sort'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="'.$group.'/programs/'.$p->id.'/edit">查看</a>' ];
                 
                 }
             }
@@ -72,7 +73,7 @@ class XkcController extends AdminController
             $data[] = $temp; 
         
         }
-        $group = 'xkc';
+        
 
         return $content->title(__('Preview Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group')));
