@@ -54,18 +54,15 @@ Route::group([
 
     $router->get('/template/temp/preview', 'Template\\TempController@preview')->name('template.temp.preview');
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
-    $router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
+    $router->get('/template/temp/programs/{program}', 'Template\\TempProgramsController@show')->name('template.temp.show');
+    //$router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
     
-
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/excel', 'ExportListController')->names('export.list');
-
     $router->resource('/export/xml', 'ChannelXmlController')->names('export.xml');
     
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
-
     $router->resource('/notifications', 'NotificationController')->names('notification');
-
     $router->resource('/plans', 'PlanController')->names('plans');
 
     $router->get('/api/notifications', 'ApiController@notifications');

@@ -87,13 +87,8 @@ class ChannelPlan
             $_program = ["id"=>$pro->id,"name"=>$pro->name,"start_at"=>$pro->start_at, 'items'=>[]];
                 
             foreach($items as $idx=>$item) {
-               
-                if(Str::contains($item[$property], $model->keyword))
-                {
-                            $item['offset'] = $idx;
-                            $_program['items'][] = $item;
-                }
-                    
+               // ToDo: 
+                
             }
 
             $_channel['programs'] = $_program;

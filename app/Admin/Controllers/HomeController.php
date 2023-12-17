@@ -139,7 +139,7 @@ HTML;
             ['name' => 'Queue driver',      'value' => config('queue.default')],
             ['name' => 'Timezone',          'value' => config('app.timezone')],
             ['name' => 'Locale',            'value' => config('app.locale')],
-            //['name' => 'Env',               'value' => config('app.env')],
+            ['name' => 'Env',               'value' => config('app.env')],
             //['name' => 'URL',               'value' => config('app.url')],
         ];
         $data = '';
