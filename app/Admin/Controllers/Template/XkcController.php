@@ -69,7 +69,7 @@ class XkcController extends AdminController
 
             }
 
-            $temp['table'] = (new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items))->render();
+            $temp['table'] = (new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
             $data[] = $temp; 
         
         }
@@ -123,7 +123,7 @@ class XkcController extends AdminController
                 }
             }
 
-            return new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items);
+            return new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';

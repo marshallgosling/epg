@@ -10,7 +10,7 @@
 /* Common styles for all types */
 .bs-callout {
   padding: 20px;
-  margin: 20px 0;
+  margin-bottom: 20px;
   border: 1px solid #eee;
   border-left-width: 5px;
   border-radius: 3px;
@@ -18,6 +18,8 @@
 .bs-callout h4 {
   margin-top: 0;
   margin-bottom: 5px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 .bs-callout p:last-child {
   margin-bottom: 0;
@@ -25,12 +27,6 @@
 .bs-callout code {
   border-radius: 3px;
 }
-
-/* Tighten up space between multiple callouts */
-.bs-callout + .bs-callout {
-  margin-top: -5px;
-}
-
 /* Variations */
 .bs-callout-danger {
   border-left-color: #ce4844;
@@ -62,6 +58,9 @@
 .bs-callout-primary h4 {
   color: #563d7c;
 }
+.bs-callout table {
+  margin-bottom: 5px;
+}
 </style>
 <div class="row">
     <div class="col-md-12"> 
@@ -81,7 +80,7 @@
             <div class="box-body table-responsive">
                 @foreach($data as $temp) 
                 <div class="bs-callout bs-callout-{{$temp['color']}}">
-                    <h4>{{$temp['start_at']}} - {{$temp['end_at']}} <small>{{$temp['duration']}} </small> {{$temp['name']}}  </h4>
+                    <h4>{{$temp['start_at']}} - {{$temp['end_at']}} &nbsp;<small>{{$temp['duration']}} </small>&nbsp; &nbsp; | {{$temp['name']}}  </h4>
                     {!!$temp['table']!!}    
                 </div>
                 @endforeach
