@@ -372,8 +372,8 @@
             return;
         }
         selectedIndex = idx;
-        if(idx == 'new') multi = true;
-        else multi = false;
+        multi = idx == 'new';
+        
         $('#searchModal').modal('show');
         $('#confirmBtn').removeAttr('disabled');
     }
