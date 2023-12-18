@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Category;
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\Epg;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -11,6 +12,8 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Storage;
 use Encore\Admin\Layout\Content;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EpgController extends AdminController
 {
@@ -74,53 +77,51 @@ class EpgController extends AdminController
         return $grid;
     }
 
-    public function preview(Content $content)
+    public function preview($air_date, Content $content)
     {
-        $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+        $channels = Channel::where('name', 'xkc')->orderBy('air_date', 'desc')->limit(300)->get();
+
+        if($air_date == 'latest')
+        {
+            $model = $channels[0];
+            $air_date = $model->air_date;
+        }
+        else {
+            $model = Channel::where('air_date', $air_date)->first();
+        }
 
         $data = [];
         $colors = [];
-        foreach($templates as $t) {
-
-            $temp = $t->toArray();
-
-            $items = [];
-            $programs = $t['records'];
-            if($programs)foreach($programs as $p)
-            {
-                if($p['data'] != null) {
-                    $days = [];
-                    if(count($p['data']['dayofweek']) == 7) $days[] = __('全天');
-                    else if($p['data']['dayofweek'])
-                        foreach($p['data']['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
-                    $items[] = [ $p['id'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="programs/'.$p['id'].'">查看</a>'];
-                
-                }
-                else {
-                    $items[] = [ $p['id'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="programs/'.$p->id.'">查看</a>' ];
-                
-                }
-            }
-
-            if($t['schedule'] == Template::SPECIAL) $temp['color'] = 'default';
-            else {
-                if(array_key_exists($t['name'], $colors)) $temp['color'] = $colors[$t['name']];
-                else {
-                    $c = Epg::getNextColor();
-                    $colors[$t['name']] = $c;
-                    $temp['color'] = $c;
-                }
-
-            }
-
-            $temp['table'] = (new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
-            $data[] = $temp; 
+        $spilt = 0;
+        $order = [[],[]];
         
+        $start_at = strtotime($air_date.' 06:00:00');
+        $pos_start = (int)Epg::where('start_at','>',$start_at-300)->where('start_at','<',$start_at+300)->orderBy('start_at', 'desc')->limit(1)->value('id');
+        $start_at += 86400;
+        $pos_end = (int)Epg::where('start_at','>',$start_at-300)->where('start_at','<',$start_at+300)->orderBy('start_at', 'desc')->limit(1)->value('id');
+
+        if($pos_start>=0 && $pos_end>$pos_start)
+        {
+            $list = Epg::where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
+
+            $programs = DB::table('epg')->selectRaw('distinct(program_id)')->where('id', '>=', $pos_start)->where('id','<',$pos_end)->pluck('program_id')->toArray();
+            $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')->whereIn('id', $programs)->orderBy('start_at')->get();
+    
+            foreach($programs as $key=>$pro)
+            {
+                $data[$pro->id] = $pro->toArray();
+                $data[$pro->id]['items'] = [];
+                $order[$spilt][] = $pro->id;
+                if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
+            }
+    
+            foreach($list as $t) {
+                $data[$t->program_id]['items'][] = substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small>'.$t->unique_no.'</small> '.  $t->name . '<small>'.substr($t->duration, 0, 8).'</small>';
+            }
         }
-        $group = 'temp';
-        $error = Storage::disk('data')->exists('generate_stall') ? Storage::disk('data')->get('generate_stall') : "";
-        return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
-        ->body(view('admin.template.preview', compact('data', 'group', 'error')));
+           
+        return $content->title(__('Preview EPG Content'))->description(__(' '))
+        ->body(view('admin.epg.preview', compact('data', 'channels', 'model', 'order')));
     }
 
 
