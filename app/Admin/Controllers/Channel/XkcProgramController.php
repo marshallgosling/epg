@@ -93,10 +93,10 @@ class XkcProgramController extends AdminController
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        $grid->filter(function($filter){
-
-            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkc')->orderBy('id', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
-            
+        $grid->filter(function(Grid\Filter $filter){
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkc')->orderBy('id', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
+            });
         });
 
         $grid->actions(function ($actions) {
