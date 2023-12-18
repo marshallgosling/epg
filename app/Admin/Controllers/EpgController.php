@@ -34,7 +34,8 @@ class EpgController extends AdminController
         });
 
         $grid->rows(function(Grid\Row $row) {
-            if(in_array($row->model()->category, Category::CATES))
+
+            if(in_array($row->model()['category'], Category::CATES))
                 $row->setAttributes(['class'=>'bg-info']);
         });
 
