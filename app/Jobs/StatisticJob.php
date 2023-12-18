@@ -34,11 +34,6 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
         $this->log_print = false;
     }
 
-    public function uniqueId()
-    {
-        return $this->id;
-    }
-
     /**
      * Execute the job.
      *
@@ -83,6 +78,11 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
         }
 
         
+    }
+
+    public function uniqueId()
+    {
+        return $this->id;
     }
 
     /**

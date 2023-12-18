@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Channel;
 
+use App\Jobs\EpgJob;
 use App\Jobs\StatisticJob;
 use App\Models\Channel;
 use Encore\Admin\Actions\BatchAction;
@@ -34,6 +35,7 @@ class BatchAudit extends BatchAction
 
             if($audit == Channel::AUDIT_PASS) {
                 StatisticJob::dispatch($model->id);
+                EpgJob::dispatch($model->id);
             }
         }
         

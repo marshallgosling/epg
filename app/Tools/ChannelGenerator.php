@@ -308,6 +308,10 @@ class ChannelGenerator
 
                 if(!$item) {
                     //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
+                    $d = $p->data;
+                    $d['result'] = '出错';
+                    $p->data = $d;
+                    $p->save();
                     throw new GenerationException("随机栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE, "{$p->id} {$p->category} {$p->name} 没有找到匹配的节目");
                 }
             }
@@ -352,6 +356,10 @@ class ChannelGenerator
 
         if(!count($data)) {
             $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
+            $d = $p->data;
+            $d['result'] = '出错';
+            $p->data = $d;
+            $p->save();
             throw new GenerationException("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE, $lasterror);
         }
         return $data;
