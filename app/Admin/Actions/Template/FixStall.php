@@ -41,7 +41,9 @@ class FixStall extends Action
     public function form()
     {
         $this->checkbox('fixed', __('问题'))->options([1=>'已解决']);
-        $this->textarea('desc', __('问题说明'));
+        $error = '无';
+        if(Storage::disk('data')->exists('generate_stall')) $error = Storage::disk('data')->get('generate_stall');
+        $this->textarea('desc', __('问题说明'))->default($error);
     
         $this->text('comment', __('说明及注意事项'))->default(__('解决问题后，才能继续自动生成编单。'))->disable();
     }
