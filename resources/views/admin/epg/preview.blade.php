@@ -69,9 +69,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            @foreach($channels as $item) 
-                            <li><a href="./{{$item->air_date}}">{{$item->air_date}} <small>{{ \App\Models\Channel::STATUS[$item->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$item->audit_status] }}</span></a></li>
-                            @endforeach
+                            
                         </ul>
                     </div>
                 </div>
