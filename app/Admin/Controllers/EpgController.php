@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Epg;
 use Encore\Admin\Controllers\AdminController;
@@ -30,6 +31,11 @@ class EpgController extends AdminController
         $grid->model()->orderBy('start_at');
         $grid->header(function () {
             return "";
+        });
+
+        $grid->rows(function(Grid\Row $row) {
+            if(in_array($row->model()->category, Category::CATES))
+                $row->setAttributes(['class'=>'bg-info']);
         });
 
         $grid->column('id', __('Id'));
