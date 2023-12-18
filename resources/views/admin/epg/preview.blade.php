@@ -82,7 +82,7 @@
                     <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
                     <ul class="list-group">
                       @foreach ($data[$pro_id]['items'] as $item)
-                      <li class="list-group-item">{{$item}}</li>
+                      <li class="list-group-item">{!!$item!!}</li>
                       @endforeach
                     </ul>   
                 </div>
@@ -94,7 +94,7 @@
                     <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
                     <ul class="list-group">
                       @foreach ($data[$pro_id]['items'] as $item)
-                      <li class="list-group-item">{{$item}}</li>
+                      <li class="list-group-item">{!!$item!!}</li>
                       @endforeach
                     </ul>   
                 </div>
