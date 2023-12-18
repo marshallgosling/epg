@@ -15,6 +15,7 @@ use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
+use App\Models\Epg;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
@@ -27,7 +28,6 @@ class XkcController extends AdminController
      * @var string
      */
     protected $title = '【 XKC 】模版';
-    private $colorIdx = 0;
     private $group = 'xkc';
 
     public function preview(Content $content)
@@ -62,7 +62,7 @@ class XkcController extends AdminController
             else {
                 if(array_key_exists($t['name'], $colors)) $temp['color'] = $colors[$t['name']];
                 else {
-                    $c = $this->getNextColor();
+                    $c = Epg::getNextColor();
                     $colors[$t['name']] = $c;
                     $temp['color'] = $c;
                 }
@@ -77,15 +77,6 @@ class XkcController extends AdminController
         $error = false;
         return $content->title(__('Preview Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group', 'error')));
-    }
-
-    private function getNextColor()
-    {
-        $colors = ['warning', 'info', 'primary', 'success','danger'];
-        $c = $colors[$this->colorIdx];
-        $this->colorIdx ++;
-        if($this->colorIdx == count($colors)) $this->colorIdx = 0;
-        return $c;
     }
 
     /**

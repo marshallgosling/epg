@@ -30,4 +30,14 @@ class Epg extends Model
         'start_at' => 'datetime:Y-m-d H:i:s',
         'end_at' => 'datetime:Y-m-d H:i:s'
     ];
+
+    private static $colorIdx = 0;
+    private const colors = ['warning', 'info', 'primary', 'success','danger'];
+    public static function getNextColor()
+    {
+        $c = self::colors[self::$colorIdx];
+        self::$colorIdx ++;
+        if(self::$colorIdx == count(self::colors)) self::$colorIdx = 0;
+        return $c;
+    }
 }

@@ -13,6 +13,7 @@ use App\Models\Temp\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
+use App\Models\Epg;
 use Encore\Admin\Layout\Content;
 
 class TempController extends AdminController
@@ -23,7 +24,6 @@ class TempController extends AdminController
      * @var string
      */
     protected $title = '【 临时 】模版';
-    private $colorIdx = 0;
 
     protected $description = [
         'index'  => "用于查看 【XKC】 自动编单问题，保存临时状态",
@@ -64,7 +64,7 @@ class TempController extends AdminController
             else {
                 if(array_key_exists($t['name'], $colors)) $temp['color'] = $colors[$t['name']];
                 else {
-                    $c = $this->getNextColor();
+                    $c = Epg::getNextColor();
                     $colors[$t['name']] = $c;
                     $temp['color'] = $c;
                 }
@@ -79,15 +79,6 @@ class TempController extends AdminController
         $error = Storage::disk('data')->exists('generate_stall') ? Storage::disk('data')->get('generate_stall') : "";
         return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group', 'error')));
-    }
-
-    private function getNextColor()
-    {
-        $colors = ['warning', 'info', 'primary', 'success','danger'];
-        $c = $colors[$this->colorIdx];
-        $this->colorIdx ++;
-        if($this->colorIdx == count($colors)) $this->colorIdx = 0;
-        return $c;
     }
 
     /**

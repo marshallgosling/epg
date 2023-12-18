@@ -9,6 +9,8 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Storage;
+use Encore\Admin\Layout\Content;
 
 class EpgController extends AdminController
 {
@@ -71,6 +73,56 @@ class EpgController extends AdminController
 
         return $grid;
     }
+
+    public function preview(Content $content)
+    {
+        $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+
+        $data = [];
+        $colors = [];
+        foreach($templates as $t) {
+
+            $temp = $t->toArray();
+
+            $items = [];
+            $programs = $t['records'];
+            if($programs)foreach($programs as $p)
+            {
+                if($p['data'] != null) {
+                    $days = [];
+                    if(count($p['data']['dayofweek']) == 7) $days[] = __('全天');
+                    else if($p['data']['dayofweek'])
+                        foreach($p['data']['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
+                    $items[] = [ $p['id'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="programs/'.$p['id'].'">查看</a>'];
+                
+                }
+                else {
+                    $items[] = [ $p['id'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], '', '', '', '', '', '<a href="programs/'.$p->id.'">查看</a>' ];
+                
+                }
+            }
+
+            if($t['schedule'] == Template::SPECIAL) $temp['color'] = 'default';
+            else {
+                if(array_key_exists($t['name'], $colors)) $temp['color'] = $colors[$t['name']];
+                else {
+                    $c = Epg::getNextColor();
+                    $colors[$t['name']] = $c;
+                    $temp['color'] = $c;
+                }
+
+            }
+
+            $temp['table'] = (new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
+            $data[] = $temp; 
+        
+        }
+        $group = 'temp';
+        $error = Storage::disk('data')->exists('generate_stall') ? Storage::disk('data')->get('generate_stall') : "";
+        return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
+        ->body(view('admin.template.preview', compact('data', 'group', 'error')));
+    }
+
 
     /**
      * Make a show builder.
