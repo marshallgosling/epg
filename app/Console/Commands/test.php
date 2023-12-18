@@ -37,9 +37,10 @@ class test extends Command
         $air_date = $this->argument('v') ?? "";
         
         $start_at = strtotime($air_date.' 06:00:00');
-        $pos_start = (int)Epg::where('start_at','>',$start_at-300)->where('start_at','<',$start_at+300)->orderBy('start_at', 'desc')->limit(1)->value('id')->dd();
+        $pos_start = (int)Epg::where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
         $start_at += 86400;
-        $pos_end = (int)Epg::where('start_at','>',$start_at-300)->where('start_at','<',$start_at+300)->orderBy('start_at', 'desc')->limit(1)->value('id');
+        $air_date = date('Y-m-d', $start_at);
+        $pos_end = (int)Epg::where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
 
         $this->info("$pos_start - $pos_end");
 
