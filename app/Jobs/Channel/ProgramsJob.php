@@ -72,8 +72,8 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $channel->status = Channel::STATUS_RUNNING;
         $channel->save();
 
-        $generator = new ChannelGenerator();
-        $generator->loadTemplate($channel->name);
+        $generator = new ChannelGenerator($channel->name);
+        $generator->loadTemplate();
 
         if($channel->name == 'xkc')
             $start_end = $generator->generateXkc($channel);
