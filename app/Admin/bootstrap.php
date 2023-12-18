@@ -22,7 +22,7 @@ Encore\Admin\Facades\Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navba
     $xkv = \Illuminate\Support\Facades\Storage::exists('xkv.txt') ? \Illuminate\Support\Facades\Storage::get('xkv.txt') : "-";
     $xkc = \Illuminate\Support\Facades\Storage::exists('xkc.txt') ?\Illuminate\Support\Facades\Storage::get('xkc.txt') : "-";
     $navbar->left(view('admin.notice', compact('xkv', 'xkc')));
-    $navbar->right(view('admin.notification1'));
+    $navbar->right(view('admin.notification'));
 
 });
 
