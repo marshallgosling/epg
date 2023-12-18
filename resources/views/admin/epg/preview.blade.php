@@ -65,12 +65,12 @@
                 <div class="btn-group">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{$model->air_date}} <small>{{ Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ Channel::AUDIT[$model->audit_status] }}</span>
+                            {{$model->air_date}} <small>{{ \App\Models\Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($channels as $item) 
-                            <li><a href="./{{$item->air_date}}">{{$item->air_date}} <small>{{ Channel::STATUS[$item->status] }} </small> <span class="label label-info">{{ Channel::AUDIT[$item->audit_status] }}</span></a></li>
+                            <li><a href="./{{$item->air_date}}">{{$item->air_date}} <small>{{ \App\Models\Channel::STATUS[$item->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$item->audit_status] }}</span></a></li>
                             @endforeach
                         </ul>
                     </div>
