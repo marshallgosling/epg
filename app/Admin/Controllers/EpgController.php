@@ -117,7 +117,7 @@ class EpgController extends AdminController
             }
     
             foreach($list as $t) {
-                $data[$t->program_id]['items'][] = substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small>'.$t->unique_no.'</small> '.  $t->name . '<small>'.substr($t->duration, 0, 8).'</small>';
+                $data[$t->program_id]['items'][] = substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
             }
         }
            
