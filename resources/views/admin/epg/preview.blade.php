@@ -76,7 +76,7 @@
             </div>
             <div class="box-body">
               @if(count($data) > 0)
-              <div class="col-md-6"> 
+              <div class="col-md-8"> 
                 @foreach($order[0] as $pro_id) 
                 <div class="bs-callout bs-callout-info">
                     <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
@@ -88,7 +88,7 @@
                 </div>
                 @endforeach
               </div>
-              <div class="col-md-6"> 
+              <div class="col-md-4"> 
                 @foreach($order[1] as $pro_id) 
                 <div class="bs-callout bs-callout-info">
                     <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
