@@ -72,7 +72,7 @@ class XkvProgramController extends AdminController
         $grid->filter(function($filter){
 
             // 在这里添加字段过滤器
-            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
+            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('id', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
             
         });
 

@@ -95,7 +95,7 @@ class XkcProgramController extends AdminController
 
         $grid->filter(function($filter){
 
-            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkc')->orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
+            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkc')->orderBy('id', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
             
         });
 
