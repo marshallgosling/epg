@@ -127,7 +127,7 @@ class ChannelGenerator
         $schecule = 0;//strtotime($channel->air_date." 06:00:00");
         $class::loadBlackList();
         $start_end = '';
-
+        $sort=0;
         foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
             $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
@@ -161,12 +161,12 @@ class ChannelGenerator
             $c->data = json_encode($data);
             $c->end_at = date('Y-m-d H:i:s', $this->air);
             $c->save();
-
+            $sort = $t->sort + 1;
         }
 
         if($this->special) {
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('sort')->get();
-            $sort = $t->sort + 1;
+            
             $this->addSpecial($programs, $sort);
         }
 

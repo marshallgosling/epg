@@ -35,7 +35,7 @@ class Exporter
                 $json->ItemList[] = clone $json->ItemList[$idx-1];
                 $cl = [$json->ItemList[$idx]->ClipsItem[0]];
                 $json->ItemList[$idx]->ClipsItem = $cl;
-
+            }
                 $itemList = &$json->ItemList[$idx];
 
                 $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
@@ -65,7 +65,7 @@ class Exporter
                 $itemList->ID = (string)Str::uuid();
                 $itemList->Pid = (string)Str::uuid();
                 $itemList->ClipsCount = 1;
-            }
+            
         }
 
         self::$json = $json;

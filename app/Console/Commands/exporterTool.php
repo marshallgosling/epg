@@ -73,7 +73,7 @@ class exporterTool extends Command
         $channel = Channel::findOrFail($id);
         $data = Exporter::gatherData($channel->air_date, $channel->name, Exporter::TIMES[$channel->name]);
    
-        Exporter::generateSimple($channel, $data);
+        Exporter::generate($id);
         Exporter::exportXml(true);
     
         Notify::fireNotify(
