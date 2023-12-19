@@ -214,7 +214,7 @@ class Exporter
         return $lines;
     }
 
-    public static function gatherData($air_date, $group, $time='06:00:00') 
+    public static function gatherData($air_date, $group) 
     {      
         $data = [];
         $spilt = 0;
@@ -260,25 +260,23 @@ class Exporter
 
     }
 
-    public static function generateData($channel, $data)
+    public static function generateData($channel, $data, $fixDate = false)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
 
         $json = json_decode($jsonstr);
 
-        //$channel = Channel::find($id);
+        if(!$fixDate) $fixDate = $channel->air_date;
 
         $json->ChannelName = $channel->name;
-        $json->PgmDate = $channel->air_date;
+        $json->PgmDate = $fixDate;
         $json->Version = $channel->version;
-
-        //$programs = $channel->programs()->get();
 
         $json->Count = count($data);
         $idx = 0;
         foreach($data as $program)
         {
-            $date = Carbon::parse($program['start_at']);
+            $date = Carbon::parse($fixDate. ' ' .$program['start_at']);
             // if not exist, just copy one 
             if(!array_key_exists($idx, $json->ItemList)) {
                 $json->ItemList[] = clone $json->ItemList[$idx-1];

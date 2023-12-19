@@ -21,7 +21,7 @@ class exporterTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:export {action?} {id?}';
+    protected $signature = 'tools:export {action?} {id?} {data?}';
 
     /**
      * The console command description.
@@ -47,20 +47,19 @@ class exporterTool extends Command
      */
     public function handle()
     {
-        $start_at = '2023-12-31';
-        $end_at = '2023-12-31';
 
         $id = $this->argument('id') ?? "";
+        $data = $this->argument('data') ?? false;
         $action = $this->argument('action') ?? "";
         
         if(in_array($action, ['excel', 'xml', 'test'])) {
-            $this->$action($id);
+            $this->$action($id, $data);
         }
         
         return 0;
     }
 
-    private function test()
+    private function test($id, $data)
     {
         $d = DB::table('notification')->selectRaw("`type`, count(`type`) as total")->where('viewed', 0)->groupBy('type')->pluck('total', 'type')->toArray();
         print_r($d);
@@ -85,25 +84,26 @@ class exporterTool extends Command
         );
     }
 
-    private function xml($id)
+    private function xml($id, $date=false)
     {
         $channel = Channel::findOrFail($id);
 
         $data = Exporter::gatherData($channel->air_date, $channel->name);
 
-        Exporter::generateData($channel, $data);
+        Exporter::generateData($channel, $data, $date);
         Exporter::exportXml();
 
+        $fake = $date ? " -> $date":"";
         Notify::fireNotify(
             $channel->name,
             Notification::TYPE_XML, 
-            "生成 XML {$channel->air_date} 成功. ", 
+            "生成 XML {$channel->air_date} {$fake} 成功. ", 
             "",
             Notification::LEVEL_INFO
         );
     }
 
-    private function excel($id)
+    private function excel($id, $p=false)
     {
         $export = ExportList::findOrFail($id);
 
