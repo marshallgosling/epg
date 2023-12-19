@@ -180,10 +180,13 @@
         <div class="box">
             <div class="box-header">
                 <div class="btn-group">
-                <b>{{@__('Preview EPG Content')}} - </b>
+                <b>{{@__('Channel')}} - </b>
                 </div>
                 <div class="btn-group">
-                  {{$model->air_date}} <small>{{ \App\Models\Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span>
+                  <span class="label-{{ \App\Models\Channel::DOTS[$model->name] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
+                  {{ \App\Models\Channel::GROUPS[$model->name] }}
+                  {{ @__('Air date')}}: {{$model->air_date}} | 
+                  <small class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span>
                             
                 </div>
             </div>
