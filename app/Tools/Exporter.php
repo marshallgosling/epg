@@ -294,7 +294,7 @@ class Exporter
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
                 $itemList->Name = $program['name'];
                 $itemList->BillType = $date->format('md').'新建';
-                $itemList->LimitLen = ChannelPrograms::caculateFrames($program->duration);
+                $itemList->LimitLen = 0;
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                 $itemList->PlayType = $idx == 0 ? 1 : 0;
 
