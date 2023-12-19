@@ -285,7 +285,7 @@ class Exporter
                 $json->ItemList[$idx]->ClipsItem = $cl;
             }
 
-            $itemList = &$json->ItemList[$idx];
+            $itemList = $json->ItemList[$idx];
 
             $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
                        
@@ -297,14 +297,14 @@ class Exporter
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                 $itemList->PlayType = $idx == 0 ? 1 : 0;
 
-            $clips = &$itemList->ClipsItem;
+            $clips = $itemList->ClipsItem;
             $items = $program['items'];
             $duration = 0;
             if(is_array($items)) foreach($items as $n=>$item)
             { 
                 if(!array_key_exists($n, $clips)) $clips[$n] = clone $clips[$n-1];
                 
-                $clip = &$clips[$n];
+                $clip = $clips[$n];
                 $clip->FileName = '<![CDATA['.$item['name'].'.'.$item['unique_no'].']]>';
                 $clip->Name = '<![CDATA['.$item['name'].']]>';
                 $clip->Id = $item['unique_no'];
@@ -326,8 +326,6 @@ class Exporter
 
         return $json;
     }
-
-
 
 
 }
