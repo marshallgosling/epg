@@ -5,13 +5,11 @@ namespace App\Admin\Controllers\Channel;
 use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
-use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
-use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -25,7 +23,7 @@ class XkcController extends AdminController
      *
      * @var string
      */
-    protected $title = "Channel【XKC】节目单";
+    protected $title = "【 星空中国 】节目单";
 
     protected $description = [
                 'index'  => "查看和编辑每日节目单数据",

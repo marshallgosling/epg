@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use App\Models\Epg;
 use Illuminate\Support\Facades\DB;
 
 class Exporter
 {
     private static $json;
     private static $xml;
+    public static $file = true;
 
     public const TIMES = ['xkv'=>'06:00:00', 'xkc'=>'17:00:00'];
 
@@ -137,16 +139,19 @@ class Exporter
         self::$json = $json;
     }
 
-    public static function exportXml($file=false)
+    public static function exportXml($json=false)
     {
         $exporter = new \App\Tools\XmlWriter();
-        self::$xml = $exporter->export(self::$json, 'PgmItem');
+        if(!$json) $json = self::$json;
 
-        if($file) {
-            Storage::disk('public')->put(self::$json->ChannelName.'_'.self::$json->PgmDate.'.xml', self::$xml);
+        $xml = $exporter->export($json, 'PgmItem');
+
+        if(self::$file) {
+            Storage::disk('public')->put($json->ChannelName.'_'.$json->PgmDate.'.xml', $xml);
 
         }
-        return self::$xml;
+        self::$xml = $xml;
+        return $xml;
     }
 
     public static function gatherLines($start_at, $end_at, $group_id, $mode='excel')
@@ -210,30 +215,119 @@ class Exporter
     }
 
     public static function gatherData($air_date, $group, $time='06:00:00') 
-    {
-        
-        $end_at = $air_date;
-        $start_at = date('Y-m-d', (strtotime($end_at.' '.$time) - 86400));
-
-        echo "$start_at - $end_at".PHP_EOL;
-
-        $lines = self::gatherLines($start_at, $end_at, $group, 'xml');
-
-        print_r($lines);
-        
-        $found = false;
+    {      
         $data = [];
+        $spilt = 0;
+        $order = [[],[]];
+        
+        $start_at = strtotime($air_date.' 06:00:00');
+        $pos_start = (int)Epg::where('group_id', $group)
+                            ->where('start_at','>',$air_date.' 05:58:00')
+                            ->where('start_at','<',$air_date.' 06:04:00')
+                            ->orderBy('start_at', 'desc')->limit(1)->value('id');
+        $start_at += 86400;
+        $air_date = date('Y-m-d', $start_at);
+        $pos_end = (int)Epg::where('group_id', $group)
+                            ->where('start_at','>',$air_date.' 05:58:00')
+                            ->where('start_at','<',$air_date.' 06:04:00')
+                            ->orderBy('start_at', 'desc')->limit(1)->value('id');
 
-        foreach($lines as $l)
+        if($pos_start>=0 && $pos_end>$pos_start)
         {
-            if($l->start_at == $time) $found = true;
-            if($found) $data[] = $l;
-            if($l->end_at == $time) $found = false;
+            $list = Epg::where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
+
+            $programs = DB::table('epg')->selectRaw('distinct(program_id)')
+                            ->where('id', '>=', $pos_start)->where('id','<',$pos_end)
+                            ->pluck('program_id')->toArray();
+
+            $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')
+                            ->whereIn('id', $programs)->orderBy('start_at')->get();
+    
+            foreach($programs as $key=>$pro)
+            {
+                $data[$pro->id] = $pro->toArray();
+                $data[$pro->id]['items'] = [];
+                //$order[$spilt][] = $pro->id;
+                //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
+            }
+    
+            foreach($list as $t) {
+                $data[$t->program_id]['items'][] = $t; 
+            }
         }
 
         return $data;
 
     }
+
+    public static function generateData($channel, $data)
+    {
+        $jsonstr = Storage::disk('data')->get('template.json');
+
+        $json = json_decode($jsonstr);
+
+        //$channel = Channel::find($id);
+
+        $json->ChannelName = $channel->name;
+        $json->PgmDate = $channel->air_date;
+        $json->Version = $channel->version;
+
+        //$programs = $channel->programs()->get();
+
+        $json->Count = count($data);
+
+        foreach($data as $idx=>$program)
+        {
+            $date = Carbon::parse($program->start_at);
+            // if not exist, just copy one 
+            if(!array_key_exists($idx, $json->ItemList)) {
+                $json->ItemList[] = clone $json->ItemList[$idx-1];
+                $cl = [$json->ItemList[$idx]->ClipsItem[0]];
+                $json->ItemList[$idx]->ClipsItem = $cl;
+            }
+
+            $itemList = &$json->ItemList[$idx];
+
+            $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
+                       
+                $itemList->StartTime = $start;
+                $itemList->SystemTime = $date->format('Y-m-d H:i:s');
+                $itemList->Name = $program->name;
+                $itemList->BillType = $date->format('md').'新建';
+                $itemList->LimitLen = ChannelPrograms::caculateFrames($program->duration);
+                $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
+                $itemList->PlayType = $idx == 0 ? 1 : 0;
+
+            $clips = &$itemList->ClipsItem;
+            $data = json_decode($program->data);
+            $duration = 0;
+            if(is_array($data)) foreach($data as $n=>$clip)
+            { 
+                if(!array_key_exists($n, $clips)) $clips[$n] = clone $clips[$n-1];
+                
+                $c = &$clips[$n];
+                $c->FileName = $clip->unique_no;
+                $c->Name = $clip->name;
+                $c->Id = $clip->unique_no;
+                $c->LimitDuration = ChannelPrograms::caculateFrames($clip->duration);
+                $c->Duration = ChannelPrograms::caculateFrames($clip->duration);              
+
+                $duration += ChannelPrograms::caculateSeconds($clip->duration);
+            }
+            $itemList->Length = $duration * config('FRAME', 25);
+            $itemList->LimitLen = $duration * config('FRAME', 25);
+            $itemList->ID = (string)Str::uuid();
+            $itemList->Pid = (string)Str::uuid();
+            $itemList->ClipsCount = is_array($data) ? count($data) : 0;
+
+            //break;
+        }
+
+        self::$json = $json;
+
+        return $json;
+    }
+
 
 
 

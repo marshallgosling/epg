@@ -24,7 +24,7 @@ class XkvProgramController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Channel【XKV】编单';
+    protected $title = '【 V China 】编单';
 
     protected $description = [
         'index'  => "每日节目编单具体编排数据，可以编辑及排序",

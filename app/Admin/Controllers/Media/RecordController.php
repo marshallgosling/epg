@@ -19,7 +19,7 @@ class RecordController extends AdminController
      *
      * @var string
      */
-    protected $title = 'XKC 节目库管理';
+    protected $title = '星空中国 节目库管理';
 
     protected $description = [
         'index'  => "XKC/XKI 节目库数据",

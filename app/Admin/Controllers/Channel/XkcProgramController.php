@@ -26,7 +26,7 @@ class XkcProgramController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Channel【XKC】编单';
+    protected $title = '【 星空中国 】编单';
 
     protected $description = [
         'index'  => "每日节目编单具体编排数据，可以编辑及排序",

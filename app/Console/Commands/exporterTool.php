@@ -66,7 +66,7 @@ class exporterTool extends Command
         print_r($d);
     }
 
-    private function xml($id)
+    private function xml_old($id)
     {
         
         //Exporter::generate($id);
@@ -74,8 +74,26 @@ class exporterTool extends Command
         $data = Exporter::gatherData($channel->air_date, $channel->name, Exporter::TIMES[$channel->name]);
    
         Exporter::generate($id);
-        Exporter::exportXml(true);
+        Exporter::exportXml();
     
+        Notify::fireNotify(
+            $channel->name,
+            Notification::TYPE_XML, 
+            "生成 XML {$channel->air_date} 成功. ", 
+            "",
+            Notification::LEVEL_INFO
+        );
+    }
+
+    private function xml($id)
+    {
+        $channel = Channel::findOrFail($id);
+
+        $data = Exporter::gatherData($channel->air_date, $channel->name);
+
+        Exporter::generateData($channel, $data);
+        Exporter::exportXml();
+
         Notify::fireNotify(
             $channel->name,
             Notification::TYPE_XML, 
