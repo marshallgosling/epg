@@ -264,28 +264,23 @@ class Exporter
     {
         $jsonstr = Storage::disk('data')->get('template.json');
 
-        $json = json_decode($jsonstr);
+        $template = json_decode($jsonstr);
 
         if(!$fixDate) $fixDate = $channel->air_date;
+        $json = clone $template->PgmItem;
 
         $json->ChannelName = $channel->name;
         $json->PgmDate = $fixDate;
         $json->Version = $channel->version;
 
-        $json->Count = count($data);
-        //$idx = 0;
+        $json->Count = count($data) - 1;
+
         foreach($data['order'] as $idx=>$pid)
         {
             $program = $data[$pid];
             $date = Carbon::parse($fixDate. ' ' .$program['start_at']);
-            // if not exist, just copy one 
-            if(!array_key_exists($idx, $json->ItemList)) {
-                $json->ItemList[] = clone $json->ItemList[$idx-1];
-                $cl = [$json->ItemList[$idx]->ClipsItem[0]];
-                $json->ItemList[$idx]->ClipsItem = $cl;
-            }
 
-            $itemList = $json->ItemList[$idx];
+            $itemList = clone $template->ItemList;
 
             $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
                        
@@ -297,14 +292,14 @@ class Exporter
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                 $itemList->PlayType = $idx == 0 ? 1 : 0;
 
-            $clips = $itemList->ClipsItem;
+            //$clips = ;
             $items = $program['items'];
             $duration = 0;
             if(is_array($items)) foreach($items as $n=>$item)
             { 
-                if(!array_key_exists($n, $clips)) $clips[$n] = clone $clips[$n-1];
+                //if(!array_key_exists($n, $clips)) $clips[$n] = clone $clips[$n-1];
                 
-                $clip = $clips[$n];
+                $clip = clone $template->ClipsItem;
                 $clip->FileName = '<![CDATA['.$item['name'].'.'.$item['unique_no'].']]>';
                 $clip->Name = '<![CDATA['.$item['name'].']]>';
                 $clip->Id = $item['unique_no'];
@@ -313,13 +308,14 @@ class Exporter
                 $clip->LimitDuration = $frames;
                 $clip->Duration = $frames;
                 $duration += $seconds;
+                $itemList->ClipsItem[] = $clip;
             }
             $itemList->Length = $duration * config('FRAME', 25);
             $itemList->LimitLen = $duration * config('FRAME', 25);
             $itemList->ID = (string)Str::uuid();
             $itemList->Pid = (string)Str::uuid();
             $itemList->ClipsCount = is_array($items) ? count($items) : 0;
-
+            $json->ItemList[] = $itemList;
         }
 
         self::$json = $json;
