@@ -304,7 +304,7 @@ class Exporter
                 if(!array_key_exists($n, $clips)) $clips[$n] = clone $clips[$n-1];
                 
                 $clip = &$clips[$n];
-                $clip->FileName = $item['unique_no'];
+                $clip->FileName = $item['name'].'.'.$item['unique_no'];
                 $clip->Name = $item['name'];
                 $clip->Id = $item['unique_no'];
                 $seconds = ChannelPrograms::caculateSeconds($item['duration']);
