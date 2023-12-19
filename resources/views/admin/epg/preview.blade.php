@@ -157,10 +157,7 @@
   .bs-docs-sidebar.affix-bottom {
     width: 213px;
   }
-  .bs-docs-sidebar.affix {
-    position: fixed; /* Undo the static from mobile first approach */
-    top: 20px;
-  }
+
   .bs-docs-sidebar.affix-bottom {
     position: absolute; /* Undo the static from mobile first approach */
   }
@@ -174,7 +171,7 @@
   /* Widen the fixed sidebar again */
   .bs-docs-sidebar.affix-bottom,
   .bs-docs-sidebar.affix {
-    width: 263px;
+    width: 463px;
   }
 }
 
@@ -207,13 +204,12 @@
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix" data-offset-top="60">
+                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix" data-offset-top="20">
                   <ul class="nav bs-docs-sidenav"> 
                     @foreach($order as $pro_id) 
                     <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
                     @endforeach
                   </ul>
-                  <a href="#top" class="back-to-top"> 回到顶部 </a>
               </div>
               @else
               <h4>没有可以预览的串联单</h4>
