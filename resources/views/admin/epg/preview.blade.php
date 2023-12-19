@@ -179,16 +179,16 @@
     <div class="col-md-12"> 
         <div class="box">
             <div class="box-header">
-                <div class="btn-group">
-                <b>{{@__('Channel')}} - </b>
-                </div>
-                <div class="btn-group">
-                  <span class="label-{{ \App\Models\Channel::DOTS[$model->name] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
-                  {{ \App\Models\Channel::GROUPS[$model->name] }}
-                  {{ @__('Air date')}}: {{$model->air_date}} | 
-                  <small class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span>
-                            
-                </div>
+                <ol class="breadcrumb">
+                  <li><b>{{@__('Channel')}} </b></li>
+                  <li><span class="label-{{ \App\Models\Channel::DOTS[$model->name] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
+                  {{ \App\Models\Channel::GROUPS[$model->name] }}</li>
+                  <li class="active"><b>{{ @__('Air date')}}</b> {{$model->air_date}} | </li>
+                  <li><span class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </span> 
+                  <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>
+                  
+                </ol>
+                
             </div>
             <div class="box-body">
               @if(count($data) > 0)
