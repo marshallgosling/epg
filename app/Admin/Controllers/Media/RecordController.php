@@ -58,7 +58,7 @@ class RecordController extends AdminController
         $grid->column('expired_date', __('Expired date'))->hide();
 
         $grid->column('created_at', __('Created at'))->hide()->sortable();
-        $grid->column('updated_at', __('Updated at'))->hide()->sortable();
+        $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->filter(function(Grid\Filter $filter){
 
