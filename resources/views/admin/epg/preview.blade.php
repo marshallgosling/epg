@@ -56,9 +56,7 @@
 }
 
 /* By default it's not affixed in mobile views, so undo that */
-.bs-docs-sidebar.affix {
-  position: static;
-}
+
 @media (min-width: 768px) {
   .bs-docs-sidebar {
     padding-left: 20px;
@@ -157,10 +155,7 @@
   .bs-docs-sidebar.affix-bottom {
     width: 213px;
   }
-  .bs-docs-sidebar.affix {
-    position: fixed; /* Undo the static from mobile first approach */
-    top: 20px;
-  }
+
   .bs-docs-sidebar.affix-bottom {
     position: absolute; /* Undo the static from mobile first approach */
   }
@@ -207,7 +202,7 @@
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs" data-spy="affix">
+                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs" data-spy="affix" data-offset-top="20">
                   <ul class="nav bs-docs-sidenav"> 
                     @foreach($order as $pro_id) 
                     <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
