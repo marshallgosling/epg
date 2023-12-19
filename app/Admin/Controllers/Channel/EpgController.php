@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Channel;
 
 use App\Models\Category;
 use App\Models\Channel;

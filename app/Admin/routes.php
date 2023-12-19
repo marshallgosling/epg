@@ -64,8 +64,8 @@ Route::group([
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
     $router->resource('/notifications', 'NotificationController')->names('notification');
     $router->resource('/plans', 'PlanController')->names('plans');
-    $router->resource('/epg', 'EpgController')->names('epg');
-    $router->get('/epg/preview/{air}', 'EpgController@preview')->name('epg.preview');
+    $router->resource('/epg', 'Channel\\EpgController')->names('channel.epg');
+    $router->get('/epg/preview/{air}', 'Channel\\EpgController@preview')->name('channel.preview');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');
