@@ -252,7 +252,7 @@ class Exporter
             }
     
             foreach($list as $t) {
-                $data[$t->program_id]['items'][] = $t; 
+                $data[$t->program_id]['items'][] = $t->toArray(); 
             }
         }
 
@@ -278,7 +278,7 @@ class Exporter
 
         foreach($data as $idx=>$program)
         {
-            $date = Carbon::parse($program->start_at);
+            $date = Carbon::parse($program['start_at']);
             // if not exist, just copy one 
             if(!array_key_exists($idx, $json->ItemList)) {
                 $json->ItemList[] = clone $json->ItemList[$idx-1];
@@ -292,33 +292,34 @@ class Exporter
                        
                 $itemList->StartTime = $start;
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                $itemList->Name = $program->name;
+                $itemList->Name = $program['name'];
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = ChannelPrograms::caculateFrames($program->duration);
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                 $itemList->PlayType = $idx == 0 ? 1 : 0;
 
             $clips = &$itemList->ClipsItem;
-            $data = json_decode($program->data);
+            $items = $program['items'];
             $duration = 0;
-            if(is_array($data)) foreach($data as $n=>$clip)
+            if(is_array($items)) foreach($items as $n=>$item)
             { 
                 if(!array_key_exists($n, $clips)) $clips[$n] = clone $clips[$n-1];
                 
-                $c = &$clips[$n];
-                $c->FileName = $clip->unique_no;
-                $c->Name = $clip->name;
-                $c->Id = $clip->unique_no;
-                $c->LimitDuration = ChannelPrograms::caculateFrames($clip->duration);
-                $c->Duration = ChannelPrograms::caculateFrames($clip->duration);              
-
-                $duration += ChannelPrograms::caculateSeconds($clip->duration);
+                $clip = &$clips[$n];
+                $clip->FileName = $item['unique_no'];
+                $clip->Name = $clip['name'];
+                $clip->Id = $clip['unique_no'];
+                $seconds = ChannelPrograms::caculateSeconds($clip->duration);
+                $frames = $seconds * (int)config('FRAMES', 25);
+                $clip->LimitDuration = $frames;
+                $clip->Duration = $frames;
+                $duration += $seconds;
             }
             $itemList->Length = $duration * config('FRAME', 25);
             $itemList->LimitLen = $duration * config('FRAME', 25);
             $itemList->ID = (string)Str::uuid();
             $itemList->Pid = (string)Str::uuid();
-            $itemList->ClipsCount = is_array($data) ? count($data) : 0;
+            $itemList->ClipsCount = is_array($items) ? count($items) : 0;
 
             //break;
         }
