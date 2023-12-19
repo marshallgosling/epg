@@ -70,7 +70,7 @@ class exporterTool extends Command
         
         //Exporter::generate($id);
         $channel = Channel::findOrFail($id);
-        $data = Exporter::gatherData($channel->air_date, $channel->name, Exporter::TIMES[$channel->name]);
+        $data = Exporter::collectData($channel->air_date, $channel->name, Exporter::TIMES[$channel->name]);
    
         Exporter::generate($id);
         Exporter::exportXml();
@@ -88,7 +88,7 @@ class exporterTool extends Command
     {
         $channel = Channel::findOrFail($id);
 
-        $data = Exporter::gatherData($channel->air_date, $channel->name);
+        $data = Exporter::collectData($channel->air_date, $channel->name);
 
         Exporter::generateData($channel, $data, $date);
         Exporter::exportXml();
