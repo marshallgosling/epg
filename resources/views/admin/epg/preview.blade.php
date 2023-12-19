@@ -208,7 +208,7 @@ ol.breadcrumb {
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs" data-spy="affix" data-offset-top="20" data-offset-bottom="100">
+                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav bs-docs-sidenav"> 
                     @foreach($order as $pro_id) 
                     <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
@@ -222,3 +222,6 @@ ol.breadcrumb {
         </div>
     </div>
 </div>
+<script type="text/javascript">
+  $('#epgAffix').affix({});
+</script>

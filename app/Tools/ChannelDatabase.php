@@ -23,12 +23,12 @@ class ChannelDatabase
 
         $programs = $channel->programs()->get();
         //$last = strtotime($channel->air_date.' 00:00:00');
-        echo "channel air date is {$channel->air_date}".PHP_EOL;
+        //echo "channel air date is {$channel->air_date}".PHP_EOL;
         $items = [];
         $air = 0;
         foreach($programs as $p)
         {
-            echo "Program {$p->name} air date is {$p->start_at}".PHP_EOL;
+            //echo "Program {$p->name} air date is {$p->start_at}".PHP_EOL;
             $item = [
                 'group_id'=>$channel->name,
                 'channel_id'=>$channel->id,
