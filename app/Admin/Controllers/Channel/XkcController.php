@@ -46,7 +46,10 @@ class XkcController extends AdminController
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="xkc/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
-        $grid->column('air_date', __('Air date'));
+        $grid->column('air_date', __('Air date'))->display(function($air_date) {
+            return '<a href="'.admin_url('epg/preview/'.$this->id).'">'.$air_date.'</a>';
+        });
+
         $grid->column('start_end', __('StartEnd'));
         $grid->column('status', __('Status'))->filter(Channel::STATUS)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning']);

@@ -77,18 +77,22 @@ class EpgController extends AdminController
         return $grid;
     }
 
-    public function preview($air_date, Content $content)
+    public function preview($id, Content $content)
     {
-        $channels = Channel::where('name', 'xkc')->orderBy('air_date', 'desc')->limit(300)->get();
+        // $channels = Channel::where('name', 'xkc')->orderBy('air_date', 'desc')->limit(300)->get();
 
-        if($air_date == 'latest')
-        {
-            $model = $channels[0];
-            $air_date = $model->air_date;
-        }
-        else {
-            $model = Channel::where('air_date', $air_date)->first();
-        }
+        // if($air_date == 'latest')
+        // {
+        //     $model = $channels[0];
+        //     $air_date = $model->air_date;
+        // }
+        // else {
+        //     $model = Channel::where('air_date', $air_date)->first();
+        // }
+
+        $model = Channel::findOrFail($id);
+        $air_date = $model->air_date;
+        $group = $model->name;
 
         $data = [];
         $colors = [];
@@ -96,14 +100,14 @@ class EpgController extends AdminController
         $order = [[],[]];
         
         $start_at = strtotime($air_date.' 06:00:00');
-        $pos_start = (int)Epg::where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
+        $pos_start = (int)Epg::where('group_id', $group)->where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
         $start_at += 86400;
         $air_date = date('Y-m-d', $start_at);
-        $pos_end = (int)Epg::where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
+        $pos_end = (int)Epg::where('group_id', $group)->where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
 
         if($pos_start>=0 && $pos_end>$pos_start)
         {
-            $list = Epg::where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
+            $list = Epg::where('group_id', $group)->where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
 
             $programs = DB::table('epg')->selectRaw('distinct(program_id)')->where('id', '>=', $pos_start)->where('id','<',$pos_end)->pluck('program_id')->toArray();
             $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')->whereIn('id', $programs)->orderBy('start_at')->get();
