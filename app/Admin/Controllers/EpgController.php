@@ -97,7 +97,7 @@ class EpgController extends AdminController
         $data = [];
         $colors = [];
         $spilt = 0;
-        $order = [[],[]];
+        $order = [];
         
         $start_at = strtotime($air_date.' 06:00:00');
         $pos_start = (int)Epg::where('group_id', $group)->where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
@@ -116,8 +116,8 @@ class EpgController extends AdminController
             {
                 $data[$pro->id] = $pro->toArray();
                 $data[$pro->id]['items'] = [];
-                $order[$spilt][] = $pro->id;
-                if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
+                $order[] = $pro->id;
+                //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
             }
     
             foreach($list as $t) {

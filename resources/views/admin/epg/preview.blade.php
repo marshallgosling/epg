@@ -70,9 +70,9 @@
             <div class="box-body">
               @if(count($data) > 0)
               <div class="col-md-8"> 
-                @foreach($order[0] as $pro_id) 
+                @foreach($order as $pro_id) 
                 <div class="bs-callout bs-callout-info">
-                    <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
+                    <h4 id="content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
                     <ul class="list-group">
                       @foreach ($data[$pro_id]['items'] as $item)
                       <li class="list-group-item">{!!$item!!}</li>
@@ -82,16 +82,12 @@
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                @foreach($order[1] as $pro_id) 
-                <div class="bs-callout bs-callout-info">
-                    <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
-                    <ul class="list-group">
-                      @foreach ($data[$pro_id]['items'] as $item)
-                      <li class="list-group-item">{!!$item!!}</li>
-                      @endforeach
-                    </ul>   
-                </div>
-                @endforeach
+                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix">
+                  <ul class="nav bs-docs-sidenav"> 
+                    @foreach($order as $pro_id) 
+                    <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
+                    @endforeach
+                  </ul>
               </div>
               @else
               <h4>没有可以预览的串联单</h4>
