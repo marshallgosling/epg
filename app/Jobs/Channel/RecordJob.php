@@ -8,13 +8,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Tools\ChannelGenerator;
-use App\Tools\GenerationException;
+use App\Tools\Generator\GenerationException;
+use App\Tools\Generator\XkcGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
@@ -72,7 +72,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             return 0;
         }
 
-        $generator = new ChannelGenerator($this->group);
+        $generator = new XkcGenerator($this->group);
         $generator->makeCopyTemplate();
         $generator->loadTemplate();
 
@@ -102,7 +102,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             $channel->save();
 
             try {
-                $start_end = $generator->generateXkc($channel);
+                $start_end = $generator->generate($channel);
             }catch(GenerationException $e)
             {
                 Notify::fireNotify(

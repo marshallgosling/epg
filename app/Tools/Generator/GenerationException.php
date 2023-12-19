@@ -1,5 +1,5 @@
 <?php
-namespace App\Tools;
+namespace App\Tools\Generator;
 
 class GenerationException extends \Exception
 {
