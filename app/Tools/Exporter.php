@@ -217,7 +217,6 @@ class Exporter
     public static function gatherData($air_date, $group) 
     {      
         $data = [];
-        $spilt = 0;
         $order = [];
         
         $start_at = strtotime($air_date.' 06:00:00');
@@ -243,12 +242,11 @@ class Exporter
             $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')
                             ->whereIn('id', $programs)->orderBy('start_at')->get();
     
-            foreach($programs as $key=>$pro)
+            foreach($programs as $pro)
             {
                 $data[$pro->id] = $pro->toArray();
                 $data[$pro->id]['items'] = [];
                 $order[] = $pro->id;
-                //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
             }
     
             foreach($list as $t) {
@@ -275,8 +273,8 @@ class Exporter
         $json->Version = $channel->version;
 
         $json->Count = count($data);
-        $idx = 0;
-        foreach($data['order'] as $pid)
+        //$idx = 0;
+        foreach($data['order'] as $idx=>$pid)
         {
             $program = $data[$pid];
             $date = Carbon::parse($fixDate. ' ' .$program['start_at']);
@@ -322,8 +320,6 @@ class Exporter
             $itemList->Pid = (string)Str::uuid();
             $itemList->ClipsCount = is_array($items) ? count($items) : 0;
 
-            $idx ++;
-            //break;
         }
 
         self::$json = $json;
