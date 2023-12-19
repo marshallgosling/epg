@@ -224,6 +224,6 @@ ol.breadcrumb {
 </div>
 <script type="text/javascript">
   $(function () {
-    $('#epgAffix').affix({offset: {top: 110}});
+    $('#epgAffix').affix({offset: {top: 130}});
   });
 </script>
