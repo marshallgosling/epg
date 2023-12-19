@@ -275,8 +275,8 @@ class Exporter
         //$programs = $channel->programs()->get();
 
         $json->Count = count($data);
-
-        foreach($data as $idx=>$program)
+        $idx = 0;
+        foreach($data as $program)
         {
             $date = Carbon::parse($program['start_at']);
             // if not exist, just copy one 
@@ -321,6 +321,7 @@ class Exporter
             $itemList->Pid = (string)Str::uuid();
             $itemList->ClipsCount = is_array($items) ? count($items) : 0;
 
+            $idx ++;
             //break;
         }
 
