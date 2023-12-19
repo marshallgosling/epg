@@ -126,7 +126,7 @@ class EpgController extends AdminController
         }
            
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.preview', compact('data', 'channels', 'model', 'order')));
+        ->body(view('admin.epg.preview', compact('data', 'model', 'order')));
     }
 
 

@@ -63,15 +63,8 @@
                 <b>{{@__('Preview EPG Content')}} - </b>
                 </div>
                 <div class="btn-group">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{$model->air_date}} <small>{{ \App\Models\Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
+                  {{$model->air_date}} <small>{{ \App\Models\Channel::STATUS[$model->status] }} </small> <span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span>
                             
-                        </ul>
-                    </div>
                 </div>
             </div>
             <div class="box-body">
