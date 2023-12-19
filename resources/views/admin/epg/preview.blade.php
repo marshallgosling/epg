@@ -172,7 +172,9 @@
     width: 463px;
   }
 }
-
+ol.breadcrumb {
+  margin-bottom: 0px;
+}
 
 </style>
 <div class="row">
