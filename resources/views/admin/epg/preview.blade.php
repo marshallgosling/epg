@@ -156,9 +156,6 @@
     width: 213px;
   }
 
-  .bs-docs-sidebar.affix-bottom {
-    position: absolute; /* Undo the static from mobile first approach */
-  }
   .bs-docs-sidebar.affix-bottom .bs-docs-sidenav,
   .bs-docs-sidebar.affix .bs-docs-sidenav {
     margin-top: 0;
@@ -202,7 +199,7 @@
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs" data-spy="affix" data-offset-top="20">
+                <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs" data-spy="affix" data-offset-top="20" data-offset-bottom="100">
                   <ul class="nav bs-docs-sidenav"> 
                     @foreach($order as $pro_id) 
                     <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
