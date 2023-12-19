@@ -86,7 +86,7 @@ class Record extends Model
      * 
      * @param TemplateRecords $template
      */
-    public static function findNextAvaiable(TemplateRecords $template, int $maxduration) {
+    public static function findNextAvaiable(TemplateRecords &$template, int $maxduration) {
         if($template->category == 'movie')
             return self::findRandom($template->category, $maxduration);
        
