@@ -309,7 +309,7 @@ class Exporter
                 $clip->FileName = $item['unique_no'];
                 $clip->Name = $clip['name'];
                 $clip->Id = $clip['unique_no'];
-                $seconds = ChannelPrograms::caculateSeconds($clip->duration);
+                $seconds = ChannelPrograms::caculateSeconds($clip['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
                 $clip->LimitDuration = $frames;
                 $clip->Duration = $frames;
