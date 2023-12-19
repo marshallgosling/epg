@@ -234,7 +234,7 @@ class Exporter
 
         if($pos_start>=0 && $pos_end>$pos_start)
         {
-            $list = Epg::where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
+            $list = Epg::where('group_id', $group)->where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
 
             $programs = DB::table('epg')->selectRaw('distinct(program_id)')
                             ->where('id', '>=', $pos_start)->where('id','<',$pos_end)
