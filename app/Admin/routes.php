@@ -66,6 +66,7 @@ Route::group([
     $router->resource('/plans', 'PlanController')->names('plans');
     $router->resource('/epg', 'Channel\\EpgController')->names('channel.epg');
     $router->get('/epg/preview/{air}', 'Channel\\EpgController@preview')->name('channel.preview');
+    $router->resource('/channel/test/programs', 'Channel\\TestProgramController')->names('channel.test.programs');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');

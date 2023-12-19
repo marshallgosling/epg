@@ -114,7 +114,7 @@ class TestProgramController extends AdminController
             $tools->append(new ToolCalculate('0'));
         });
 
-        $grid->disableCreateButton();
+        //$grid->disableCreateButton();
 
         return $grid;
     }
@@ -154,12 +154,13 @@ class TestProgramController extends AdminController
     {
         $form = new Form(new ChannelPrograms());
 
+        $form->hidden('channel_id', "Channel")->default('0');
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'))->disable();
-        $form->text('end_at', __('End at'))->disable();
-        $form->text('duration', __('Duration'))->disable();
+        $form->text('start_at', __('Start at'));
+        $form->text('end_at', __('End at'));
+        $form->text('duration', __('Duration'))->inputmask(['mask'=>'99:99:99:99']);
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
         $form->json('data', '编单数据');

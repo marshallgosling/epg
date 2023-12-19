@@ -87,7 +87,7 @@ class XkvProgramController extends AdminController
             if(key_exists('channel_id', $_REQUEST))$tools->append(new ToolCalculate($_REQUEST['channel_id']));
         });
 
-        $grid->disableCreateButton();
+        //$grid->disableCreateButton();
 
         return $grid;
     }
@@ -127,12 +127,13 @@ class XkvProgramController extends AdminController
     {
         $form = new Form(new ChannelPrograms());
 
+        $form->select('channel_id', "Channel")->options(Channel::where('name', 'xkv')->select('id', 'air_date')->pluck('air_date', 'id')->toArray());
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'))->disable();
-        $form->text('end_at', __('End at'))->disable();
-        $form->text('duration', __('Duration'))->disable();
+        $form->text('start_at', __('Start at'));
+        $form->text('end_at', __('End at'));
+        $form->text('duration', __('Duration'))->inputmask(['mask'=>'99:99:99:99']);
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
         $form->json('data', '编单数据');
