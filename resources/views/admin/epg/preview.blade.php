@@ -155,7 +155,10 @@
   .bs-docs-sidebar.affix-bottom {
     width: 213px;
   }
-
+  .bs-docs-sidebar.affix {
+    position: fixed; /* Undo the static from mobile first approach */
+    top: 20px;
+  }
   .bs-docs-sidebar.affix-bottom .bs-docs-sidenav,
   .bs-docs-sidebar.affix .bs-docs-sidenav {
     margin-top: 0;
