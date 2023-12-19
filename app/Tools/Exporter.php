@@ -218,7 +218,7 @@ class Exporter
     {      
         $data = [];
         $spilt = 0;
-        $order = [[],[]];
+        $order = [];
         
         $start_at = strtotime($air_date.' 06:00:00');
         $pos_start = (int)Epg::where('group_id', $group)
@@ -247,13 +247,15 @@ class Exporter
             {
                 $data[$pro->id] = $pro->toArray();
                 $data[$pro->id]['items'] = [];
-                //$order[$spilt][] = $pro->id;
+                $order[] = $pro->id;
                 //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
             }
     
             foreach($list as $t) {
                 $data[$t->program_id]['items'][] = $t->toArray(); 
             }
+
+            $data['order'] = $order;
         }
 
         return $data;
@@ -274,8 +276,9 @@ class Exporter
 
         $json->Count = count($data);
         $idx = 0;
-        foreach($data as $program)
+        foreach($data['order'] as $pid)
         {
+            $program = $data[$pid];
             $date = Carbon::parse($fixDate. ' ' .$program['start_at']);
             // if not exist, just copy one 
             if(!array_key_exists($idx, $json->ItemList)) {
