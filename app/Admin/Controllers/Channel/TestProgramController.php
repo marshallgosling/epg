@@ -60,16 +60,14 @@ class TestProgramController extends AdminController
             if(key_exists('replicate', $data)) {
                 return new InfoBox('这是一个副本节目， 副本ID:'. $data->replicate,'','aqua','','');
             }
-            for($i=0;$i<count($data);$i++)
+            if(is_array($data))for($i=0;$i<count($data);$i++)
             {
                 $item = $data[$i];
                 if($i==10)break;
                 $items[] = [$item->start_at, $item->end_at, $item->unique_no, $item->name, $item->duration, $item->category, $item->artist];
             }
             
-            if(count($items) == 0) $info = "没有节目记录，请点击添加";
-            else $info = '当前最多只显示10条记录，请点击查看';
-
+            if(count($items) == 0) return "<p>没有节目记录，请点击添加</p>";
             
             return new Table(['开始','结束', '播出编号', '名称', '时长', '栏目', '剧集'], $items);
         });
