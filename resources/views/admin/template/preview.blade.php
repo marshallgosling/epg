@@ -70,12 +70,10 @@
                 @if($error)
                   错误信息：<b class="text-danger">{{$error}}</b>
                 @else
-                  <b>{{@__('Preview Template Content')}}</b>
+                  <b>{{@__('No errors')}}</b>
                 @endif
                 </div>
-                <div class="btn-group pull-right">
-                    @if(!$error)<a class="btn btn-primary btn-sm" title="返回编辑模式" href="../{{$group}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回编辑模式</span></a>@endif
-                </div>
+                
             </div>
             <div class="box-body table-responsive">
                 @foreach($data as $temp) 
