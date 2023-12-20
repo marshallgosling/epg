@@ -41,15 +41,15 @@ class Exporter
                         
                     $itemList->StartTime = $start;
                     $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                    $itemList->Name = $program->name;
+                    $itemList->Name = '<![CDATA['.$program->name.']]>';
                     $itemList->BillType = $date->format('md').'新建';
                     $itemList->LimitLen = $duration;
                     $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                     $itemList->PlayType = $idx == 0 ? 1 : 0;
 
                 $clip = clone $template->ClipsItem;
-                $clip->FileName = $program->unique_no;
-                $clip->Name = $program->name;
+                $clip->FileName = '<![CDATA['.$program->name.'.'.$program->unique_no.']]>';
+                $clip->Name = '<![CDATA['.$program->name.']]>';
                 $clip->Id = $program->unique_no;
                 $clip->LimitDuration = $duration;
                 $clip->Duration = $duration;              
@@ -62,7 +62,7 @@ class Exporter
                 $itemList->Pid = (string)Str::uuid();
                 $itemList->ClipsCount = 1;
                 $itemList->ClipsItem[] = $clip;
-                
+
                 $json->ItemList[] = $itemList;
         }
         
