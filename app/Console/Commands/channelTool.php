@@ -11,6 +11,8 @@ use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
 use App\Tools\Generator\GenerationException;
+use App\Tools\Generator\XkcGenerator;
+use App\Tools\Generator\XkvGenerator;
 use App\Tools\Notify;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -169,15 +171,15 @@ class channelTool extends Command
             return 0;
         }
 
-        $generator = new ChannelGenerator($channel->name);
-        $generator->makeCopyTemplate();
-        $generator->loadTemplate();
+        // $generator = new ChannelGenerator($channel->name);
+        // $generator->makeCopyTemplate();
+        // $generator->loadTemplate();
+
+        if($channel->name == 'xkv') $generator = new XkvGenerator($channel->name);
+        else $generator = new XkcGenerator($channel->name);
 
         try {
-            if($channel->name == 'xkc')
-                $start_end = $generator->generateXkc($channel);
-            else
-                $start_end = $generator->generate($channel);
+            $start_end = $generator->generate($channel);
 
         }catch(GenerationException $e)
         {
@@ -194,7 +196,7 @@ class channelTool extends Command
             return;
         }
         
-        $generator->saveTemplateState();
+        //$generator->saveTemplateState();
 
             $channel->start_end = $start_end;
             $channel->status = Channel::STATUS_READY;
@@ -209,7 +211,7 @@ class channelTool extends Command
             "频道节目时间 $start_end"
         );
 
-        $generator->cleanTempData();
+        //$generator->cleanTempData();
 
     }
 
