@@ -72,7 +72,7 @@ class TempController extends AdminController
 
             }
 
-            $temp['table'] = (new Table(['序号', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
+            $temp['table'] = (new Table(['ID', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
             $data[] = $temp; 
         
         }

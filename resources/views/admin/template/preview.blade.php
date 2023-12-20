@@ -80,7 +80,7 @@
             <div class="box-body table-responsive">
                 @foreach($data as $temp) 
                 <div class="bs-callout bs-callout-{{$temp['color']}}">
-                    <h4>{{$temp['start_at']}} - {{$temp['end_at']}} &nbsp;<small>{{$temp['duration']}} </small>&nbsp; &nbsp; | {{$temp['name']}} ({{$temp['id']}}) </h4>
+                    <h4>{{$temp['start_at']}} - {{$temp['end_at']}} &nbsp;<small>{{$temp['duration']}} </small>&nbsp; &nbsp; | {{$temp['name']}} (ID:{{$temp['id']}}) </h4>
                     {!!$temp['table']!!}    
                 </div>
                 @endforeach
