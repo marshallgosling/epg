@@ -109,12 +109,12 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                     $channel->name,
                     Notification::TYPE_GENERATE, 
                     "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
-                    "详细错误:".$e->getMessage()."\n".$e->desc, 'error'
+                    $e->getMessage()."\n".$e->desc, 'error'
                 );
                 $channel->start_end = '';
                 $channel->status = Channel::STATUS_EMPTY;
                 $channel->save();
-                Storage::disk('data')->put(XkcGenerator::STALL_FILE, (string)$e->desc);
+                Storage::disk('data')->put(XkcGenerator::STALL_FILE, $e->getMessage().", Last:".$e->desc);
                 $error = true;
                 continue;
             }
