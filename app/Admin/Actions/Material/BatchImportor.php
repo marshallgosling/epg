@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Material;
 
 use App\Models\Channel;
+use App\Tools\ChannelGenerator;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class BatchImportor extends BatchAction
             $program->unique_no = $model->unique_no;
             $program->duration = $model->duration;
             $program->category = [$model->category];
+            $program->seconds = ChannelGenerator::parseDuration($model->duration);
             
             if($class::where('unique_no', $model->unique_no)->exists())
             {
