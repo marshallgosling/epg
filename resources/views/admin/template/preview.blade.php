@@ -74,13 +74,13 @@
                 @endif
                 </div>
                 <div class="btn-group pull-right">
-                    @if(!$error)<a class="btn btn-primary btn-sm" title="返回编辑模式" href="../{{$group}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回编辑模式</span></a>@endif
+                    @if($back)<a class="btn btn-primary btn-sm" title="返回编辑模式" href="../{{$group}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回编辑模式</span></a>@endif
                 </div>
             </div>
             <div class="box-body table-responsive">
                 @foreach($data as $temp) 
                 <div class="bs-callout bs-callout-{{$temp['color']}}">
-                    <h4>{{$temp['start_at']}} - {{$temp['end_at']}} &nbsp;<small>{{$temp['duration']}} </small>&nbsp; &nbsp; | {{$temp['name']}}  </h4>
+                    <h4>{{$temp['start_at']}} - {{$temp['end_at']}} &nbsp;<small>{{$temp['duration']}} </small>&nbsp; &nbsp; | {{$temp['name']}} ({{$temp['id']}}) </h4>
                     {!!$temp['table']!!}    
                 </div>
                 @endforeach
