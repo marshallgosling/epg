@@ -235,7 +235,8 @@ class XkcGenerator implements IGenerator
                 $temps = Record::findNextAvaiable($p, $maxduration);
                 $items = [];
 
-                if(!in_array($temps[0], ['finished', 'empty'])) continue;
+                if(in_array($temps[0], ['finished', 'empty'])) continue;
+                
                 $d = $p->data;
                 foreach($temps as $item) {
                     if($item == 'empty') {
