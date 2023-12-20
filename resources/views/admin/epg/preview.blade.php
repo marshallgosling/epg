@@ -185,8 +185,8 @@ ol.breadcrumb {
                   <li><b>{{@__('Channel')}} </b></li>
                   <li><span class="label-{{ \App\Models\Channel::DOTS[$model->name] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
                   {{ \App\Models\Channel::GROUPS[$model->name] }}</li>
-                  <li class="active"><b>{{ @__('Air date')}}</b></li>
-                  <li> {{$model->air_date}} </li>
+                  <li><b>{{ @__('Air date')}}</b></li>
+                  <li class="active"> {{$model->air_date}} </li>
                   <li><span class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </span> 
                   <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>
                   
