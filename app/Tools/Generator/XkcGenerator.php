@@ -139,7 +139,7 @@ class XkcGenerator implements IGenerator
             $programs = $t->records()->get();
 
             $this->maxDuration = $schedule_duration + (int)config('MAX_DURATION_GAP', 600);
-            $data = $this->addProgramItem($programs, $this->maxDuration, strtotime($channel->air_date), $dayofweek);
+            $data = $this->addRecordItem($programs, $this->maxDuration, strtotime($channel->air_date), $dayofweek);
 
             $break_level = 5;
             while(abs($schedule_duration - $this->duration) > (int)config('MAX_GENERATION_GAP', 300))
