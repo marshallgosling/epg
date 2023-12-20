@@ -234,10 +234,10 @@ class XkcGenerator implements IGenerator
                 $items[] = $item;
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
-                $data = $p->data;
+                $d = $p->data;
                 $ep = 1;
-                if(array_key_exists('ep', $data)) {
-                    $ep = (int)$data['ep'];
+                if(array_key_exists('ep', $d)) {
+                    $ep = (int)$d['ep'];
                 }
                 for($i=0;$i<$ep;$i++) {
                     $item = Record::findNextAvaiable($p, $maxduration);
