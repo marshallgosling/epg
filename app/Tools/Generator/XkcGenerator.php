@@ -241,7 +241,22 @@ class XkcGenerator implements IGenerator
                 }
                 for($i=0;$i<$ep;$i++) {
                     $item = Record::findNextAvaiable($p, $maxduration);
-                    if($item) $items[] = $item;
+
+                    if($item == '未找到') {
+                        $d['result'] = $item;
+                    }
+                    else if($item == '编排完') {
+                        $d['result'] = $item;
+                    }
+                    else {
+                        $items[] = $item;
+                        $d['episodes'] = $item->episodes;
+                        $d['unique_no'] = $item->unique_no;
+                        $d['name'] = $item->name;
+                        $d['result'] = '编排中';
+                    }
+                    $p->data = $d;
+                    $p->save();
                 }
 
                 if(count($items) == 0) continue;

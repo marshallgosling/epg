@@ -95,13 +95,6 @@ class Record extends Model
         if($template->data['episodes'] == null) {
             $item = self::findRandomEpisode($template->category, $maxduration);
             
-            $data['episodes'] = $item->episodes;
-            $data['unique_no'] = $item->unique_no;
-            $data['name'] = $item->name;
-            $data['result'] = '编排中';
-
-            $template->data = $data;
-            $template->save();
             return $item;
         }
 
@@ -110,28 +103,15 @@ class Record extends Model
         if($item == 'finished') {
             if($template->type == TemplateRecords::TYPE_STATIC) {
                 Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
-
-                $data['result'] = '编排完';
             }
-            $item = false;
+            $item = '编排完';
         }
         else if($item == 'empty') {
             if($template->type == TemplateRecords::TYPE_STATIC) {
                 Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
-
-                $data['result'] = '未找到';
             }
-            $item = false;
+            $item = '未找到';
         }
-        else {
-            $data['episodes'] = $item->episodes;
-            $data['unique_no'] = $item->unique_no;
-            $data['result'] = '编排中';
-            $data['name'] = $item->name;
-        }
-
-        $template->data = $data;
-        $template->save();
  
         return $item;
     }
