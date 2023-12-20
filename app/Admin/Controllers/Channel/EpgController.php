@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
+use App\Tools\Exporter;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -67,7 +68,7 @@ class EpgController extends AdminController
         $grid->disableBatchActions();
         $grid->disableActions();
 
-        $grid->filter(function(Grid\Filter $filter){
+        $grid->filter(function (Grid\Filter $filter){
             $filter->column(8, function (Grid\Filter $filter) {
                 //$filter->equal('group_id', __('Group'))->radio(Channel::GROUPS);
                 $filter->between('start_at', __('TimeRange'))->datetime();
@@ -94,36 +95,44 @@ class EpgController extends AdminController
         $air_date = $model->air_date;
         $group = $model->name;
 
-        $data = [];
-        $colors = [];
-        $spilt = 0;
-        $order = [];
+        $data = Exporter::collectData($air_date, $group, function ($t) {
+            return substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
+        });
+
+        $order = $data['order'];
+
+        // $data = [];
+        // $colors = [];
+        // $spilt = 0;
+        // $order = [];
         
-        $start_at = strtotime($air_date.' 06:00:00');
-        $pos_start = (int)Epg::where('group_id', $group)->where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
-        $start_at += 86400;
-        $air_date = date('Y-m-d', $start_at);
-        $pos_end = (int)Epg::where('group_id', $group)->where('start_at','>',$air_date.' 05:58:00')->where('start_at','<',$air_date.' 06:04:00')->orderBy('start_at', 'desc')->limit(1)->value('id');
+        // $start_at = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
+        // $pos_start = (int)Epg::where('group_id', $group)->where('start_at','>',date('Y-m-d H:i:s', $start_at-300))
+        //                 ->where('start_at','<',date('Y-m-d H:i:s', $start_at+300))->orderBy('start_at', 'desc')->limit(1)->value('id');
+        // $start_at += 86400;
+        // $air_date = date('Y-m-d', $start_at);
+        // $pos_end = (int)Epg::where('group_id', $group)->where('start_at','>',date('Y-m-d H:i:s', $start_at-300))
+        //                 ->where('start_at','<',date('Y-m-d H:i:s', $start_at+300))->orderBy('start_at', 'desc')->limit(1)->value('id');
 
-        if($pos_start>=0 && $pos_end>$pos_start)
-        {
-            $list = Epg::where('group_id', $group)->where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
+        // if($pos_start>=0 && $pos_end>$pos_start)
+        // {
+        //     $list = Epg::where('group_id', $group)->where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
 
-            $programs = DB::table('epg')->selectRaw('distinct(program_id)')->where('id', '>=', $pos_start)->where('id','<',$pos_end)->pluck('program_id')->toArray();
-            $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')->whereIn('id', $programs)->orderBy('start_at')->get();
+        //     $programs = DB::table('epg')->selectRaw('distinct(program_id)')->where('id', '>=', $pos_start)->where('id','<',$pos_end)->pluck('program_id')->toArray();
+        //     $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')->whereIn('id', $programs)->orderBy('start_at')->get();
     
-            foreach($programs as $key=>$pro)
-            {
-                $data[$pro->id] = $pro->toArray();
-                $data[$pro->id]['items'] = [];
-                $order[] = $pro->id;
-                //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
-            }
+        //     foreach($programs as $key=>$pro)
+        //     {
+        //         $data[$pro->id] = $pro->toArray();
+        //         $data[$pro->id]['items'] = [];
+        //         $order[] = $pro->id;
+        //         //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
+        //     }
     
-            foreach($list as $t) {
-                $data[$t->program_id]['items'][] = substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
-            }
-        }
+        //     foreach($list as $t) {
+        //         $data[$t->program_id]['items'][] = substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
+        //     }
+        // }
            
         return $content->title(__('Preview EPG Content'))->description(__(' '))
         ->body(view('admin.epg.preview', compact('data', 'model', 'order')));

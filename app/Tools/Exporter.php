@@ -208,22 +208,22 @@ class Exporter
         return $lines;
     }
 
-    public static function collectData($air_date, $group) 
+    public static function collectData($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
         $order = [];
         
-        $start_at = strtotime($air_date.' 06:00:00');
+        $start_at = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
         $pos_start = (int)Epg::where('group_id', $group)
-                            ->where('start_at','>',$air_date.' 05:58:00')
-                            ->where('start_at','<',$air_date.' 06:04:00')
-                            ->orderBy('start_at', 'desc')->limit(1)->value('id');
+                        ->where('start_at','>',date('Y-m-d H:i:s', $start_at-300))
+                        ->where('start_at','<',date('Y-m-d H:i:s', $start_at+300))
+                        ->orderBy('start_at', 'desc')->limit(1)->value('id');
         $start_at += 86400;
         $air_date = date('Y-m-d', $start_at);
         $pos_end = (int)Epg::where('group_id', $group)
-                            ->where('start_at','>',$air_date.' 05:58:00')
-                            ->where('start_at','<',$air_date.' 06:04:00')
-                            ->orderBy('start_at', 'desc')->limit(1)->value('id');
+                        ->where('start_at','>',date('Y-m-d H:i:s', $start_at-300))
+                        ->where('start_at','<',date('Y-m-d H:i:s', $start_at+300))
+                        ->orderBy('start_at', 'desc')->limit(1)->value('id');
 
         if($pos_start>=0 && $pos_end>$pos_start)
         {
@@ -244,7 +244,10 @@ class Exporter
             }
     
             foreach($list as $t) {
-                $data[$t->program_id]['items'][] = $t->toArray(); 
+                if($callback)
+                    $data[$t->program_id]['items'][] = call_user_func($callback, $t);
+                else
+                    $data[$t->program_id]['items'][] = $t->toArray();
             }
 
             $data['order'] = $order;
