@@ -123,8 +123,11 @@ class exporterTool extends Command
         $channel->name = 'xkv';
         $channel->air_date = $date;
 
-        Exporter::generateData($channel, $data);
-        Exporter::exportXml(true, 'test-');
+        $json = Exporter::generateData($channel, $data);
+
+        print_r($json);
+        
+        Exporter::exportXml(true, 'test');
     }
 
     private function excel($id, $p=false)
