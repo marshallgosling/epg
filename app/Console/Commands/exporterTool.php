@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\ExportList;
 use App\Models\Notification;
 use App\Tools\ExcelWriter;
@@ -52,7 +53,7 @@ class exporterTool extends Command
         $data = $this->argument('data') ?? false;
         $action = $this->argument('action') ?? "";
         
-        if(in_array($action, ['excel', 'xml', 'test'])) {
+        if(in_array($action, ['excel', 'xml', 'test', 'testxml'])) {
             $this->$action($id, $data);
         }
         
@@ -101,6 +102,29 @@ class exporterTool extends Command
             "",
             Notification::LEVEL_INFO
         );
+    }
+
+    private function testxml($id, $date)
+    {
+        $programs = ChannelPrograms::where('channel_id', 0)->orderBy('sort')->get();
+        $data = [];
+        $order = [];
+        foreach($programs as $p) {
+            $order[] = $p->id;
+            $data[$p->id] = $p->toArray();
+            $data[$p->id]['items'] = json_decode($p->data, true);
+        }
+        $data['order'] = $order;
+
+        $channel = new Channel();
+        $channel->id = $id;
+        $channel->audit_status = Channel::AUDIT_EMPTY;
+        $channel->status = Channel::STATUS_READY;
+        $channel->name = 'xkv';
+        $channel->air_date = $date;
+
+        Exporter::generateData($channel, $data);
+        Exporter::exportXml(true, 'test-');
     }
 
     private function excel($id, $p=false)

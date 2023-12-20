@@ -224,7 +224,7 @@ TMP;
         $channel->status = Channel::STATUS_READY;
         $channel->name = 'test';
         $channel->air_date = '2024-02-08';
-        
+
         if($channel->audit_status == Channel::AUDIT_PASS) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
@@ -275,7 +275,7 @@ TMP;
             'message' => trans('admin.save_succeeded'),
         ];
 
-        CalculationEvent::dispatch($model->channel_id, $model->id);
+        //CalculationEvent::dispatch($model->channel_id, $model->id);
 
         return response()->json($response);
     }
@@ -302,7 +302,7 @@ TMP;
 
         $model->save();
 
-        CalculationEvent::dispatch($model->channel_id);
+        //CalculationEvent::dispatch($model->channel_id);
 
         $response = [
             'status'  => true,
@@ -313,23 +313,7 @@ TMP;
         
     }
 
-    private function caculateDuration($data, $start=0)
-    {
-        foreach($data as &$item)
-        {
-            $duration = explode(':', $item['duration']);
-            $seconds = (int)$duration[0]*3600 + (int)$duration[1]*60 + (int)$duration[2];
-
-            $item['start_at'] = date('H:i:s', $start);
-            $item['end_at'] = date('H:i:s', $start+$seconds);
-
-            $start += $seconds;
-            
-        }
-
-        return $data;
-    }
-
+    
 
 
 }

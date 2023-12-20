@@ -133,7 +133,7 @@ class Exporter
         self::$json = $json;
     }
 
-    public static function exportXml($json=false)
+    public static function exportXml($json=false, $name='')
     {
         $exporter = new \App\Tools\XmlWriter();
         if(!$json) $json = self::$json;
@@ -141,7 +141,7 @@ class Exporter
         $xml = $exporter->export($json, 'PgmItem');
 
         if(self::$file) {
-            Storage::disk('public')->put($json->ChannelName.'_'.$json->PgmDate.'.xml', $xml);
+            Storage::disk('public')->put("$name".$json->ChannelName.'_'.$json->PgmDate.'.xml', $xml);
 
         }
         self::$xml = $xml;

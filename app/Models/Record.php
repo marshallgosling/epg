@@ -92,13 +92,18 @@ class Record extends Model
        
         //$data = json_decode(json_encode($template->data));
         $data = $template->data;
-        if($template->data['episodes'] == null) {
+        if($data['episodes'] == null) {
             $item = self::findRandomEpisode($template->category, $maxduration);
             
             return $item;
         }
 
-        $item = self::findNextEpisode($template->data['episodes'], $template->data['unique_no']);
+        $ep = 1;
+        if(array_key_exists('ep', $data)) $ep = (int)$data['ep'];
+        
+        for($i=0;$i<$ep;$i++) {
+            $item = self::findNextEpisode($data['episodes'], $data['unique_no']);
+        }
 
         if($item == 'finished') {
             if($template->type == TemplateRecords::TYPE_STATIC) {
