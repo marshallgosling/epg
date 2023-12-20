@@ -125,9 +125,9 @@ class exporterTool extends Command
 
         $json = Exporter::generateData($channel, $data);
 
-        print_r($json);
-        
-        Exporter::exportXml(true, 'test');
+        //print_r($json);
+
+        Exporter::exportXml(false, 'test');
     }
 
     private function excel($id, $p=false)
