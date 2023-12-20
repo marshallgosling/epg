@@ -197,7 +197,7 @@ ol.breadcrumb {
               @if(count($data) > 0)
               <div class="col-md-8"> 
                 @foreach($order as $pro_id) 
-                <div id="content{{$pro_id}}" class="bs-callout bs-callout-info">
+                <div id="content{{$pro_id}}" class="bs-callout bs-callout-primary">
                     <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
                     <ul class="list-group">
                       @foreach ($data[$pro_id]['items'] as $item)
