@@ -51,9 +51,14 @@ class Program extends Model
         self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
     }
 
-    public static function findRandom($key)
+    public static function findRandom($key, $maxSeconds)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('program.unique_no')->join('material', 'program.unique_no', '=', 'material.unique_no')->where('program.category','like',"%$key%")->pluck('unique_no')->toArray();
+        if(!Arr::exists(self::$cache, $key)) 
+            self::$cache[$key] = self::select('program.unique_no')
+                ->join('material', 'program.unique_no', '=', 'material.unique_no')
+                ->where('program.category','like',"%$key%")
+                ->where('program.seconds','<',$maxSeconds)
+                ->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   
 
@@ -65,16 +70,7 @@ class Program extends Model
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
             ->select("program.unique_no", "program.name", "program.artist", "program.black", "material.duration","material.frames")->first();
 
-        // $black = false;
-
-        // if($program->artist)foreach(self::$blacklist as $keyword) {
-        //     if(Str::contains($program->artist, $keyword)) {
-        //         $black = true;
-        //         break;
-        //     }
-        // };
-
-        if($program->black) return self::findRandom($key);
+        if($program->black) return self::findRandom($key, $maxSeconds);
         else return $program;
     }
 
