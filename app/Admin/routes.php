@@ -66,7 +66,11 @@ Route::group([
     $router->resource('/plans', 'PlanController')->names('plans');
     $router->resource('/epg', 'Channel\\EpgController')->names('channel.epg');
     $router->get('/epg/preview/{air}', 'Channel\\EpgController@preview')->name('channel.preview');
+    
+    $router->get('/channel/test/tree/{id}', 'Channel\\TestProgramController@tree')->name('channel.test.programs.tree');
     $router->resource('/channel/test/programs', 'Channel\\TestProgramController')->names('channel.test.programs');
+    $router->delete('/channel/test/data/{id}/remove/{idx}', 'Channel\\TestProgramController@remove')->name('channel.test.programs.delete');
+    $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');
