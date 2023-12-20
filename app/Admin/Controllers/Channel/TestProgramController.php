@@ -218,8 +218,13 @@ TMP;
 
         $json = str_replace("'","\\'", json_encode($data));
         $view = 'admin.program.xkc';
-        $channel = Channel::find($model->channel_id);
-
+        $channel = new Channel();
+        $channel->id = 0;
+        $channel->audit_status = Channel::AUDIT_EMPTY;
+        $channel->status = Channel::STATUS_READY;
+        $channel->name = 'test';
+        $channel->air_date = '2024-02-08';
+        
         if($channel->audit_status == Channel::AUDIT_PASS) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
