@@ -10,7 +10,7 @@ use App\Models\Notification;
 use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
-use App\Tools\GenerationException;
+use App\Tools\Generator\GenerationException;
 use App\Tools\Notify;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -78,19 +78,42 @@ class channelTool extends Command
 
     private function fixer($id)
     {
-        $channels = Channel::where('status', Channel::STATUS_READY)->where('name', $id)->get();
+        $programs = ChannelPrograms::where('channel_id', $id)->get();
 
-        foreach($channels as $channel)
-        {
-            $pros = ChannelPrograms::where('channel_id', $channel->id)->orderBy('id')->get()->toArray();
-            if($pros)
+        foreach($programs as $p) {
+
+            $data = json_decode($p->data, true);
+            $list = [];
+            for($i=0;$i<100;$i++)
             {
-                
-                $start_end = $pros[0]['start_at']. ' - '.$pros[count($pros) - 1]['end_at'];
-                $channel->start_end = $start_end;
-                $channel->save();
+                if(array_key_exists($i, $data))
+                {
+                    $list[] = $data[$i];
+                }
+                else {
+                    break;
+                }
             }
+
+            if(array_key_exists('replicate', $data)) continue;
+            $p->data = json_encode($list);
+            $p->save();
         }
+        
+        
+        // $channels = Channel::where('status', Channel::STATUS_READY)->where('name', $id)->get();
+
+        // foreach($channels as $channel)
+        // {
+        //     $pros = ChannelPrograms::where('channel_id', $channel->id)->orderBy('id')->get()->toArray();
+        //     if($pros)
+        //     {
+                
+        //         $start_end = $pros[0]['start_at']. ' - '.$pros[count($pros) - 1]['end_at'];
+        //         $channel->start_end = $start_end;
+        //         $channel->save();
+        //     }
+        // }
     }
 
     private function create($id, $group)
