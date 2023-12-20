@@ -6,7 +6,7 @@ use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
-use App\Admin\Actions\Channel\BatchGenerator;
+use App\Admin\Actions\Channel\BatchXkcGenerator as BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;

@@ -170,8 +170,8 @@ ol.breadcrumb {
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
-                  <ul class="nav epg-sidenav epg-sidenav-{{$color}}"> 
+                <nav class="epg-sidebar epg-sidebar-{{$color}} hidden-print hidden-sm hidden-xs" id="epgAffix">
+                  <ul class="nav epg-sidenav"> 
                     @foreach($order as $pro_id) 
                     <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
                     @endforeach

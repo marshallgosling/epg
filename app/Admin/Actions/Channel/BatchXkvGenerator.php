@@ -9,7 +9,7 @@ use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
 
-class BatchGenerator extends BatchAction
+class BatchXkvGenerator extends BatchAction
 {
     public $name = '批量生成编单';
 
@@ -17,9 +17,9 @@ class BatchGenerator extends BatchAction
     {
         //return $this->response()->success(__('Generator closed.'))->refresh();
 
-        if(Storage::disk('data')->exists("generate_stall"))
+        if(Storage::disk('data')->exists("generate_stall_xkv"))
         {
-            return $this->response()->error(__('节目单自动生成工具遇到错误，需要人工干预.'))->refresh();
+            return $this->response()->error(__('V China 节目单自动生成工具遇到错误，需要人工干预.'))->refresh();
         }
 
         $group = '';
@@ -40,9 +40,6 @@ class BatchGenerator extends BatchAction
             if($group == 'xkv')ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
         }
 
-        if($group == 'xkc')
-            RecordJob::dispatch($group)->onQueue('xkc');
-        
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }
 
