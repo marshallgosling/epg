@@ -15,8 +15,9 @@ use App\Tools\LoggerTrait;
 
 class XkcGenerator implements IGenerator
 {
-
     use LoggerTrait;
+
+    public const STALL_FILE = "xkc_stall.txt";
 
     private $channel;
     private $templates;

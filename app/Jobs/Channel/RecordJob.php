@@ -51,7 +51,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        if(Storage::disk('data')->exists("generate_stall"))
+        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
         {
             Notify::fireNotify(
                 $this->group,
@@ -114,7 +114,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 $channel->start_end = '';
                 $channel->status = Channel::STATUS_EMPTY;
                 $channel->save();
-                Storage::disk('data')->put("generate_stall", (string)$e->desc);
+                Storage::disk('data')->put(XkcGenerator::STALL_FILE, (string)$e->desc);
                 $error = true;
                 continue;
             }

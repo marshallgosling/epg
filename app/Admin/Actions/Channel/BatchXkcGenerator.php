@@ -5,6 +5,7 @@ namespace App\Admin\Actions\Channel;
 use App\Jobs\Channel\ProgramsJob;
 use App\Jobs\Channel\RecordJob;
 use App\Models\Channel;
+use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,7 @@ class BatchXkcGenerator extends BatchAction
     {
         //return $this->response()->success(__('Generator closed.'))->refresh();
 
-        if(Storage::disk('data')->exists("generate_stall"))
+        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
         {
             return $this->response()->error(__('节目单自动生成工具遇到错误，需要人工干预.'))->refresh();
         }

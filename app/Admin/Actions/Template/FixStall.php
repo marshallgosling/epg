@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Template;
 
 use App\Tools\Notify;
 use App\Models\Notification;
+use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,13 +18,13 @@ class FixStall extends Action
 
     public function handle(Request $request)
     {
-        if(!Storage::disk('data')->exists('generate_stall'))
+        if(!Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
             return $this->response()->success('无需处理');
         $desc = $request->get('desc') ?? "";
         $fixed = $request->get('fixed') ?? 0;
 
         if($fixed) {
-            Storage::disk('data')->delete('generate_stall');
+            Storage::disk('data')->delete(XkcGenerator::STALL_FILE);
             Notify::fireNotify(
                 $this->group,
                 Notification::TYPE_GENERATE, 
@@ -42,7 +43,7 @@ class FixStall extends Action
     {
         $this->checkbox('fixed', __('问题'))->options([1=>'已解决']);
         $error = '无';
-        if(Storage::disk('data')->exists('generate_stall')) $error = Storage::disk('data')->get('generate_stall');
+        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE)) $error = Storage::disk('data')->get(XkcGenerator::STALL_FILE);
         $this->textarea('desc', __('问题说明'))->default($error);
     
         $this->text('comment', __('说明及注意事项'))->default(__('解决问题后，才能继续自动生成编单。'))->disable();

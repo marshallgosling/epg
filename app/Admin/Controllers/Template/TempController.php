@@ -14,6 +14,7 @@ use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
 use App\Models\Epg;
+use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Layout\Content;
 
 class TempController extends AdminController
@@ -76,7 +77,7 @@ class TempController extends AdminController
         
         }
         $group = 'temp';
-        $error = Storage::disk('data')->exists('generate_stall') ? Storage::disk('data')->get('generate_stall') : "";
+        $error = Storage::disk('data')->exists(XkcGenerator::STALL_FILE) ? Storage::disk('data')->get(XkcGenerator::STALL_FILE) : "";
         return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group', 'error')));
     }
