@@ -94,6 +94,7 @@ class EpgController extends AdminController
         $model = Channel::findOrFail($id);
         $air_date = $model->air_date;
         $group = $model->name;
+        $color = $group == 'xkv' ? "info" : "primary";
 
         $data = Exporter::collectData($air_date, $group, function ($t) {
             return substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
@@ -135,7 +136,7 @@ class EpgController extends AdminController
         // }
            
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.preview', compact('data', 'model', 'order')));
+        ->body(view('admin.epg.preview', compact('data', 'model', 'order', 'color')));
     }
 
 
