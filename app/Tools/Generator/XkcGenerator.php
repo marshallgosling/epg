@@ -235,7 +235,7 @@ class XkcGenerator implements IGenerator
                 $items = [];
 
                 if(!in_array($temps[0], ['finished', 'empty'])) continue;
-
+                $d = $p->data;
                 foreach($temps as $item) {
                     if($item == 'empty') {
                         $d['result'] = '未找到';
