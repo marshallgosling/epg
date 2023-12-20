@@ -178,6 +178,8 @@ class channelTool extends Command
         if($channel->name == 'xkv') $generator = new XkvGenerator($channel->name);
         else $generator = new XkcGenerator($channel->name);
 
+        $generator->loadTemplate();
+        
         try {
             $start_end = $generator->generate($channel);
 
