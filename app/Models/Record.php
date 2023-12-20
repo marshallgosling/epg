@@ -111,6 +111,8 @@ class Record extends Model
             $data['unique_no'] = $item->unique_no;
             $items[] = $item;
         }
+
+        if($data['result'] == '编排完') continue;
         
         for($i=$ep;$i<$total;$i++) {
             $item = self::findNextEpisode($data['episodes'], $data['unique_no']);
