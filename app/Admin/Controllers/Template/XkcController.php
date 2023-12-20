@@ -16,6 +16,7 @@ use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
 use App\Models\Epg;
+use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
@@ -159,7 +160,7 @@ class XkcController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             //$tools->disableBatchActions();
-            if(Storage::disk('data')->exists('generate_stall'))
+            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
                 $tools->append(new FixStall());
         });
 

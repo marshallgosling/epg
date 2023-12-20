@@ -93,7 +93,7 @@ class TempController extends AdminController
 
         $grid->header(function () {
             
-            if(Storage::disk('data')->exists('generate_stall'))
+            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
                 return '<small>用于查看 【XKC】 自动编单问题，保存临时状态</small> <span class="label label-warning">不可修改</span>';
             else
                 return '<small>目前自动编单没有问题</small>';
@@ -160,7 +160,7 @@ class TempController extends AdminController
         $grid->disableBatchActions();
         $grid->disableActions();
         $grid->tools(function (Grid\Tools $tools) {
-            if(Storage::disk('data')->exists('generate_stall'))
+            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
                 $tools->append(new FixStall());
         });
 
