@@ -112,7 +112,7 @@ class Record extends Model
             $items[] = $item;
         }
 
-        if($data['result'] == '编排完') continue;
+        if($data['result'] == '编排完') return ['finished'];
         
         for($i=$ep;$i<$total;$i++) {
             $item = self::findNextEpisode($data['episodes'], $data['unique_no']);
