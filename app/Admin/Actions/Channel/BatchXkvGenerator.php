@@ -36,8 +36,7 @@ class BatchXkvGenerator extends BatchAction
             $model->status = Channel::STATUS_WAITING;
             $model->save();
 
-            $group = $model->name;
-            if($group == 'xkv')ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
+            ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
         }
 
         return $this->response()->success(__('Generator start success message.'))->refresh();

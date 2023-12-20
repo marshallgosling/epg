@@ -92,11 +92,13 @@ class XkvGenerator implements IGenerator
         $sort=0;
         foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
-            $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
+            
             if($this->air == 0) {
                 $this->air = strtotime($channel->air_date.' '.$t->start_at); 
                 $start_end = $t->start_at;
             }
+
+            $t = $this->loadWeekendsTemplate($channel->air_date, $t);
 
             $this->duration = 0;
 
@@ -134,6 +136,9 @@ class XkvGenerator implements IGenerator
 
         $start_end .= ' - '. date('H:i:s', $this->air);
 
+        $channel->start_end = $start_end;
+        $channel->save();
+        
         return $start_end;
         
     }

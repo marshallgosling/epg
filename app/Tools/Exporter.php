@@ -52,9 +52,7 @@ class Exporter
                 $clip->Name = '<![CDATA['.$program->name.']]>';
                 $clip->Id = $program->unique_no;
                 $clip->LimitDuration = $duration;
-                $clip->Duration = $duration;              
-
-                //$duration += ChannelPrograms::caculateSeconds($program->duration);
+                $clip->Duration = $duration;
 
                 $itemList->Length = $duration;
                 $itemList->LimitLen = $duration;
