@@ -196,7 +196,7 @@ class XkcGenerator implements IGenerator
 
     public function addRecordItem($templates, $maxduration, $air, $dayofweek='')
     {
-        $data = [];
+        $epglist = [];
         $lasterror = '';
         
         foreach($templates as $p) {
@@ -210,8 +210,8 @@ class XkcGenerator implements IGenerator
                 continue;
             }
             if($p->type == TemplateRecords::TYPE_RANDOM) {
-                $item = Record::findNextAvaiable($p, $maxduration);
-                if(!$item) {
+                $temps = Record::findNextAvaiable($p, $maxduration);
+                if(in_array($temps[0], ['finished', 'empty'])) {
                     $d = $p->data;
                     $d['episodes'] = null;
                     $d['unique_no'] = '';
@@ -219,34 +219,29 @@ class XkcGenerator implements IGenerator
                     $d['result'] = '';
                     $p->data = $d;
  
-                    $item = Record::findNextAvaiable($p, $maxduration);
+                    $temps = Record::findNextAvaiable($p, $maxduration);
                 }
 
-                if(!$item) {
-                    //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
-                    $d = $p->data;
-                    $d['result'] = '出错';
-                    $p->data = $d;
-                    $p->save();
-                    throw new GenerationException("随机栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE, "{$p->id} {$p->category} {$p->name} 没有找到匹配的节目");
+                foreach($temps as $item) {
+                    if(!in_array($item, ['finished', 'empty'])) {
+                        $items[] = $item;
+                    }
                 }
-
-                $items[] = $item;
+                
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
-                $d = $p->data;
-                $ep = 1;
-                if(array_key_exists('ep', $d)) {
-                    $ep = (int)$d['ep'];
-                }
-                for($i=0;$i<$ep;$i++) {
-                    $item = Record::findNextAvaiable($p, $maxduration);
+                
+                $temps = Record::findNextAvaiable($p, $maxduration);
+                $items = [];
 
-                    if($item == '未找到') {
-                        $d['result'] = $item;
+                if(!in_array($temps[0], ['finished', 'empty'])) continue;
+
+                foreach($temps as $item) {
+                    if($item == 'empty') {
+                        $d['result'] = '未找到';
                     }
-                    else if($item == '编排完') {
-                        $d['result'] = $item;
+                    else if($item == 'finished') {
+                        $d['result'] = '编排完';
                     }
                     else {
                         $items[] = $item;
@@ -258,8 +253,6 @@ class XkcGenerator implements IGenerator
                     $p->data = $d;
                     $p->save();
                 }
-
-                if(count($items) == 0) continue;
             }
             
             if(count($items)) {
@@ -275,12 +268,10 @@ class XkcGenerator implements IGenerator
 
                         $line['end_at'] = date('H:i:s', $this->air);
 
-                        $data[] = $line;
+                        $epglist[] = $line;
                             
                         $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
 
-                        // Only add once;
-                        break;
                     }
                     else {
 
@@ -288,23 +279,24 @@ class XkcGenerator implements IGenerator
                         //throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
                     }
                 }
+                if(count($epglist)) break;
+                // Only add once;
+                        //break;
             }
-            else
-            {
-                $this->warn("栏目 {$p->id} {$p->category} 内没有任何节目");
-                throw new GenerationException("栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE);
-            }
+
         }
 
-        if(count($data) == 0) {
-            $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
+        if(count($epglist) == 0) {
+            $name = Template::where('id', $p->template_id)->value('name');
+            $this->error("模版栏目 {$p->template_id} {$name} 内没有匹配到任何节目");
             $d = $p->data;
             $d['result'] = '出错';
             $p->data = $d;
             $p->save();
-            throw new GenerationException("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE, $lasterror);
+            
+            throw new GenerationException("模版栏目 {$p->template_id} {$name} 内没有匹配到任何节目", Notification::TYPE_GENERATE, $lasterror);
         }
-        return $data;
+        return $epglist;
     }
 
 
