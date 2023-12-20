@@ -22,8 +22,9 @@ class Exporter
     {
         $jsonstr = Storage::disk('data')->get('template.json');
 
-        $json = json_decode($jsonstr);
+        $template = json_decode($jsonstr);
 
+        $json = clone $template->PgmItem;
         $json->ChannelName = $channel->name;
         $json->PgmDate = $channel->air_date;
         $json->Version = $channel->version;
@@ -32,13 +33,8 @@ class Exporter
         foreach($programs as $idx=>$program)
         {
             $date = Carbon::parse($channel->air_date . ' '. $program->start_at);
-            // if not exist, just copy one 
-            if(!array_key_exists($idx, $json->ItemList)) {
-                $json->ItemList[] = clone $json->ItemList[$idx-1];
-                $cl = [$json->ItemList[$idx]->ClipsItem[0]];
-                $json->ItemList[$idx]->ClipsItem = $cl;
-            }
-                $itemList = &$json->ItemList[$idx];
+            
+            $itemList = clone $template->ItemList;
 
                 $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
                 $duration = ChannelPrograms::caculateFrames($program->duration);
@@ -51,14 +47,12 @@ class Exporter
                     $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                     $itemList->PlayType = $idx == 0 ? 1 : 0;
 
-                $clips = &$itemList->ClipsItem;
-                $n = 0;
-                $c = &$clips[$n];
-                $c->FileName = $program->unique_no;
-                $c->Name = $program->name;
-                $c->Id = $program->unique_no;
-                $c->LimitDuration = $duration;
-                $c->Duration = $duration;              
+                $clip = clone $template->ClipsItem;
+                $clip->FileName = $program->unique_no;
+                $clip->Name = $program->name;
+                $clip->Id = $program->unique_no;
+                $clip->LimitDuration = $duration;
+                $clip->Duration = $duration;              
 
                 //$duration += ChannelPrograms::caculateSeconds($program->duration);
 
@@ -67,8 +61,11 @@ class Exporter
                 $itemList->ID = (string)Str::uuid();
                 $itemList->Pid = (string)Str::uuid();
                 $itemList->ClipsCount = 1;
-            
+                $itemList->ClipsItem[] = $clip;
+                
+                $json->ItemList[] = $itemList;
         }
+        
 
         self::$json = $json;
     }

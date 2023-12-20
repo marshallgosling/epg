@@ -130,6 +130,30 @@ class exporterTool extends Command
         Exporter::exportXml(false, 'test');
     }
 
+    private function simplexml($id, $date)
+    {
+        $programs = ChannelPrograms::where('channel_id', 0)->orderBy('sort')->get();
+        
+        //$order = [];
+        foreach($programs as $p) {
+            $data = json_decode($p->data);
+        }
+        //$data['order'] = $order;
+
+        $channel = new Channel();
+        $channel->id = $id;
+        $channel->audit_status = Channel::AUDIT_EMPTY;
+        $channel->status = Channel::STATUS_READY;
+        $channel->name = 'xkv';
+        $channel->air_date = $date;
+
+        $json = Exporter::generateSimple($channel, $data);
+
+        //print_r($json);
+
+        Exporter::exportXml(false, 'test');
+    }
+
     private function excel($id, $p=false)
     {
         $export = ExportList::findOrFail($id);
