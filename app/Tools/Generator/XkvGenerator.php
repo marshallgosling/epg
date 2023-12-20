@@ -2,7 +2,7 @@
 namespace App\Tools\Generator;
 
 use App\Models\Channel;
-use App\Models\Temp\Template;
+use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\TemplatePrograms;
