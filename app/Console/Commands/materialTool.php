@@ -67,7 +67,7 @@ class materialTool extends Command
     }
 
     private function seconds() {
-        $items = Record::where('seconds', 0)->select('id','duration','seconds')->get();
+        $items = Program::where('seconds', 0)->select('id','duration','seconds')->get();
         foreach($items as $item)
         {
             $item->seconds = ChannelGenerator::parseDuration($item->duration);
