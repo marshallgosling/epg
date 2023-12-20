@@ -53,7 +53,7 @@ class exporterTool extends Command
         $data = $this->argument('data') ?? false;
         $action = $this->argument('action') ?? "";
         
-        if(in_array($action, ['excel', 'xml', 'test', 'testxml'])) {
+        if(in_array($action, ['excel', 'xml', 'test', 'testxml', 'simplexml'])) {
             $this->$action($id, $data);
         }
         
