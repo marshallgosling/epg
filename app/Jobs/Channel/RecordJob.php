@@ -112,7 +112,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                     "详细错误:".$e->getMessage()."\n".$e->desc, 'error'
                 );
                 $channel->start_end = '';
-                $channel->status = Channel::STATUS_ERROR;
+                $channel->status = Channel::STATUS_EMPTY;
                 $channel->save();
                 Storage::disk('data')->put("generate_stall", $e->desc);
                 $error = true;
