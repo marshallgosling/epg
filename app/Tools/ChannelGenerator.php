@@ -14,6 +14,8 @@ use App\Models\TemplatePrograms;
 use App\Models\Temp\TemplateRecords;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Tools\Generator\GenerationException;
 
 class ChannelGenerator
 {
@@ -126,7 +128,7 @@ class ChannelGenerator
         $schecule = 0;//strtotime($channel->air_date." 06:00:00");
         $class::loadBlackList();
         $start_end = '';
-
+        $sort=0;
         foreach($this->daily as $t) {    
             // check Date using Weekends Template or not.
             $t = $this->loadWeekendsTemplate(date('Y-m-d H:i:s', $schecule), $t);
@@ -160,12 +162,12 @@ class ChannelGenerator
             $c->data = json_encode($data);
             $c->end_at = date('Y-m-d H:i:s', $this->air);
             $c->save();
-
+            $sort = $t->sort + 1;
         }
 
         if($this->special) {
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('sort')->get();
-            $sort = $t->sort + 1;
+            
             $this->addSpecial($programs, $sort);
         }
 
@@ -284,7 +286,7 @@ class ChannelGenerator
         
         foreach($templates as $p) {
             $item = false;
-            
+            $items = [];
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
             $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
             $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 999999999999;
@@ -307,39 +309,54 @@ class ChannelGenerator
 
                 if(!$item) {
                     //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, '没有找到匹配的节目', "{$p->id} {$p->category} {$p->name} ", 'error');
+                    $d = $p->data;
+                    $d['result'] = '出错';
+                    $p->data = $d;
+                    $p->save();
                     throw new GenerationException("随机栏目 {$p->id} {$p->category} 内没有任何节目", Notification::TYPE_GENERATE, "{$p->id} {$p->category} {$p->name} 没有找到匹配的节目");
                 }
+
+                $items[] = $item;
             }
             else if($p->type == TemplateRecords::TYPE_STATIC) {
+                $data = $p->data;
+                $ep = 1;
+                if(array_key_exists('ep', $data)) {
+                    $ep = (int)$data['ep'];
+                }
+                for($i=0;$i<$ep;$i++) {
+                    $item = Record::findNextAvaiable($p, $maxduration);
+                    if($item) $items[] = $item;
+                }
 
-                $item = Record::findNextAvaiable($p, $maxduration);
-
-                if(!$item) continue;
+                if(count($items) == 0) continue;
             }
             
-            if($item) {
-                $seconds = self::parseDuration($item->duration);
-                if($seconds > 0) {
-                    
-                    $this->duration += $seconds;
-                    
-                    $line = ChannelGenerator::createItem($item, $p->category, date('H:i:s', $this->air));
-                    
-                    $this->air += $seconds;
-
-                    $line['end_at'] = date('H:i:s', $this->air);
-
-                    $data[] = $line;
+            if(count($items)) {
+                foreach($items as $item) {
+                    $seconds = self::parseDuration($item->duration);
+                    if($seconds > 0) {
                         
-                    $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
+                        $this->duration += $seconds;
+                        
+                        $line = ChannelGenerator::createItem($item, $p->category, date('H:i:s', $this->air));
+                        
+                        $this->air += $seconds;
 
-                    // Only add once;
-                    break;
-                }
-                else {
+                        $line['end_at'] = date('H:i:s', $this->air);
 
-                    $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
-                    throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
+                        $data[] = $line;
+                            
+                        $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
+
+                        // Only add once;
+                        break;
+                    }
+                    else {
+
+                        $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                        //throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
+                    }
                 }
             }
             else
@@ -349,8 +366,12 @@ class ChannelGenerator
             }
         }
 
-        if(!count($data)) {
+        if(count($data) == 0) {
             $this->error("栏目 {$p->id} {$p->category} 内没有匹配到任何节目");
+            $d = $p->data;
+            $d['result'] = '出错';
+            $p->data = $d;
+            $p->save();
             throw new GenerationException("栏目 {$p->id} {$p->category} 内没有匹配到任何节目", Notification::TYPE_GENERATE, $lasterror);
         }
         return $data;
@@ -602,11 +623,24 @@ class ChannelGenerator
             $start += $seconds;
             $item->end_at = date('H:i:s', $start);
 
-            
-            
         }
 
         return $data;
+    }
+
+    public static function writeTextMark($group, $date)
+    {
+        try {
+            
+            $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
+            $d2 = strtotime($date);
+            if($d2 > $d)
+                Storage::put($group.'.txt', $date);
+        }
+        catch(\Exception $e)
+        {
+
+        }
     }
 
 }

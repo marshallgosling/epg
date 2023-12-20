@@ -29,4 +29,9 @@ class Statistic
     {
         return Record::count();
     }
+
+    public static function countAudit()
+    {
+        return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('audit_status', Channel::AUDIT_PASS)->pluck('total', 'name')->toArray();
+    }
 }

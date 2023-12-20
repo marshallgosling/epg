@@ -7,7 +7,7 @@ use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\ToolExporter;
-use App\Admin\Actions\Channel\BatchGenerator;
+use App\Admin\Actions\Channel\BatchXkvGenerator as BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
@@ -24,7 +24,7 @@ class XkvController extends AdminController
      *
      * @var string
      */
-    protected $title = "Channel【XKV】节目单";
+    protected $title = "【 V China 】节目单";
 
     protected $description = [
                 'index'  => "查看和编辑每日节目单数据",
@@ -47,7 +47,9 @@ class XkvController extends AdminController
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="xkv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
-        $grid->column('air_date', __('Air date'));
+        $grid->column('air_date', __('Air date'))->display(function($air_date) {
+            return '<a href="'.admin_url('epg/preview/'.$this->id).'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
+        });
         $grid->column('name', __('Group'))->hide();
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['default','info','success','danger','warning']);
         //$grid->column('comment', __('Comment'));

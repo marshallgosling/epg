@@ -17,10 +17,10 @@ class ProgramController extends AdminController
      *
      * @var string
      */
-    protected $title = 'XKV 节目库管理';
+    protected $title = 'V China 节目库管理';
 
     protected $description = [
-        'index'  => "XKV 节目库数据",
+        'index'  => "V China 节目库数据",
 //        'show'   => 'Show',
 //        'edit'   => 'Edit',
 //        'create' => 'Create',

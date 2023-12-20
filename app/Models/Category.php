@@ -14,6 +14,7 @@ class Category extends Model
     public $timestamps = false;
 
     public const TYPES = ['tags'=>'标签', 'mood'=>'情绪', 'energy'=>'力量', 'tempo'=>'节奏', 'genre'=>'风格', 'sex'=>'性别'];
+    public const CATES = ['movie', 'cartoon', 'drama', 'Entertainm', 'CanXin'];
 
     protected $fillable = [
         'id',

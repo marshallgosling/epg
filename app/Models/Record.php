@@ -86,54 +86,56 @@ class Record extends Model
      * 
      * @param TemplateRecords $template
      */
-    public static function findNextAvaiable(TemplateRecords $template, int $maxduration) {
+    public static function findNextAvaiable(TemplateRecords &$template, int $maxduration) {
         if($template->category == 'movie')
-            return self::findRandom($template->category, $maxduration);
+            return [self::findRandom($template->category, $maxduration)];
        
-        //$data = json_decode(json_encode($template->data));
+        
         $data = $template->data;
-        if($template->data['episodes'] == null) {
+        $total = 1; $ep = 0;
+        if(array_key_exists('ep', $data)) $total = (int)$data['ep'];
+        $items = [];
+
+        if($data['episodes'] == null) {
+
             $item = self::findRandomEpisode($template->category, $maxduration);
+            if($total == 1)
+            { 
+                return [$item];
+            }
+
+            if(in_array($item, ['finished', 'empty'])) return [$item];
+
+            $ep = 1;
+            $data['episodes'] = $item->episodes;
+            $data['unique_no'] = $item->unique_no;
+            $items[] = $item;
+        }
+        
+        for($i=$ep;$i<$total;$i++) {
+            $item = self::findNextEpisode($data['episodes'], $data['unique_no']);
+
+            if($item == 'finished') {
+                if($template->type == TemplateRecords::TYPE_STATIC) {
+                    Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
+                }
+                //$item = '编排完';
+            }
+            else if($item == 'empty') {
+                if($template->type == TemplateRecords::TYPE_STATIC) {
+                    Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
+                }
+                //$item = '未找到';
+            }
+            else {
+                $data['episodes'] = $item->episodes;
+                $data['unique_no'] = $item->unique_no;
+            }
             
-            $data['episodes'] = $item->episodes;
-            $data['unique_no'] = $item->unique_no;
-            $data['name'] = $item->name;
-            $data['result'] = '编排中';
-
-            $template->data = $data;
-            $template->save();
-            return $item;
+            $items[] = $item;
         }
-
-        $item = self::findNextEpisode($template->data['episodes'], $template->data['unique_no']);
-
-        if($item == 'finished') {
-            if($template->type == TemplateRecords::TYPE_STATIC) {
-                Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
-
-                $data['result'] = '编排完';
-            }
-            $item = false;
-        }
-        else if($item == 'empty') {
-            if($template->type == TemplateRecords::TYPE_STATIC) {
-                Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
-
-                $data['result'] = '未找到';
-            }
-            $item = false;
-        }
-        else {
-            $data['episodes'] = $item->episodes;
-            $data['unique_no'] = $item->unique_no;
-            $data['result'] = '编排中';
-            $data['name'] = $item->name;
-        }
-
-        $template->data = $data;
-        $template->save();
  
-        return $item;
+        return $items;
     }
 
     public static function findNextEpisode($episodes, $unique_no='', $category='')

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<PgmItem>
+    <PgmDate>2024-02-03</PgmDate>
+    <ChannelName>xkv</ChannelName>
+    <PgmClass>全天</PgmClass>
+    <ListType>0</ListType>
+    <Version>3</Version>
+    <Count>0</Count>
+    <ItemList>
+        <PlayType>1</PlayType>
+        <StartTime>1080000</StartTime>
+        <SystemTime>2023-09-08 12:00:00</SystemTime>
+        <Insert>0</Insert>
+        <Length>15000</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>10分钟（带时码）</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0908新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>15000</LimitLen>
+        <AdvType>0</AdvType>
+        <ID></ID>
+        <Pid></Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45177</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>1</ClipsCount>
+        <ClipsItem>
+            <FileName>UH82CDAW</FileName>
+            <Name>10分钟（带时码）</Name>
+            <Id />
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>15000</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>1500</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+</PgmItem>

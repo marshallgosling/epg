@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\ExportList;
 use App\Models\Notification;
 use App\Tools\ExcelWriter;
@@ -21,7 +22,7 @@ class exporterTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:export {action?} {id?}';
+    protected $signature = 'tools:export {action?} {id?} {data?}';
 
     /**
      * The console command description.
@@ -47,34 +48,33 @@ class exporterTool extends Command
      */
     public function handle()
     {
-        $start_at = '2023-12-31';
-        $end_at = '2023-12-31';
 
         $id = $this->argument('id') ?? "";
+        $data = $this->argument('data') ?? false;
         $action = $this->argument('action') ?? "";
         
-        if(in_array($action, ['excel', 'xml', 'test'])) {
-            $this->$action($id);
+        if(in_array($action, ['excel', 'xml', 'test', 'testxml', 'simplexml'])) {
+            $this->$action($id, $data);
         }
         
         return 0;
     }
 
-    private function test()
+    private function test($id, $data)
     {
         $d = DB::table('notification')->selectRaw("`type`, count(`type`) as total")->where('viewed', 0)->groupBy('type')->pluck('total', 'type')->toArray();
         print_r($d);
     }
 
-    private function xml($id)
+    private function xml_old($id)
     {
         
         //Exporter::generate($id);
         $channel = Channel::findOrFail($id);
-        $data = Exporter::gatherData($channel->air_date, $channel->name);
+        $data = Exporter::collectData($channel->air_date, $channel->name, Exporter::TIMES[$channel->name]);
    
-        Exporter::generateSimple($channel, $data);
-        Exporter::exportXml(true);
+        Exporter::generate($id);
+        Exporter::exportXml();
     
         Notify::fireNotify(
             $channel->name,
@@ -85,7 +85,76 @@ class exporterTool extends Command
         );
     }
 
-    private function excel($id)
+    private function xml($id, $date=false)
+    {
+        $channel = Channel::findOrFail($id);
+
+        $data = Exporter::collectData($channel->air_date, $channel->name);
+
+        Exporter::generateData($channel, $data, $date);
+        Exporter::exportXml();
+
+        $fake = $date ? " -> $date":"";
+        Notify::fireNotify(
+            $channel->name,
+            Notification::TYPE_XML, 
+            "生成 XML {$channel->air_date} {$fake} 成功. ", 
+            "",
+            Notification::LEVEL_INFO
+        );
+    }
+
+    private function testxml($id, $date)
+    {
+        $programs = ChannelPrograms::where('channel_id', 0)->orderBy('sort')->get();
+        $data = [];
+        $order = [];
+        foreach($programs as $p) {
+            $order[] = $p->id;
+            $data[$p->id] = $p->toArray();
+            $data[$p->id]['items'] = json_decode($p->data, true);
+        }
+        $data['order'] = $order;
+
+        $channel = new Channel();
+        $channel->id = $id;
+        $channel->audit_status = Channel::AUDIT_EMPTY;
+        $channel->status = Channel::STATUS_READY;
+        $channel->name = 'xkv';
+        $channel->air_date = $date;
+
+        $json = Exporter::generateData($channel, $data);
+
+        //print_r($json);
+
+        Exporter::exportXml(false, 'test');
+    }
+
+    private function simplexml($id, $date)
+    {
+        $programs = ChannelPrograms::where('channel_id', 0)->orderBy('sort')->get();
+        
+        //$order = [];
+        foreach($programs as $p) {
+            $data = json_decode($p->data);
+        }
+        //$data['order'] = $order;
+
+        $channel = new Channel();
+        $channel->id = $id;
+        $channel->audit_status = Channel::AUDIT_EMPTY;
+        $channel->status = Channel::STATUS_READY;
+        $channel->name = 'xkv';
+        $channel->air_date = $date;
+
+        $json = Exporter::generateSimple($channel, $data);
+
+        //print_r($json);
+
+        Exporter::exportXml(false, 'test');
+    }
+
+    private function excel($id, $p=false)
     {
         $export = ExportList::findOrFail($id);
 

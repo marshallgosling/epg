@@ -51,7 +51,8 @@ class XmlWriter
     private function escape($value)
     {
         // TODO: htmlspecialchars
-        return htmlspecialchars($value);
+        if( strpos($value, '<![CDATA[') != -1) return $value;
+        else return htmlspecialchars($value);
     }
     private function getArrayName($parentName)
     {

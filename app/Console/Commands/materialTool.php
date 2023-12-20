@@ -117,7 +117,7 @@ class materialTool extends Command
             $class = '\App\Models\Program';
             $program = new $class();
             
-            if(in_array($model->category, ['tvshow', 'tvseries', 'movie','starmade','cartoon']))
+            if(in_array($model->category, ['Entertainm', 'drama', 'movie','CanXin','cartoon']))
             {
                 $class = '\App\Models\Record';
                 $program = new $class();

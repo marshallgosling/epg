@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
@@ -16,6 +15,7 @@ use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use App\Models\Notification;
+use App\Tools\Generator\XkvGenerator;
 
 class ProgramsJob implements ShouldQueue, ShouldBeUnique
 {
@@ -72,13 +72,10 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         $channel->status = Channel::STATUS_RUNNING;
         $channel->save();
 
-        $generator = new ChannelGenerator();
-        $generator->loadTemplate($channel->name);
+        $generator = new XkvGenerator($channel->name);
+        $generator->loadTemplate();
 
-        if($channel->name == 'xkc')
-            $start_end = $generator->generateXkc($channel);
-        else
-            $start_end = $generator->generate($channel);
+        $start_end = $generator->generate($channel);
         
         $channel->status = Channel::STATUS_READY;
         $channel->start_end = $start_end;
@@ -92,6 +89,8 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
         );
 
         $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+
+        ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
     }
 
     /**

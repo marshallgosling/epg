@@ -90,28 +90,38 @@ HTML;
             '物料管理' => admin_url('/media/material'),
             '黑名单' => admin_url('media/blacklist'),
             '播出计划' => admin_url('plans'),
-            '播出串联单' => admin_url('export/xml'),
-            '通知' => admin_url('notifications')
+            '串联单' => admin_url('epg'),
+            '通知' => admin_url('notifications'),
+            'Excel' => admin_url('export/excel')
         ];
 
         $templates = Statistic::countTemplate();
-        $channellist = Statistic::countChannelXml();
+        $channels = Statistic::countChannelXml();
+        $audit = Statistic::countAudit();
+        
+        foreach(['xkv','xkc'] as $k) {
+          if(!array_key_exists($k, $channels)) $channels[$k] = 0;
+          if(!array_key_exists($k, $audit)) $audit[$k] = 0;
+        }
 
         $channels =[
-          '频道 XKV' => [
+          '频道 V China' => [
             '节目库内容数量 <span class="badge">'.Statistic::countPrograms().'</span>' => admin_url('/media/programs'),
             '模版库数量 <span class="badge">'.$templates['xkv'].'</span>' => admin_url('/template/xkv'),
-            '编单数量 <span class="badge">'.$channellist['xkv'].'</span>' => admin_url('/channel/xkv'),
+            '编单数量 <span class="badge">'.$channels['xkv'].'</span>' => admin_url('/channel/xkv'),
+            '已审核编单 <span class="badge">'.$audit['xkv'].'</span>' => admin_url('/channel/xkv'),
           ],
-          '频道 XKC' => [
+          '频道 星空中国' => [
             '节目库内容数量 <span class="badge">'.Statistic::countRecords().'</span>' => admin_url('/media/records'),
             '模版库数量 <span class="badge">'.$templates['xkc'].'</span>' => admin_url('/template/xkc'),
-            '编单数量 <span class="badge">'.$channellist['xkc'].'</span>' => admin_url('/channel/xkc'),
+            '编单数量 <span class="badge">'.$channels['xkc'].'</span>' => admin_url('/channel/xkc'),
+            '已审核编单 <span class="badge">'.$audit['xkc'].'</span>' => admin_url('/channel/xkc'),
           ],
-          '频道 XKI' => [
+          '频道 星空国际' => [
             '节目库' => '#',
             '模版库' => '#',
             '编单列表' => '#',
+            '已审核编单' => '#'
           ]
         ];
 
@@ -124,17 +134,13 @@ HTML;
         $envs = [
             ['name' => 'PHP version',       'value' => 'PHP/'.PHP_VERSION],
             ['name' => 'Laravel version',   'value' => app()->version()],
-            ['name' => 'CGI',               'value' => php_sapi_name()],
-            ['name' => 'Uname',             'value' => php_uname()],
             ['name' => 'Server',            'value' => Arr::get($_SERVER, 'SERVER_SOFTWARE')],
-
             ['name' => 'Cache driver',      'value' => config('cache.default')],
             ['name' => 'Session driver',    'value' => config('session.driver')],
             ['name' => 'Queue driver',      'value' => config('queue.default')],
-
             ['name' => 'Timezone',          'value' => config('app.timezone')],
             ['name' => 'Locale',            'value' => config('app.locale')],
-            //['name' => 'Env',               'value' => config('app.env')],
+            ['name' => 'Env',               'value' => config('app.env')],
             //['name' => 'URL',               'value' => config('app.url')],
         ];
         $data = '';

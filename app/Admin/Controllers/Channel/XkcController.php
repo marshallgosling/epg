@@ -5,13 +5,11 @@ namespace App\Admin\Controllers\Channel;
 use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
-use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\ToolExporter;
-use App\Admin\Actions\Channel\BatchGenerator;
+use App\Admin\Actions\Channel\BatchXkcGenerator as BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
-use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -25,7 +23,7 @@ class XkcController extends AdminController
      *
      * @var string
      */
-    protected $title = "Channel【XKC】节目单";
+    protected $title = "【 星空中国 】节目单";
 
     protected $description = [
                 'index'  => "查看和编辑每日节目单数据",
@@ -48,7 +46,10 @@ class XkcController extends AdminController
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
             return '<a href="xkc/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
-        $grid->column('air_date', __('Air date'));
+        $grid->column('air_date', __('Air date'))->display(function($air_date) {
+            return '<a href="'.admin_url('epg/preview/'.$this->id).'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
+        });
+
         $grid->column('start_end', __('StartEnd'));
         $grid->column('status', __('Status'))->filter(Channel::STATUS)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning']);

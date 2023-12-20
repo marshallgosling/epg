@@ -1,0 +1,2817 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<PgmItem>
+    <PgmDate>2024-02-05</PgmDate>
+    <ChannelName>xkv</ChannelName>
+    <PgmClass>全天</PgmClass>
+    <ListType>0</ListType>
+    <Version>24</Version>
+    <Count>24</Count>
+    <ItemList>
+        <PlayType>1</PlayType>
+        <StartTime>540000</StartTime>
+        <SystemTime>2024-02-05 06:00:00</SystemTime>
+        <Insert>0</Insert>
+        <Length>88675</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>偶像派+民谣风+粤来香</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>88675</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>bfc6a086-11e4-49b2-aac1-bcfaecdaf5d5</ID>
+        <Pid>6a51f55f-ec04-401e-92d4-e80cbfde8b8d</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>30</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>628925</StartTime>
+        <SystemTime>2024-02-05 06:59:17</SystemTime>
+        <Insert>0</Insert>
+        <Length>93675</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>男人帮+女人花+最经典</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>93675</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>76ab10cf-8694-4102-80c9-7e27e7244b07</ID>
+        <Pid>d3bc4334-d29c-4ae8-86b9-81a72805b70f</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>722600</StartTime>
+        <SystemTime>2024-02-05 08:01:44</SystemTime>
+        <Insert>0</Insert>
+        <Length>84750</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>够派对+V强音+风尚汇</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>84750</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>78fe90df-b504-49e9-957f-9540a25d9c68</ID>
+        <Pid>5ba02e91-b30b-4d91-9e0c-a39339c14b15</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>33</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>807350</StartTime>
+        <SystemTime>2024-02-05 08:58:14</SystemTime>
+        <Insert>0</Insert>
+        <Length>93000</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>V原创+最摇滚+原声碟</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>93000</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>fa3ca410-ed1b-43a6-a0b9-087046571c5e</ID>
+        <Pid>edec558c-c3e3-4c88-8e0c-e8d9bbd1d737</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>32</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>900350</StartTime>
+        <SystemTime>2024-02-05 10:00:14</SystemTime>
+        <Insert>0</Insert>
+        <Length>87925</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>双重奏+拍拍走+神州热</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>87925</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>f4f77ac8-4472-4a07-a215-d30319957105</ID>
+        <Pid>dd685915-a804-4520-b41b-ef57af354f69</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>28</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>988275</StartTime>
+        <SystemTime>2024-02-05 10:58:51</SystemTime>
+        <Insert>0</Insert>
+        <Length>90800</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>乐工厂+面对面+日韩流</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>90800</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>a9deecf2-9781-471e-9cab-06f713ed6bef</ID>
+        <Pid>4079c68f-6676-4716-af61-c009255d3634</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>24</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1079075</StartTime>
+        <SystemTime>2024-02-05 11:59:23</SystemTime>
+        <Insert>0</Insert>
+        <Length>90475</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>最流行+国际酷+台湾通</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>90475</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>6ead734f-a551-4d2f-9470-905c4075eede</ID>
+        <Pid>49cf8782-594d-4c74-ae74-57c7affe8c39</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>29</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1169550</StartTime>
+        <SystemTime>2024-02-05 12:59:42</SystemTime>
+        <Insert>0</Insert>
+        <Length>87375</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>快红新声代+课间操+恋爱ING</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>87375</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>315ed3bc-c00a-4407-91b0-9a73e6101207</ID>
+        <Pid>b78d3128-e259-4e5c-b614-00e49270d915</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1256925</StartTime>
+        <SystemTime>2024-02-05 13:57:57</SystemTime>
+        <Insert>0</Insert>
+        <Length>84050</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>偶像派+民谣风+粤来香</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>84050</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>57046d59-e82a-4aa5-983c-2b0492d4f194</ID>
+        <Pid>054921b2-b6fa-495f-83d6-6ef9b26f9c2a</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1340975</StartTime>
+        <SystemTime>2024-02-05 14:53:59</SystemTime>
+        <Insert>0</Insert>
+        <Length>89225</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>男人帮+女人花+最经典</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>89225</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>ad01f383-8159-4678-82c7-8b86a30f2bed</ID>
+        <Pid>4c0231e1-7fbe-4f0b-8d05-184be39daee8</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1430200</StartTime>
+        <SystemTime>2024-02-05 15:53:28</SystemTime>
+        <Insert>0</Insert>
+        <Length>92800</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>够派对+V强音+风尚汇</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>92800</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>9a85ea32-6cac-4c70-a503-3861cdf95701</ID>
+        <Pid>54cf8bc7-b25d-4f9d-ad12-32802ce46a81</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>33</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1523000</StartTime>
+        <SystemTime>2024-02-05 16:55:20</SystemTime>
+        <Insert>0</Insert>
+        <Length>91800</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>V原创+最摇滚+原声碟</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>91800</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>ebb23865-88a9-49a8-b1b1-87fa9212866e</ID>
+        <Pid>8e975281-6858-4258-9c2f-e4015ff2841d</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1614800</StartTime>
+        <SystemTime>2024-02-05 17:56:32</SystemTime>
+        <Insert>0</Insert>
+        <Length>84400</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>双重奏+拍拍走+神州热</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>84400</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>e1da1c96-9fe3-4d71-9cda-fb46e56243bb</ID>
+        <Pid>8eec33cd-decc-46c8-96de-74518c7fc3c6</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>29</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1699200</StartTime>
+        <SystemTime>2024-02-05 18:52:48</SystemTime>
+        <Insert>0</Insert>
+        <Length>95850</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>乐工厂+面对面+日韩流</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>95850</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>4e7960ff-8593-4202-a701-5133138a4528</ID>
+        <Pid>2a50e78e-a57c-41cf-927f-ffb433256828</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>26</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1795050</StartTime>
+        <SystemTime>2024-02-05 19:56:42</SystemTime>
+        <Insert>0</Insert>
+        <Length>87250</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>最流行+国际酷+台湾通</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>87250</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>f280ff73-b859-4b53-bdf6-e96a98a2dff4</ID>
+        <Pid>58dda853-e579-4a86-bce9-6e888a590b73</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>29</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1882300</StartTime>
+        <SystemTime>2024-02-05 20:54:52</SystemTime>
+        <Insert>0</Insert>
+        <Length>93525</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>快红新声代+课间操+恋爱ING</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>93525</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>e22713c6-720f-4453-8a74-861aa2da71ea</ID>
+        <Pid>e72de864-9bfb-44bc-842c-45d24dcffab0</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>1975825</StartTime>
+        <SystemTime>2024-02-05 21:57:13</SystemTime>
+        <Insert>0</Insert>
+        <Length>93475</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>偶像派+民谣风+粤来香</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>93475</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>346b6009-90d4-4f8a-b4c1-e4f74f36d3d9</ID>
+        <Pid>2cfc86dc-0eb2-45fa-9905-fe13b2a534d0</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>33</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>2069300</StartTime>
+        <SystemTime>2024-02-05 22:59:32</SystemTime>
+        <Insert>0</Insert>
+        <Length>84325</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>男人帮+女人花+最经典</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>84325</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>aeefa9cd-9778-4fc4-b65e-8431f64bf7a9</ID>
+        <Pid>e1303c34-5f30-43b0-b680-772dccb0bf33</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>2153625</StartTime>
+        <SystemTime>2024-02-05 23:55:45</SystemTime>
+        <Insert>0</Insert>
+        <Length>78525</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>够派对+V强音+风尚汇</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>78525</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>bf406998-4aeb-40dd-b8ab-4ec6000523ce</ID>
+        <Pid>abf489be-956f-47a0-a9c2-8a6083ea1f86</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>33</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>72150</StartTime>
+        <SystemTime>2024-02-05 00:48:06</SystemTime>
+        <Insert>0</Insert>
+        <Length>95400</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>V原创+最摇滚+原声碟</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>95400</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>cdffd273-220b-47ae-a4e9-d831c2ecbbf7</ID>
+        <Pid>293d399c-9dde-4229-8331-88265387ff02</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>31</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>167550</StartTime>
+        <SystemTime>2024-02-05 01:51:42</SystemTime>
+        <Insert>0</Insert>
+        <Length>93325</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>双重奏+拍拍走+神州热</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>93325</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>c0b3958b-1037-4bfe-8f46-453f9069b4ee</ID>
+        <Pid>7f8bb58d-6223-4f7e-bb65-2196eb3c6a52</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>28</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>260875</StartTime>
+        <SystemTime>2024-02-05 02:53:55</SystemTime>
+        <Insert>0</Insert>
+        <Length>96300</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>快红新声代+面对面+日韩流</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>96300</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>14fe025a-c727-43b2-95c8-1af9787d8c03</ID>
+        <Pid>f4e267c7-6bfb-4515-95d5-63c7d239fb3c</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>32</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>357175</StartTime>
+        <SystemTime>2024-02-05 03:58:07</SystemTime>
+        <Insert>0</Insert>
+        <Length>93000</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>最流行+国际酷+台湾通</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>93000</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>74a8fc59-f7b1-4017-95df-591c10a5833c</ID>
+        <Pid>34b6eb35-dbfa-4139-bbc2-dd26d8b040ec</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>28</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+    <ItemList>
+        <PlayType>0</PlayType>
+        <StartTime>450175</StartTime>
+        <SystemTime>2024-02-05 05:00:07</SystemTime>
+        <Insert>0</Insert>
+        <Length>90925</Length>
+        <Offset>0</Offset>
+        <ChSignal>0</ChSignal>
+        <ChSignalEx>0</ChSignalEx>
+        <DevType>0</DevType>
+        <DevId>0</DevId>
+        <Name>V LIVE</Name>
+        <Name2 />
+        <TapeID />
+        <BillType>0205新建</BillType>
+        <ProgType>综艺</ProgType>
+        <Memo />
+        <PlayedTask />
+        <LimitOffset>0</LimitOffset>
+        <LimitLen>90925</LimitLen>
+        <AdvType>0</AdvType>
+        <ID>68ac985e-5503-489f-a806-345c1e191d81</ID>
+        <Pid>cf19fb94-e8fe-4374-960c-68fc31b8e743</Pid>
+        <Status>0</Status>
+        <Modify>0</Modify>
+        <First>0</First>
+        <PgmDate>45327</PgmDate>
+        <ColumnName />
+        <Category />
+        <ProductDepartment />
+        <Origin />
+        <sCharats />
+        <sKeys />
+        <sPlayType />
+        <sDevType>硬盘</sDevType>
+        <ClipsCount>4</ClipsCount>
+        <ClipsItem>
+            <FileName>VCNI21000033</FileName>
+            <Name>[V]现场--Opening Rev</Name>
+            <Id>VCNI21000033</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>804484</FileName>
+            <Name>3rd CMA R2</Name>
+            <Id>804484</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>89675</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>89675</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNI22000007</FileName>
+            <Name>[V]现场--Closing（2023）</Name>
+            <Id>VCNI22000007</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>250</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>250</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+        <ClipsItem>
+            <FileName>VCNP18018012</FileName>
+            <Name>2018 V Live Promo</Name>
+            <Id>VCNP18018012</Id>
+            <LimitOffset>0</LimitOffset>
+            <LimitDuration>750</LimitDuration>
+            <Offset>0</Offset>
+            <Duration>750</Duration>
+            <Status>0</Status>
+            <MediaType />
+            <FileId />
+            <AreaStatus></AreaStatus>
+            <Code />
+            <ClipFileCount>1</ClipFileCount>
+            <ClipFile>
+                <AreaId></AreaId>
+                <FileSize></FileSize>
+                <MD5></MD5>
+            </ClipFile>
+        </ClipsItem>
+    </ItemList>
+</PgmItem>

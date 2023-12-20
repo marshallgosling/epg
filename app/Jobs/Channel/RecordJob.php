@@ -8,13 +8,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Tools\ChannelGenerator;
-use App\Tools\GenerationException;
+use App\Tools\Generator\GenerationException;
+use App\Tools\Generator\XkcGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
@@ -51,7 +51,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        if(Storage::disk('data')->exists("generate_stall"))
+        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
         {
             Notify::fireNotify(
                 $this->group,
@@ -72,7 +72,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             return 0;
         }
 
-        $generator = new ChannelGenerator($this->group);
+        $generator = new XkcGenerator($this->group);
         $generator->makeCopyTemplate();
         $generator->loadTemplate();
 
@@ -102,19 +102,19 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             $channel->save();
 
             try {
-                $start_end = $generator->generateXkc($channel);
+                $start_end = $generator->generate($channel);
             }catch(GenerationException $e)
             {
                 Notify::fireNotify(
                     $channel->name,
                     Notification::TYPE_GENERATE, 
                     "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
-                    "详细错误:".$e->getMessage()."\n".$e->desc, 'error'
+                    $e->getMessage()."\n".$e->desc, 'error'
                 );
                 $channel->start_end = '';
-                $channel->status = Channel::STATUS_ERROR;
+                $channel->status = Channel::STATUS_EMPTY;
                 $channel->save();
-                Storage::disk('data')->put("generate_stall", date('Y-m-d H:i:s'));
+                Storage::disk('data')->put(XkcGenerator::STALL_FILE, $e->getMessage().", Last:".$e->desc);
                 $error = true;
                 continue;
             }
@@ -133,6 +133,9 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
             );
 
             $this->info("生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ");
+
+            ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+                  
         }
 
         if(!$error) {

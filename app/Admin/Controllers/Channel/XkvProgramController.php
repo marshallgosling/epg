@@ -24,7 +24,7 @@ class XkvProgramController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Channel【XKV】编单';
+    protected $title = '【 V China 】编单';
 
     protected $description = [
         'index'  => "每日节目编单具体编排数据，可以编辑及排序",
@@ -69,11 +69,10 @@ class XkvProgramController extends AdminController
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        $grid->filter(function($filter){
-
-            // 在这里添加字段过滤器
-            $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('id', 'desc')->limit(20)->get()->pluck('air_date', 'id'));
-            
+        $grid->filter(function(Grid\Filter $filter){
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('id', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
+            });
         });
 
         $grid->actions(function ($actions) {
@@ -88,7 +87,7 @@ class XkvProgramController extends AdminController
             if(key_exists('channel_id', $_REQUEST))$tools->append(new ToolCalculate($_REQUEST['channel_id']));
         });
 
-        $grid->disableCreateButton();
+        //$grid->disableCreateButton();
 
         return $grid;
     }
@@ -128,12 +127,13 @@ class XkvProgramController extends AdminController
     {
         $form = new Form(new ChannelPrograms());
 
+        $form->select('channel_id', "Channel")->options(Channel::where('name', 'xkv')->select('id', 'air_date')->pluck('air_date', 'id')->toArray());
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'))->disable();
-        $form->text('end_at', __('End at'))->disable();
-        $form->text('duration', __('Duration'))->disable();
+        $form->text('start_at', __('Start at'));
+        $form->text('end_at', __('End at'));
+        $form->text('duration', __('Duration'))->inputmask(['mask'=>'99:99:99:99']);
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
         $form->json('data', '编单数据');

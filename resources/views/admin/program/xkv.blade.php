@@ -107,8 +107,10 @@
 <div id="template" style="display: none">{!!$template!!}</div>
 <script type="text/javascript">
     var selectedItem = null;
+    var selectedItems = [];
+    var multi = false;
     var selectedIndex = -1;
-    var replaceItem = [];
+    var modifiedItem = [];
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
     var sortEnabled = false;
@@ -272,11 +274,18 @@
             backupData();
 
             if(selectedIndex == 'new') {
+                var checkedidx = $('.grid-row-checkbox:checked').length > 0 ? 
+                    $('.grid-row-checkbox:checked').eq(0).data('id') : -1;
+
+                //if(!multi) selectedItems = [selectedItem];
                 
-                selectedIndex = dataList.length;
+                selectedIndex = checkedidx == -1 ? dataList.length : parseInt(checkedidx) + 1;  
                 
-                dataList.push(selectedItem);
-                replaceItem.push(selectedItem.unique_no.toString());
+                for(var n=0;n<selectedItems.length;n++) {
+                    dataList.splice(selectedIndex+n, 0, selectedItems[n]);
+                    modifiedItem.push(selectedItems[n].unique_no.toString());
+                }
+                
                 reCalculate(selectedIndex);
             }
             else {
@@ -285,7 +294,7 @@
                     return;
                 }
                 dataList[selectedIndex] = selectedItem;
-                replaceItem.push(selectedItem.unique_no.toString());
+                modifiedItem.push(selectedItem.unique_no.toString());
                 reCalculate(selectedIndex);
             }
 
@@ -321,6 +330,7 @@
                     var items = data.result;
                     cachedPrograms = cachedPrograms.concat(items);
                     selectedItem = null;
+                    selectedItems = [];
 
                     if(data.total == 0) {
                         $('#noitem').show();
@@ -363,6 +373,10 @@
             return;
         }
         selectedIndex = idx;
+        multi = idx == 'new';
+        
+        console.log('multi:'+multi);
+
         $('#searchModal').modal('show');
         $('#confirmBtn').removeAttr('disabled');
     }
@@ -376,11 +390,24 @@
             repo.category = repo.category.toString().split(',')[0];
         }
         if(repo.artist==null) repo.artist='';
-        repo.isnew = true;
-        selectedItem = repo;
-
-        $('.search-item').removeClass('info');
-        $('.search-item').eq(idx).addClass('info');
+        
+        if(multi) {
+            console.log('multi:'+idx);
+            if(selectedItems.indexOf(repo)==-1) {
+                selectedItems.push(repo);
+                $('.search-item').eq(idx).addClass('info');
+            }
+            else {
+                selectedItems.splice(selectedItems.indexOf(repo), 1);
+                $('.search-item').eq(idx).removeClass('info');
+            }
+        }
+        else {
+            selectedItem = repo;
+            $('.search-item').removeClass('info');
+            $('.search-item').eq(idx).addClass('info');
+        }
+        
     }
 
     function deleteProgram (idx) {
@@ -403,7 +430,7 @@
         for(i=0;i<dataList.length;i++)
         {
             var style = '';
-            if(in_array(dataList[i].unique_no, replaceItem)) style = 'bg-danger';
+            if(in_array(dataList[i].unique_no, modifiedItem)) style = 'bg-danger';
             html += createItem(i, dataList[i], style);
             total += parseDuration(dataList[i].duration);
         }

@@ -49,6 +49,7 @@
     "Date from"     : "从",
     "Date to"       : "至",
     "DateRange"     : "日期范围",
+    "TimeRange"     : "时间范围",
     "Filepath"      : "文件路径",
     "Select"        : "选择",
     "Copy"          : "复制",
@@ -69,11 +70,13 @@
     "Scaned at":    "上次扫描时间",
     "Keyword":      "关键字",
     "Data":     "原始数据",
+    "Ep no":    "连载集数",
     "ChannelController" : "Channel【V】节目单",
     "ChannelIndexDesc" : "查看和编辑每日节目单数据",
     
     "Advanced Mode": "高级编排模式",
     "Modify Template Content": "调整模版编排内容",
+    "Preview EPG Content": "预览串联单详细编排",
     "CategoryController" : "分类管理",
     "MaterialController" : "物料管理",
     "ProgramController" : "节目管理",
@@ -115,7 +118,7 @@
     "xml": "串联单导出",
     "audit": "审核",
     "blacklist": "黑名单",
-
+    "Error Mode": "错误排查模式",
     "Preview Mode": "预览模式",
     "Preview Template Content": "预览模版节目内容编排",
 

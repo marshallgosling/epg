@@ -19,11 +19,10 @@
  */
 
 Encore\Admin\Facades\Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-
-    //$navbar->left(view('admin.search'));
-
+    $xkv = \Illuminate\Support\Facades\Storage::exists('xkv.txt') ? \Illuminate\Support\Facades\Storage::get('xkv.txt') : "-";
+    $xkc = \Illuminate\Support\Facades\Storage::exists('xkc.txt') ? \Illuminate\Support\Facades\Storage::get('xkc.txt') : "-";
+    $navbar->left(view('admin.notice', compact('xkv', 'xkc')));
     $navbar->right(view('admin.notification'));
-
 });
 
 Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
@@ -35,7 +34,7 @@ Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
         $filter->setAction('?expand=1');
     });
     $grid->header(function ($query) {
-        return '<small>按住 shift 键可快速批量多选操作</small>';
+        return '<small>按住 <kbd>shift</kbd> 键可快速批量多选操作</small>';
     });
     $js = <<<JS
     var startmove = false;
@@ -104,6 +103,14 @@ Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
         $tools->disableList();
     });
     
+});
+
+\Encore\Admin\Show::init(function (\Encore\Admin\Show $show) {
+    $show->panel()->tools(function (\Encore\Admin\Show\Tools $tools) {
+        $tools->disableDelete();
+        $tools->disableEdit();
+        $tools->disableList();
+    });
 });
 
 Encore\Admin\Form::forget(['map', 'editor']);
