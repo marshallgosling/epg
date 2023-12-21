@@ -38,7 +38,7 @@ class CategoryRelationListener
             $data = [];
             foreach($cids as $cid)
             {
-                $data[] = ['category_id'=>$cid, $table.'_id'=>$program_id, 'type'=>Category::TYPE_TAGS];
+                $data[] = ['category_id'=>$cid, 'record_id'=>$program_id, 'type'=>Category::TYPE_TAGS];
             }
 
             if(count($data)) {

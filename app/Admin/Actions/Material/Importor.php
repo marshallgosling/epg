@@ -45,7 +45,7 @@ class Importor extends RowAction
             $program->save();
 
             $cid = Category::where('no', $model->category)->value('id');
-            DB::table('category_'.$relation)->insert(['category_id'=>$cid, $relation.'_id'=>$program->id]);
+            DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
         }
         return $this->response()->success(__('Import Success message'));
     }
