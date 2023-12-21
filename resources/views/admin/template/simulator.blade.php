@@ -164,7 +164,7 @@ ol.breadcrumb {
                   @if(count($model['data']) > 0)
                 
                   @foreach($model['data'] as $program) 
-                  <div class="epg-callout epg-callout-{{$program['error']?'error':'info'}}">
+                  <div id="channel{{$model['id']}}" class="epg-callout epg-callout-{{$program['error']?'error':'info'}}">
                       <h4>{{$model['air_date']}} {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
                           || &nbsp; 
                           </h4>
