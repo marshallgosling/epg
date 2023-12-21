@@ -32,6 +32,7 @@ class XkcSimulator
     {
         $this->log_channel = 'simulator';
         $this->group = $group;
+        $this->log_print = false;
     }
 
     public function handle($start, $days, \Closure $callback=null)
