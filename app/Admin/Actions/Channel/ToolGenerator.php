@@ -63,9 +63,9 @@ class ToolGenerator extends Action
             }
         
             if($group == 'xkc')
-                RecordJob::dispatch($group);
+                RecordJob::dispatch($group)->onQueue('xkc');
             else
-                ProgramsJob::dispatch($group);
+                ProgramsJob::dispatch($group)->onQueue('xkv');
         }
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
