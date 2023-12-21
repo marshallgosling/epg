@@ -75,9 +75,9 @@ class ToolGenerator extends Action
     {
         $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$this->group])->orderBy('air_date')->first();
         $c = $channel ? $channel->air_date : date('Y-m-d');
-        $this->date('start_at', '开始日期')->default($c)->disable();
+        $this->text('start', '开始日期')->default($c)->disable();
         $this->date('end_at', '结束日期')->placeholder('不填则自动结束');
- 
+        $this->hidden('start_at', '开始日期')->default($c);
         $this->hidden('group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default("串联单固定按日期生成，从近到远的顺序。\n如果节目单有状态为“错误”的情况，则自动生成不会进行")->disable();
     }

@@ -40,7 +40,7 @@ class test extends Command
         $end_at = '2024-01-11';
 
         $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>'xkc'])
-                    ->where('air_date','>',$start_at)->where('air_date','<=',$end_at)->get();
+                    ->where('air_date','>=',$start_at)->where('air_date','<=',$end_at)->get();
 
         print_r($channels->toArray());
         // $start_at = strtotime($air_date.' 06:00:00');
