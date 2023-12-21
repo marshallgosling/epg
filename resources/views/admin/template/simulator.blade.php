@@ -151,7 +151,7 @@ ol.breadcrumb {
                   <li><b>{{ @__('Air date')}}</b></li>
                   <li class="active"> {{$begin}} </li>
                   <li><b>运行天数</b></li>
-                  <li>>{{ $days }} </li>
+                  <li>{{ $days }} </li>
                 </ol>
                 
             </div>

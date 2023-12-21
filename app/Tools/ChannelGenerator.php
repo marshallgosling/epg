@@ -63,7 +63,7 @@ class ChannelGenerator
      * @param Template $t
      * @return ChannelProgram $c
      */
-    public static function createChannelProgram(Template $t)
+    public static function createChannelProgram($t)
     {
         $c = new ChannelPrograms();
         $c->name = $t->name;
