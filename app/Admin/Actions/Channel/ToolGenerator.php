@@ -82,7 +82,7 @@ class ToolGenerator extends Action
 
     public function html()
     {
-        return '<a class="generate-epg btn btn-sm btn-info"><i class="fa fa-robot"></i> '.$this->name.'</a>';
+        return '<a class="generate-epg btn btn-sm btn-info"><i class="fa fa-android"></i> '.$this->name.'</a>';
     }
 
 }
