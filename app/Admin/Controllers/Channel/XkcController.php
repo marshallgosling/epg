@@ -8,6 +8,7 @@ use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\BatchXkcGenerator as BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
+use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -69,7 +70,7 @@ class XkcController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchGenerator());
+            //$actions->add(new BatchGenerator());
             $actions->add(new BatchClean);
         });
 
@@ -82,10 +83,13 @@ class XkcController extends AdminController
             
         });
 
+        $grid->disableCreateButton();
+
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new ToolCreator('xkc'));
             $tools->append(new BatchAudit);
             $tools->append(new ToolExporter('xkc'));
+            $tools->append(new ToolGenerator('xkc'));
         });
 
         return $grid;
