@@ -53,7 +53,7 @@ class XkcController extends AdminController
 
         $grid->column('start_end', __('StartEnd'));
         $grid->column('status', __('Status'))->filter(Channel::STATUS)
-        ->using(Channel::STATUS)->label(['default','info','success','danger','warning']);
+        ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));

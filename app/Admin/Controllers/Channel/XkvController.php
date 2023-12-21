@@ -52,7 +52,7 @@ class XkvController extends AdminController
             return '<a href="'.admin_url('epg/preview/'.$this->id).'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
         });
         $grid->column('name', __('Group'))->hide();
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['default','info','success','danger','warning']);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
