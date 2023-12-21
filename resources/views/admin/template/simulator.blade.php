@@ -172,26 +172,29 @@ ol.breadcrumb {
                   @foreach($model['data'] as $program) 
                   <div class="epg-callout epg-callout-{{$program['error']?'error':'info'}}">
                       <h4>{{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
-                          || &nbsp; 模版信息: 
-                          @if($program['template']) 
-                            {{$program['template']['name']}} (ID: {{$program['template']['id']}})
-                          @else
-                            无
-                          @endif
+                          || &nbsp; 
                           </h4>
                       @if($program['error'])
                         <p class="text-danger">{{$program['error']}}</p>
 
                       @else
                       <ul class="list-group">
+                        <li class="list-group-item disabled">
+                        模版信息: 
+                          @if($program['template']) 
+                          (ID: {{$program['template']['id']}}) &nbsp; &nbsp;{{$program['template']['data']['episodes']}} - {{$program['template']['data']['name']}} <span class="text-danger">{{$program['template']['data']['result']}}</span> <span class="pull-right text-warning">{{$program['template']['data']['unique_no']}} </span>
+                          @else
+                            无
+                          @endif
+                        </li>
                         @foreach ($program['program']['data'] as $item)
                         <li class="list-group-item">{!!$item!!}</li>
                         @endforeach
                       </ul>
-                      @endif;   
+                      @endif
                   </div>
                   @endforeach
-                  @endif;
+                  @endif
                   </div>
                 </div>
                 @endforeach

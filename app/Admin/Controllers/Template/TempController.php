@@ -97,7 +97,7 @@ class TempController extends AdminController
         $simulator = new XkcSimulator($group);
 
         $data = $simulator->handle($begin, $days, function ($t) {
-            return substr($t['start_at'], 11).' - '. substr($t['end_at'], 11). ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
+            return ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
         });
 
         //dd($data);
