@@ -50,7 +50,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         if($this->uuid == 'xkv') {
-            $channels = Channel::where(['group_id'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->get();
+            $channels = Channel::where(['name'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->get();
         }
         else {
             $channel = Channel::where('uuid', $this->uuid)->first();
@@ -118,7 +118,7 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
             }
         }
         if($error)
-            Channel::where(['group_id'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->update(['status'=>Channel::STATUS_EMPTY]);
+            Channel::where(['name'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->update(['status'=>Channel::STATUS_EMPTY]);
     }
 
     /**

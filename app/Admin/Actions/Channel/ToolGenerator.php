@@ -29,12 +29,12 @@ class ToolGenerator extends Action
             return $this->response()->error('您有未处理的节目单模版数据错误，请先进入临时模版页面，解决模版问题，然后点击解决问题。');
         }
 
-        if(Channel::where(['status'=>Channel::STATUS_ERROR,'group_id'=>$this->group])->exists())
+        if(Channel::where(['status'=>Channel::STATUS_ERROR,'name'=>$this->group])->exists())
         {
             return $this->response()->error('节目单有状态为“错误”的情况，请先处理错误的节目单后才能继续。');
         }
 
-        $last = Channel::where(['status'=>Channel::STATUS_EMPTY,'group_id'=>$this->group])->orderBy('air_date', 'desc')->first();
+        $last = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$this->group])->orderBy('air_date', 'desc')->first();
         if(!$last) {
             return $this->response()->error('没有节目单需要生成');
         }
@@ -49,7 +49,7 @@ class ToolGenerator extends Action
             return $this->response()->error('结束日期不能早于开始日期');
         }
 
-        $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'group_id'=>$this->group])
+        $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$this->group])
                     ->where('air_date','>',$start_at)->where('air_date','<=',$end_at)->get();
         
         if($channels) {
@@ -71,7 +71,7 @@ class ToolGenerator extends Action
 
     public function form()
     {
-        $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'group_id'=>$this->group])->orderBy('air_date')->first();
+        $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$this->group])->orderBy('air_date')->first();
         $c = $channel ? $channel->air_date : date('Y-m-d');
         $this->date('start_at', '开始日期')->default($c)->disable();
         $this->date('end_at', '结束日期')->placeholder('不填则自动结束');
