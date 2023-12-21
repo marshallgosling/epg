@@ -81,6 +81,12 @@ return [
             'days' => 7,
         ],
 
+        'simulator' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/simulator.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'statistic' => [
             'driver' => 'daily',
             'path' => storage_path('logs/statistic.log'),

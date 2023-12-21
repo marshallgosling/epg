@@ -139,41 +139,62 @@ ol.breadcrumb {
 }
 
 </style>
+
 <div class="row">
     <div class="col-md-12"> 
         <div class="box">
-            <div class="box-header">
+          <div class="box-header">
                 <ol class="breadcrumb">
                   <li><b>{{@__('Channel')}} </b></li>
-                  <li><span class="label-{{ \App\Models\Channel::DOTS[$model->name] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
-                  {{ \App\Models\Channel::GROUPS[$model->name] }}</li>
+                  <li><span class="label-{{ \App\Models\Channel::DOTS[$group] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
+                  {{ \App\Models\Channel::GROUPS[$group] }}</li>
                   <li><b>{{ @__('Air date')}}</b></li>
-                  <li class="active"> {{$model->air_date}} </li>
-                  <li><span class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </span></li>
-                  <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>
+                  <li class="active"> {{$begin}} </li>
+                  <li><b>运行天数</b></li>
+                  <li>>{{ $days }} </li>
+                  
                   
                 </ol>
                 
             </div>
             <div class="box-body">
-              @if(count($data) > 0)
               <div class="col-md-8"> 
-                @foreach($order as $pro_id) 
-                <div id="content{{$pro_id}}" class="epg-callout epg-callout-{{$color}}">
-                    <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
-                    <ul class="list-group">
-                      @foreach ($data[$pro_id]['items'] as $item)
-                      <li class="list-group-item">{!!$item!!}</li>
-                      @endforeach
-                    </ul>   
+              @foreach ($data as $model)
+                <div class="row">
+                  <div class="col-md-12"> 
+                    <ol class="breadcrumb" id="channel{{$model['id']}}">
+                      <li><b>{{@__('Channel')}} </b></li>
+                      <li><span class="label-{{ \App\Models\Channel::DOTS[$model['name']] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
+                      {{ \App\Models\Channel::GROUPS[$model['name']] }}</li>
+                      <li><b>{{ @__('Air date')}}</b></li>
+                      <li class="active"> {{$model['air_date']}} </li>
+                    </ol>
+                  @if(count($model['data']) > 0)
+                
+                  @foreach($model['data'] as $program) 
+                  <div class="epg-callout epg-callout-{{$program['error']?'error':'info'}}">
+                      <h4>{{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} || &nbsp; 模版信息: {{$program['template']['name']}} (ID: {{$program['template']['id']}}) </h4>
+                      @if($program['error'])
+                        <p class="text-danger">{{$program['error']}}</p>
+
+                      @else
+                      <ul class="list-group">
+                        @foreach ($program['data'] as $item)
+                        <li class="list-group-item">{!!$item!!}</li>
+                        @endforeach
+                      </ul>
+                      @endif;   
+                  </div>
+                  @endforeach
+                  </div>
                 </div>
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="epg-sidebar epg-sidebar-{{$color}} hidden-print hidden-sm hidden-xs" id="epgAffix">
+                <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
-                    @foreach($order as $pro_id) 
-                    <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
+                    @foreach ($data as $model)
+                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} </a> </li>
                     @endforeach
                   </ul>
               </div>
@@ -184,6 +205,7 @@ ol.breadcrumb {
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
   $(function () {
     $('#epgAffix').affix({offset: {top: 130}});
