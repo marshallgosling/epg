@@ -77,13 +77,14 @@ class XkcSimulator
                 $template_item = $this->findAvailableTemplateItem($channel, $template_items);
 
                 $templateresult = $template->toArray();
-                $templateresult['epglist'] = [];
+
                 $templateresult['error'] = false;
+                $templateresult['template'] = $templateresult;
 
                 if(!$template_item) {
                     $this->info("没有找到匹配的模版数据: {$template->id} {$template->category}");
                     $templateresult['error'] = "没有找到匹配的模版数据: {$template->id} {$template->category}";
-                    $templateresult['template'] = $templateresult;
+                    
                     $templateresult['program'] = $program->toArray();
 
                     $result['data'][] = $templateresult;
