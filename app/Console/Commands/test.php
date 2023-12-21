@@ -40,7 +40,7 @@ class test extends Command
         
         $day = strtotime($day);
 
-        $templates = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
         for($i=0;$i<20;$i++)
         {
@@ -64,7 +64,7 @@ class test extends Command
                 $program->channel_id = $channel->id;
                 $program->start_at = date('Y-m-d H:i:s', $air);
 
-                $template_items = $template->records()->get();
+                $template_items = $template->records;
 
                 $template_item = $this->findAvailableTemplateItem($channel, $template_items);
 
