@@ -152,8 +152,6 @@ ol.breadcrumb {
                   <li class="active"> {{$begin}} </li>
                   <li><b>运行天数</b></li>
                   <li>>{{ $days }} </li>
-                  
-                  
                 </ol>
                 
             </div>
@@ -186,6 +184,7 @@ ol.breadcrumb {
                       @endif;   
                   </div>
                   @endforeach
+                  @endif;
                   </div>
                 </div>
                 @endforeach
@@ -198,9 +197,7 @@ ol.breadcrumb {
                     @endforeach
                   </ul>
               </div>
-              @else
-              <h4>没有可以预览的串联单</h4>
-              @endif
+              
             </div>
         </div>
     </div>
