@@ -42,7 +42,7 @@ class CategoryRelationListener
             }
 
             if(count($data)) {
-                DB::table('category_'.$table)->where([$table.'_id'=>$program_id,'type'=>Category::TYPE_TAGS])->delete();
+                DB::table('category_'.$table)->where(['record_id'=>$program_id,'type'=>Category::TYPE_TAGS])->delete();
                 DB::table('category_'.$table)->insert($data);
             }
         }
