@@ -2,11 +2,13 @@
 
 namespace App\Admin\Actions\Material;
 
+use App\Models\Category;
 use App\Models\Channel;
 use App\Tools\ChannelGenerator;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BatchImportor extends BatchAction
 {
@@ -18,9 +20,11 @@ class BatchImportor extends BatchAction
         $channel = $request->get('channel');
         if($channel == 'xkv') {
             $class = '\App\Models\Program';
+            $relation = 'program';
         }
         else {
             $class = '\App\Models\Record';
+            $relation = 'record';
         }
         
         foreach($models as $model)
@@ -51,6 +55,8 @@ class BatchImportor extends BatchAction
             }
             else {
                 $program->save();
+                $cid = Category::where('no', $model->category)->value('id');
+                DB::table('category_'.$relation)->insert(['category_id'=>$cid, $relation.'_id'=>$program->id]);
             }
         }
         

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Events\CategoryRelationEvent;
 use App\Models\Category;
 use App\Models\Program;
 use Encore\Admin\Controllers\AdminController;
@@ -196,6 +197,10 @@ class ProgramController extends AdminController
                 }
             }
             
+        });
+
+        $form->saved(function (Form $form) {
+            CategoryRelationEvent::dispatch($form->model()->id, $form->category, 'program');
         });
 
         return $form;

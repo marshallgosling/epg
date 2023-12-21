@@ -2,7 +2,9 @@
 
 namespace App\Admin\Actions\Program;
 
+use App\Events\CategoryRelationEvent;
 use App\Models\Category;
+use App\Models\Program;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -29,8 +31,19 @@ class BatchModify extends BatchAction
             }
             
 
-            if($model->isDirty())
+            if($model->isDirty()) {
                 $model->save();
+
+                if($model instanceof Program) {
+                    $table = 'program';
+                }
+                else
+                    $table = 'record';
+                
+                CategoryRelationEvent::dispatch($model->id, $categories, $table);
+                
+            }
+                
             
         }
         
