@@ -88,7 +88,7 @@ class XkcSimulator
                     $templateresult['program'] = $program->toArray();
 
                     $result['data'][] = $templateresult;
-
+                    $result['error'] = true;
                     
                     continue;
                 }
@@ -124,11 +124,13 @@ class XkcSimulator
                     if(count($epglist) == 0) {
                         $this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
                         $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $result['error'] = true;
                     }
                 }
                 else {
                     $this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
                     $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                    $result['error'] = true;
                 }
 
 

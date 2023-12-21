@@ -107,6 +107,18 @@
   border-left-color: #337ab7;
 }
 
+.epg-sidebar-danger .nav > li > a:hover,
+.epg-sidebar-danger .nav > li > a:focus {
+  color: #ce4844;
+  border-left-color: #ce4844;
+}
+.epg-sidebar-danger .nav > .active > a,
+.epg-sidebar-danger .nav > .active:hover > a,
+.epg-sidebar-danger .nav > .active:focus > a {
+  color: #ce4844;
+  border-left-color: #ce4844;
+}
+
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {
   .epg-sidebar .nav > .active > ul {
@@ -164,7 +176,7 @@ ol.breadcrumb {
                   @if(count($model['data']) > 0)
                 
                   @foreach($model['data'] as $program) 
-                  <div id="channel{{$model['id']}}" class="epg-callout epg-callout-{{$program['error']?'error':'info'}}">
+                  <div id="channel{{$model['id']}}" class="epg-callout epg-callout-{{$program['error']?'danger':'info'}}">
                       <h4>{{$model['air_date']}} {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
                           || &nbsp; 
                           </h4>
@@ -194,10 +206,10 @@ ol.breadcrumb {
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
+                <nav class="epg-sidebar {{$model['error']?'epg-sidebar-danger':''}} hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     @foreach ($data as $model)
-                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} </a> </li>
+                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} {{$model['error']?"错误":''}}</a> </li>
                     @endforeach
                   </ul>
               </div>
