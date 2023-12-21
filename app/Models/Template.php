@@ -65,12 +65,12 @@ class Template extends Model
 
     public function programs()
     {
-        return $this->hasMany(TemplatePrograms::class, 'template_id', 'id');
+        return $this->hasMany(TemplatePrograms::class, 'template_id', 'id')->orderBy('sort', 'asc');
     }
 
     public function records()
     {
-        return $this->hasMany(TemplateRecords::class, 'template_id', 'id');
+        return $this->hasMany(TemplateRecords::class, 'template_id', 'id')->orderBy('sort', 'asc');
     }
 
     public static function getFormattedTemplate($group='default')
