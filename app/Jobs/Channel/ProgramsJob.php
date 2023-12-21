@@ -77,20 +77,34 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
         $start_end = $generator->generate($channel);
         
-        $channel->status = Channel::STATUS_READY;
-        $channel->start_end = $start_end;
-        $channel->save();
+        if($start_end == '') {
+            $channel->status = Channel::STATUS_ERROR;
+            $channel->start_end = $start_end;
+            $channel->save();
+            Notify::fireNotify(
+                $channel->name,
+                Notification::TYPE_GENERATE, 
+                "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
+                "频道节目时间为空", 'error'
+            );
+            $this->error("生成节目编单 {$channel->air_date} 数据失败. ");
+        }
+        else {
+            $channel->status = Channel::STATUS_READY;
+            $channel->start_end = $start_end;
+            $channel->save();
 
-        Notify::fireNotify(
-            $channel->name,
-            Notification::TYPE_GENERATE, 
-            "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
-            "频道节目时间 $start_end"
-        );
+            Notify::fireNotify(
+                $channel->name,
+                Notification::TYPE_GENERATE, 
+                "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
+                "频道节目时间 $start_end"
+            );
 
-        $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+            $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
 
-        ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+            ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+        }
     }
 
     /**

@@ -135,10 +135,11 @@ class XkvGenerator implements IGenerator
             $this->addSpecialPrograms($programs, $sort);
         }
 
-        $start_end .= ' - '. date('H:i:s', $this->air);
 
-        $channel->start_end = $start_end;
-        $channel->save();
+        if($start_end != '') {
+            $start_end .= ' - '. date('H:i:s', $this->air);
+        }
+        
         
         return $start_end;
         
