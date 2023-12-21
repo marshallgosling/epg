@@ -22,10 +22,10 @@ class ToolCreator extends Action
 
     public function handle(Request $request)
     {
-        $start_at = $request->get('start_at');
-        $end_at = $request->get('end_at') ?? $start_at;
+        $start_at = $request->get('create_start_at');
+        $end_at = $request->get('create_end_at') ?? $start_at;
         $generate = $request->get('generate') ?? "0";
-        $group = $request->get('group');
+        $group = $request->get('create_group');
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
@@ -70,10 +70,10 @@ class ToolCreator extends Action
 
     public function form()
     {
-        $this->date('start_at', '开始日期')->required();
-        $this->date('end_at', '结束日期')->required();
+        $this->date('create_start_at', '开始日期')->required();
+        $this->date('create_end_at', '结束日期')->required();
         $this->checkbox('generate', '同时生成节目单')->options([1=>'生成']);
-        $this->hidden('group', '分组')->default($this->group);
+        $this->hidden('create_group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default('根据日期范围创建节目单。')->disable();
     }
 
