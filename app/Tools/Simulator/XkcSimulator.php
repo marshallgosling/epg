@@ -92,6 +92,7 @@ class XkcSimulator
                     
                     continue;
                 }
+                $result['error'] = false;
 
                 $this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
