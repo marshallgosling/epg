@@ -50,7 +50,7 @@ class ToolGenerator extends Action
         }
 
         $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$this->group])
-                    ->where('air_date','>',$start_at)->where('air_date','<=',$end_at)->get();
+                    ->where('air_date','>=',$start_at)->where('air_date','<=',$end_at)->get();
         
         if($channels) {
             foreach($channels as $model) {
