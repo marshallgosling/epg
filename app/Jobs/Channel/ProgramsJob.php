@@ -63,6 +63,9 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
         $error = false;
 
+        $generator = new XkvGenerator('xkv');
+        $generator->loadTemplate();
+
         foreach($channels as $channel)
         {
             if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
@@ -80,9 +83,6 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
 
             $channel->status = Channel::STATUS_RUNNING;
             $channel->save();
-
-            $generator = new XkvGenerator($channel->name);
-            $generator->loadTemplate();
 
             $start_end = $generator->generate($channel);
             
