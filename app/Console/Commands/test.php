@@ -179,7 +179,7 @@ class test extends Command
         $air = strtotime($channel->air_date);
         $dayofweek = date('N', $air);
 
-        foreach($templateItems as $p)
+        foreach($templateItems as &$p)
         {
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
             $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
