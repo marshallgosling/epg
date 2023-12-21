@@ -78,6 +78,7 @@ class XkcSimulator
 
                 $templateresult = $template->toArray();
                 $templateresult['epglist'] = [];
+                $templateresult['error'] = false;
 
                 if(!$template_item) {
                     $this->info("没有找到匹配的模版数据: {$template->id} {$template->category}");
