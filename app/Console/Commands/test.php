@@ -137,10 +137,15 @@ class test extends Command
 
                 $temps = Record::findNextAvaiable($template, $maxDuration);
             }
-
+            $d = $template->data;
             foreach($temps as $item) {
                 if(!in_array($item, ['finished', 'empty'])) {
                     $items[] = $item;
+                    $d['episodes'] = $item->episodes;
+                    $d['unique_no'] = $item->unique_no;
+                    $d['name'] = $item->name;
+                    $d['result'] = '编排中';
+                    $template->data = $d;
                 }
             }
             
