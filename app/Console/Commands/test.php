@@ -95,7 +95,7 @@ class test extends Command
                                 
                             $this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
 
-                            
+
 
                         }
                         else {
@@ -105,8 +105,11 @@ class test extends Command
                         }
                     }
                     if(count($epglist) == 0) {
-                        $this->error(" 异常，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                        $this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
                     }
+                }
+                else {
+                    $this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
                 }
 
                 $program->duration = $duration;
@@ -146,7 +149,7 @@ class test extends Command
             $temps = Record::findNextAvaiable($template, $maxDuration);
             $items = [];
 
-            if(in_array($temps[0], ['finished', 'empty'])) continue;
+            if(in_array($temps[0], ['finished', 'empty'])) return $items;
             
             $d = $template->data;
             foreach($temps as $item) {
