@@ -100,7 +100,7 @@ class TempController extends AdminController
             return substr($t['start_at'], 11).' - '. substr($t['end_at'], 11). ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
         });
 
-        dd($data);
+        //dd($data);
         return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
         ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin')));
     }
