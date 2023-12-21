@@ -160,18 +160,12 @@ ol.breadcrumb {
               @foreach ($data as $model)
                 <div class="row">
                   <div class="col-md-12"> 
-                    <ol class="breadcrumb" id="channel{{$model['id']}}">
-                      <li><b>{{@__('Channel')}} </b></li>
-                      <li><span class="label-{{ \App\Models\Channel::DOTS[$model['name']] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
-                      {{ \App\Models\Channel::GROUPS[$model['name']] }}</li>
-                      <li><b>{{ @__('Air date')}}</b></li>
-                      <li class="active"> {{$model['air_date']}} </li>
-                    </ol>
+                    
                   @if(count($model['data']) > 0)
                 
                   @foreach($model['data'] as $program) 
                   <div class="epg-callout epg-callout-{{$program['error']?'error':'info'}}">
-                      <h4>{{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
+                      <h4>{{$model['air_date']}} {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
                           || &nbsp; 
                           </h4>
                       @if($program['error'])
