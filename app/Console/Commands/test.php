@@ -50,6 +50,7 @@ class test extends Command
             $channel->air_date = date('Y-m-d', $day);
             $day += 86400;
 
+            $this->warn("start date:" . $channel->air_date);
             $air = 0;
             $duration = 0;
             $epglist = [];
@@ -73,7 +74,7 @@ class test extends Command
                     continue;
                 }
 
-                $this->info(json_encode($template_item->data, JSON_UNESCAPED_UNICODE));
+                $this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
                 $maxDuration = ChannelGenerator::parseDuration($template->duration); + (int)config('MAX_DURATION_GAP', 600);
                 $items = $this->findAvailableRecords($template_item, $maxDuration);
@@ -93,7 +94,7 @@ class test extends Command
 
                             $epglist[] = $line;
                                 
-                            $this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
+                            //$this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
 
 
 
