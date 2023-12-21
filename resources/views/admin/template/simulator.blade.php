@@ -180,10 +180,7 @@ ol.breadcrumb {
                       <h4>{{$model['air_date']}} {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
                           || &nbsp; 
                           </h4>
-                      @if($program['error'])
-                        <p class="text-danger">{{$program['error']}}</p>
-
-                      @else
+                      
                       <ul class="list-group">
                         <li class="list-group-item disabled">
                         模版信息: 
@@ -193,11 +190,13 @@ ol.breadcrumb {
                             无
                           @endif
                         </li>
+                        @if($program['error'])
+                        <li class="list-group-item text-danger">{{$program['error']}}</li>
+                        @else
                         @foreach ($program['program']['data'] as $item)
                         <li class="list-group-item">{!!$item!!}</li>
                         @endforeach
-                      </ul>
-                      @endif
+                        @endif
                   </div>
                   @endforeach
                   @endif
@@ -206,7 +205,7 @@ ol.breadcrumb {
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="epg-sidebar {{$model['error']?'epg-sidebar-danger':''}} hidden-print hidden-sm hidden-xs" id="epgAffix">
+                <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     @foreach ($data as $model)
                     <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} {{$model['error']?"错误":''}}</a> </li>
