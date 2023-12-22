@@ -100,16 +100,17 @@ class Record extends Model
         if($data['episodes'] == null) {
 
             $item = self::findRandomEpisode($template->category, $maxduration);
-            if($total == 1)
-            { 
-                return [$item];
-            }
+            // if($total == 1)
+            // { 
+            //     return [$item];
+            // }
 
             if(in_array($item, ['finished', 'empty'])) return [$item];
 
             $ep = 1;
             $data['episodes'] = $item->episodes;
             $data['unique_no'] = $item->unique_no;
+            $data['result'] = "编排中";
             $items[] = $item;
         }
 
@@ -135,8 +136,7 @@ class Record extends Model
             else {
                 $data['episodes'] = $item->episodes;
                 $data['unique_no'] = $item->unique_no;
-
-
+                $data['result'] = '编排中';
             }
             
             $items[] = $item;

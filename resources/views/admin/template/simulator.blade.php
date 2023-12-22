@@ -183,7 +183,7 @@ ol.breadcrumb {
                       
                       <ul class="list-group">
                         <li class="list-group-item disabled">
-                        模版信息: 
+                        模版状态: 
                           @if($program['template']) 
                           (ID: {{$program['template']['id']}}) &nbsp; &nbsp;{{$program['template']['data']['episodes']}} - {{$program['template']['data']['name']}} <span class="text-danger">{{$program['template']['data']['result']}}</span> <span class="pull-right text-warning">{{$program['template']['data']['unique_no']}} </span>
                           @else
