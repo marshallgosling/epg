@@ -177,7 +177,7 @@ ol.breadcrumb {
                 <nav class="epg-sidebar epg-sidebar-{{$color}} hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     @foreach($data as $program) 
-                    <li> <a href="#content{{$program->id}}">{{$program->start_at}} - {{@substr($program->end_at, 11)}} &nbsp; | {{$program->name}} </a> </li>
+                    <li> <a href="#content{{$program->id}}">{{@substr($program->start_at,11)}} - {{@substr($program->end_at, 11)}} &nbsp; | {{$program->name}} </a> </li>
                     @endforeach
                   </ul>
               </div>
