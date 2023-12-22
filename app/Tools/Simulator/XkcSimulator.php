@@ -53,7 +53,7 @@ class XkcSimulator
             $day += 86400;
             $result = $channel->toArray();
             $result['data'] = [];
-
+            $result['error'] = false;
             //$this->warn("start date:" . $channel->air_date);
             $air = 0;
             $duration = 0;
@@ -92,7 +92,7 @@ class XkcSimulator
                     
                     continue;
                 }
-                $result['error'] = false;
+                
 
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
@@ -133,9 +133,7 @@ class XkcSimulator
                     $templateresult['error'] = " 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     $result['error'] = true;
                 }
-                if(Record::$islast) {
 
-                }
 
                 $program->duration = $duration;
                 $program->data = $epglist;
