@@ -138,7 +138,8 @@ class XkcSimulator
                 $program->duration = $duration;
                 $program->data = $epglist;
                 $program->end_at = date('Y-m-d H:i:s', $air);
-
+                
+                $templateresult['template'] = $template_item;
                 $templateresult['program'] = $program->toArray();
 
                 $result['data'][] = $templateresult;
