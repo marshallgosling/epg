@@ -43,7 +43,7 @@ class XkvController extends AdminController
         $color = 'info';
           
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.xkc.preview', compact('data', 'model', 'color')));
+        ->body(view('admin.epg.xkv', compact('data', 'model', 'color')));
     }
 
     /**
