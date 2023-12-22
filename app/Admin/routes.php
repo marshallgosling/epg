@@ -24,6 +24,7 @@ Route::group([
     $router->resource('/media/blacklist', 'Media\\BlackListController')->names('media.blacklist');
 
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');
+    $router->get('/channel/xkc/preview/{id}', 'Channel\\XkcController@preview')->name('channel.xkc.preview');
     $router->resource('/channel/xkc/programs', 'Channel\\XkcProgramController')->names('channel.xkc.programs');
     $router->resource('/channel/xkc', 'Channel\\XkcController')->names('channel.xkc');
     $router->delete('/channel/xkc/data/{id}/remove/{idx}', 'Channel\\XkcProgramController@remove')->name('channel.xkc.programs.delete');
@@ -32,6 +33,7 @@ Route::group([
     $router->post('/channel/open/data/{id}', 'Channel\\XkcProgramController@open')->name('channel.xkc.programs.open');
 
     $router->get('/channel/xkv/tree/{id}', 'Channel\\XkvProgramController@tree')->name('channel.xkv.programs.tree');
+    $router->get('/channel/xkv/preview/{id}', 'Channel\\XkvController@preview')->name('channel.xkv.preview');
     $router->resource('/channel/xkv/programs', 'Channel\\XkvProgramController')->names('channel.xkv.programs');
     $router->resource('/channel/xkv', 'Channel\\XkvController')->names('channel.xkv');
     $router->delete('/channel/xkv/data/{id}/remove/{idx}', 'Channel\\XkvProgramController@remove')->name('channel.xkv.programs.delete');
