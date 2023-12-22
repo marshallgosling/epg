@@ -162,9 +162,13 @@ ol.breadcrumb {
                 <div id="content{{$program->id}}" class="epg-callout epg-callout-{{$color}}">
                     <h4>{{$program->start_at}} - {{$program->end_at}} &nbsp;<small>{{$program->duration}} </small>&nbsp; &nbsp; | {{$program->name}}  </h4>
                     <ul class="list-group">
+                      @if(strpos($program->data, 'replicate'))
+                        <li> 副本节目单 </li>
+                      @else
                       @foreach (json_decode($program->data) as $t)
                       <li class="list-group-item">{{@substr($t->start_at, 11)}} - {{@substr($t->end_at, 11)}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
                       @endforeach
+                      @endif
                     </ul>   
                 </div>
                 @endforeach
