@@ -15,6 +15,7 @@ use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
+use App\Admin\Extensions\MyTable;
 use App\Models\Epg;
 use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Layout\Content;
@@ -102,21 +103,22 @@ class XkcController extends AdminController
             $items = [];
             if($programs)foreach($programs as $p)
             {
+                $style = '';
                 if($p->data != null) {
                     $days = [];
                     if(count($p->data['dayofweek']) == 7) $days[] = __('全天');
                     else if($p->data['dayofweek'])
                         foreach($p->data['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
-                    $items[] = [ $p->id, $p->name, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['name'], $p->data['result'], '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>'];
-                
+                    $item = [ $p->id, $p->name, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['name'], $p->data['result'], '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>'];
+                    if($p->data['result'] == '编排完' || $p->data['result'] == '错误') $style = 'bg-danger';
                 }
                 else {
-                    $items[] = [ $p->id, $p->name, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>' ];
-                
+                    $item = [ $p->id, $p->name, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>' ];
                 }
+                $items[] = compact('style', 'item');
             }
 
-            return new Table(['ID', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
+            return new MyTable(['ID', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';
