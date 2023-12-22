@@ -79,13 +79,14 @@ class XkcSimulator
                 $templateresult = $template->toArray();
 
                 $templateresult['error'] = false;
-                $templateresult['template'] = $template_item;
+                
 
                 if(!$template_item) {
                     $this->info("没有找到匹配的模版数据: {$template->id} {$template->category}");
                     $templateresult['error'] = "没有找到匹配的模版数据: {$template->id} {$template->category}";
                     
                     $templateresult['program'] = $program->toArray();
+                    $templateresult['template'] = json_decode(json_encode($template_item));
 
                     $result['data'][] = $templateresult;
                     $result['error'] = true;
@@ -139,7 +140,7 @@ class XkcSimulator
                 $program->data = $epglist;
                 $program->end_at = date('Y-m-d H:i:s', $air);
                 
-                $templateresult['template'] = $template_item;
+                $templateresult['template'] = json_decode(json_encode($template_item));
                 $templateresult['program'] = $program->toArray();
 
                 $result['data'][] = $templateresult;
