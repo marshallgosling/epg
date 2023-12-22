@@ -13,6 +13,7 @@ use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
@@ -35,51 +36,11 @@ class XkcController extends AdminController
 
     public function preview($air_date, Content $content)
     {
-        // $channels = Channel::where('name', 'xkc')->orderBy('air_date', 'desc')->limit(300)->get();
-
-        // if($air_date == 'latest')
-        // {
-        //     $model = $channels[0];
-        //     $air_date = $model->air_date;
-        // }
-        // else {
-            $model = Channel::where('name', 'xkc')->where('air_date', $air_date)->first();
-        // }
+        $model = Channel::where('name', 'xkc')->where('air_date', $air_date)->first();
 
         $data = $model->programs()->get();
         $color = 'primary';
-        // $colors = [];
-        // $spilt = 0;
-        // $order = [];
-        
-        // $start_at = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
-        // $pos_start = (int)Epg::where('group_id', $group)->where('start_at','>',date('Y-m-d H:i:s', $start_at-300))
-        //                 ->where('start_at','<',date('Y-m-d H:i:s', $start_at+300))->orderBy('start_at', 'desc')->limit(1)->value('id');
-        // $start_at += 86400;
-        // $air_date = date('Y-m-d', $start_at);
-        // $pos_end = (int)Epg::where('group_id', $group)->where('start_at','>',date('Y-m-d H:i:s', $start_at-300))
-        //                 ->where('start_at','<',date('Y-m-d H:i:s', $start_at+300))->orderBy('start_at', 'desc')->limit(1)->value('id');
-
-        // if($pos_start>=0 && $pos_end>$pos_start)
-        // {
-        //     $list = Epg::where('group_id', $group)->where('id', '>=', $pos_start)->where('id','<',$pos_end)->get();
-
-        //     $programs = DB::table('epg')->selectRaw('distinct(program_id)')->where('id', '>=', $pos_start)->where('id','<',$pos_end)->pluck('program_id')->toArray();
-        //     $programs = ChannelPrograms::select('id','name','start_at','end_at','schedule_start_at','schedule_end_at','duration')->whereIn('id', $programs)->orderBy('start_at')->get();
-    
-        //     foreach($programs as $key=>$pro)
-        //     {
-        //         $data[$pro->id] = $pro->toArray();
-        //         $data[$pro->id]['items'] = [];
-        //         $order[] = $pro->id;
-        //         //if($pro->schedule_start_at == '06:00:00' && $key>0) $spilt = 1;
-        //     }
-    
-        //     foreach($list as $t) {
-        //         $data[$t->program_id]['items'][] = substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
-        //     }
-        // }
-           
+          
         return $content->title(__('Preview EPG Content'))->description(__(' '))
         ->body(view('admin.xkc.preview', compact('data', 'model', 'color')));
     }

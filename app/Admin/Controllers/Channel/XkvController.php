@@ -14,6 +14,7 @@ use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
@@ -33,6 +34,17 @@ class XkvController extends AdminController
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
     ];
+
+    public function preview($air_date, Content $content)
+    {
+        $model = Channel::where('name', 'xkv')->where('air_date', $air_date)->first();
+
+        $data = $model->programs()->get();
+        $color = 'info';
+          
+        return $content->title(__('Preview EPG Content'))->description(__(' '))
+        ->body(view('admin.xkc.preview', compact('data', 'model', 'color')));
+    }
 
     /**
      * Make a grid builder.
