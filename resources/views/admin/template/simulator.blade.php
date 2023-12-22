@@ -160,9 +160,9 @@ ol.breadcrumb {
                   <li><b>{{@__('Channel')}} </b></li>
                   <li><span class="label-{{ \App\Models\Channel::DOTS[$group] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
                   {{ \App\Models\Channel::GROUPS[$group] }}</li>
-                  <li><b>{{ @__('Air date')}}</b></li>
+                  <li><b>{{ @__('Start date')}}</b></li>
                   <li class="active"> {{$begin}} </li>
-                  <li><b>运行天数</b></li>
+                  <li><b>{{ @__('Simulate days')}}</b></li>
                   <li>{{ $days }} </li>
                 </ol>
                 
