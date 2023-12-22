@@ -131,7 +131,7 @@ class XkcSimulator
                 }
                 else {
                     $this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                    $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                    $templateresult['error'] = " 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     $result['error'] = true;
                 }
 
