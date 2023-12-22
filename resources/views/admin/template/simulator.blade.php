@@ -177,7 +177,7 @@ ol.breadcrumb {
                 
                   @foreach($model['data'] as $program) 
                   <div id="channel{{$model['id']}}" class="epg-callout epg-callout-{{$program['error']?'danger':'info'}}">
-                      <h4>{{$model['air_date']}} ({{@\App\Models\TemplateRecords::DAYS[date('N', $model['air_date'])]}}) {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
+                      <h4>{{$model['air_date']}} ({{@\App\Models\TemplateRecords::DAYS[''.date('N', $model['air_date'])]}}) {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
                           || &nbsp; 
                           </h4>
                       
