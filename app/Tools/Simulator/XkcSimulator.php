@@ -2,11 +2,11 @@
 namespace App\Tools\Simulator;
 
 use App\Models\Channel;
-use App\Models\Temp\Template;
+use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Models\Record;
-use App\Models\Temp\TemplateRecords;
+use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
@@ -133,7 +133,9 @@ class XkcSimulator
                     $templateresult['error'] = " 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     $result['error'] = true;
                 }
+                if(Record::$islast) {
 
+                }
 
                 $program->duration = $duration;
                 $program->data = $epglist;
