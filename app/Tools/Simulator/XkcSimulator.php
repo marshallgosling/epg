@@ -200,7 +200,7 @@ class XkcSimulator
                     $d['episodes'] = $item->episodes;
                     $d['unique_no'] = $item->unique_no;
                     $d['name'] = $item->name;
-                    $d['result'] = '编排中';
+                    $d['result'] = Record::$islast ? '编排完' : '编排中';
                 }
                 $template->data = $d;
                 //$p->save();
