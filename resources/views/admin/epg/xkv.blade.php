@@ -160,10 +160,10 @@ ol.breadcrumb {
               <div class="col-md-8"> 
                 @foreach($data as $program) 
                 <div id="content{{$program->id}}" class="epg-callout epg-callout-{{$color}}">
-                    <h4>{{$program->start_at}} - {{@substr($program->end_at, 11)}} &nbsp;<small>{{$program->duration}} </small>&nbsp; &nbsp; | {{$program->name}}  </h4>
+                    <h4>{{$program->start_at}} - {{@substr($program->end_at, 11)}} &nbsp;<small>{{@\App\Tools\ChannelGenerator::formatDuration($program->duration)}} </small>&nbsp; &nbsp; | {{$program->name}}  </h4>
                     <ul class="list-group">
                       @if(strpos($program->data, 'replicate'))
-                        <li> 副本节目单 </li>
+                        <li class="list-group-item disabled"> 副本节目单 </li>
                       @else
                       @foreach (json_decode($program->data) as $t)
                       <li class="list-group-item">{{$t->start_at}} - {{$t->end_at}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
