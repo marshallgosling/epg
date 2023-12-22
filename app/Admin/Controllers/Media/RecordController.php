@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Program\BatchModify;
+use App\Events\CategoryRelationEvent;
 use App\Models\Record;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
@@ -40,7 +41,12 @@ class RecordController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
-        $grid->column('name', __('Name'))->sortable();
+        $grid->column('name', __('Name'))->display(function ($name) {
+            if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
+            else $name2 = '';
+            return $name . $name2;
+        });
+        $grid->column('name2', __('English'))->hide();
         $grid->column('category', __('Category'))->display(function($category) {
             $category = array_map(function ($c) {
                 $t = Category::findCategory($c);
@@ -87,6 +93,7 @@ class RecordController extends AdminController
         $show->field('id', __('Id'));
         $show->field('unique_no', __('Unique no'));
         $show->field('name', __('Name'));
+        $show->field('name2', __('English'));
         $show->field('category', __('Category'))->implode(',');
         $show->field('duration', __('Duration'));
         
@@ -113,8 +120,9 @@ class RecordController extends AdminController
 
         $form->text('unique_no', __('Unique no'))->required();
         $form->text('name', __('Name'))->required();
-        
-        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories('tags', true))->required();
+        $form->text('name2', __('English'));
+        $form->multipleSelect('category', __('Category'))
+            ->options(Category::getFormattedCategories('tags', true))->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('episodes', __('Episodes'));
         $form->text('ep', __('Ep'));
@@ -125,6 +133,40 @@ class RecordController extends AdminController
         $form->switch('black', __('BlackList'));
 
         $form->text('comment', __('Comment'));
+        
+
+        $form->saving(function(Form $form) {
+
+            if($form->isCreating()) {
+                $error = new MessageBag([
+                    'title'   => '创建节目失败',
+                    'message' => '该'.__('Unique no').': '. $form->unique_no.' 已存在。'
+                ]);
+    
+                if(Record::where('unique_no', $form->unique_no)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+
+            if($form->isEditing()) {
+                $error = new MessageBag([
+                    'title'   => '修改节目失败',
+                    'message' => '该'.__('Unique no').': '. $form->unique_no.' 已存在。'
+                ]);
+    
+                if(Record::where('unique_no', $form->air_date)->where('id','<>',$form->model()->id)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+            
+        });
+
+        $form->saved(function (Form $form) {
+            
+            CategoryRelationEvent::dispatch($form->model()->id, $form->category, 'record');
+        });
 
         return $form;
     }

@@ -1,54 +1,58 @@
 <?php
-
-namespace App\Console\Commands;
+namespace App\Tools\Simulator;
 
 use App\Models\Channel;
-use App\Models\TemplateRecords;
-use App\Models\Epg;
+use App\Models\Temp\Template;
+use App\Models\ChannelPrograms;
+use App\Models\Notification;
 use App\Models\Record;
-use App\Models\Template;
+use App\Models\Temp\TemplateRecords;
 use App\Tools\ChannelGenerator;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
-class test extends Command
+use App\Tools\LoggerTrait;
+
+class XkcSimulator
 {
+    use LoggerTrait;
+
+    private $channel;
+    private $group;
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * 按24小时累加的播出时间，格式为 timestamp ，输出为 H:i:s
      */
-    protected $signature = 'test {v?} {d?}';
+    private $air;
 
     /**
-     * The console command description.
-     *
-     * @var string
+     * 统计一档节目的时长，更换新节目时重新计算
      */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    private $duration;
+    
+    public function __construct($group)
     {
-        $group = $this->argument('v') ?? "";
-        $day = $this->argument('d') ?? "2024-02-06";
-        
-        $day = strtotime($day);
+        $this->log_channel = 'simulator';
+        $this->group = $group;
+        $this->log_print = false;
+    }
+
+    public function handle($start, $days, \Closure $callback=null)
+    {
+        $day = strtotime($start);
+        $group = $this->group;
+
+        $data = [];
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
-        for($i=0;$i<20;$i++)
+        for($i=0;$i<$days;$i++)
         {
             $channel = new Channel();
             $channel->id = $i;
             $channel->name = $group;
             $channel->air_date = date('Y-m-d', $day);
             $day += 86400;
+            $result = $channel->toArray();
+            $result['data'] = [];
 
             $this->warn("start date:" . $channel->air_date);
             $air = 0;
@@ -64,15 +68,31 @@ class test extends Command
 
                 $program->channel_id = $channel->id;
                 $program->start_at = date('Y-m-d H:i:s', $air);
-
+                $program->duration = $duration;
+                $program->data = [];
+                $program->end_at = date('Y-m-d H:i:s', $air);
+                
                 $template_items = $template->records;
 
                 $template_item = $this->findAvailableTemplateItem($channel, $template_items);
 
+                $templateresult = $template->toArray();
+
+                $templateresult['error'] = false;
+                $templateresult['template'] = $template_item;
+
                 if(!$template_item) {
                     $this->info("没有找到匹配的模版数据: {$template->id} {$template->category}");
+                    $templateresult['error'] = "没有找到匹配的模版数据: {$template->id} {$template->category}";
+                    
+                    $templateresult['program'] = $program->toArray();
+
+                    $result['data'][] = $templateresult;
+                    $result['error'] = true;
+                    
                     continue;
                 }
+                $result['error'] = false;
 
                 $this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
@@ -92,12 +112,9 @@ class test extends Command
 
                             $line['end_at'] = date('H:i:s', $air);
 
-                            $epglist[] = $line;
-                                
+                            $epglist[] = $callback ? call_user_func($callback, $line) : $line;
+                            //$templateresult['epglist'][] = $line;
                             //$this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
-
-
-
                         }
                         else {
 
@@ -107,19 +124,30 @@ class test extends Command
                     }
                     if(count($epglist) == 0) {
                         $this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                        $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $result['error'] = true;
                     }
                 }
                 else {
                     $this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                    $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                    $result['error'] = true;
                 }
 
+
                 $program->duration = $duration;
-                $program->data = json_encode($epglist);
+                $program->data = $epglist;
                 $program->end_at = date('Y-m-d H:i:s', $air);
+
+                $templateresult['program'] = $program->toArray();
+
+                $result['data'][] = $templateresult;
+
             }
+            $data[] = $result;
         }
 
-        return 0;
+        return $data;
     }
 
     private function findAvailableRecords(TemplateRecords &$template, $maxDuration)

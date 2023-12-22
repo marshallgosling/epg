@@ -2,10 +2,12 @@
 
 namespace App\Admin\Actions\Material;
 
+use App\Models\Category;
 use App\Models\Program;
 use App\Models\Record;
 use App\Models\Material;
 use Encore\Admin\Actions\RowAction;
+use Illuminate\Support\Facades\DB;
 
 class Importor extends RowAction
 {
@@ -14,11 +16,13 @@ class Importor extends RowAction
     public function handle(Material $model)
     {
         $class = '\App\Models\Program';
+        $relation = 'program';
         $program = new $class();
         if(in_array($model->category, ['CanXin', 'drama', 'movie','Entertainm','cartoon']))
         {
             $class = '\App\Models\Record';
             $program = new $class();
+            $relation = 'record';
             
             $program->episodes = $model->group;
             if(preg_match('/(\d+)$/', $model->name, $matches))
@@ -39,6 +43,9 @@ class Importor extends RowAction
         }
         else {
             $program->save();
+
+            $cid = Category::where('no', $model->category)->value('id');
+            DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
         }
         return $this->response()->success(__('Import Success message'));
     }

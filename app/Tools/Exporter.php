@@ -246,9 +246,10 @@ class Exporter
                 else
                     $data[$t->program_id]['items'][] = $t->toArray();
             }
-
-            $data['order'] = $order;
+            
         }
+
+        $data['order'] = $order;
 
         return $data;
 

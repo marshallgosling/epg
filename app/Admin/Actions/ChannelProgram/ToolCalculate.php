@@ -37,7 +37,7 @@ class ToolCalculate extends Action
             $this->channel_id => DB::table('channel')->where('id', $this->channel_id)->value('air_date')
         ];
         $this->checkbox('channel', '节目单日期')->default($this->channel_id)->options($type);
-        
+        $this->text('begin_at', __('Start at'))->default(config('EPG_BEGIN_TIME', '17:00:00'));
     }
 
     public function html()

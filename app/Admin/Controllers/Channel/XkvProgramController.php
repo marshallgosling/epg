@@ -71,7 +71,7 @@ class XkvProgramController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function (Grid\Filter $filter) {
-                $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('id', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
+                $filter->equal('channel_id', __('Air date'))->select(Channel::where('name', 'xkv')->orderBy('air_date', 'desc')->limit(300)->get()->pluck('air_date', 'id'));
             });
         });
 

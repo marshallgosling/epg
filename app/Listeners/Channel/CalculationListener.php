@@ -32,7 +32,7 @@ class CalculationListener
         }
         $programs = $channel->programs()->get();
 
-        $start = $channel->name == 'xkv' ? strtotime($channel->air_date . ' 06:00:00') : strtotime($channel->air_date . ' 17:00:00');
+        $start = $channel->name == 'xkv' ? strtotime($channel->air_date . ' 17:00:00') : strtotime($channel->air_date . ' 17:00:00');
         $this->info("process program re-calculation: ".$event->getChannelId().' '.$event->getChannelProgramId());
         $start_end = date('H:i:s', $start);
         foreach($programs as $pro)

@@ -49,48 +49,76 @@ class ProgramsJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        
-        $channel = Channel::where('uuid', $this->uuid)->first();
-
-        if(!$channel) {
-            $this->error("频道 {$this->uuid} 不存在");
+        if($this->uuid == 'xkv') {
+            $channels = Channel::where(['name'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->get();
+        }
+        else {
+            $channel = Channel::where('uuid', $this->uuid)->first();
+            $channels = [$channel];
+        }
+        if(!$channels) {
+            $this->error("频道 {$this->uuid} 是空数组");
             return 0;
         }
 
-        if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-            $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
-            Notify::fireNotify(
-                $channel->name,
-                Notification::TYPE_GENERATE, 
-                "生成节目编单 {$channel->name}_{$channel->air_date} 失败. ", 
-                "频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
-                Notification::LEVEL_WARN
-            );
-            return 0;
-        }
+        $error = false;
 
-        $channel->status = Channel::STATUS_RUNNING;
-        $channel->save();
-
-        $generator = new XkvGenerator($channel->name);
+        $generator = new XkvGenerator('xkv');
         $generator->loadTemplate();
 
-        $start_end = $generator->generate($channel);
-        
-        $channel->status = Channel::STATUS_READY;
-        $channel->start_end = $start_end;
-        $channel->save();
+        foreach($channels as $channel)
+        {
+            if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
+                $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
+                Notify::fireNotify(
+                    $channel->name,
+                    Notification::TYPE_GENERATE, 
+                    "生成节目编单 {$channel->name}_{$channel->air_date} 失败. ", 
+                    "频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
+                    Notification::LEVEL_WARN
+                );
+                $error = true;
+                break;
+            }
 
-        Notify::fireNotify(
-            $channel->name,
-            Notification::TYPE_GENERATE, 
-            "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
-            "频道节目时间 $start_end"
-        );
+            $channel->status = Channel::STATUS_RUNNING;
+            $channel->save();
 
-        $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+            $start_end = $generator->generate($channel);
+            
+            if($start_end == '') {
+                $channel->status = Channel::STATUS_ERROR;
+                $channel->start_end = $start_end;
+                $channel->save();
+                Notify::fireNotify(
+                    $channel->name,
+                    Notification::TYPE_GENERATE, 
+                    "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
+                    "频道节目时间为空", 'error'
+                );
+                $error = true;
+                $this->error("生成节目编单 {$channel->air_date} 数据失败. ");
+                break;
+            }
+            else {
+                $channel->status = Channel::STATUS_READY;
+                $channel->start_end = $start_end;
+                $channel->save();
 
-        ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+                Notify::fireNotify(
+                    $channel->name,
+                    Notification::TYPE_GENERATE, 
+                    "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
+                    "频道节目时间 $start_end"
+                );
+
+                $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
+
+                ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+            }
+        }
+        if($error)
+            Channel::where(['name'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->update(['status'=>Channel::STATUS_EMPTY]);
     }
 
     /**

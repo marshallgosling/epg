@@ -32,4 +32,9 @@ class BatchClean extends BatchAction
         return $this->response()->success(__('Clean success message.'))->refresh();
     }
 
+    public function dialog()
+    {
+        $this->confirm('确定清空节目单吗？ 该操作不可回退！');
+    }
+
 }

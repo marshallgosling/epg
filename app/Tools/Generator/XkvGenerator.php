@@ -2,9 +2,10 @@
 namespace App\Tools\Generator;
 
 use App\Models\Channel;
-use App\Models\Temp\Template;
+use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
+use App\Models\Program;
 use App\Models\TemplatePrograms;
 use App\Tools\ChannelGenerator;
 use Carbon\Carbon;
@@ -82,12 +83,12 @@ class XkvGenerator implements IGenerator
             return ["satus" =>false, "message"=>"Channel is null"];
         }
 
-        $class = $channel->name == 'xkv' ? '\App\Models\Program' : '\App\Models\Record';
+        //$class = $channel->name == 'xkv' ? '\App\Models\Program' : '\App\Models\Record';
 
         //if($this->daily)
         $this->air = 0;//strtotime($channel->air_date." 06:00:00");
         $schecule = 0;//strtotime($channel->air_date." 06:00:00");
-        $class::loadBlackList();
+        Program::loadBlackList();
         $start_end = '';
         $sort=0;
         foreach($this->daily as $t) {    
@@ -117,7 +118,7 @@ class XkvGenerator implements IGenerator
             
             $programs = $t->programs()->get();
 
-            $data = $this->addProgramItem($programs, $class);
+            $data = $this->addProgramItem($programs, $t);
 
             // $bumper = $this->addBumperItem();
             
@@ -134,10 +135,11 @@ class XkvGenerator implements IGenerator
             $this->addSpecialPrograms($programs, $sort);
         }
 
-        $start_end .= ' - '. date('H:i:s', $this->air);
 
-        $channel->start_end = $start_end;
-        $channel->save();
+        if($start_end != '') {
+            $start_end .= ' - '. date('H:i:s', $this->air);
+        }
+        
         
         return $start_end;
         
@@ -180,18 +182,22 @@ class XkvGenerator implements IGenerator
         return date('H:i:s', $this->air);
     }
 
-    public function addProgramItem($programs, $class)
+    public function addProgramItem($programs, $template)
     {
         $data = [];
+
+        $scheculeSeconds = ChannelGenerator::parseDuration($template->duration);
         
+        $maxSeconds = (int)config('XKV_MAX_SECONDS', $scheculeSeconds);
+
         foreach($programs as $p) {
             $item = false;
 
             if($p->type == TemplatePrograms::TYPE_PROGRAM) { 
-                $item = $class::findRandom($p->category);
+                $item = Program::findRandom($p->category, $maxSeconds);
             }
             else {
-                $item = $class::findUnique($p->data);
+                $item = Program::findUnique($p->data);
 
                 if(!$item) {
                     $item = Material::findUnique($p->data);
@@ -213,6 +219,12 @@ class XkvGenerator implements IGenerator
                     $data[] = $line;
                         
                     $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
+
+                    if($this->duration > $scheculeSeconds) 
+                    {
+                        $this->warn(" 节目编排时长已大于计划时长，因此跳出编单.");
+                        break;
+                    }
                 }
                 else {
 

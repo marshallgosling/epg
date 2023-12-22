@@ -8,10 +8,12 @@ use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\BatchXkcGenerator as BatchGenerator;
 use App\Admin\Actions\Channel\ToolCreator;
+use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
@@ -32,6 +34,17 @@ class XkcController extends AdminController
         //        'create' => 'Create',
     ];
 
+    public function preview($air_date, Content $content)
+    {
+        $model = Channel::where('name', 'xkc')->where('air_date', $air_date)->first();
+
+        $data = $model->programs()->get();
+        $color = 'primary';
+          
+        return $content->title(__('Preview EPG Content'))->description(__(' '))
+        ->body(view('admin.epg.xkc', compact('data', 'model', 'color')));
+    }
+
     /**
      * Make a grid builder.
      *
@@ -47,12 +60,12 @@ class XkcController extends AdminController
             return '<a href="xkc/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
         });
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
-            return '<a href="'.admin_url('epg/preview/'.$this->id).'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
+            return '<a href="xkc/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
         });
 
         $grid->column('start_end', __('StartEnd'));
         $grid->column('status', __('Status'))->filter(Channel::STATUS)
-        ->using(Channel::STATUS)->label(['default','info','success','danger','warning']);
+        ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
@@ -69,7 +82,7 @@ class XkcController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchGenerator());
+            //$actions->add(new BatchGenerator());
             $actions->add(new BatchClean);
         });
 
@@ -82,10 +95,13 @@ class XkcController extends AdminController
             
         });
 
+        $grid->disableCreateButton();
+
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new ToolCreator('xkc'));
             $tools->append(new BatchAudit);
             $tools->append(new ToolExporter('xkc'));
+            $tools->append(new ToolGenerator('xkc'));
         });
 
         return $grid;

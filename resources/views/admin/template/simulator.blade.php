@@ -107,6 +107,18 @@
   border-left-color: #337ab7;
 }
 
+.epg-sidebar-danger .nav > li > a:hover,
+.epg-sidebar-danger .nav > li > a:focus {
+  color: #ce4844;
+  border-left-color: #ce4844;
+}
+.epg-sidebar-danger .nav > .active > a,
+.epg-sidebar-danger .nav > .active:hover > a,
+.epg-sidebar-danger .nav > .active:focus > a {
+  color: #ce4844;
+  border-left-color: #ce4844;
+}
+
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {
   .epg-sidebar .nav > .active > ul {
@@ -139,51 +151,73 @@ ol.breadcrumb {
 }
 
 </style>
+
 <div class="row">
     <div class="col-md-12"> 
         <div class="box">
-            <div class="box-header">
+          <div class="box-header">
                 <ol class="breadcrumb">
                   <li><b>{{@__('Channel')}} </b></li>
-                  <li><span class="label-{{ \App\Models\Channel::DOTS[$model->name] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
-                  {{ \App\Models\Channel::GROUPS[$model->name] }}</li>
+                  <li><span class="label-{{ \App\Models\Channel::DOTS[$group] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
+                  {{ \App\Models\Channel::GROUPS[$group] }}</li>
                   <li><b>{{ @__('Air date')}}</b></li>
-                  <li class="active"> {{$model->air_date}} </li>
-                  <li><span class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </span></li>
-                  <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>
-                  
+                  <li class="active"> {{$begin}} </li>
+                  <li><b>运行天数</b></li>
+                  <li>{{ $days }} </li>
                 </ol>
                 
             </div>
             <div class="box-body">
-              @if(count($data) > 0)
               <div class="col-md-8"> 
-                @foreach($order as $pro_id) 
-                <div id="content{{$pro_id}}" class="epg-callout epg-callout-{{$color}}">
-                    <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
-                    <ul class="list-group">
-                      @foreach ($data[$pro_id]['items'] as $item)
-                      <li class="list-group-item">{!!$item!!}</li>
-                      @endforeach
-                    </ul>   
+              @foreach ($data as $model)
+                <div class="row">
+                  <div class="col-md-12"> 
+                    
+                  @if(count($model['data']) > 0)
+                
+                  @foreach($model['data'] as $program) 
+                  <div id="channel{{$model['id']}}" class="epg-callout epg-callout-{{$program['error']?'danger':'info'}}">
+                      <h4>{{$model['air_date']}} {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
+                          || &nbsp; 
+                          </h4>
+                      
+                      <ul class="list-group">
+                        <li class="list-group-item disabled">
+                        模版信息: 
+                          @if($program['template']) 
+                          (ID: {{$program['template']['id']}}) &nbsp; &nbsp;{{$program['template']['data']['episodes']}} - {{$program['template']['data']['name']}} <span class="text-danger">{{$program['template']['data']['result']}}</span> <span class="pull-right text-warning">{{$program['template']['data']['unique_no']}} </span>
+                          @else
+                            无
+                          @endif
+                        </li>
+                        @if($program['error'])
+                        <li class="list-group-item text-danger">{{$program['error']}}</li>
+                        @else
+                        @foreach ($program['program']['data'] as $item)
+                        <li class="list-group-item">{!!$item!!}</li>
+                        @endforeach
+                        @endif
+                  </div>
+                  @endforeach
+                  @endif
+                  </div>
                 </div>
                 @endforeach
               </div>
               <div class="col-md-4"> 
-                <nav class="epg-sidebar epg-sidebar-{{$color}} hidden-print hidden-sm hidden-xs" id="epgAffix">
+                <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
-                    @foreach($order as $pro_id) 
-                    <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
+                    @foreach ($data as $model)
+                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} {{$model['error']?"错误":''}}</a> </li>
                     @endforeach
                   </ul>
               </div>
-              @else
-              <h4>没有可以预览的串联单</h4>
-              @endif
+              
             </div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
   $(function () {
     $('#epgAffix').affix({offset: {top: 130}});

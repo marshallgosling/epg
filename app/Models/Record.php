@@ -86,7 +86,7 @@ class Record extends Model
      * 
      * @param TemplateRecords $template
      */
-    public static function findNextAvaiable(TemplateRecords &$template, int $maxduration) {
+    public static function findNextAvaiable(&$template, int $maxduration) {
         if($template->category == 'movie')
             return [self::findRandom($template->category, $maxduration)];
        
@@ -111,6 +111,8 @@ class Record extends Model
             $data['unique_no'] = $item->unique_no;
             $items[] = $item;
         }
+
+        if($data['result'] == '编排完') return ['finished'];
         
         for($i=$ep;$i<$total;$i++) {
             $item = self::findNextEpisode($data['episodes'], $data['unique_no']);

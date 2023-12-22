@@ -158,13 +158,17 @@ ol.breadcrumb {
             <div class="box-body">
               @if(count($data) > 0)
               <div class="col-md-8"> 
-                @foreach($order as $pro_id) 
-                <div id="content{{$pro_id}}" class="epg-callout epg-callout-{{$color}}">
-                    <h4>{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp;<small>{{$data[$pro_id]['duration']}} </small>&nbsp; &nbsp; | {{$data[$pro_id]['name']}}  </h4>
+                @foreach($data as $program) 
+                <div id="content{{$program->id}}" class="epg-callout epg-callout-{{$color}}">
+                    <h4>{{$program->start_at}} - {{@substr($program->end_at, 11)}} &nbsp;<small>{{@\App\Tools\ChannelGenerator::formatDuration($program->duration)}} </small>&nbsp; &nbsp; | {{$program->name}}  </h4>
                     <ul class="list-group">
-                      @foreach ($data[$pro_id]['items'] as $item)
-                      <li class="list-group-item">{!!$item!!}</li>
+                      @if(strpos($program->data, 'replicate'))
+                        <li class="list-group-item disabled"> 副本节目单 </li>
+                      @else
+                      @foreach (json_decode($program->data) as $t)
+                      <li class="list-group-item">{{$t->start_at}} - {{$t->end_at}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
                       @endforeach
+                      @endif
                     </ul>   
                 </div>
                 @endforeach
@@ -172,8 +176,8 @@ ol.breadcrumb {
               <div class="col-md-4"> 
                 <nav class="epg-sidebar epg-sidebar-{{$color}} hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
-                    @foreach($order as $pro_id) 
-                    <li> <a href="#content{{$pro_id}}">{{$data[$pro_id]['start_at']}} - {{$data[$pro_id]['end_at']}} &nbsp; | {{$data[$pro_id]['name']}}  </a> </li>
+                    @foreach($data as $program) 
+                    <li> <a href="#content{{$program->id}}">{{@substr($program->start_at,11)}} - {{@substr($program->end_at, 11)}} &nbsp; | {{$program->name}} </a> </li>
                     @endforeach
                   </ul>
               </div>

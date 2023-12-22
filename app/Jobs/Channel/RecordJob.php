@@ -89,7 +89,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 );
                 $channel->status = Channel::STATUS_ERROR;
                 $channel->save();
-                continue;
+                break;
             }
 
             if($error) {
