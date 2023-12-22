@@ -42,7 +42,7 @@ class RecordController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
         $grid->column('name', __('Name'))->display(function ($name) {
-            if($this->name2) $name2 = '&nbsp; <small class="text-warning" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">En</small>';
+            if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
             else $name2 = '';
             return $name . $name2;
         });
