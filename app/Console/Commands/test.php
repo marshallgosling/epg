@@ -53,7 +53,7 @@ class test extends Command
 
             $template_item = $this->findAvailableTemplateItem($channel, $template_items);
 
-            print_r($template_item);
+            print_r($template_item->toArray());
         }
 
         return 0 ;
