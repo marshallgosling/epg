@@ -208,7 +208,7 @@ ol.breadcrumb {
                 <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     @foreach ($data as $model)
-                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} {{$model['error']?"错误":''}}</a> </li>
+                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} ({{@\App\Models\TemplateRecords::DAYS[date('N', strtotime($model['air_date']))]}}) {{$model['error']?"错误":''}}</a> </li>
                     @endforeach
                   </ul>
               </div>
