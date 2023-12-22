@@ -72,6 +72,8 @@
                 @else
                   <b>{{@__('Preview Template Content')}}</b>
                 @endif
+                <a class="btn btn-danger btn-sm" title="模拟编单测试" href="../simulator"><i class="fa fa-android"></i><span class="hidden-xs"> 模拟编单测试</span></a>
+                
                 </div>
                 <div class="btn-group pull-right">
                     @if($back)<a class="btn btn-primary btn-sm" title="返回编辑模式" href="../{{$group}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回编辑模式</span></a>@endif

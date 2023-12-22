@@ -89,7 +89,8 @@ class TempController extends AdminController
     public function simulator(Request $request, Content $content)
     {
         $group = $request->get('group') ?? 'xkc';
-        $days = (int)$request->get('days') ?? 14;
+        $days = (int)$request->get('days');
+        $days = $days == 0 ? 14 : $days;
 
         $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
         $begin = $channel ? $channel->air_date : date('Y-m-d');
