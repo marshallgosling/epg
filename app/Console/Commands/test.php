@@ -201,6 +201,8 @@ class test extends Command
         $air = strtotime($channel->air_date);
         $dayofweek = date('N', $air);
 
+        $this->info("dayofweek: ".$dayofweek);
+
         foreach($templateItems as &$p)
         {
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
