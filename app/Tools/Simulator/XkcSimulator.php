@@ -59,7 +59,7 @@ class XkcSimulator
             $duration = 0;
             $epglist = [];
             
-            foreach($templates as $template)
+            foreach($templates as &$template)
             {
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
