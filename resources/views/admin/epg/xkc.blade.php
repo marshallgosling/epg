@@ -159,7 +159,7 @@ ol.breadcrumb {
               @if(count($data) > 0)
               <div class="col-md-8"> 
                 @foreach($data as $program) 
-                <div id="content{{$pro_id}}" class="epg-callout epg-callout-{{$color}}">
+                <div id="content{{$program->id}}" class="epg-callout epg-callout-{{$color}}">
                     <h4>{{$program->start_at}} - {{$program->end_at}} &nbsp;<small>{{$program->duration}} </small>&nbsp; &nbsp; | {{$program->name}}  </h4>
                     <ul class="list-group">
                       @foreach (json_decode($program->data) as $t)
@@ -173,7 +173,7 @@ ol.breadcrumb {
                 <nav class="epg-sidebar epg-sidebar-{{$color}} hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     @foreach($data as $program) 
-                    <li> <a href="#content{{$pro_id}}">{{$program->start_at}} - {{$program->end_at}} &nbsp; | {{$program->name}} </a> </li>
+                    <li> <a href="#content{{$program->id}}">{{$program->start_at}} - {{$program->end_at}} &nbsp; | {{$program->name}} </a> </li>
                     @endforeach
                   </ul>
               </div>
