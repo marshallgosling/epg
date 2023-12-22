@@ -54,7 +54,7 @@ class XkcSimulator
             $result = $channel->toArray();
             $result['data'] = [];
 
-            $this->warn("start date:" . $channel->air_date);
+            //$this->warn("start date:" . $channel->air_date);
             $air = 0;
             $duration = 0;
             $epglist = [];
@@ -80,13 +80,12 @@ class XkcSimulator
 
                 $templateresult['error'] = false;
                 
-
                 if(!$template_item) {
-                    $this->info("没有找到匹配的模版数据: {$template->id} {$template->category}");
-                    $templateresult['error'] = "没有找到匹配的模版数据: {$template->id} {$template->category}";
+                    //$this->info("没有找到匹配的模版: {$template->id} {$template->category}");
+                    $templateresult['error'] = "没有找到匹配的模版: {$template->id} {$template->category}";
                     
                     $templateresult['program'] = $program->toArray();
-                    $templateresult['template'] = json_decode(json_encode($template_item), true);
+                    $templateresult['template'] = [];
 
                     $result['data'][] = $templateresult;
                     $result['error'] = true;
@@ -95,7 +94,7 @@ class XkcSimulator
                 }
                 $result['error'] = false;
 
-                $this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
+                //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
                 $maxDuration = ChannelGenerator::parseDuration($template->duration); + (int)config('MAX_DURATION_GAP', 600);
                 $items = $this->findAvailableRecords($template_item, $maxDuration);
@@ -119,18 +118,18 @@ class XkcSimulator
                         }
                         else {
 
-                            $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                            //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
                             //throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
                         }
                     }
                     if(count($epglist) == 0) {
-                        $this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                        //$this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
                         $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                         $result['error'] = true;
                     }
                 }
                 else {
-                    $this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                    //$this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
                     $templateresult['error'] = " 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     $result['error'] = true;
                 }
@@ -210,7 +209,7 @@ class XkcSimulator
         return $items;
     }
 
-    private function findAvailableTemplateItem($channel, $templateItems)
+    private function findAvailableTemplateItem($channel, &$templateItems)
     {
         $air = strtotime($channel->air_date);
         $dayofweek = date('N', $air);
