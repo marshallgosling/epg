@@ -187,7 +187,7 @@ class XkcSimulator
             $d = $template->data;
             foreach($temps as $item) {
                 if($item == 'empty') {
-                    $d['result'] = '未找到';
+                    $d['result'] = '错误';
                 }
                 else if($item == 'finished') {
                     $d['result'] = '编排完';
