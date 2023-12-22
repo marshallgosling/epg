@@ -184,8 +184,6 @@ class XkcSimulator
             $temps = Record::findNextAvaiable($template, $maxDuration);
             $items = [];
 
-            if(in_array($temps[0], ['finished', 'empty'])) return $items;
-            
             $d = $template->data;
             foreach($temps as $item) {
                 if($item == 'empty') {
