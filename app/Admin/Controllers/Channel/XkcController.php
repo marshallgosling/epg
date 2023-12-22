@@ -81,7 +81,7 @@ class XkcController extends AdminController
         // }
            
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.xkc.preview', compact('data', 'model', 'order', 'color')));
+        ->body(view('admin.xkc.preview', compact('data', 'model', 'color')));
     }
 
     /**
