@@ -87,8 +87,8 @@ class TempController extends AdminController
         $group = 'temp';
         $back = false;
         $error = Storage::disk('data')->exists(XkcGenerator::STALL_FILE) ? Storage::disk('data')->get(XkcGenerator::STALL_FILE) : "";
-        return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
-        ->body(view('admin.template.preview', compact('data', 'group', 'error','back')));
+        return $content->title(__('Restore Mode'))->description(__('Preview Restore Template Content'))
+        ->body(view('admin.template.restore', compact('data', 'group', 'error','back')));
     }
 
     /**

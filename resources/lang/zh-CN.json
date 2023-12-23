@@ -125,6 +125,8 @@
     "Preview Template Content": "预览模版节目内容编排",
     "Simulator Mode": "编单模拟器",
     "Preview Simulator Content": "查看模拟运行结果，可以帮助提前预知模版错误",
+    "Restore Mode": "模版回退模式",
+    "Preview Restore Template Content": "上次运行成功的模版结果",
     "具体节目编排": "具体节目编排",
     "返回普通模式": "返回普通模式"
 
