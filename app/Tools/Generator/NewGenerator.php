@@ -13,6 +13,7 @@ use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
 use App\Tools\LoggerTrait;
+use App\Tools\Notify;
 use App\Tools\Simulator\XkcSimulator;
 use Illuminate\Support\Facades\Storage;
 
@@ -135,6 +136,15 @@ class NewGenerator
             $channel->start_end = $start_end .' - '. date('H:i:s', $air);
             $channel->status = Channel::STATUS_READY;
             $channel->save();
+
+            Notify::fireNotify(
+                $channel->name,
+                Notification::TYPE_GENERATE, 
+                "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
+                "频道节目时间 $start_end"
+            );
+
+            ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
         }
 
         return true;
