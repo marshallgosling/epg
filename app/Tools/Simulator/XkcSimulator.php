@@ -8,9 +8,11 @@ use App\Models\Notification;
 use App\Models\Record;
 use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
+use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\DB;
 
 use App\Tools\LoggerTrait;
+use Illuminate\Support\Facades\Storage;
 
 class XkcSimulator
 {
@@ -22,7 +24,7 @@ class XkcSimulator
      * 按24小时累加的播出时间，格式为 timestamp ，输出为 H:i:s
      */
     private $air;
-
+    public $errors;
     /**
      * 统计一档节目的时长，更换新节目时重新计算
      */
@@ -35,11 +37,30 @@ class XkcSimulator
         $this->log_print = false;
     }
 
+    public function setErrorMark($errors)
+    {
+        if(count($errors)) {
+            Storage::disk('data')->put(XkcGenerator::STALL_FILE, $errors[0]);
+        }
+        else {
+            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+                Storage::disk('data')->delete(XkcGenerator::STALL_FILE);
+        }
+    }
+
+    public function getErrorMark()
+    {
+        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+            return Storage::disk('data')->get(XkcGenerator::STALL_FILE);
+        else
+            return false;
+    }
+
     public function handle($start, $days, \Closure $callback=null)
     {
         $day = strtotime($start);
         $group = $this->group;
-
+        $errors = [];
         $data = [];
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
@@ -89,7 +110,7 @@ class XkcSimulator
 
                     $result['data'][] = $templateresult;
                     $result['error'] = true;
-                    
+                    $errors[] = "没有找到匹配的模版: {$template->id} {$template->category}";
                     continue;
                 }
                 
@@ -124,14 +145,16 @@ class XkcSimulator
                     }
                     if(count($epglist) == 0) {
                         //$this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                        $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $templateresult['error'] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                         $result['error'] = true;
+                        $errors[] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     }
                 }
                 else {
                     //$this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                    $templateresult['error'] = " 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                    $templateresult['error'] = "异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     $result['error'] = true;
+                    $errors[] = "异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                 }
 
 
@@ -148,6 +171,8 @@ class XkcSimulator
             $data[] = $result;
         }
 
+        $this->setErrorMark($errors);
+        $this->errors = $errors;
         return $data;
     }
 

@@ -5,7 +5,6 @@ namespace App\Admin\Controllers\Template;
 use App\Admin\Actions\Template\BatchDisable;
 use App\Admin\Actions\Template\BatchEnable;
 use App\Models\Template;
-use App\Admin\Extensions\MyAdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -165,8 +164,7 @@ class XkcController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             //$tools->disableBatchActions();
-            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
-                $tools->append(new FixStall());
+            
         });
 
         return $grid;
