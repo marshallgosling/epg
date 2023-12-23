@@ -12,6 +12,7 @@ use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\DB;
 
 use App\Tools\LoggerTrait;
+use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
 
 class XkcSimulator
@@ -43,8 +44,18 @@ class XkcSimulator
             Storage::disk('data')->put(XkcGenerator::STALL_FILE, $errors[0]);
         }
         else {
-            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE)) {
+                
+                Notify::fireNotify(
+                    $this->group,
+                    Notification::TYPE_GENERATE, 
+                    "节目单自动生成模版错误已解决", 
+                    "处理日期时间: ".date('Y-m-d H:i:s').' 描述: '.Storage::disk('data')->get(XkcGenerator::STALL_FILE),
+                    Notification::LEVEL_INFO
+                );
                 Storage::disk('data')->delete(XkcGenerator::STALL_FILE);
+            }
+                
         }
     }
 
