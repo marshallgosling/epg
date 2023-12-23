@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Admin\Controllers\Template;
-
 
 use App\Models\Temp\Template;
 use Encore\Admin\Controllers\AdminController;
@@ -14,12 +12,10 @@ use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
 use App\Admin\Extensions\MyTable;
-use App\Models\Channel;
 use App\Models\Epg;
 use App\Tools\Generator\XkcGenerator;
-use App\Tools\Simulator\XkcSimulator;
 use Encore\Admin\Layout\Content;
-use Illuminate\Http\Request;
+
 
 class TempController extends AdminController
 {
@@ -90,27 +86,6 @@ class TempController extends AdminController
         $error = Storage::disk('data')->exists(XkcGenerator::STALL_FILE) ? Storage::disk('data')->get(XkcGenerator::STALL_FILE) : "";
         return $content->title(__('Error Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group', 'error','back')));
-    }
-
-    public function simulator(Request $request, Content $content)
-    {
-        $group = $request->get('group') ?? 'xkc';
-        $days = (int)$request->get('days');
-        $days = $days == 0 ? 14 : $days;
-
-        $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
-        $begin = $channel ? $channel->air_date : date('Y-m-d');
-
-        $simulator = new XkcSimulator($group);
-
-        $data = $simulator->handle($begin, $days, function ($t) {
-            return ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
-        });
-
-        $error = $simulator->getErrorMark();
-
-        return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
-        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error')));
     }
 
     /**
