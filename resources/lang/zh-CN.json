@@ -59,10 +59,12 @@
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Expired date"  : "过期时间",
+    "Start date"    : "起始日期",
+    "Simulate days" : "运行天数",
     "Schedule start at": "计划开始时间",
     "Schedule end at" : "计划结束时间",
     "Order no" : "排序",
-    "Sort" : "序号",
+    "Sort" : "排序",
     "Level": "级别",
     "Message": "消息内容",
     "User": "发起者",
@@ -121,7 +123,8 @@
     "Error Mode": "错误排查模式",
     "Preview Mode": "预览模式",
     "Preview Template Content": "预览模版节目内容编排",
-
+    "Simulator Mode": "编单模拟器",
+    "Preview Simulator Content": "查看模拟运行结果，可以帮助提前预知模版错误",
     "具体节目编排": "具体节目编排",
     "返回普通模式": "返回普通模式"
 

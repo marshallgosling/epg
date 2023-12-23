@@ -3,7 +3,7 @@
 namespace App\Tools\Generator;
 
 use App\Models\Channel;
-use App\Models\Temp\Template;
+use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Models\Record;
@@ -13,7 +13,336 @@ use Illuminate\Support\Facades\DB;
 
 use App\Tools\LoggerTrait;
 
-class NewGenerator 
+class NewGenerator implements IGenerator
 {
+    use LoggerTrait;
 
+    public const STALL_FILE = "xkc_stall.txt";
+
+    private $channel;
+    private $templates;
+    private $daily;
+    private $weekends;
+    private $special;
+    private $group;
+    /**
+     * 按24小时累加的播出时间，格式为 timestamp ，输出为 H:i:s
+     */
+    private $air;
+
+    /**
+     * 统计一档节目的时长，更换新节目时重新计算
+     */
+    private $duration;
+
+    private $maxDuration = 0;
+
+    public $errors = [];
+    
+    public function __construct($group)
+    {
+        $this->log_channel = 'channel';
+        $this->group = $group;
+    }
+
+    /**
+     * Load all templates
+     * 
+     * @param Channel $channel
+     * @param string $group
+     * 
+     */
+    public function loadTemplate()
+    {
+        $group = $this->group;
+        $this->daily = Template::where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $this->weekends = Template::where(['group_id'=>$group,'schedule'=>Template::WEEKENDS,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $this->special = Template::where(['group_id'=>$group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+    }
+
+    public function makeCopyTemplate()
+    {
+        $group = $this->group;
+
+        DB::table('temp_template')->where('group_id', $group)->delete();
+        DB::table('temp_template')->insertUsing(\App\Models\Template::PROPS, 
+            DB::table('template')->selectRaw(implode(',', Template::PROPS)
+        )->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING]));
+        
+        $this->templates = Template::select('id')->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING])->pluck('id')->toArray();
+        DB::table('temp_template_programs')->whereIn('template_id', $this->templates)->delete();
+        DB::table('temp_template_programs')->insertUsing(\App\Models\TemplateRecords::PROPS, 
+            DB::table('template_programs')->selectRaw(implode(',', TemplateRecords::PROPS)
+        )->whereIn('template_id', $this->templates));
+
+    }
+
+    public function saveTemplateState() 
+    {
+        $list = TemplateRecords::whereIn('template_id', $this->templates)->select('id','data')->pluck('data', 'id')->toArray();
+
+        foreach($list as $id=>$data)
+        {
+            \App\Models\TemplateRecords::find($id)->update(['data'=>$data]);
+        }
+    }
+
+    public function cleanTempData()
+    {
+        DB::table('temp_template_programs')->whereIn('template_id', $this->templates)->delete();
+        DB::table('temp_template')->where('group_id', $this->group)->delete();
+    }
+
+
+    public function generate(Channel $channel)
+    {
+        
+            //$this->warn("start date:" . $channel->air_date);
+            $air = 0;
+            $duration = 0;
+            $epglist = [];
+            
+            foreach($this->daily as &$template)
+            {
+                if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
+                $epglist = []; 
+                // This is one single Program
+                $program = ChannelGenerator::createChannelProgram($template);
+
+                $program->channel_id = $channel->id;
+                $program->start_at = date('Y-m-d H:i:s', $air);
+                $program->duration = $duration;
+                $program->data = [];
+                $program->end_at = date('Y-m-d H:i:s', $air);
+                
+                $template_items = $template->records;
+
+                $template_item = $this->findAvailableTemplateItem($channel, $template_items);
+
+                $templateresult = $template->toArray();
+
+                $templateresult['error'] = false;
+                
+                if(!$template_item) {
+                    //$this->info("没有找到匹配的模版: {$template->id} {$template->category}");
+                    $templateresult['error'] = "没有找到匹配的模版: {$template->id} {$template->category}";
+                    
+                    $templateresult['program'] = $program->toArray();
+                    $templateresult['template'] = [];
+
+                    $result['data'][] = $templateresult;
+                    $result['error'] = true;
+                    
+                    continue;
+                }
+                
+                $maxDuration = ChannelGenerator::parseDuration($template->duration); + (int)config('MAX_DURATION_GAP', 600);
+                $items = $this->findAvailableRecords($template_item, $maxDuration);
+
+                if(count($items)) {
+                    foreach($items as $item) {
+                        $seconds = ChannelGenerator::parseDuration($item->duration);
+                        if($seconds > 0) {
+                            
+                            $duration += $seconds;
+                            
+                            $line = ChannelGenerator::createItem($item, $template_item->category, date('H:i:s', $air));
+                            
+                            $air += $seconds;
+
+                            $line['end_at'] = date('H:i:s', $air);
+
+                            $epglist[] = $line;
+                            //$templateresult['epglist'][] = $line;
+                            //$this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
+                        }
+                        else {
+
+                            //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                            //throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
+                        }
+                    }
+                    if(count($epglist) == 0) {
+                        //$this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                        $templateresult['error'] = " 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $result['error'] = true;
+                    }
+                }
+                else {
+                    //$this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
+                    $templateresult['error'] = " 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                    $result['error'] = true;
+                }
+
+
+                $program->duration = $duration;
+                $program->data = $epglist;
+                $program->end_at = date('Y-m-d H:i:s', $air);
+                
+                $templateresult['template'] = json_decode(json_encode($template_item), true);
+                $templateresult['program'] = $program->toArray();
+
+                $result['data'][] = $templateresult;
+
+            }
+            $data[] = $result;
+        
+    }
+
+    private function findAvailableRecords(TemplateRecords &$template, $maxDuration)
+    {
+        $items = [];
+        if($template->type == TemplateRecords::TYPE_RANDOM) {
+            $temps = Record::findNextAvaiable($template, $maxDuration);
+            if(in_array($temps[0], ['finished', 'empty'])) {
+                $d = $template->data;
+                $d['episodes'] = null;
+                $d['unique_no'] = '';
+                $d['name'] = '';
+                $d['result'] = '';
+                $template->data = $d;
+
+                $temps = Record::findNextAvaiable($template, $maxDuration);
+            }
+            $d = $template->data;
+            foreach($temps as $item) {
+                if(!in_array($item, ['finished', 'empty'])) {
+                    $items[] = $item;
+                    $d['episodes'] = $item->episodes;
+                    $d['unique_no'] = $item->unique_no;
+                    $d['name'] = $item->name;
+                    $d['result'] = '编排中';
+                    $template->data = $d;
+                }
+            }
+            
+        }
+        else if($template->type == TemplateRecords::TYPE_STATIC) {
+                
+            $temps = Record::findNextAvaiable($template, $maxDuration);
+            $items = [];
+
+            if(in_array($temps[0], ['finished', 'empty'])) return $items;
+            
+            $d = $template->data;
+            foreach($temps as $item) {
+                if($item == 'empty') {
+                    $d['result'] = '未找到';
+                }
+                else if($item == 'finished') {
+                    $d['result'] = '编排完';
+                }
+                else {
+                    $items[] = $item;
+                    $d['episodes'] = $item->episodes;
+                    $d['unique_no'] = $item->unique_no;
+                    $d['name'] = $item->name;
+                    $d['result'] = Record::$islast ? '编排完' : '编排中';
+                }
+                $template->data = $d;
+                //$p->save();
+            }
+        }
+
+        return $items;
+    }
+
+    private function findAvailableTemplateItem($channel, &$templateItems)
+    {
+        $air = strtotime($channel->air_date);
+        $dayofweek = date('N', $air);
+
+        foreach($templateItems as &$p)
+        {
+            if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
+            $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
+            $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 999999999999;
+            if($air < $begin || $air > $end) {
+                $lasterror = "{$p->id} {$p->category} 编排设定时间 {$p->data['date_from']}/{$p->data['date_to']} 已过期";
+                continue;
+            }
+
+            if($p->data['result'] == '编排完') continue;
+
+            return $p;
+        }
+
+        return false;
+    }
+    
+
+    public function addPRItem($category='XK PR')
+    {
+        $item = Record::findPR($category);
+
+        $this->info("find bumper: {$item->name} {$item->duration}");
+        $seconds = ChannelGenerator::parseDuration($item->duration);
+
+        //$air = $this->air + $seconds;
+
+        $this->duration += $seconds;
+
+        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $this->air));
+                    
+        $this->air += $seconds;
+        
+
+        $line['end_at'] = date('H:i:s', $this->air);
+
+        $this->info("添加PR 节目: {$category} {$item->name} {$item->duration}");
+
+        return $line;
+    }
+
+    public function addBumperItem($schedule_end, $break_level, $class, $category='m1')
+    {
+        $item = $class::findBumper($break_level);
+
+        $this->info("find bumper: {$item->name} {$item->duration}");
+        $seconds = ChannelGenerator::parseDuration($item->duration);
+
+        $air = $this->air + $seconds;
+
+        $this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
+        if($air > ($schedule_end + (int)config('GENERATE_GAP', 300))) return false;
+
+        $this->duration += $seconds;
+                    
+        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $this->air));
+                    
+        $this->air += $seconds;
+
+        $line['end_at'] = date('H:i:s', $this->air);
+
+        $this->info("添加Bumper 节目: {$category} {$item->name} {$item->duration}");
+
+        return $line;
+    }
+
+    public function addSpecialPrograms($programs, $sort)
+    {
+        
+        foreach($this->special as $idx=>$t) {
+            foreach($programs as $program)
+            {
+                $p = $program->replicate();
+
+                $p->name .= ' (副本)';
+                $p->data = json_encode(['replicate'=>$program->id]);
+                $p->start_at = date('Y-m-d H:i:s', $this->air);
+                $this->air += $p->duration;
+                $p->end_at = date('Y-m-d H:i:s', $this->air);                   
+                $p->sort = $sort;
+
+                $p->schedule_start_at = ChannelGenerator::scheduleTime($p->schedule_start_at, $t->duration, ($idx+1));
+                $p->schedule_end_at = ChannelGenerator::scheduleTime($p->schedule_end_at, $t->duration, ($idx+1));
+
+                $p->save();
+                $sort ++;
+            }
+            $this->info("复制节目 {$t->name} {$t->start_at} {$t->end_at}");
+        }
+
+        return date('H:i:s', $this->air);
+    }
 }

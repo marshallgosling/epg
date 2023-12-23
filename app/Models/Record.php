@@ -54,6 +54,7 @@ class Record extends Model
     private static $bumper = false;
     private static $pr = false;
     public static $daysofweek = '0';
+    public static $islast = false;
 
     public static function loadBlackList()
     {
@@ -99,16 +100,17 @@ class Record extends Model
         if($data['episodes'] == null) {
 
             $item = self::findRandomEpisode($template->category, $maxduration);
-            if($total == 1)
-            { 
-                return [$item];
-            }
+            // if($total == 1)
+            // { 
+            //     return [$item];
+            // }
 
             if(in_array($item, ['finished', 'empty'])) return [$item];
 
             $ep = 1;
             $data['episodes'] = $item->episodes;
             $data['unique_no'] = $item->unique_no;
+            $data['result'] = "编排中";
             $items[] = $item;
         }
 
@@ -119,19 +121,22 @@ class Record extends Model
 
             if($item == 'finished') {
                 if($template->type == TemplateRecords::TYPE_STATIC) {
-                    Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
+                    //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
                 }
                 //$item = '编排完';
+                $data['result'] = '编排完';
             }
             else if($item == 'empty') {
                 if($template->type == TemplateRecords::TYPE_STATIC) {
-                    Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
+                    //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
                 }
                 //$item = '未找到';
+                $data['result'] = '未找到';
             }
             else {
                 $data['episodes'] = $item->episodes;
                 $data['unique_no'] = $item->unique_no;
+                $data['result'] = '编排中';
             }
             
             $items[] = $item;
@@ -144,6 +149,7 @@ class Record extends Model
     {
         //if($episodes == null) return self::findRandomEpisode($category);
         $list = Record::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
+        self::$islast = false;
         foreach($list as $idx=>$l)
         {
             if($unique_no == '') return $l;
@@ -153,6 +159,7 @@ class Record extends Model
                     return 'finished';
                 }
                 else {
+                    if($idx == count($list)) self::$islast = true;
                     return $list[$idx];
                 }
             }

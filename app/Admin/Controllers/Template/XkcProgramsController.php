@@ -151,7 +151,7 @@ class XkcProgramsController extends AdminController
 
             $form->text("name", __('Name'));
             $form->text('unique_no', __('Unique no'));
-            $form->text('result', __('Status'));
+            $form->select('result', __('Status'))->options([""=>'','编排中'=>'编排中',"编排完"=>'编排完',"错误"=>"错误"]);
             
         });
     

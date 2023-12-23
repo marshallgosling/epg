@@ -160,10 +160,18 @@ ol.breadcrumb {
                   <li><b>{{@__('Channel')}} </b></li>
                   <li><span class="label-{{ \App\Models\Channel::DOTS[$group] }}" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>
                   {{ \App\Models\Channel::GROUPS[$group] }}</li>
-                  <li><b>{{ @__('Air date')}}</b></li>
+                  <li><b>{{ @__('Start date')}}</b></li>
                   <li class="active"> {{$begin}} </li>
-                  <li><b>运行天数</b></li>
+                  <li><b>{{ @__('Simulate days')}}</b></li>
                   <li>{{ $days }} </li>
+                  <li>&nbsp; </li>
+                  @if($error)
+                  <li><b>运行结果</b></li>
+                  <li><b class="text-danger">出错</b></li>
+                  @else
+                  <li><b>运行结果</b></li>
+                  <li><b class="text-success">通过</b></li>
+                  @endif
                 </ol>
                 
             </div>
@@ -177,13 +185,13 @@ ol.breadcrumb {
                 
                   @foreach($model['data'] as $program) 
                   <div id="channel{{$model['id']}}" class="epg-callout epg-callout-{{$program['error']?'danger':'info'}}">
-                      <h4>{{$model['air_date']}} {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
+                      <h4>{{$model['air_date']}} ({{@\App\Models\TemplateRecords::DAYS[date('N', strtotime($model['air_date']))]}}) {{$program['start_at']}} - {{$program['end_at']}} &nbsp;<small>{{$program['duration']}} </small>&nbsp; &nbsp; | {{$program['name']}} 
                           || &nbsp; 
                           </h4>
                       
                       <ul class="list-group">
                         <li class="list-group-item disabled">
-                        模版信息: 
+                        模版状态: 
                           @if($program['template']) 
                           (ID: {{$program['template']['id']}}) &nbsp; &nbsp;{{$program['template']['data']['episodes']}} - {{$program['template']['data']['name']}} <span class="text-danger">{{$program['template']['data']['result']}}</span> <span class="pull-right text-warning">{{$program['template']['data']['unique_no']}} </span>
                           @else
@@ -208,7 +216,7 @@ ol.breadcrumb {
                 <nav class="epg-sidebar hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     @foreach ($data as $model)
-                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} {{$model['error']?"错误":''}}</a> </li>
+                    <li> <a href="#channel{{$model['id']}}"><b>{{ @__('Air date')}}</b> | {{$model['air_date']}} ({{@\App\Models\TemplateRecords::DAYS[date('N', strtotime($model['air_date']))]}}) {{$model['error']?"错误":''}}</a> </li>
                     @endforeach
                   </ul>
               </div>
