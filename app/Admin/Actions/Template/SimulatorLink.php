@@ -16,6 +16,11 @@ class SimulatorLink extends Action
         return admin_url('/template/simulator');
     }
 
+    public function handle()
+    {
+        return $this->response()->redirect(admin_url('/template/simulator'));
+    }
+
     public function html()
     {
         return '<a class="simulator btn btn-sm btn-danger"><i class="fa fa-android"></i> '.__($this->name).'</a>';
