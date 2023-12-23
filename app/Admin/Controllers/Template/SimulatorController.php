@@ -19,10 +19,10 @@ class SimulatorController extends Controller
 
         $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
         $begin = $channel ? $channel->air_date : date('Y-m-d');
+        $channels = XkcSimulator::generateFakeChannels($begin, $days);
+        $simulator = new XkcSimulator($group, $days, $channels);
 
-        $simulator = new XkcSimulator($group);
-
-        $data = $simulator->handle($begin, $days, function ($t) {
+        $data = $simulator->handle(function ($t) {
             return ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
         });
 

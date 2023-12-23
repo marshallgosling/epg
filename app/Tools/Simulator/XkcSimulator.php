@@ -19,29 +19,53 @@ class XkcSimulator
 {
     use LoggerTrait;
 
-    private $channel;
+    private $channels;
+    private $programs;
+    private $templates;
     private $group;
     /**
      * 按24小时累加的播出时间，格式为 timestamp ，输出为 H:i:s
      */
-    private $air;
+    private $days;
     public $errors;
+    private $saveState = false;
     /**
      * 统计一档节目的时长，更换新节目时重新计算
      */
     private $duration;
-    
-    public function __construct($group)
+
+    public function __construct($group, $days, $channels=false)
     {
         $this->log_channel = 'simulator';
         $this->group = $group;
+        $this->days = $days;
         $this->log_print = false;
+        $this->channels = $channels ?? [];
+        $this->programs = [];
+    }
+
+    public static function generateFakeChannels($begin, $days)
+    {
+        $day = strtotime($begin);
+        $channels = [];
+        for($i=0;$i<$days;$i++)
+        {
+            $channel = new Channel();
+            $channel->id = $i;
+            $channel->name = 'xkc';
+            $channel->air_date = date('Y-m-d', $day);
+            $day += 86400;
+
+            $channels[] = $channel;
+        }
+        return $channels;
     }
 
     public function setErrorMark($errors)
     {
         if(count($errors)) {
-            Storage::disk('data')->put(XkcGenerator::STALL_FILE, $errors[0]);
+            if(!Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+                Storage::disk('data')->put(XkcGenerator::STALL_FILE, $errors[0]);
         }
         else {
             if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE)) {
@@ -67,34 +91,30 @@ class XkcSimulator
             return false;
     }
 
-    public function handle($start, $days, \Closure $callback=null)
+    public function handle(\Closure $callback=null)
     {
-        $day = strtotime($start);
+        //$day = strtotime($start);
         $group = $this->group;
         $errors = [];
         $data = [];
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
-        for($i=0;$i<$days;$i++)
+        foreach($this->channels as &$channel)
         {
-            $channel = new Channel();
-            $channel->id = $i;
-            $channel->name = $group;
-            $channel->air_date = date('Y-m-d', $day);
-            $day += 86400;
+            
             $result = $channel->toArray();
             $result['data'] = [];
             $result['error'] = false;
             //$this->warn("start date:" . $channel->air_date);
             $air = 0;
-            $duration = 0;
-            $epglist = [];
+            $programs = [];
             
             foreach($templates as &$template)
             {
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
+                $duration = 0;
                 // This is one single Program
                 $program = ChannelGenerator::createChannelProgram($template);
 
@@ -128,7 +148,7 @@ class XkcSimulator
 
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
-                $maxDuration = ChannelGenerator::parseDuration($template->duration); + (int)config('MAX_DURATION_GAP', 600);
+                $maxDuration = ChannelGenerator::parseDuration($template->duration) + (int)config('MAX_DURATION_GAP', 600);
                 $items = $this->findAvailableRecords($template_item, $maxDuration);
 
                 if(count($items)) {
@@ -160,6 +180,7 @@ class XkcSimulator
                         $result['error'] = true;
                         $errors[] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     }
+                    
                 }
                 else {
                     //$this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
@@ -176,18 +197,29 @@ class XkcSimulator
                 $templateresult['template'] = json_decode(json_encode($template_item), true);
                 $templateresult['program'] = $program->toArray();
 
+                if($this->saveState) $template_item->save();
                 $result['data'][] = $templateresult;
-
+                $programs[] = $program;
+                
             }
             $data[] = $result;
+            
+            $this->programs[$channel->air_date] = $programs;
         }
 
         $this->setErrorMark($errors);
         $this->errors = $errors;
+        $this->templates = $templates;
+
         return $data;
     }
 
-    private function findAvailableRecords(TemplateRecords &$template, $maxDuration)
+    public function saveTemplateState()
+    {
+        $this->saveState = true;
+    }
+
+    private function findAvailableRecords(&$template, $maxDuration)
     {
         $items = [];
         if($template->type == TemplateRecords::TYPE_RANDOM) {
@@ -266,4 +298,23 @@ class XkcSimulator
         return false;
     }
     
+    public function getChannels()
+    {
+        return $this->channels;
+    }
+
+    public function setChannels($channels)
+    {
+        $this->channels = $channels;
+    }
+
+    public function getPrograms($air_date=false)
+    {
+        if($air_date)
+        {
+            return array_key_exists($air_date, $this->programs) ? $this->programs[$air_date] : false;
+        }
+
+        return $this->programs;
+    }
 }

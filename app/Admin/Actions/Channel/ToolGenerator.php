@@ -47,9 +47,13 @@ class ToolGenerator extends Action
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
+        $max = $s + 86400 * (int)config('SIMULATOR_DAYS', 14) - 86400;
+
         if($s > $e) {
             return $this->response()->error('结束日期不能早于开始日期');
         }
+
+        if($e > $max) $end_at = date('Y-m-d', $max);
 
         $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])
                     ->where('air_date','>=',$start_at)->where('air_date','<=',$end_at)->get();
@@ -80,7 +84,7 @@ class ToolGenerator extends Action
         $this->date('generate_end_at', '结束日期')->placeholder('不填则自动结束');
         $this->hidden('generate_start_at', '开始日期')->default($c);
         $this->hidden('generate_group', '分组')->default($this->group);
-        $this->textarea('comment', '说明及注意事项')->default("串联单固定按日期生成，从近到远的顺序。\n如果节目单有状态为“错误”的情况，则自动生成不会进行")->disable();
+        $this->textarea('comment', '说明及注意事项')->default("串联单固定按日期生成，从近到远的顺序。\n如果节目单有状态为“错误”的情况，则自动生成不会进行\n最多生成 ".config('SIMULATOR_DAYS', 14). ' 天')->disable();
         
     }
 

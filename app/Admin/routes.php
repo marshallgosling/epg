@@ -54,7 +54,7 @@ Route::group([
     $router->resource('/template/xkv/programs', 'Template\\XkvProgramsController')->names('template.xkv.programs');
     $router->resource('/template/xkv', 'Template\\XkvController')->names('template.xkv');
 
-    $router->get('/template/temp/preview', 'Template\\TempController@preview')->name('template.temp.preview');
+    $router->get('/template/temp/restore', 'Template\\TempController@restore')->name('template.temp.restore');
     $router->get('/template/simulator', 'Template\\SimulatorController@index')->name('template.simulator');
     
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');

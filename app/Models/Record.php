@@ -159,7 +159,7 @@ class Record extends Model
                     return 'finished';
                 }
                 else {
-                    if($idx == count($list)) self::$islast = true;
+                    if($idx == count($list)-1) self::$islast = true;
                     return $list[$idx];
                 }
             }
