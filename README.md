@@ -14,7 +14,26 @@
 
 ## 功能截图
 
+### 首页
+<img src="https://drive.google.com/file/d/1oo6MtL_rHxO_qBWNRm4Ouujsid5h6GND/view?usp=sharing" />
 
+### 有状态编单模版
+<img src="https://drive.google.com/file/d/1NJKgtj1-yW9fxX1mA8AOA6NlhL9gJvm0/view?usp=sharing" />
+
+### 编单模版预览
+<img src="https://drive.google.com/file/d/1zhOeo_KrOQBFzgUeyUgFeHttTdnQh7oD/view?usp=sharing" />
+
+### 自动编单
+<img src="https://drive.google.com/file/d/1zKIMq3Ju7mn3k1qJnWDayoUoBbBmUAnW/view?usp=sharing" />
+
+### 通知列表
+<img src="https://drive.google.com/file/d/1MUCnvSFkZoY_CvEjczn-YkjoJh6C8Eiy/view?usp=sharing" />
+
+### Excel 导出
+<img src="https://drive.google.com/file/d/1xs5U0MOOrtcEHS382R2n4jEiSBKrQwjY/view?usp=sharing" />
+
+### 修改编单内容
+<img src="https://drive.google.com/file/d/1aQAFmTlUNeESZM3vaP5ol9iHFoKDHbOb/view?usp=sharing" />
 
 ## Contributing
 
