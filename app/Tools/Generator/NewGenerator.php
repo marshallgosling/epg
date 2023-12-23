@@ -40,6 +40,7 @@ class NewGenerator
     public function generate()
     {
         ChannelGenerator::makeCopyTemplate($this->group);
+        Record::loadBumpers();
 
         $days = (int)config('SIMULATOR_DAYS', 14);
 
@@ -47,7 +48,7 @@ class NewGenerator
         if(!$channels) return false;
         
         $simulator = new XkcSimulator($this->group, $days, $channels);
-
+        $simulator->saveTemplateState();
         $data = $simulator->handle();
 
         $error = $simulator->getErrorMark();
@@ -75,8 +76,12 @@ class NewGenerator
                     $air = strtotime($program->start_at);
                     $start_end = date('H:i:s', $air);
                 }
-
-                foreach($program->data as &$p)
+                else {
+                    $program->start_at = date('Y-m-d H:i:s', $air);
+                }
+                $this->info("program: {$program->start_at} {$program->end_at} {$program->name}");
+                $data = $program->data;
+                foreach($data as &$p)
                 {
                     $p['start_at'] = date('H:i:s', $air);
                     $air += ChannelGenerator::parseDuration($p['duration']);
@@ -89,10 +94,13 @@ class NewGenerator
                 
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {
+                    if($duration > $scheduledDuration) break;
                     $pr = $this->addPRItem($air);
-                    if($pr) {
-                        $program->data[] = $pr['line'];
+                    if(is_array($pr)) {
+                        $data[] = $pr['line'];
                         $duration += $pr['seconds'];
+                        $air += $pr['seconds'];
+                        $this->info("add PR: ".json_encode($pr, JSON_UNESCAPED_UNICODE));
                     }
                     $break_level --;
                     if($break_level < 0) {
@@ -101,16 +109,20 @@ class NewGenerator
                     }
                 }
 
+                
                 $break_level = 3;
                 $schedule_end = strtotime($program->start_at) + $scheduledDuration;
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {
+                    if($duration > $scheduledDuration) break;
                     // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
                     // 凑时间，凑节目数
                     $res = $this->addBumperItem($schedule_end, $break_level, $air);
-                    if($res) {
-                        $program->data[] = $res['line'];
+                    if(is_array($res)) {
+                        $data[] = $res['line'];
                         $duration += $res['seconds'];
+                        $air += $res['seconds'];
+                        $this->info("add Bumper: ".json_encode($res, JSON_UNESCAPED_UNICODE));
                     }
                     else {
                         // 4次循环后，还是没有找到匹配的节目，则跳出循环
@@ -124,7 +136,7 @@ class NewGenerator
                 }
 
                 $program->duration = $duration;
-                $program->data = json_encode($program->data);
+                $program->data = json_encode($data);
                 $program->end_at = date('Y-m-d H:i:s', $air);
                 $program->save();
                 $sort = $program->sort + 1;
@@ -137,6 +149,7 @@ class NewGenerator
             $channel->status = Channel::STATUS_READY;
             $channel->save();
 
+
             Notify::fireNotify(
                 $channel->name,
                 Notification::TYPE_GENERATE, 
@@ -147,12 +160,14 @@ class NewGenerator
             ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
         }
 
+        
+            
         return true;
 
     }
 
 
-    public function addPRItem(&$air, $category='XK PR')
+    public function addPRItem($air, $category='XK PR')
     {
         $item = Record::findPR($category);
 
@@ -170,11 +185,11 @@ class NewGenerator
         return compact('line', 'seconds');
     }
 
-    public function addBumperItem($schedule_end, $break_level, &$air, $category='m1')
+    public function addBumperItem($schedule_end, $break_level, $air, $category='m1')
     {
         $item = Record::findBumper($break_level);
 
-        $this->info("find bumper: {$item->name} {$item->duration}");
+        //$this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
 
         $temp_air = $air + $seconds;

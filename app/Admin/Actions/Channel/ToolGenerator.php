@@ -47,7 +47,7 @@ class ToolGenerator extends Action
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
-        $max = $s + 86400 * (int)config('SIMULATOR_DAYS', 14);
+        $max = $s + 86400 * (int)config('SIMULATOR_DAYS', 14) - 86400;
 
         if($s > $e) {
             return $this->response()->error('结束日期不能早于开始日期');

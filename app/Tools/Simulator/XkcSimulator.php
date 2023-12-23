@@ -28,6 +28,7 @@ class XkcSimulator
      */
     private $days;
     public $errors;
+    private $saveState = false;
     /**
      * 统计一档节目的时长，更换新节目时重新计算
      */
@@ -99,22 +100,21 @@ class XkcSimulator
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
-        for($i=0;$i<$this->days&&$i<count($this->channels);$i++)
+        foreach($this->channels as &$channel)
         {
-            $channel = $this->channels[$i];
-
+            
             $result = $channel->toArray();
             $result['data'] = [];
             $result['error'] = false;
             //$this->warn("start date:" . $channel->air_date);
             $air = 0;
-            $duration = 0;
             $programs = [];
             
             foreach($templates as &$template)
             {
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
+                $duration = 0;
                 // This is one single Program
                 $program = ChannelGenerator::createChannelProgram($template);
 
@@ -148,7 +148,7 @@ class XkcSimulator
 
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
-                $maxDuration = ChannelGenerator::parseDuration($template->duration); + (int)config('MAX_DURATION_GAP', 600);
+                $maxDuration = ChannelGenerator::parseDuration($template->duration) + (int)config('MAX_DURATION_GAP', 600);
                 $items = $this->findAvailableRecords($template_item, $maxDuration);
 
                 if(count($items)) {
@@ -180,6 +180,7 @@ class XkcSimulator
                         $result['error'] = true;
                         $errors[] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     }
+                    
                 }
                 else {
                     //$this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
@@ -196,11 +197,13 @@ class XkcSimulator
                 $templateresult['template'] = json_decode(json_encode($template_item), true);
                 $templateresult['program'] = $program->toArray();
 
+                if($this->saveState) $template_item->save();
                 $result['data'][] = $templateresult;
                 $programs[] = $program;
+                
             }
             $data[] = $result;
-            $this->channels[] = $channel;
+            
             $this->programs[$channel->air_date] = $programs;
         }
 
@@ -209,6 +212,11 @@ class XkcSimulator
         $this->templates = $templates;
 
         return $data;
+    }
+
+    public function saveTemplateState()
+    {
+        $this->saveState = true;
     }
 
     private function findAvailableRecords(&$template, $maxDuration)
