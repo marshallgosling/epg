@@ -58,7 +58,7 @@ class TempController extends AdminController
                     else if($p['data']['dayofweek'])
                         foreach($p['data']['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
                     
-                        if($p['data']['result'] == '编排完' || $p['data']['result'] == '错误') $style = 'bg-danger';
+                    if($p['data']['result'] == '编排完' || $p['data']['result'] == '错误') $style = 'bg-danger';
                     
                     $item = [ $p['id'], $p['name'], $p['category'], TemplateRecords::TYPES[$p['type']], $p['data']['episodes'], $p['data']['date_from'].'/'.$p['data']['date_to'], implode(',', $days), $p['data']['name'], $p['data']['result'], '<a href="programs/'.$p['id'].'">查看</a>'];
                 
@@ -107,9 +107,10 @@ class TempController extends AdminController
             return ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
         });
 
-        //dd($data);
+        $error = $simulator->getErrorMark();
+
         return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
-        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin')));
+        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error')));
     }
 
     /**

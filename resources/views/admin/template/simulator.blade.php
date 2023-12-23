@@ -164,6 +164,14 @@ ol.breadcrumb {
                   <li class="active"> {{$begin}} </li>
                   <li><b>{{ @__('Simulate days')}}</b></li>
                   <li>{{ $days }} </li>
+                  <li>&nbsp; </li>
+                  @if($error)
+                  <li><b>运行结果</b></li>
+                  <li><b class="text-danger">出错</b></li>
+                  @else
+                  <li><b>运行结果</b></li>
+                  <li><b class="text-success">通过</b></li>
+                  @endif
                 </ol>
                 
             </div>
