@@ -15,7 +15,7 @@ class SimulatorController extends Controller
     {
         $group = $request->get('group') ?? 'xkc';
         $days = (int)$request->get('days');
-        $days = $days == 0 ? 14 : $days;
+        $days = $days == 0 ? (int)config('SIMULATOR_DAYS', 14) : $days;
 
         $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
         $begin = $channel ? $channel->air_date : date('Y-m-d');
