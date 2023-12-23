@@ -14,6 +14,7 @@ use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
+use App\Admin\Actions\Template\SimulatorLink;
 use App\Admin\Extensions\MyTable;
 use App\Models\Epg;
 use App\Tools\Generator\XkcGenerator;
@@ -164,7 +165,7 @@ class XkcController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             //$tools->disableBatchActions();
-            
+            $tools->append(new SimulatorLink);
         });
 
         return $grid;
