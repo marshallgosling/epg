@@ -72,7 +72,7 @@
                 
                 </div>
                 <div class="btn-group">
-                <a class="btn btn-danger btn-sm" title="回退模版数据" href="../restore"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 回退模版数据</span></a>
+                <a class="btn btn-danger btn-sm disabled" title="回退模版数据" href="../restore"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 回退模版数据</span></a>
                 
                 </div>
                 
