@@ -33,7 +33,10 @@ class TempController extends AdminController
 //        'create' => 'Create',
     ];
 
-    public function preview(Content $content)
+    /**
+     * 用于模版回退
+     */
+    public function restore(Content $content)
     {
         $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
 

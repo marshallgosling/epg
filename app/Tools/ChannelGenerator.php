@@ -2,20 +2,14 @@
 
 namespace App\Tools;
 
-use App\Models\Category;
-use App\Models\Channel;
-use App\Models\Template;
+
 use App\Models\ChannelPrograms;
-use App\Models\Material;
-use App\Models\Notification;
 use App\Models\Program;
-use App\Models\Record;
-use App\Models\TemplatePrograms;
+use App\Models\Temp\Template;
 use App\Models\Temp\TemplateRecords;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Tools\Generator\GenerationException;
+
 
 class ChannelGenerator
 {
@@ -46,6 +40,41 @@ class ChannelGenerator
         $this->log_channel = 'channel';
         $this->group = $group;
     }
+
+    public static function makeCopyTemplate($group)
+    {
+        
+        self::cleanTempData($group);
+
+        DB::table('temp_template')->insertUsing(\App\Models\Template::PROPS, 
+            DB::table('template')->selectRaw(implode(',', Template::PROPS)
+        )->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING]));
+        
+        $templates = Template::select('id')->where(['group_id' => $group, 'status'=> Template::STATUS_SYNCING])->pluck('id')->toArray();
+        DB::table('temp_template_programs')->whereIn('template_id', $templates)->delete();
+        DB::table('temp_template_programs')->insertUsing(\App\Models\TemplateRecords::PROPS, 
+            DB::table('template_programs')->selectRaw(implode(',', TemplateRecords::PROPS)
+        )->whereIn('template_id', $templates));
+
+        return $templates;
+    }
+
+    public static function saveTemplateState($templates) 
+    {
+        $list = TemplateRecords::whereIn('template_id', $templates)->select('id','data')->pluck('data', 'id')->toArray();
+
+        foreach($list as $id=>$data)
+        {
+            \App\Models\TemplateRecords::find($id)->update(['data'=>$data]);
+        }
+    }
+
+    public static function cleanTempData($group)
+    {
+        DB::table('temp_template_programs')->delete();
+        DB::table('temp_template')->where('group_id', $group)->delete();
+    }
+
 
     public static function scheduleTime($origin, $duration, $multi=1)
     {
