@@ -228,4 +228,30 @@ class XkcController extends AdminController
         
         return $form;
     }
+
+    public function reset() {
+        $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+        $data = json_encode($templates->toArray());
+        Storage::disk('data')->put('xkc_reset_template_'.date('YmdHis').'.json', $data);
+
+        foreach($templates as $t)
+        {
+            $records = $t->records;
+
+            foreach($records as $model)
+            {
+                $data = $model->data;
+                if(key_exists('unique_no', $data)) $data['unique_no'] = '';
+                if(key_exists('result', $data)) $data['result'] = '';
+                if(key_exists('name', $data)) $data['name'] = '';
+
+                if($model->type == TemplateRecords::TYPE_RANDOM) $data['episodes'] = '';
+
+                $model->data = $data;
+                if($model->isDirty()) $model->save();
+            }
+        }
+
+        return response()->json(['result'=>true]);
+    }
 }
