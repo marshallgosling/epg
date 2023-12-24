@@ -23,7 +23,7 @@ class NewGenerator
 
     public const STALL_FILE = "xkc_stall.txt";
 
-    private $channel;
+    private $channels;
     private $templates;
     private $group;
 
@@ -35,6 +35,29 @@ class NewGenerator
     {
         $this->log_channel = 'channel';
         $this->group = $group;
+        $this->channels = Channel::where(['status'=>Channel::STATUS_WAITING,'name'=>$this->group])->orderBy('air_date')->limit($days)->get();
+        
+    }
+
+    public function test()
+    {
+        $days = (int)config('SIMULATOR_DAYS', 14);
+        $simulator = new XkcSimulator($this->group, $days, $this->channels);
+        //$simulator->saveTemplateState();
+        $simulator->handle();
+
+        $error = $simulator->getErrorMark();
+
+        return $error;
+    }
+
+    public function reset()
+    {
+        foreach($this->channels as $channel)
+        {
+            $channel->status = Channel::STATUS_EMPTY;
+            $channel->save();
+        }
     }
 
     public function generate()
@@ -43,8 +66,7 @@ class NewGenerator
         Record::loadBumpers();
 
         $days = (int)config('SIMULATOR_DAYS', 14);
-
-        $channels = Channel::where(['status'=>Channel::STATUS_WAITING,'name'=>$this->group])->orderBy('air_date')->limit($days)->get();
+        $channels = $this->channels;
         if(!$channels) return false;
         
         $simulator = new XkcSimulator($this->group, $days, $channels);
