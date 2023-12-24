@@ -254,4 +254,29 @@ class XkcController extends AdminController
 
         return response()->json(['status'=>true, 'message'=>'重置成功']);
     }
+
+    public function restore()
+    {
+        $templates = \App\Models\Temp\Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+        $data = json_encode($templates->toArray());
+        //Storage::disk('data')->put('xkc_reset_template_'.date('YmdHis').'.json', $data);
+
+        foreach($templates as $t)
+        {
+            $records = $t->records;
+
+            foreach($records as $model)
+            {
+                $data = $model->data;
+                
+                $r = TemplateRecords::find($model->id);
+                if($r) {
+                    $r->data = $data;
+                    $r->save();
+                }
+            }
+        }
+
+        return response()->json(['status'=>true, 'message'=>'回退成功']);
+    }
 }

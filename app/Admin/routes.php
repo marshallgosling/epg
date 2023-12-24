@@ -47,6 +47,7 @@ Route::group([
     $router->resource('/template/xkc/programs', 'Template\\XkcProgramsController')->names('template.xkc.programs');
     $router->resource('/template/xkc', 'Template\\XkcController')->names('template.xkc');
     $router->post('/template/xkc/reset/state', 'Template\\XkcController@reset')->name('template.xkc.reset');
+    $router->post('/template/xkc/restore/state', 'Template\\XkcController@restore')->name('template.xkc.restore');
 
     $router->get('/template/xkv/tree/{id}', 'Template\\XkvProgramsController@tree')->name('template.xkv.tree');
     $router->post('/template/xkv/data/{id}/save', 'Template\\XkvProgramsController@save')->name('template.xkv.tree.save');
