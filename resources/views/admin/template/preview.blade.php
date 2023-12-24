@@ -75,7 +75,11 @@
                 
                 </div>
                 <div class="btn-group">
-                <a class="btn btn-danger btn-sm" title="模拟编单测试" href="../simulator"><i class="fa fa-android"></i><span class="hidden-xs"> 模拟编单测试</span></a>
+                <a class="btn btn-success btn-sm" title="模拟编单测试" href="../simulator"><i class="fa fa-android"></i><span class="hidden-xs"> 模拟编单测试</span></a>
+                
+                </div>
+                <div class="btn-group">
+                 <a class="btn btn-danger btn-sm" title="一键清空状态" href="javascript:clearState();"><i class="fa fa-chain-broken"></i><span class="hidden-xs"> 一键清空状态</span></a>
                 
                 </div>
                 <div class="btn-group pull-right">
@@ -93,4 +97,44 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+  function clearState() {
+      swal({
+          title: "确认要清空状态吗?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "确认",
+          showLoaderOnConfirm: true,
+          cancelButtonText: "取消",
+          preConfirm: function() {
+              return new Promise(function(resolve) {
+                  $.ajax({
+                      method: 'post',
+                      url: '/admin/template/{{$group}}/reset/state',
+                      data: {
+                          data: 'reset',
+                          action: "state",
+                          _token: LA.token,
+                      },
+                      success: function (data) {
+                          $.pjax.reload('#pjax-container');
+                          toastr.success('重置成功 !');
+                          resolve(data);
+                      }
+                  });
+              });
+            }
+          }).then(function(result) {
+              var data = result.value;
+              if (typeof data === 'object') {
+                  if (data.status) {
+                      swal(data.message, '', 'success');
+                  } else {
+                      swal(data.message, '', 'error');
+              }
+            }
+        });
+    }
+</script>
 

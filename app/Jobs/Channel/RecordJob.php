@@ -52,6 +52,9 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
+        
+        $generator = new NewGenerator($this->group);
+
         if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
         {
             Notify::fireNotify(
@@ -61,13 +64,26 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
                 "您有未处理的节目单模版数据错误，请先进入临时模版页面，解决模版问题，然后点击解决问题。",
                 Notification::LEVEL_WARN
             );
+            $generator->reset();
             return 0;
         }
 
-        $error = false;
+        $test = $generator->test();
+        if($test) {
+            Notify::fireNotify(
+                $this->group,
+                Notification::TYPE_GENERATE, 
+                "节目单自动生成工具遇到错误，需要人工干预", 
+                "您有未处理的节目单模版数据错误，请先进入临时模版页面，解决模版问题，然后点击解决问题。",
+                Notification::LEVEL_WARN
+            );
 
-        $generator = new NewGenerator($this->group);
-        $error = $generator->generate();
+            $generator->reset();
+            return 0;
+        }
+        
+        $generator->generate();
+
     }
 
     /**

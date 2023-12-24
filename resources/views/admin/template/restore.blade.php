@@ -72,7 +72,7 @@
                 
                 </div>
                 <div class="btn-group">
-                <a class="btn btn-danger btn-sm disabled" title="回退模版数据" href="../restore"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 回退模版数据</span></a>
+                <a class="btn btn-danger btn-sm {{$error?'':'disabled'}}" title="回退模版数据" href="javascript:{{$error?'restoreState()':''}};"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 回退模版数据</span></a>
                 
                 </div>
                 
@@ -89,3 +89,43 @@
     </div>
 </div>
 
+<script type="text/javascript">
+  function restoreState() {
+      swal({
+          title: "确认要回退状态吗?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "确认",
+          showLoaderOnConfirm: true,
+          cancelButtonText: "取消",
+          preConfirm: function() {
+              return new Promise(function(resolve) {
+                  $.ajax({
+                      method: 'post',
+                      url: '/admin/template/xkc/restore/state',
+                      data: {
+                          data: 'reset',
+                          action: "state",
+                          _token: LA.token,
+                      },
+                      success: function (data) {
+                          $.pjax.reload('#pjax-container');
+                          toastr.success('重置成功 !');
+                          resolve(data);
+                      }
+                  });
+              });
+            }
+          }).then(function(result) {
+              var data = result.value;
+              if (typeof data === 'object') {
+                  if (data.status) {
+                      swal(data.message, '', 'success');
+                  } else {
+                      swal(data.message, '', 'error');
+              }
+            }
+        });
+    }
+</script>
