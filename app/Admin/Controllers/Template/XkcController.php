@@ -252,6 +252,6 @@ class XkcController extends AdminController
             }
         }
 
-        return response()->json(['result'=>true]);
+        return response()->json(['status'=>true, 'message'=>'重置成功']);
     }
 }
