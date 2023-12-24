@@ -35,6 +35,7 @@ class NewGenerator
     {
         $this->log_channel = 'channel';
         $this->group = $group;
+        $days = (int)config('SIMULATOR_DAYS', 14);
         $this->channels = Channel::where(['status'=>Channel::STATUS_WAITING,'name'=>$this->group])->orderBy('air_date')->limit($days)->get();
         
     }
