@@ -38,6 +38,9 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         
+        echo ini_get('memory_limit')."\n";
+        exit;
+
         $day = strtotime($day);
 
         $channel = new Channel();
