@@ -6,6 +6,7 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Channel;
 use App\Models\Template;
 use App\Models\ChannelPrograms;
+use App\Models\EpgJob;
 use App\Models\Notification;
 use App\Models\Record;
 use App\Models\Temp\TemplateRecords;
@@ -61,6 +62,19 @@ class NewGenerator
         }
     }
 
+    private function saveJob($data, $file, $channels)
+    {
+        if(count($channels)) $name = $channels[count($channels)-1]->air_date;
+        else $name = 'unknow';
+        $job = new EpgJob;
+        $job->name = $name;
+        $job->file = $file;
+        $job->group_id = 'xkc';
+        $job->save();
+        Storage::put($file, json_encode($data));
+
+    }
+
     public function generate()
     {
         ChannelGenerator::makeCopyTemplate($this->group);
@@ -80,7 +94,8 @@ class NewGenerator
             // Notify error
             return false;
         }
-        Storage::put("xkc_generator_{$days}_".date('YmdHis').'.json', json_encode($data));
+
+        $this->saveJob($data, "xkc_generator_{$days}_".date('YmdHis').'.json', $channels);
 
         $special = Template::where(['group_id'=>$this->group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
