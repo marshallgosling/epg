@@ -30,7 +30,7 @@ class EpgJobController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
-        $grid->column('group_id', __('Group id'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('status', __('Status'))->using(EpgJob::STATUS);
         $grid->column('file', __('File'));
         $grid->column('created_at', __('Created at'));
@@ -53,7 +53,7 @@ class EpgJobController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
-        $show->field('group_id', __('Group id'))->using(Channel::GROUPS);
+        $show->field('group_id', __('Group'))->using(Channel::GROUPS);
         $show->field('status', __('Status'))->using(EpgJob::STATUS);
         $show->field('file', __('File'));
         $show->field('created_at', __('Created at'));
@@ -72,7 +72,7 @@ class EpgJobController extends AdminController
         $form = new Form(new EpgJob());
 
         $form->text('name', __('Name'));
-        $form->radio('group_id', __('Group id'))->options(Channel::GROUPS);
+        $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
         $form->radio('status', __('Status'))->options(EpgJob::STATUS);
         $form->file('file', __('File'));
 
