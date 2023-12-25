@@ -69,9 +69,11 @@ Route::group([
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
     $router->resource('/notifications', 'NotificationController')->names('notification');
     $router->resource('/plans', 'PlanController')->names('plans');
+
+    $router->resource('/epg/jobs', 'EpgJobController')->names('epg.jobs');
     $router->resource('/epg', 'Channel\\EpgController')->names('channel.epg');
     $router->get('/epg/preview/{air}', 'Channel\\EpgController@preview')->name('channel.preview');
-    
+
     $router->get('/channel/test/tree/{id}', 'Channel\\TestProgramController@tree')->name('channel.test.programs.tree');
     $router->resource('/channel/test/programs', 'Channel\\TestProgramController')->names('channel.test.programs');
     $router->delete('/channel/test/data/{id}/remove/{idx}', 'Channel\\TestProgramController@remove')->name('channel.test.programs.delete');
