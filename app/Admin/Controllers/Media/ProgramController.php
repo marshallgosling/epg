@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Program\BatchModify;
 use App\Events\CategoryRelationEvent;
 use App\Models\Category;
 use App\Models\Program;
@@ -90,6 +91,10 @@ class ProgramController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');});
             $filter->column(6, function(Grid\Filter $filter) { $filter->mlike('artist', __('Artist'))->placeholder('输入%作为通配符，如 张学% 或 %学友%');$filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); });
     
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchModify);
         });
 
         return $grid;

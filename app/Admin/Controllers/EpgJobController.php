@@ -74,7 +74,7 @@ class EpgJobController extends AdminController
         $form->text('name', __('Name'));
         $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
         $form->radio('status', __('Status'))->options(EpgJob::STATUS);
-        $form->file('file', __('File'));
+        $form->text('file', __('File'));
 
         return $form;
     }
