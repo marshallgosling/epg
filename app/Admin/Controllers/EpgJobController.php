@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Channel;
 use App\Models\EpgJob;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -15,7 +16,7 @@ class EpgJobController extends AdminController
      *
      * @var string
      */
-    protected $title = 'EpgJob';
+    protected $title = '节目自动编单任务记录';
 
     /**
      * Make a grid builder.
@@ -25,14 +26,17 @@ class EpgJobController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new EpgJob());
+        $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
-        $grid->column('group_id', __('Group id'));
-        $grid->column('status', __('Status'));
+        $grid->column('group_id', __('Group id'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        $grid->column('status', __('Status'))->using(EpgJob::STATUS);
         $grid->column('file', __('File'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->disableCreateButton();
 
         return $grid;
     }
@@ -49,8 +53,8 @@ class EpgJobController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('name', __('Name'));
-        $show->field('group_id', __('Group id'));
-        $show->field('status', __('Status'));
+        $show->field('group_id', __('Group id'))->using(Channel::GROUPS);
+        $show->field('status', __('Status'))->using(EpgJob::STATUS);
         $show->field('file', __('File'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -68,8 +72,8 @@ class EpgJobController extends AdminController
         $form = new Form(new EpgJob());
 
         $form->text('name', __('Name'));
-        $form->text('group_id', __('Group id'));
-        $form->switch('status', __('Status'));
+        $form->radio('group_id', __('Group id'))->options(Channel::GROUPS);
+        $form->radio('status', __('Status'))->options(EpgJob::STATUS);
         $form->file('file', __('File'));
 
         return $form;

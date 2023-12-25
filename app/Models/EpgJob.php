@@ -17,7 +17,7 @@ class EpgJob extends Model
     public const STATUS_WAITING = 5;
 
 
-    public const STATUS = ['未编单', '运行中', '正常', '错误', '下线', '等待中'];
+    public const STATUS = ['正常', '错误'];
     public const AUDIT = ['未审核', '通过', '不通过'];
 
     public const GROUPS = ['xkv'=>'V China', 'xkc'=>'星空中国', 'xki'=>'星空国际'];
