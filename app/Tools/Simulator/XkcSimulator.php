@@ -19,6 +19,9 @@ class XkcSimulator
 {
     use LoggerTrait;
 
+    /**
+     * 空编单列表
+     */
     private $channels;
     private $programs;
     private $templates;
@@ -28,6 +31,9 @@ class XkcSimulator
      */
     private $days;
     public $errors;
+    /**
+     * 是否保存状态
+     */
     private $saveState = false;
     /**
      * 统计一档节目的时长，更换新节目时重新计算
@@ -44,6 +50,9 @@ class XkcSimulator
         $this->programs = [];
     }
 
+    /**
+     * 单纯模拟运行时，生成虚拟频道列表（按日期）
+     */
     public static function generateFakeChannels($begin, $days)
     {
         $day = strtotime($begin);
@@ -165,13 +174,13 @@ class XkcSimulator
                             $line['end_at'] = date('H:i:s', $air);
 
                             $epglist[] = $callback ? call_user_func($callback, $line) : $line;
-                            //$templateresult['epglist'][] = $line;
+
                             //$this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
                         }
                         else {
 
                             //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
-                            //throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
+                            
                         }
                     }
                     if(count($epglist) == 0) {
@@ -188,7 +197,6 @@ class XkcSimulator
                     $result['error'] = true;
                     $errors[] = "异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                 }
-
 
                 $program->duration = $duration;
                 $program->data = $epglist;
@@ -284,9 +292,9 @@ class XkcSimulator
         {
             if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
             $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
-            $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 999999999999;
+            $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 9999999999;
             if($air < $begin || $air > $end) {
-                $lasterror = "{$p->id} {$p->category} 编排设定时间 {$p->data['date_from']}/{$p->data['date_to']} 已过期";
+                //$lasterror = "{$p->id} {$p->category} 编排设定时间 {$p->data['date_from']}/{$p->data['date_to']} 已过期";
                 continue;
             }
 
