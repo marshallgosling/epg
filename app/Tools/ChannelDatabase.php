@@ -4,6 +4,7 @@ namespace App\Tools;
 
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
+use App\Models\Notification;
 
 class ChannelDatabase
 {
@@ -61,6 +62,12 @@ class ChannelDatabase
         }
 
         Epg::insert($items);
+
+        Notify::fireNotify(
+            $channel->name,
+            Notification::TYPE_EPG, 
+            "{$channel->name} {$channel->air_date} 串联单更新", "频道 {$channel->name} 日期 {$channel->air_date} 串联单数据更新并将替换已有数据（如存在）。"
+        );
     }
 
     public static function fixChannelStartTime($channel)

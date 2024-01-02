@@ -65,7 +65,7 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
             Notify::fireNotify(
                 $channel->name,
                 Notification::TYPE_STATISTIC, 
-                "{$channel->name} {$channel->air_date} 统计数据成功", "统计数据 频道 {$channel->name} 日期 {$channel->air_date} 成功，保存数据库并将替换已有数据（如存在）。"
+                "{$channel->name} {$channel->air_date} 统计数据成功", "频道 {$channel->name} 日期 {$channel->air_date} 成功，保存数据库并将替换已有数据（如存在）。"
             );
         }
         else {

@@ -35,6 +35,11 @@ class Category extends Model
 
     private static $categories = [];
 
+    public static function getXkcCategories()
+    {
+        return Record::XKC;
+    }
+
     public static function getFormattedCategories($type='tags', $withEmpty=false)
     {
         if($type == 'all')
