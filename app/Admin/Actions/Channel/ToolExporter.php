@@ -2,7 +2,7 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\ExportJob;
+use App\Jobs\ExcelJob;
 use App\Models\ExportList;
 use App\Models\TemplatePrograms;
 use Encore\Admin\Actions\Action;
@@ -41,7 +41,7 @@ class ToolExporter extends Action
         $model->group_id = $group;
         $model->save();
 
-        ExportJob::dispatch($model->id);
+        ExcelJob::dispatch($model->id);
 
         return $this->response()->success('批量生成Excel任务添加成功。')->redirect(admin_url('export/excel'));
     }

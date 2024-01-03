@@ -41,6 +41,8 @@ class EpgJob implements ShouldQueue, ShouldBeUnique
         {
             ChannelDatabase::removeEpg($channel);
             ChannelDatabase::saveEpgToDatabase($channel);
+
+            ExportJob::dispatch($this->id);
         }
     }
 
