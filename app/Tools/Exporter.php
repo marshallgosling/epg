@@ -307,7 +307,7 @@ class Exporter
         foreach($data as $idx=>$program)
         {
             //$program = $data[$pid];
-            $date = Carbon::parse($fixDate. ' ' .$program['start_at']);
+            $date = Carbon::parse($program['start_at']);
 
             $itemList = clone $template->ItemList;
 
