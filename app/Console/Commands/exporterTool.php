@@ -104,7 +104,7 @@ class exporterTool extends Command
         $channel->name = 'xkv';
         $channel->air_date = $date;
 
-        $json = Exporter::generateData($channel, $data);
+        $json = Exporter::generateData2($channel, $data);
 
         //print_r($json);
 
