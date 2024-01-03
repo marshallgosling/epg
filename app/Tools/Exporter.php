@@ -212,7 +212,8 @@ class Exporter
 
         $list = Epg::where('group_id', $group)
                     ->where('start_at','>',date('Y-m-d H:i:s', $start_at))
-                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+24800))->get();
+                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+24800))
+                    ->orderBy('start_at', 'asc')->get();
 
         $pos_start = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
         $pos_end = $pos_start + 86400;
