@@ -217,7 +217,7 @@ TMP;
         $form->hidden('_token')->default(csrf_token());
 
         $json = str_replace("'","\\'", json_encode($data));
-        $view = 'admin.program.xkc';
+        $view = 'admin.program.test';
         $channel = new Channel();
         $channel->id = 0;
         $channel->audit_status = Channel::AUDIT_EMPTY;

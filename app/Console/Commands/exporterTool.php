@@ -66,25 +66,6 @@ class exporterTool extends Command
         print_r($d);
     }
 
-    private function xml_old($id)
-    {
-        
-        //Exporter::generate($id);
-        $channel = Channel::findOrFail($id);
-        $data = Exporter::collectData($channel->air_date, $channel->name, Exporter::TIMES[$channel->name]);
-   
-        Exporter::generate($id);
-        Exporter::exportXml();
-    
-        Notify::fireNotify(
-            $channel->name,
-            Notification::TYPE_XML, 
-            "生成 XML {$channel->air_date} 成功. ", 
-            "",
-            Notification::LEVEL_INFO
-        );
-    }
-
     private function xml($id, $date=false)
     {
         $channel = Channel::findOrFail($id);
@@ -123,7 +104,7 @@ class exporterTool extends Command
         $channel->name = 'xkv';
         $channel->air_date = $date;
 
-        $json = Exporter::generateData($channel, $data);
+        $json = Exporter::generateData2($channel, $data);
 
         //print_r($json);
 
