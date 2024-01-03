@@ -205,7 +205,40 @@ class Exporter
         return $lines;
     }
 
-    public static function collectData($air_date, $group, \Closure $callback=null) 
+    public static function collectData($air_date, $group, \Closure $callback=null)
+    {
+        $data = [];
+        $start_at = strtotime($air_date.' 00:00:00');
+
+        $list = Epg::where('group_id', $group)
+                    ->where('start_at','>',date('Y-m-d H:i:s', $start_at))
+                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+24800))->get();
+
+        $pos_start = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
+        $pos_end = $pos_start + 86400;
+
+        $begin = $end = 0;
+        foreach($list as $idx=>$item) {
+            $start = strtotime($item->start_at);
+
+            if($start > ($pos_start-300) && $start < ($pos_start + 300)) $begin=$idx;
+            if($start > ($pos_end-300) && $start < ($pos_end + 300)) $end = $idx;
+        }
+        foreach($list as $idx=>$item) {
+
+            if($idx < $begin || $idx>=$end) {
+                continue;
+            }
+            if($callback)
+                $data[] = call_user_func($callback, $item);
+            else
+                $data[] = $item->toArray();
+        }
+
+        return $data;
+    }
+
+    public static function collectData2($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
         $order = [];
@@ -256,6 +289,68 @@ class Exporter
     }
 
     public static function generateData($channel, $data, $fixDate = false)
+    {
+        $jsonstr = Storage::disk('data')->get('template.json');
+
+        $template = json_decode($jsonstr);
+
+        if(!$fixDate) $fixDate = $channel->air_date;
+        $json = clone $template->PgmItem;
+
+        $json->ChannelName = $channel->name;
+        $json->PgmDate = $fixDate;
+        $json->Version = $channel->version;
+
+        $json->Count = count($data);
+
+        foreach($data as $idx=>$program)
+        {
+            //$program = $data[$pid];
+            $date = Carbon::parse($fixDate. ' ' .$program['start_at']);
+
+            $itemList = clone $template->ItemList;
+
+            $start = ChannelPrograms::caculateFrames($date->format('H:i:s'));
+                       
+                $itemList->StartTime = $start;
+                $itemList->SystemTime = $date->format('Y-m-d H:i:s');
+                $itemList->Name = $program['name'];
+                $itemList->BillType = $date->format('md').'新建';
+                $itemList->LimitLen = 0;
+                $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
+                $itemList->PlayType = $idx == 0 ? 1 : 0;
+
+            //$clips = ;
+            //$items = $program['items'];
+            $duration = 0;
+            //if(is_array($items)) foreach($items as $item)
+            { 
+                $clip = clone $template->ClipsItem;
+                $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
+                $clip->Name = '<![CDATA['.$program['name'].']]>';
+                $clip->Id = $program['unique_no'];
+                $seconds = ChannelPrograms::caculateSeconds($program['duration']);
+                $frames = $seconds * (int)config('FRAMES', 25);
+                $clip->LimitDuration = $frames;
+                $clip->Duration = $frames;
+                $duration += $seconds;
+                $itemList->ClipsItem[] = $clip;
+            }
+            $itemList->Length = $duration * config('FRAME', 25);
+            $itemList->LimitLen = $duration * config('FRAME', 25);
+            $itemList->ID = (string)Str::uuid();
+            $itemList->Pid = (string)Str::uuid();
+            $itemList->ClipsCount = 1;
+            $json->ItemList[] = $itemList;
+        }
+
+        self::$json = $json;
+
+        return $json;
+    
+    }
+
+    public static function generateData2($channel, $data, $fixDate = false)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
 
