@@ -37,7 +37,7 @@ class Category extends Model
 
     public static function getXkcCategories()
     {
-        return Record::XKC;
+        return ['CanXin'=>'灿星制作 (CanXin)','Entertainm'=>'综艺 (Entertainm)','drama'=>'电视剧 (drama)','cartoon'=>'卡通 (cartoon)'];
     }
 
     public static function getFormattedCategories($type='tags', $withEmpty=false)
