@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Channel\ToolEpgList;
 use App\Models\Channel;
 use App\Models\ExportList;
 use Encore\Admin\Controllers\AdminController;
@@ -62,14 +63,9 @@ class ChannelXmlController extends AdminController
 
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            // $actions->add(new Generator);
-            // $actions->add(new Clean);
-            //$actions->disableAll();
-        });
-
-        $grid->header(function () {
-            return false;
+        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
+            $actions->add(new ToolEpgList());
+            $actions->disableDelete();
         });
 
         $grid->filter(function(Grid\Filter $filter){
@@ -84,11 +80,13 @@ class ChannelXmlController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            //$tools->append(new ToolExporter());
+            //$tools->disableBatchActions();
+            
         });
 
         $grid->disableCreateButton();
-        $grid->disableBatchActions();
+        //$grid->disableBatchActions();
+    
         $grid->disableActions();
 
         return $grid;
