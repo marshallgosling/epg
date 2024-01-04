@@ -523,6 +523,7 @@
     {
         templist = [];
         $('.dd-item').on('mousedown', function(e) {
+            if(sortEnabled) return;
             e.preventDefault();
             let idx = parseInt($(this).data('id'));
             startmove = true;
@@ -531,6 +532,7 @@
             
         });
         $('.dd-item').on('mouseenter', function(e) {
+            if(sortEnabled) return;
             if(startmove) {
                 var idx = parseInt($(this).data('id'));
                 if(templist.indexOf(idx) == -1) {
