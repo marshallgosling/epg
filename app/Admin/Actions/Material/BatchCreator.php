@@ -28,7 +28,7 @@ class BatchCreator extends Action
         $total = (int)$request->get('total');
         $st = (int)$request->get('st');
         $duration = $request->get('duration');
-        $frames = ChannelGenerator::parseFrames($duration);
+        $frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
         $code = 'XK'.Str::random(12);
 
         for($ep=$st;$ep<=$total;$ep++)
@@ -53,8 +53,8 @@ class BatchCreator extends Action
         //$this->text('unique_no', __('Unique no'))->placeholder('首集播出编号，后续集数自动累加');
 
         $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入');
-        $this->text('st', __('Start'))->default(1)->placeholder('起始集号');
-        $this->text('total', __('Ep'))->placeholder('总集数');
+        $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号');
+        $this->text('total', __('总集数'))->placeholder('总集数');
         $this->text('duration', __('Duration'))->placeholder('时长');
         //$this->file('excel', __('Excel'))->placeholder('通过文件导入');
         //$this->text('group', __('Group'));
