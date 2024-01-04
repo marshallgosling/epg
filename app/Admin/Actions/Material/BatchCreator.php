@@ -48,7 +48,7 @@ class BatchCreator extends Action
 
     public function form()
     {
-        $this->radio('channel', __('Channel'))->options(['xkc'=>'星空中国']);
+        $this->radio('channel', __('Channel'))->options(['xkc'=>'星空中国'])->default('xkc');
         $this->select('category', __('Category'))->options(Category::getXkcCategories());
         //$this->text('unique_no', __('Unique no'))->placeholder('首集播出编号，后续集数自动累加');
 
