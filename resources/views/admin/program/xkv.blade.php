@@ -97,7 +97,7 @@
                     <table class="table table-search table-hover table-striped">
                                 
                     </table>
-                    <div id="noitem" style="margin:30px;display:block"><strong>没有找到任何记录</strong></div>
+                    <div id="noitem" style="margin:30px;display:block"><strong>请输入关键字查询</strong></div>
                 </div>
             </div>
         </div>
@@ -330,6 +330,7 @@
         if(uniqueAjax) uniqueAjax.abort();
             keyword = keyword;
             $('.table-search').html('');
+            $('#noitem').html('搜索数据中...');
             cachedPrograms = [];
             curPage = 1
             uniqueAjax = $.ajax({
@@ -349,6 +350,7 @@
 
                     if(data.total == 0) {
                         $('#noitem').show();
+                        $('#noitem').html('<strong>没有找到任何记录</strong>');
                         $('#totalSpan').html('');
                         return;
                     }
@@ -371,6 +373,8 @@
                 },
                 error: function() {
                     uniqueAjax = null;
+                    $('#noitem').show();
+                    $('#noitem').html('<strong>没有找到任何记录</strong>');
                 }
             });
     }
