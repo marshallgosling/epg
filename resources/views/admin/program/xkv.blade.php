@@ -239,7 +239,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    m: $('#category').val(),
+                    c: $('#category').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -337,7 +337,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    m: $('#category').val(),
+                    c: $('#category').val(),
                     p: curPage
                 },
                 success: function (data) {

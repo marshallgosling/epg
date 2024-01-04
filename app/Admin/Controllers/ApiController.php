@@ -18,7 +18,7 @@ class ApiController extends Controller
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
         //$o = (int)$request->get('o', 0);
-        $m = $request->get('m');
+        $c = $request->get('c');
         $q = substr($q, 0, 20);
         $size = 20;$start = ($p-1)*$size;
 
@@ -30,8 +30,8 @@ class ApiController extends Controller
         //     $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
         // }
         $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
-        if($m) {
-            $model = $model->where('category', 'like', "%$m%");
+        if($c) {
+            $model = $model->where('category', 'like', "%$c%");
         }
 
 
@@ -47,27 +47,30 @@ class ApiController extends Controller
     public function records(Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        $o = (int)$request->get('o', 0);
+        //$o = (int)$request->get('o', 0);
+        $c = $request->get('c');
+        $m = $request->get('m');
         $size = 20;$start = ($p-1)*$size;
 
-        if($o == 1) {
-            $model = DB::table('records');
-            $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
-        }
-        else {
-            $model = DB::table('program');
-            $sql = 'id, unique_no, duration, name, category, artist, black';
-        }
+        $model = DB::table('records');
+        $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
+        // if($o == 1) {
             
-        // if($o) {
-        //     $model = $model->where('category', 'like', "%$q%");
         // }
         // else {
-            $model = $model->where('name', 'like', "%$q%")->orWhere('category', 'like' ,"%$q%")->orWhere('unique_no', 'like', "$q%");
-            if($o == 0) {
-                $model = $model->orWhere('artist', 'like', "%$q%");
-            }
+        //     $model = DB::table('program');
+        //     $sql = 'id, unique_no, duration, name, category, artist, black';
         // }
+        if($c) {
+            $model = $model->where('category', 'like', "%$c%");
+        }
+        if($m == '剧集名') {
+            $model = $model->where('episodes', 'like', "$q");
+        }
+        else {
+            $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q");
+            
+        }
 
         return response()->json([
             'total' => $model->count(),
