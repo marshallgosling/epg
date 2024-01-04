@@ -9,22 +9,22 @@ use Encore\Admin\Actions\BatchAction;
 
 class ToolEpgList extends BatchAction
 {
-    public $name = '批量生成';
+    public $name = '重新生成';
     protected $selector = '.xml-channel';
 
     public function handle(Collection $collection)
     {
-        
         foreach ($collection as $model) 
         {
             if($model->audit_status != Channel::AUDIT_PASS || $model->status != Channel::STATUS_READY) {
                 // 空编单和停止使用的编单不能通过审核
                 continue;
             }
-            ExportJob::dispatch($model->id);
+            if($model->name == 'xkc')
+                ExportJob::dispatch($model->id);
         }
         
-        return $this->response()->success(__('Clean success message.'))->refresh();
+        return $this->response()->success(__('Generator start success message.'))->refresh();
     }
 
     public function dialog()
