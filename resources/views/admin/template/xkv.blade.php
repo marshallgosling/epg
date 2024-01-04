@@ -264,22 +264,25 @@
                     
                     for(var i=0;i<list.length;i++)
                     {
-                        newList[i] = dataList[list[i].id];
+                        if(dataList[i].sort != list[i].id) {
+                            dataList[i].sort = list[i].id;
+                            dataList[i].haschanged = 1;
+                        }
                     }
                     action = "sort";
                 }
                 else {
                     action = "modify";
-                    newList = dataList;     
+                    //newList = dataList;     
                 }
                 
                 $.ajax({
                     method: 'post',
                     url: '/admin/template/xkv/data/{!! $model->id !!}/save',
                     data: {
-                        data: JSON.stringify(newList),
+                        data: JSON.stringify(dataList),
                         action: action,
-                        deleted: JSON.stringify(deletedItem),
+                        //deleted: JSON.stringify(deletedItem),
                         _token: LA.token
                     },
                     success: function (data) {
