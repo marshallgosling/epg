@@ -53,7 +53,7 @@
             <!-- /.box-body -->
         </div>
     </div>
-</div></div>
+</div>
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -64,12 +64,26 @@
       <div class="modal-body">
         
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-md-4">
                 <div class="input-group">    
                     <span class="input-group-addon">
-                        <label><input type="checkbox" id="onlycategory" autocomplete="off"> 只搜索栏目字段</label>
+                        栏目
                     </span>
-                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
+                    <input type="text" class="form-control" name="category" id="category" placeholder="请输入栏目">
+                    
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">    
+                    <span class="input-group-addon">
+                    关键字
+                    </span>
+                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                    
+                </div>    
+            </div>
+            <div class="col-md-2">
+                <div class="input-group">
                     <span class="input-group-btn">
                         <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
                     </span>
@@ -78,7 +92,7 @@
             
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="table-responsive" style="margin-top:10px;height:500px; overflow-y:scroll">
                     <table class="table table-search table-hover table-striped">
                                 
@@ -88,6 +102,7 @@
             </div>
         </div>
       </div>
+
       <div class="modal-footer">
         <div class="pull-left">
             <ul class="pager" style="margin:0;">
@@ -224,7 +239,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    o: $('#onlycategory').prop('checked') ? 1 : 0,
+                    m: $('#category').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -255,7 +270,7 @@
         });
 
         $("#keyword").on('change', function(e) {
-            searchKeywords(e.currentTarget.value);
+            //searchKeywords(e.currentTarget.value);
         });
 
         $('#btnSearch').on('click', function(e) {
@@ -322,7 +337,7 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    o: $('#onlycategory').prop('checked') ? 1 : 0,
+                    m: $('#category').val(),
                     p: curPage
                 },
                 success: function (data) {

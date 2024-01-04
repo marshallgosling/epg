@@ -17,16 +17,23 @@ class ApiController extends Controller
     public function treePrograms(Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        $o = (int)$request->get('o', 0);
+        //$o = (int)$request->get('o', 0);
+        $m = $request->get('m');
+        $q = substr($q, 0, 20);
         $size = 20;$start = ($p-1)*$size;
 
         $model = DB::table('program');
-        if($o) {
-            $model = $model->where('category', 'like', "%$q%");
+        // if($o) {
+        //     $model = $model->where('category', 'like', "%$q%");
+        // }
+        // else {
+        //     $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
+        // }
+        $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
+        if($m) {
+            $model = $model->where('category', 'like', "%$m%");
         }
-        else {
-            $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
-        }
+
 
         return response()->json([
             'total' => $model->count(),
