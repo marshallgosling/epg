@@ -39,7 +39,7 @@ class XkiController extends AdminController
         $model = Channel::where('name', 'xki')->where('air_date', $air_date)->first();
 
         $data = $model->programs()->get();
-        $color = 'primary';
+        $color = 'danger';
           
         return $content->title(__('Preview EPG Content'))->description(__(' '))
         ->body(view('admin.epg.xki', compact('data', 'model', 'color')));
