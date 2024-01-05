@@ -80,7 +80,7 @@ class XkcController extends AdminController
         
         $error = false;
         $back = true;
-        return $content->title(__('Preview Mode'))->description(__('Preview Template Content'))
+        return $content->title($this->title. ' ' .__('Preview Mode'))->description(__('Preview Template Content'))
         ->body(view('admin.template.preview', compact('data', 'group', 'error','back')));
     }
 
