@@ -73,7 +73,7 @@ class ChannelXmlController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function (Grid\Filter $filter) {
-                $filter->equal('name', __('Group'))->select(ExportList::GROUPS);
+                $filter->equal('name', __('Group'))->select(Channel::GROUPS);
                 $filter->date('air_date', __('Air date'));
             });
             $filter->column(6, function (Grid\Filter $filter) {

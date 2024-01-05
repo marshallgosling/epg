@@ -318,6 +318,7 @@
             $('#btnSort').html("保存");
             $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
             selectedItem = false;
+            selectedItems = [];
             $('.search-item').removeClass('info');
             
         });
