@@ -2,10 +2,12 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\Channel\ProgramsJob;
-use App\Jobs\Channel\RecordJob;
+use App\Jobs\Channel\XkvGeneratorJob;
+use App\Jobs\Channel\XkcGeneratorJob;
+use App\Jobs\Channel\XkiGeneratorJob;
 use App\Models\Channel;
 use App\Tools\Generator\XkcGenerator;
+use App\Tools\Generator\XkiGenerator;
 use Illuminate\Support\Facades\Storage;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
@@ -27,6 +29,11 @@ class ToolGenerator extends Action
         $group = $request->get('generate_group');
 
         if($group == 'xkc' && Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+        {
+            return $this->response()->error('您有未处理的模版编排错误，请先进入模版页面，解决模版问题，然后点击“模拟编单测试”按钮。');
+        }
+
+        if($group == 'xki' && Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
         {
             return $this->response()->error('您有未处理的模版编排错误，请先进入模版页面，解决模版问题，然后点击“模拟编单测试”按钮。');
         }
@@ -67,9 +74,11 @@ class ToolGenerator extends Action
             }
         
             if($group == 'xkc')
-                RecordJob::dispatch($group)->onQueue('xkc');
+                XkcGeneratorJob::dispatch($group)->onQueue('xkc');
+            else if($group == 'xki')
+                XkiGeneratorJob::dispatch($group)->onQueue('xki');
             else
-                ProgramsJob::dispatch($group)->onQueue('xkv');
+                XkvGeneratorJob::dispatch($group)->onQueue('xkv');
         }
 
         return $this->response()->success(__('Generator start success message.'))->refresh();

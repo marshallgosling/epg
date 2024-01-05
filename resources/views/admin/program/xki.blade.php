@@ -1,5 +1,5 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xki/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
     <div class="box-body fields-group">
     
                     <input type="hidden" name="data" value='' id="data">
@@ -54,6 +54,7 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -62,9 +63,8 @@
         <h4 class="modal-title">搜索</h4>
       </div>
       <div class="modal-body">
-        
         <div class="row">
-            <div class="col-md-4">
+        <div class="col-md-4">
                 <div class="input-group">    
                     <span class="input-group-addon">
                         栏目
@@ -75,9 +75,13 @@
             </div>
             <div class="col-md-6">
                 <div class="input-group">    
-                    <span class="input-group-addon">
-                    关键字
-                    </span>
+                    <div class="input-group-btn">
+                        <button id="modalBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="modalText">关键字</span> <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:changeModel('关键字');">关键字</a></li>
+                            <li><a href="javascript:changeModel('剧集名');">剧集名</a></li>
+                        </ul>
+                    </div><!-- /btn-group -->
                     <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
                     
                 </div>    
@@ -89,20 +93,18 @@
                     </span>
                 </div>
             </div>
-            
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="table-responsive" style="margin-top:10px;height:500px; overflow-y:scroll">
+                <div class="table-responsive" style="height:500px; overflow-y:scroll">
                     <table class="table table-search table-hover table-striped">
                                 
                     </table>
-                    <div id="noitem" style="margin:30px;display:block"><strong>请输入关键字查询</strong></div>
+                    <div id="noitem" style="display:block"><strong>请输入关键字查询</strong></div>
                 </div>
             </div>
         </div>
       </div>
-
       <div class="modal-footer">
         <div class="pull-left">
             <ul class="pager" style="margin:0;">
@@ -111,10 +113,8 @@
                 </li>
             </ul>
         </div>
-        
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -122,10 +122,8 @@
 <div id="template" style="display: none">{!!$template!!}</div>
 <script type="text/javascript">
     var selectedItem = null;
-    var selectedItems = [];
-    var multi = false;
     var selectedIndex = -1;
-    var modifiedItem = [];
+    var replaceItem = [];
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
     var sortEnabled = false;
@@ -135,6 +133,7 @@
     var curPage = 1;
     var keyword = '';
     var loadingMore = false;
+    var modal = '关键字';
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
@@ -160,12 +159,10 @@
                 toastr.error("请先勾选需要删除的节目。");
                 return;
             }
-            backupData();
             for(i=selected.length-1;i>=0;i--)
             {
                 dataList.splice(selected[i], 1);
             }
-            console.table(dataList);
             reCalculate(0);
             reloadTree();
             $('#btnSort').html("保存");
@@ -183,7 +180,6 @@
             console.table(dataList);
             reloadTree();
             toastr.success("回退成功");
-
             if(backupList.length==0)
                 $('#btnRollback').attr('disabled', true);
         });
@@ -215,7 +211,7 @@
                 
                 $.ajax({
                     method: 'post',
-                    url: '/admin/channel/xkv/data/{!! $model->id !!}/save',
+                    url: '/admin/channel/xki/data/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(newList),
                         _token:LA.token,
@@ -235,11 +231,12 @@
             loadingMore = true;
             curPage ++;
             $.ajax({
-                url: "/admin/api/tree/programs",
+                url: "/admin/api/tree/records",
                 dataType: 'json',
                 data: {
                     q: keyword,
                     c: $('#category').val(),
+                    m: modal,
                     p: curPage
                 },
                 success: function (data) {
@@ -289,18 +286,11 @@
             backupData();
 
             if(selectedIndex == 'new') {
-                var checkedidx = $('.grid-row-checkbox:checked').length > 0 ? 
-                    $('.grid-row-checkbox:checked').eq(0).data('id') : -1;
-
-                //if(!multi) selectedItems = [selectedItem];
                 
-                selectedIndex = checkedidx == -1 ? dataList.length : parseInt(checkedidx) + 1;  
+                selectedIndex = dataList.length;
                 
-                for(var n=0;n<selectedItems.length;n++) {
-                    dataList.splice(selectedIndex+n, 0, selectedItems[n]);
-                    modifiedItem.push(selectedItems[n].unique_no.toString());
-                }
-                
+                dataList.push(selectedItem);
+                replaceItem.push(selectedItem.unique_no.toString());
                 reCalculate(selectedIndex);
             }
             else {
@@ -309,7 +299,7 @@
                     return;
                 }
                 dataList[selectedIndex] = selectedItem;
-                modifiedItem.push(selectedItem.unique_no.toString());
+                replaceItem.push(selectedItem.unique_no.toString());
                 reCalculate(selectedIndex);
             }
 
@@ -318,7 +308,6 @@
             $('#btnSort').html("保存");
             $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
             selectedItem = false;
-            selectedItems = [];
             $('.search-item').removeClass('info');
             
         });
@@ -326,20 +315,27 @@
         reloadTree();
     });
 
-    function searchKeywords(keyword)
+    function changeModel(v)
+    {
+        $('#modalText').html(v);
+        modal = v;
+    }
+
+    function searchKeywords(k)
     {
         if(uniqueAjax) uniqueAjax.abort();
-            keyword = keyword;
-            $('.table-search').html('');
+            keyword = k;
             $('#noitem').html('搜索数据中...');
+            $('.table-search').html('');
             cachedPrograms = [];
             curPage = 1
             uniqueAjax = $.ajax({
-                url: "/admin/api/tree/programs",
+                url: "/admin/api/tree/records",
                 dataType: 'json',
                 data: {
                     q: keyword,
                     c: $('#category').val(),
+                    m: modal,
                     p: curPage
                 },
                 success: function (data) {
@@ -347,7 +343,6 @@
                     var items = data.result;
                     cachedPrograms = cachedPrograms.concat(items);
                     selectedItem = null;
-                    selectedItems = [];
 
                     if(data.total == 0) {
                         $('#noitem').show();
@@ -357,7 +352,7 @@
                     }
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
-                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var head = ['序号','播出编号','名称','其他','时长','栏目'];
                     var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
@@ -393,10 +388,6 @@
             return;
         }
         selectedIndex = idx;
-        multi = idx == 'new';
-        
-        console.log('multi:'+multi);
-
         $('#searchModal').modal('show');
         $('#confirmBtn').removeAttr('disabled');
     }
@@ -410,24 +401,11 @@
             repo.category = repo.category.toString().split(',')[0];
         }
         if(repo.artist==null) repo.artist='';
-        
-        if(multi) {
-            console.log('multi:'+idx);
-            if(selectedItems.indexOf(repo)==-1) {
-                selectedItems.push(repo);
-                $('.search-item').eq(idx).addClass('info');
-            }
-            else {
-                selectedItems.splice(selectedItems.indexOf(repo), 1);
-                $('.search-item').eq(idx).removeClass('info');
-            }
-        }
-        else {
-            selectedItem = repo;
-            $('.search-item').removeClass('info');
-            $('.search-item').eq(idx).addClass('info');
-        }
-        
+        repo.isnew = true;
+        selectedItem = repo;
+
+        $('.search-item').removeClass('info');
+        $('.search-item').eq(idx).addClass('info');
     }
 
     function deleteProgram (idx) {
@@ -435,7 +413,6 @@
             toastr.error("请先保存排序结果。");
             return;
         }
-        backupData();
         dataList.splice(idx, 1);
         reCalculate(idx);
         reloadTree();
@@ -450,7 +427,7 @@
         for(i=0;i<dataList.length;i++)
         {
             var style = '';
-            if(in_array(dataList[i].unique_no, modifiedItem)) style = 'bg-danger';
+            if(in_array(dataList[i].unique_no, replaceItem)) style = 'bg-danger';
             html += createItem(i, dataList[i], style);
             total += parseDuration(dataList[i].duration);
         }
@@ -459,7 +436,7 @@
         $('#tree-programs').html(html);
         var d = Date.parse('2000/1/1 00:00:00');
         $('#total').html('<small>总时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
-        $chkboxes = $('.grid-row-checkbox');
+        var $chkboxes = $('.grid-row-checkbox');
         setupMouseEvents();
     }
 

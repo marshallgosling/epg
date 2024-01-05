@@ -4,6 +4,7 @@ namespace App\Tools;
 use App\Models\Channel;
 use App\Models\Program;
 use App\Models\Record;
+use App\Models\Record2;
 use App\Models\Template;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,11 @@ class Statistic
     public static function countRecords()
     {
         return Record::count();
+    }
+
+    public static function countRecord2()
+    {
+        return Record2::count();
     }
 
     public static function countAudit()

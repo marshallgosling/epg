@@ -1,14 +1,4 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
-    <div class="box-body fields-group">
-    
-                    <input type="hidden" name="data" value='' id="data">
-    </div>
-    
-            <input type="hidden" name="_token" value="{{@csrf_token()}}">
-</form>
-</div>
-<div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
@@ -17,12 +7,12 @@
                 <div class="btn-group">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{@substr($model->start_at, 11)}} -- {{@substr($model->end_at, 11)}} {{$model->name}} 
+                            <b>{{@substr($model->start_at, 0)}}</b> (<small>{{@substr($model->duration, 0)}}</small>) {{$model->name}} <small class="text-{{$model->status==\App\Models\Template::STATUS_SYNCING?'danger':'info'}}">{{@\App\Models\Template::STATUSES[$model->status]}}</small>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top">{{@substr($item->start_at, 11)}} -- {{@substr($item->end_at, 11)}} {{$item->name}}</a></li>
+                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}"><b>{{@substr($item->start_at, 0)}}</b> (<small>{{@substr($item->duration, 0)}}</small>) {{$item->name}} <small class="text-{{$item->status==\App\Models\Template::STATUS_SYNCING?'danger':'info'}}">{{@\App\Models\Template::STATUSES[$item->status]}}</small></a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -30,7 +20,7 @@
                 <div class="btn-group">&nbsp; &nbsp;</div>
                
                 <div class="btn-group pull-right">
-                    <a class="btn btn-warning btn-sm" title="返回" href="../programs?channel_id={{$model->channel_id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回</span></a>
+                    <a class="btn btn-warning btn-sm" title="返回普通模式" href="../programs?template_id={{$model->id}}"><i class="fa fa-arrow-left"></i><span class="hidden-xs"> 返回普通模式</span></a>
                 </div>
                 
             </div>
@@ -54,6 +44,67 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editorModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">修改</h4>
+      </div>
+      <div class="modal-body">
+        <div class="box-body">
+            <div class="form-group">
+                <label>类型</label>
+                <div>
+                    <span class="icheck">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="inputType0" value="0" class="minimal type action"> 节目  
+                            </label>
+                    </span>
+                    <span class="icheck">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="inputType1" value="1" class="minimal type action"> 广告  
+                            </label>
+                    </span>
+                    <span class="icheck">
+                            <label class="radio-inline">
+                                <input type="radio" name="type" id="inputType2" value="2" class="minimal type action"> 垫片  
+                            </label>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                        <label>分类</label>
+                        
+                            <input type="text" class="form-control" id="inputCategory" placeholder="填写分类">
+                       
+                    </div>
+            <div class="form-group">
+                    <label>别名</label>
+                   
+                        <input type="text" class="form-control" id="inputName" placeholder="填写别名">
+                    
+                </div>
+            <div class="form-group">
+                <label>数据</label>
+                
+                    <input type="text" class="form-control" id="inputData" placeholder="填写播出编号">
+              
+            </div>
+        </div>
+    </div>
+      <div class="modal-footer">
+        
+        <button id="editBtn" type="button" class="btn btn-info">确认</button>      
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -64,26 +115,12 @@
       <div class="modal-body">
         
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-lg-8">
                 <div class="input-group">    
                     <span class="input-group-addon">
-                        栏目
+                        <label><input type="checkbox" id="onlycategory" autocomplete="off"> 只搜索栏目字段</label>
                     </span>
-                    <input type="text" class="form-control" name="category" id="category" placeholder="请输入栏目">
-                    
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">    
-                    <span class="input-group-addon">
-                    关键字
-                    </span>
-                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
-                    
-                </div>    
-            </div>
-            <div class="col-md-2">
-                <div class="input-group">
+                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
                     <span class="input-group-btn">
                         <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
                     </span>
@@ -92,17 +129,16 @@
             
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-lg-12">
                 <div class="table-responsive" style="margin-top:10px;height:500px; overflow-y:scroll">
                     <table class="table table-search table-hover table-striped">
                                 
                     </table>
-                    <div id="noitem" style="margin:30px;display:block"><strong>请输入关键字查询</strong></div>
+                    <div id="noitem" style="display:block"><strong>没有找到任何记录</strong></div>
                 </div>
             </div>
         </div>
       </div>
-
       <div class="modal-footer">
         <div class="pull-left">
             <ul class="pager" style="margin:0;">
@@ -111,7 +147,11 @@
                 </li>
             </ul>
         </div>
-        
+        <span>模版类型</span>
+        <label><input type="radio" name="datatype" value="0" checked> 节目</label>
+        <label><input type="radio" name="datatype" value="2"> 固定</label>
+        <label><input type="radio" name="datatype" value="1"> 广告</label>
+        &nbsp;
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
         
@@ -122,12 +162,12 @@
 <div id="template" style="display: none">{!!$template!!}</div>
 <script type="text/javascript">
     var selectedItem = null;
-    var selectedItems = [];
-    var multi = false;
     var selectedIndex = -1;
-    var modifiedItem = [];
+    var editorIndex = -1;
+    var deletedItem = [];
     var sortChanged = false;
     var dataList = JSON.parse('{!!$json!!}');
+    var category = JSON.parse('{!!@json_encode($category)!!}');
     var sortEnabled = false;
     var cachedPrograms = null;
     var uniqueAjax = null;
@@ -141,9 +181,11 @@
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
         $('body').on('mouseup', function(e) {
+            //console.log('stop ');
             startmove = false;
             templist = [];
         });
+        $('.minimal').iCheck({radioClass:'iradio_minimal-blue'});
         $('#btnDelete').on('click', function(e) {
 
             if(sortEnabled) {
@@ -160,16 +202,14 @@
                 toastr.error("请先勾选需要删除的节目。");
                 return;
             }
-            backupData();
             for(i=selected.length-1;i>=0;i--)
             {
-                dataList.splice(selected[i], 1);
+                deletedItem.push(dataList.splice(selected[i], 1)[0]);
             }
-            console.table(dataList);
-            reCalculate(0);
-            reloadTree();
             $('#btnSort').html("保存");
             $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+
+            reloadTree();
         });
 
         $('#btnRollback').on('click', function(e) {
@@ -179,13 +219,33 @@
                 return;
             }
             //console.log("rollback data");
+            deletedItem.pop();
             dataList = backupList.pop();
+            
             console.table(dataList);
             reloadTree();
             toastr.success("回退成功");
 
             if(backupList.length==0)
                 $('#btnRollback').attr('disabled', true);
+        });
+
+        $('#editBtn').on('click', function(e) {
+            $('#editorModal').modal('hide');
+            backupData();
+            var tmp = dataList[editorIndex];
+            tmp.type = $('input[name=type]:checked').val();
+            tmp.name = $('#inputName').val();
+            tmp.category = $('#inputCategory').val();
+            tmp.data = $('#inputData').val();
+            dataList[editorIndex] = tmp;
+
+            console.table(tmp);
+
+            $('#btnSort').html("保存");
+            $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+
+            reloadTree();
         });
 
         $('#btnSort').on('click', function(e) {
@@ -200,6 +260,7 @@
                 $('#treeinfo').html('<small>可拖动排序</'+'small>');
             } 
             else {
+                var action = "";
                 var newList = [];
                 if(sortChanged) {
                     var list = $('#tree-programs').nestable('serialize');
@@ -208,17 +269,21 @@
                     {
                         newList[i] = dataList[list[i].id];
                     }
+                    action = "sort";
                 }
                 else {
+                    action = "modify";
                     newList = dataList;     
                 }
                 
                 $.ajax({
                     method: 'post',
-                    url: '/admin/channel/xkv/data/{!! $model->id !!}/save',
+                    url: '/admin/template/xki/data/{!! $model->id !!}/save',
                     data: {
                         data: JSON.stringify(newList),
-                        _token:LA.token,
+                        action: action,
+                        deleted: JSON.stringify(deletedItem),
+                        _token: LA.token
                     },
                     success: function (data) {
                         $.pjax.reload('#pjax-container');
@@ -239,7 +304,6 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    c: $('#category').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -268,9 +332,9 @@
                 }
             })
         });
-
+        
         $("#keyword").on('change', function(e) {
-            //searchKeywords(e.currentTarget.value);
+            searchKeywords(e.currentTarget.value);
         });
 
         $('#btnSearch').on('click', function(e) {
@@ -287,38 +351,30 @@
             $('#searchModal').modal('hide');
 
             backupData();
+            deletedItem.push({name: "empty"});
 
-            if(selectedIndex == 'new') {
-                var checkedidx = $('.grid-row-checkbox:checked').length > 0 ? 
-                    $('.grid-row-checkbox:checked').eq(0).data('id') : -1;
+            var item = {
+                id: selectedIndex == 'new' ? 0 : dataList[selectedIndex].id,
+                name: selectedItem.name,
+                category: selectedItem.category,
+                type: $('input[name=datatype]:checked').val(),
+                data: selectedItem.unique_no,
+                sort: selectedIndex,
+                ischange: 1
+            };
+            if(item.type == 0) {
+                item.data = '';
+                item.name = '';
+            }
 
-                //if(!multi) selectedItems = [selectedItem];
-                
-                selectedIndex = checkedidx == -1 ? dataList.length : parseInt(checkedidx) + 1;  
-                
-                for(var n=0;n<selectedItems.length;n++) {
-                    dataList.splice(selectedIndex+n, 0, selectedItems[n]);
-                    modifiedItem.push(selectedItems[n].unique_no.toString());
-                }
-                
-                reCalculate(selectedIndex);
-            }
-            else {
-                if(selectedItem.black) {
-                    toastr.error("该艺人以上黑名单，不能使用");
-                    return;
-                }
-                dataList[selectedIndex] = selectedItem;
-                modifiedItem.push(selectedItem.unique_no.toString());
-                reCalculate(selectedIndex);
-            }
+            if(selectedIndex == 'new') selectedIndex = dataList.length;
+            dataList[selectedIndex] = item;
 
             reloadTree();
             
             $('#btnSort').html("保存");
             $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
             selectedItem = false;
-            selectedItems = [];
             $('.search-item').removeClass('info');
             
         });
@@ -329,9 +385,7 @@
     function searchKeywords(keyword)
     {
         if(uniqueAjax) uniqueAjax.abort();
-            keyword = keyword;
-            $('.table-search').html('');
-            $('#noitem').html('搜索数据中...');
+            //keyword = e.currentTarget.value;
             cachedPrograms = [];
             curPage = 1
             uniqueAjax = $.ajax({
@@ -339,26 +393,24 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    c: $('#category').val(),
-                    p: curPage
+                    p: curPage,
+                    o: $('#onlycategory').prop('checked') ? 1 : 0
                 },
                 success: function (data) {
                     uniqueAjax = null;
                     var items = data.result;
                     cachedPrograms = cachedPrograms.concat(items);
                     selectedItem = null;
-                    selectedItems = [];
 
                     if(data.total == 0) {
                         $('#noitem').show();
-                        $('#noitem').html('<strong>没有找到任何记录</strong>');
                         $('#totalSpan').html('');
                         return;
                     }
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
                     var head = ['序号','播出编号','名称','艺人','时长','栏目'];
-                    var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
+                    var html = '<tr><th>'+head.join('</'+'th><th>')+'</'+'th></t'+'r>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
                     for(i=0;i<items.length;i++)
@@ -374,8 +426,6 @@
                 },
                 error: function() {
                     uniqueAjax = null;
-                    $('#noitem').show();
-                    $('#noitem').html('<strong>没有找到任何记录</strong>');
                 }
             });
     }
@@ -386,6 +436,20 @@
         $('#btnRollback').removeAttr('disabled');
     }
 
+    function showEditorModal(idx) {
+        if(sortEnabled) {
+            toastr.error("请先保存排序结果。");
+            return;
+        }
+        editorIndex = idx;
+        $('#editorModal').modal('show');
+        var tmp = dataList[editorIndex];
+        $('.minimal').iCheck('uncheck');
+        $('#inputType'+tmp.type).iCheck('check');
+        $('#inputName').val(tmp.name);
+        $('#inputCategory').val(tmp.category);
+        $('#inputData').val(tmp.data);
+    }
 
     function showSearchModal(idx) {
         if(sortEnabled) {
@@ -393,10 +457,6 @@
             return;
         }
         selectedIndex = idx;
-        multi = idx == 'new';
-        
-        console.log('multi:'+multi);
-
         $('#searchModal').modal('show');
         $('#confirmBtn').removeAttr('disabled');
     }
@@ -404,30 +464,16 @@
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
         if(repo.black) {
-            toastr.error("该节目以上黑名单");
+            toastr.error("该节目已上黑名单");
         }
         if(repo.category) {
             repo.category = repo.category.toString().split(',')[0];
         }
-        if(repo.artist==null) repo.artist='';
         
-        if(multi) {
-            console.log('multi:'+idx);
-            if(selectedItems.indexOf(repo)==-1) {
-                selectedItems.push(repo);
-                $('.search-item').eq(idx).addClass('info');
-            }
-            else {
-                selectedItems.splice(selectedItems.indexOf(repo), 1);
-                $('.search-item').eq(idx).removeClass('info');
-            }
-        }
-        else {
-            selectedItem = repo;
-            $('.search-item').removeClass('info');
-            $('.search-item').eq(idx).addClass('info');
-        }
-        
+        selectedItem = repo;
+
+        $('.search-item').removeClass('info');
+        $('.search-item').eq(idx).addClass('info');
     }
 
     function deleteProgram (idx) {
@@ -436,11 +482,10 @@
             return;
         }
         backupData();
-        dataList.splice(idx, 1);
-        reCalculate(idx);
-        reloadTree();
+        deletedItem.push(dataList.splice(idx, 1)[0]);
         $('#btnSort').html("保存");
         $('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
+        reloadTree();
     }
 
     function reloadTree()
@@ -450,17 +495,17 @@
         for(i=0;i<dataList.length;i++)
         {
             var style = '';
-            if(in_array(dataList[i].unique_no, modifiedItem)) style = 'bg-danger';
+            //if(in_array(dataList[i].unique_no, replaceItem)) style = 'bg-danger';
             html += createItem(i, dataList[i], style);
-            total += parseDuration(dataList[i].duration);
         }
         html += '</'+'ol>';
 
         $('#tree-programs').html(html);
-        var d = Date.parse('2000/1/1 00:00:00');
-        $('#total').html('<small>总时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
+        $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
+
         $chkboxes = $('.grid-row-checkbox');
-        setupMouseEvents();
+        
+        setupMouseEvents()
     }
 
     var $chkboxes;
@@ -523,18 +568,18 @@
     function createItem(idx, item, style) {
         var html = $('#template').html();
         var textstyle = "";
-        if(style == '') style = parseBg(item.category, item.unique_no);
-        if(style == 'bg-danger') textstyle = 'text-danger';
-        return html.replace(/idx/g, idx).replace(/textstyle/g, textstyle).replace('start_at', item.start_at).replace('end_at', item.end_at)
-                    .replace('name', item.name).replace('duration', item.duration).replace('artist', item.artist)
-                    .replace('category', item.category).replace('unique_no', item.unique_no).replace('bgstyle', style);
+        if(style == '') style = parseBg(item.category, item.data);
+        labelstyle = category.labels[item.type];
+
+        return html.replace(/idx/g, idx).replace('name', item.name).replace('categorytype', category.types[item.type])
+                    .replace('labelstyle', labelstyle).replace('category', item.category).replace('unique_no', item.data).replace('bgstyle', style);
     }
 
     function parseBg($no, $code)
     {
         if($no == 'm1') return 'bg-warning';
         if($no == 'v1') return 'bg-default';
-        if($code.match(/VCNM(\w+)/)) return 'bg-info';
+        if($code && $code.match(/VCNM(\w+)/)) return 'bg-info';
         return '';
     }
     function parseDuration($dur)

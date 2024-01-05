@@ -20,16 +20,16 @@ use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 
-class XkcProgramsController extends AdminController
+class XkiProgramsController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '普通模版编排 【 星空中国 】';
+    protected $title = '普通模版编排 【 星空国际 】';
 
-    private $group = 'xkc';
+    private $group = 'xki';
 
     /**
      * Make a grid builder.

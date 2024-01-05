@@ -17,6 +17,7 @@ Route::group([
 
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
     $router->resource('/media/records', 'Media\\RecordController')->names('media.records');
+    $router->resource('/media/record2', 'Media\\Record2Controller')->names('media.record2');
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
     $router->post('/media/programs/unique', 'Media\\ProgramController@unique')->name('media.material.unique');
@@ -30,6 +31,13 @@ Route::group([
     $router->delete('/channel/xkc/data/{id}/remove/{idx}', 'Channel\\XkcProgramController@remove')->name('channel.xkc.programs.delete');
     $router->post('/channel/xkc/data/{id}/save', 'Channel\\XkcProgramController@save')->name('channel.xkc.programs.save');
     
+    $router->get('/channel/xki/tree/{id}', 'Channel\\XkiProgramController@tree')->name('channel.xki.programs.tree');
+    $router->get('/channel/xki/preview/{id}', 'Channel\\XkiController@preview')->name('channel.xki.preview');
+    $router->resource('/channel/xki/programs', 'Channel\\XkiProgramController')->names('channel.xki.programs');
+    $router->resource('/channel/xki', 'Channel\\XkiController')->names('channel.xki');
+    $router->delete('/channel/xki/data/{id}/remove/{idx}', 'Channel\\XkiProgramController@remove')->name('channel.xki.programs.delete');
+    $router->post('/channel/xki/data/{id}/save', 'Channel\\XkiProgramController@save')->name('channel.xki.programs.save');
+    
     $router->post('/channel/open/data/{id}', 'Channel\\XkcProgramController@open')->name('channel.xkc.programs.open');
 
     $router->get('/channel/xkv/tree/{id}', 'Channel\\XkvProgramController@tree')->name('channel.xkv.programs.tree');
@@ -42,22 +50,31 @@ Route::group([
     $router->get('/template/xkc/tree/{id}', 'Template\\XkcProgramsController@tree')->name('template.xkc.programs.tree');
     $router->post('/template/xkc/data/{id}/save', 'Template\\XkcProgramsController@save')->name('template.xkc.programs.save');
     $router->delete('/template/xkc/data/{id}/remove/{idx}', 'Template\\XkcProgramsController@remove')->name('template.xkc.programs.delete');
-    
     $router->get('/template/xkc/preview', 'Template\\XkcController@preview')->name('template.xkc.preview');
     $router->resource('/template/xkc/programs', 'Template\\XkcProgramsController')->names('template.xkc.programs');
     $router->resource('/template/xkc', 'Template\\XkcController')->names('template.xkc');
     $router->post('/template/xkc/reset/state', 'Template\\XkcController@reset')->name('template.xkc.reset');
     $router->post('/template/xkc/restore/state', 'Template\\XkcController@restore')->name('template.xkc.restore');
 
+    $router->get('/template/xki/tree/{id}', 'Template\\XkiProgramsController@tree')->name('template.xki.programs.tree');
+    $router->post('/template/xki/data/{id}/save', 'Template\\XkiProgramsController@save')->name('template.xki.programs.save');
+    $router->delete('/template/xki/data/{id}/remove/{idx}', 'Template\\XkiProgramsController@remove')->name('template.xki.programs.delete');
+    $router->get('/template/xki/preview', 'Template\\XkiController@preview')->name('template.xki.preview');
+    $router->resource('/template/xki/programs', 'Template\\XkiProgramsController')->names('template.xki.programs');
+    $router->resource('/template/xki', 'Template\\XkiController')->names('template.xki');
+    $router->post('/template/xki/reset/state', 'Template\\XkiController@reset')->name('template.xki.reset');
+    $router->post('/template/xki/restore/state', 'Template\\XkiController@restore')->name('template.xki.restore');
+
+
     $router->get('/template/xkv/tree/{id}', 'Template\\XkvProgramsController@tree')->name('template.xkv.tree');
     $router->post('/template/xkv/data/{id}/save', 'Template\\XkvProgramsController@save')->name('template.xkv.tree.save');
     $router->delete('/template/xkv/data/{id}/remove/{idx}', 'Template\\XkvProgramsController@remove')->name('template.xkv.tree.delete');
-    
     $router->resource('/template/xkv/programs', 'Template\\XkvProgramsController')->names('template.xkv.programs');
     $router->resource('/template/xkv', 'Template\\XkvController')->names('template.xkv');
 
     $router->get('/template/temp/restore', 'Template\\TempController@restore')->name('template.temp.restore');
-    $router->get('/template/simulator', 'Template\\SimulatorController@index')->name('template.simulator');
+    $router->get('/template/simulator/xkc', 'Template\\SimulatorController@xkc')->name('template.simulator.xkc');
+    $router->get('/template/simulator/xki', 'Template\\SimulatorController@xki')->name('template.simulator.xki');
     
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
     $router->get('/template/temp/programs/{program}', 'Template\\TempProgramsController@show')->name('template.temp.show');

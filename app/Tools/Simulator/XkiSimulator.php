@@ -5,17 +5,17 @@ use App\Models\Channel;
 use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
-use App\Models\Record;
+use App\Models\Record2 as Record;
 use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
-use App\Tools\Generator\XkcGenerator;
+use App\Tools\Generator\XkiGenerator;
 use Illuminate\Support\Facades\DB;
 
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
 
-class XkcSimulator
+class XkiSimulator
 {
     use LoggerTrait;
 
@@ -73,20 +73,20 @@ class XkcSimulator
     public function setErrorMark($errors)
     {
         if(count($errors)) {
-            if(!Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
-                Storage::disk('data')->put(XkcGenerator::STALL_FILE, $errors[0]);
+            if(!Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
+                Storage::disk('data')->put(XkiGenerator::STALL_FILE, $errors[0]);
         }
         else {
-            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE)) {
+            if(Storage::disk('data')->exists(XkiGenerator::STALL_FILE)) {
                 
                 Notify::fireNotify(
                     $this->group,
                     Notification::TYPE_GENERATE, 
                     "节目单自动生成模版错误已解决", 
-                    "处理日期时间: ".date('Y-m-d H:i:s').' 描述: '.Storage::disk('data')->get(XkcGenerator::STALL_FILE),
+                    "处理日期时间: ".date('Y-m-d H:i:s').' 描述: '.Storage::disk('data')->get(XkiGenerator::STALL_FILE),
                     Notification::LEVEL_INFO
                 );
-                Storage::disk('data')->delete(XkcGenerator::STALL_FILE);
+                Storage::disk('data')->delete(XkiGenerator::STALL_FILE);
             }
                 
         }
@@ -94,8 +94,8 @@ class XkcSimulator
 
     public function getErrorMark()
     {
-        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
-            return Storage::disk('data')->get(XkcGenerator::STALL_FILE);
+        if(Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
+            return Storage::disk('data')->get(XkiGenerator::STALL_FILE);
         else
             return false;
     }

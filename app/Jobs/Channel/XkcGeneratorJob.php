@@ -14,13 +14,12 @@ use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Tools\ChannelGenerator;
 use App\Tools\Generator\GenerationException;
-use App\Tools\Generator\NewGenerator;
 use App\Tools\Generator\XkcGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
 
-class RecordJob implements ShouldQueue, ShouldBeUnique
+class XkcGeneratorJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
@@ -53,7 +52,7 @@ class RecordJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         
-        $generator = new NewGenerator($this->group);
+        $generator = new XkcGenerator();
 
         if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
         {

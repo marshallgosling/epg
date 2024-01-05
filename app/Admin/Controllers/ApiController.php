@@ -17,16 +17,23 @@ class ApiController extends Controller
     public function treePrograms(Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        $o = (int)$request->get('o', 0);
+        //$o = (int)$request->get('o', 0);
+        $c = $request->get('c');
+        $q = substr($q, 0, 20);
         $size = 20;$start = ($p-1)*$size;
 
         $model = DB::table('program');
-        if($o) {
-            $model = $model->where('category', 'like', "%$q%");
+        // if($o) {
+        //     $model = $model->where('category', 'like', "%$q%");
+        // }
+        // else {
+        //     $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
+        // }
+        $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
+        if($c) {
+            $model = $model->where('category', 'like', "%$c%");
         }
-        else {
-            $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
-        }
+
 
         return response()->json([
             'total' => $model->count(),
@@ -40,27 +47,30 @@ class ApiController extends Controller
     public function records(Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        $o = (int)$request->get('o', 0);
+        //$o = (int)$request->get('o', 0);
+        $c = $request->get('c');
+        $m = $request->get('m');
         $size = 20;$start = ($p-1)*$size;
 
-        if($o == 1) {
-            $model = DB::table('records');
-            $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
-        }
-        else {
-            $model = DB::table('program');
-            $sql = 'id, unique_no, duration, name, category, artist, black';
-        }
+        $model = DB::table('records');
+        $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
+        // if($o == 1) {
             
-        // if($o) {
-        //     $model = $model->where('category', 'like', "%$q%");
         // }
         // else {
-            $model = $model->where('name', 'like', "%$q%")->orWhere('category', 'like' ,"%$q%")->orWhere('unique_no', 'like', "$q%");
-            if($o == 0) {
-                $model = $model->orWhere('artist', 'like', "%$q%");
-            }
+        //     $model = DB::table('program');
+        //     $sql = 'id, unique_no, duration, name, category, artist, black';
         // }
+        if($c) {
+            $model = $model->where('category', 'like', "%$c%");
+        }
+        if($m == '剧集名') {
+            $model = $model->where('episodes', 'like', "$q");
+        }
+        else {
+            $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q");
+            
+        }
 
         return response()->json([
             'total' => $model->count(),
@@ -77,7 +87,7 @@ class ApiController extends Controller
             
         return DB::table('program')->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
             ->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
-            ->paginate(15);
+            ->orderBy('seconds', 'desc')->paginate(15);
     }
 
     public function category(Request $request) {

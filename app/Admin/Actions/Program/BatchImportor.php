@@ -25,7 +25,7 @@ class BatchImportor extends Action
 
         for($i=0;$i<$ep;$i++)
         {
-            
+
         }
         
         
@@ -37,6 +37,7 @@ class BatchImportor extends Action
         $this->select('category', __('Category'))->options(Category::getXkcCategories());
         $this->text('unique_no', __('Unique no'))->placeholder('首集播出编号，后续集数自动累加');
         $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入');
+        $this->text('st', __('Start'))->default(1)->placeholder('起始集号');
         $this->text('ep', __('Ep'))->placeholder('总集数');
         
         $this->file('excel', __('Excel'))->placeholder('通过文件导入');

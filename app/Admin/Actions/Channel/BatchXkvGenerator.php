@@ -2,8 +2,7 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\Channel\ProgramsJob;
-use App\Jobs\Channel\RecordJob;
+use App\Jobs\Channel\XkvGeneratorJob;
 use App\Models\Channel;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,7 +35,7 @@ class BatchXkvGenerator extends BatchAction
             $model->status = Channel::STATUS_WAITING;
             $model->save();
 
-            ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
+            XkvGeneratorJob::dispatch($model->uuid)->onQueue('xkv');
         }
 
         return $this->response()->success(__('Generator start success message.'))->refresh();

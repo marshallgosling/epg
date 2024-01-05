@@ -1,34 +1,49 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Channel;
 
-use App\Admin\Actions\Channel\ToolEpgList;
+use App\Admin\Actions\Channel\BatchAudit;
+use App\Admin\Actions\Channel\BatchClean;
+use App\Admin\Actions\Channel\Clean;
+use App\Admin\Actions\Channel\ToolExporter;
+use App\Admin\Actions\Channel\BatchXkcGenerator as BatchGenerator;
+use App\Admin\Actions\Channel\ToolCreator;
+use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
-use App\Models\ExportList;
-use App\Tools\Exporter;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 
-class ChannelXmlController extends AdminController
+class XkiController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = "节目单 Xml 文件列表";
+    protected $title = "【 星空国际 】节目单";
 
     protected $description = [
-                'index'  => "查看和生成节目单 EPG 播出数据",
+                'index'  => "查看和编辑每日节目单数据",
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
     ];
+
+    public function preview($air_date, Content $content)
+    {
+        $model = Channel::where('name', 'xki')->where('air_date', $air_date)->first();
+
+        $data = $model->programs()->get();
+        $color = 'danger';
+          
+        return $content->title(__('Preview EPG Content'))->description(__(' '))
+        ->body(view('admin.epg.xki', compact('data', 'model', 'color')));
+    }
 
     /**
      * Make a grid builder.
@@ -39,16 +54,18 @@ class ChannelXmlController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->orderBy('air_date', 'desc');
+        $grid->model()->where('name', 'xki')->orderBy('air_date', 'desc');
 
-        $grid->column('id', __('ID'));
-        $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="#">'.$uuid.'</a>';
-        })->hide();
-        $grid->column('air_date', __('Air date'))->sortable();
-        //$grid->column('name', __('Name'));
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['warning','danger','success','danger']);
+            return '<a href="xkc/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+        });
+        $grid->column('air_date', __('Air date'))->display(function($air_date) {
+            return '<a href="xkc/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
+        });
+
+        $grid->column('start_end', __('StartEnd'));
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)
+        ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
@@ -57,40 +74,35 @@ class ChannelXmlController extends AdminController
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'));
         */
-        $grid->column('download', __('Download'))->display(function() {
-            $filename = $this->name.'_'.$this->air_date.'.xml';
-            return Storage::disk('public')->exists($filename) ? 
-                '<a href="'.Storage::disk('public')->url($filename).'" target="_blank">'.
-                $filename. ' ('.Exporter::filesize(Storage::disk('public')->size($filename)) . ')</a>':'';
+        $grid->column('updated_at', __('Updated at'));
+
+        $grid->actions(function ($actions) {
+            //$actions->add(new Generator);
+            $actions->add(new Clean);
         });
 
-        $grid->column('updated_at', __('Updated at'))->hide();
-
-        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
-            $actions->add(new ToolEpgList());
-            $actions->disableDelete();
+        $grid->batchActions(function ($actions) {
+            //$actions->add(new BatchGenerator());
+            $actions->add(new BatchClean);
         });
 
         $grid->filter(function(Grid\Filter $filter){
-            $filter->column(6, function (Grid\Filter $filter) {
-                $filter->in('name', __('Group'))->checkbox(Channel::GROUPS);
+
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('uuid', __('Uuid'));
                 $filter->date('air_date', __('Air date'));
             });
-            $filter->column(6, function (Grid\Filter $filter) {
-                $filter->equal('uuid', __('Uuid'));
-            });
-            
-        });
-
-        $grid->tools(function (Grid\Tools $tools) {
-            //$tools->disableBatchActions();
             
         });
 
         $grid->disableCreateButton();
-        //$grid->disableBatchActions();
-    
-        $grid->disableActions();
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new ToolCreator('xki'));
+            $tools->append(new BatchAudit);
+            $tools->append(new ToolExporter('xki'));
+            $tools->append(new ToolGenerator('xki'));
+        });
 
         return $grid;
     }
@@ -108,7 +120,7 @@ class ChannelXmlController extends AdminController
         $show->field('id', __('Id'));
         $show->field('uuid', __('Uuid'));
         $show->field('air_date', __('Air date'));
-        $show->field('name', __('Name'));
+        $show->field('name', __('Group'));
         $show->field('status', __('Status'))->using(Channel::STATUS);
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
@@ -131,17 +143,17 @@ class ChannelXmlController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->hidden('name', __('Name'))->default('channelv');
-        $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
+        $form->hidden('name', __('Name'))->default('xki');
+        $form->display('uuid', __('Uuid'))->default('自动生成');
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
-        $form->text('version', __('Version'))->default('1')->required();
+        $form->display('version', __('Version'))->default('1');
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
         $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
         $form->date('audit_date', __('Audit date'));
-        $form->text('comment', __('Comment'));
+        $form->textarea('comment', __('Comment'));
 
         $form->date('distribution_date', __('Distribution date'));
 
@@ -153,9 +165,10 @@ class ChannelXmlController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
 
-                //$form->name = 'channelv';
+                $form->uuid = (string) Str::uuid();
+                $form->version = 1;
     
-                if(Channel::where('air_date', $form->air_date)->exists())
+                if(Channel::where('air_date', $form->air_date)->where('name', 'xkc')->exists())
                 {
                     return back()->with(compact('error'));
                 }
@@ -167,7 +180,7 @@ class ChannelXmlController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 节目单已存在。',
                 ]);
     
-                if(Channel::where('air_date', $form->air_date)->where('id','<>',$form->model()->id)->exists())
+                if(Channel::where('air_date', $form->air_date)->where('name', 'xkc')->where('id','<>',$form->model()->id)->exists())
                 {
                     return back()->with(compact('error'));
                 }

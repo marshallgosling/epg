@@ -264,22 +264,25 @@
                     
                     for(var i=0;i<list.length;i++)
                     {
-                        newList[i] = dataList[list[i].id];
+                        if(dataList[i].sort != list[i].id) {
+                            dataList[i].sort = list[i].id;
+                            dataList[i].haschanged = 1;
+                        }
                     }
                     action = "sort";
                 }
                 else {
                     action = "modify";
-                    newList = dataList;     
+                    //newList = dataList;     
                 }
                 
                 $.ajax({
                     method: 'post',
                     url: '/admin/template/xkv/data/{!! $model->id !!}/save',
                     data: {
-                        data: JSON.stringify(newList),
+                        data: JSON.stringify(dataList),
                         action: action,
-                        deleted: JSON.stringify(deletedItem),
+                        //deleted: JSON.stringify(deletedItem),
                         _token: LA.token
                     },
                     success: function (data) {
@@ -523,6 +526,7 @@
     {
         templist = [];
         $('.dd-item').on('mousedown', function(e) {
+            if(sortEnabled) return;
             e.preventDefault();
             let idx = parseInt($(this).data('id'));
             startmove = true;
@@ -531,6 +535,7 @@
             
         });
         $('.dd-item').on('mouseenter', function(e) {
+            if(sortEnabled) return;
             if(startmove) {
                 var idx = parseInt($(this).data('id'));
                 if(templist.indexOf(idx) == -1) {

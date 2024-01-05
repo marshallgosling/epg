@@ -2,14 +2,14 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\Channel\XkcGeneratorJob;
+use App\Jobs\Channel\XkiGeneratorJob;
 use App\Models\Channel;
-use App\Tools\Generator\XkcGenerator;
+use App\Tools\Generator\XkiGenerator;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
 
-class BatchXkcGenerator extends BatchAction
+class BatchXkiGenerator extends BatchAction
 {
     public $name = '批量生成编单';
 
@@ -17,7 +17,7 @@ class BatchXkcGenerator extends BatchAction
     {
         //return $this->response()->success(__('Generator closed.'))->refresh();
 
-        if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+        if(Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
         {
             return $this->response()->error(__('节目单自动生成工具遇到错误，需要人工干预.'))->refresh();
         }
@@ -40,7 +40,7 @@ class BatchXkcGenerator extends BatchAction
             
         }
 
-        XkcGeneratorJob::dispatch($group)->onQueue('xkc');
+        XkiGeneratorJob::dispatch($group)->onQueue('xki');
         
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

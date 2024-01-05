@@ -412,5 +412,8 @@ class Exporter
         return $json;
     }
 
-
+    public static function filesize($bytes)
+    {
+        return floor($bytes / 1024) .'KB';
+    }
 }

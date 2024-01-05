@@ -17,6 +17,7 @@ class Material extends Model
         'name',
         'unique_no',
         'category',
+        'channel',
         'duration',
         'size',
         'frames',

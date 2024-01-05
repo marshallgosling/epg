@@ -99,9 +99,10 @@ HTML;
         $channels = Statistic::countChannelXml();
         $audit = Statistic::countAudit();
         
-        foreach(['xkv','xkc'] as $k) {
+        foreach(['xkv','xkc','xki'] as $k) {
           if(!array_key_exists($k, $channels)) $channels[$k] = 0;
           if(!array_key_exists($k, $audit)) $audit[$k] = 0;
+          if(!array_key_exists($k, $templates)) $templates[$k] = 0;
         }
 
         $channels =[
@@ -118,10 +119,10 @@ HTML;
             '已审核编单 <span class="badge">'.$audit['xkc'].'</span>' => admin_url('/channel/xkc'),
           ],
           '频道 星空国际' => [
-            '节目库' => '#',
-            '模版库' => '#',
-            '编单列表' => '#',
-            '已审核编单' => '#'
+            '节目库内容数量 <span class="badge">'.Statistic::countRecord2().'</span>' => admin_url('/media/record2'),
+            '模版库数量 <span class="badge">'.$templates['xki'].'</span>' => admin_url('/template/xki'),
+            '编单数量 <span class="badge">'.$channels['xki'].'</span>' => admin_url('/channel/xki'),
+            '已审核编单 <span class="badge">'.$audit['xki'].'</span>' => admin_url('/channel/xki'),
           ]
         ];
 
@@ -134,7 +135,7 @@ HTML;
         $envs = [
             ['name' => 'PHP version',       'value' => 'PHP/'.PHP_VERSION],
             ['name' => 'Laravel version',   'value' => app()->version()],
-            ['name' => 'Laravel Admin', 'value' => \Encore\Admin\Admin::VERSION],
+            ['name' => 'Laravel Admin',     'value' => \Encore\Admin\Admin::VERSION],
             ['name' => 'Server',            'value' => Arr::get($_SERVER, 'SERVER_SOFTWARE')],
             ['name' => 'Cache driver',      'value' => config('cache.default')],
             ['name' => 'Session driver',    'value' => config('session.driver')],

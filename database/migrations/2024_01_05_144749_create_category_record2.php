@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoryProgram extends Migration
+class CreateCategoryRecord2 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCategoryProgram extends Migration
      */
     public function up()
     {
-        Schema::create('category_program', function (Blueprint $table) {
+        Schema::create('category_record2', function (Blueprint $table) {
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('record_id');
             $table->unsignedTinyInteger('type')->comment('类型')->default(0);
@@ -28,6 +28,6 @@ class CreateCategoryProgram extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('category_program');
+        Schema::dropIfExists('category_record2');
     }
 }

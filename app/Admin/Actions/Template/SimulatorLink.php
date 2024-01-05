@@ -11,14 +11,20 @@ class SimulatorLink extends Action
 
     public $group = 'xkc';
 
+    public function __construct($group='')
+    {
+        $this->group = $group;
+        parent::__construct();
+    }
+
     public function href()
     {
-        return admin_url('/template/simulator');
+        return admin_url('/template/simulator/'.$this->group);
     }
 
     public function handle()
     {
-        return $this->response()->redirect(admin_url('/template/simulator'));
+        return $this->response()->redirect(admin_url('/template/simulator/'.$this->group));
     }
 
     public function html()
