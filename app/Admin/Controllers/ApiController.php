@@ -87,7 +87,7 @@ class ApiController extends Controller
             
         return DB::table('program')->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
             ->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
-            ->paginate(15);
+            ->orderBy('seconds', 'desc')->paginate(15);
     }
 
     public function category(Request $request) {

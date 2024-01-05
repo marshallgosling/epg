@@ -16,7 +16,7 @@ class Program extends Model
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',
         'album','artist','co_artist', 'duration',
-        'company', 'air_date', 'product_date', 
+        'company', 'air_date', 'product_date', 'seconds',
         'genre', 'gender','lang','mood','tempo','energy', 'black'
     ];
 
