@@ -45,6 +45,14 @@ class test extends Command
             $words = explode("\t", $line);
             $p = Record::where('name', $words[0])->first();
             if($p) {
+                $p->name2 = $words[2];
+                $cates = explode(' ', $words[1]);
+                foreach($cates as $c)
+                {
+                    $p->category[] = $this->parseTag($c);
+                };
+                $p->save();
+
                 print_r($p->toArray());
                 break;
             }
@@ -724,6 +732,15 @@ YES一族	劇情	Fruit Punch	YES一族(菜鳥大亨)	92min
 最佳拍档之千里救差婆	喜劇	Aces Go Places IV	最佳拍檔之千里救差婆	85min
 EOF;
         return explode(PHP_EOL, $str);
+    }
+
+
+    private function parseTag($w)
+    {
+        $tags = [
+            '动作'=> 'action','喜劇'=> 'comedy','劇情'=> 'story','恐怖'=> 'horror','靈幻'=> 'fantacy', '爱情'=>'romance'
+        ];
+        return $tags[$w];
     }
     
 }
