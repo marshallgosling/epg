@@ -214,7 +214,7 @@ class XkiController extends AdminController
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->text('comment', __('Comment'));
 
-        $form->hidden('group_id', __('Group'))->default('xkc');
+        $form->hidden('group_id', __('Group'))->default($this->group);
         $form->hidden('end_at', __('End at'));
 
         $form->saving(function(Form $form) {

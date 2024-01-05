@@ -24,6 +24,8 @@ class XkvController extends AdminController
      */
     protected $title = '【 XKV 】模版';
 
+    private $group = 'xkv';
+
     /**
      * Make a grid builder.
      *
@@ -33,7 +35,7 @@ class XkvController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->where('group_id', 'xkv')->orderBy('sort', 'asc');
+        $grid->model()->where('group_id', $this->group)->orderBy('sort', 'asc');
  
         $grid->column('name', __('Name'))->display(function($name) {
             return '<a href="xkv/programs?template_id='.$this->id.'">'.$name.'</a>'; 
@@ -127,7 +129,7 @@ class XkvController extends AdminController
 
         $form->number('sort', __('Sort'))->min(0)->default(0);
         $form->text('comment', __('Comment'));
-        $form->hidden('group_id', __('Group'))->default('xkv');
+        $form->hidden('group_id', __('Group'))->default($this->group);
         $form->hidden('end_at', __('End at'));
         
         $form->saving(function(Form $form) {
