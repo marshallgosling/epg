@@ -165,7 +165,7 @@ class XkiController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             //$tools->disableBatchActions();
-            $tools->append(new SimulatorLink);
+            $tools->append(new SimulatorLink('xki'));
         });
 
         return $grid;

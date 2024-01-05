@@ -165,7 +165,7 @@ class XkcController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             //$tools->disableBatchActions();
-            $tools->append(new SimulatorLink);
+            $tools->append(new SimulatorLink('xkc'));
         });
 
         return $grid;
