@@ -16,7 +16,7 @@ class CreateCategoryRecord extends Migration
         Schema::create('category_record', function (Blueprint $table) {
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('record_id');
-            $table->unsignedTinyInteger('type')->comment('类型');
+            $table->unsignedTinyInteger('type')->comment('类型')->default(0);
             $table->index(['category_id', 'record_id'], 'category_record');
         });
     }
