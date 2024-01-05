@@ -8,21 +8,21 @@ use App\Models\Template;
 use App\Models\ChannelPrograms;
 use App\Models\EpgJob;
 use App\Models\Notification;
-use App\Models\Record;
+use App\Models\Record2 as Record;
 use App\Models\Temp\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
-use App\Tools\Simulator\XkcSimulator;
+use App\Tools\Simulator\XkiSimulator;
 use Illuminate\Support\Facades\Storage;
 
-class NewGenerator
+class XkiGenerator
 {
     use LoggerTrait;
 
-    public const STALL_FILE = "xkc_stall.txt";
+    public const STALL_FILE = "xki_stall.txt";
 
     private $channels;
     private $templates;
@@ -32,7 +32,7 @@ class NewGenerator
 
     public $errors = [];
     
-    public function __construct($group)
+    public function __construct($group='xki')
     {
         $this->log_channel = 'channel';
         $this->group = $group;
@@ -44,7 +44,7 @@ class NewGenerator
     public function test()
     {
         $days = (int)config('SIMULATOR_DAYS', 14);
-        $simulator = new XkcSimulator($this->group, $days, $this->channels);
+        $simulator = new XkiSimulator($this->group, $days, $this->channels);
         //$simulator->saveTemplateState();
         $simulator->handle();
 
@@ -69,7 +69,7 @@ class NewGenerator
         $job = new EpgJob;
         $job->name = $name;
         $job->file = $file;
-        $job->group_id = 'xkc';
+        $job->group_id = 'xki';
         $job->save();
         Storage::put($file, json_encode($data));
 
@@ -84,7 +84,7 @@ class NewGenerator
         $channels = $this->channels;
         if(!$channels) return false;
         
-        $simulator = new XkcSimulator($this->group, $days, $channels);
+        $simulator = new XkiSimulator($this->group, $days, $channels);
         $simulator->saveTemplateState();
         $data = $simulator->handle();
 
@@ -95,7 +95,7 @@ class NewGenerator
             return false;
         }
 
-        $this->saveJob($data, "xkc_generator_{$days}_".date('YmdHis').'.json', $channels);
+        $this->saveJob($data, "xki_generator_{$days}_".date('YmdHis').'.json', $channels);
 
         $special = Template::where(['group_id'=>$this->group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         

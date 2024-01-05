@@ -17,7 +17,7 @@ use App\Tools\Notify;
 use App\Models\Notification;
 use App\Tools\Generator\XkvGenerator;
 
-class ProgramsJob implements ShouldQueue, ShouldBeUnique
+class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 

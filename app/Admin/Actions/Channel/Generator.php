@@ -2,7 +2,7 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\Channel\ProgramsJob;
+use App\Jobs\Channel\XkvGeneratorJob;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use Encore\Admin\Actions\RowAction;
@@ -23,12 +23,12 @@ class Generator extends RowAction
         }
 
         if($model->name == 'xkc') return $this->response()->warning(__('Generator closed.'))->refresh();
-
-        
+        if($model->name == 'xki') return $this->response()->warning(__('Generator closed.'))->refresh();
+     
         $model->status = Channel::STATUS_WAITING;
         $model->save();
 
-        ProgramsJob::dispatch($model->uuid)->onQueue('xkv');
+        XkvGeneratorJob::dispatch($model->uuid)->onQueue('xkv');
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

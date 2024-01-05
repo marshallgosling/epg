@@ -2,8 +2,8 @@
 
 namespace App\Admin\Actions\Channel;
 
-use App\Jobs\Channel\ProgramsJob;
-use App\Jobs\Channel\RecordJob;
+use App\Jobs\Channel\XkvGeneratorJob;
+use App\Jobs\Channel\XkcGeneratorJob;
 use App\Models\Channel;
 use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\Storage;
@@ -67,9 +67,9 @@ class ToolGenerator extends Action
             }
         
             if($group == 'xkc')
-                RecordJob::dispatch($group)->onQueue('xkc');
+                XkcGeneratorJob::dispatch($group)->onQueue('xkc');
             else
-                ProgramsJob::dispatch($group)->onQueue('xkv');
+                XkvGeneratorJob::dispatch($group)->onQueue('xkv');
         }
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
