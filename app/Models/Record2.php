@@ -12,11 +12,11 @@ use Illuminate\Support\Str;
 use App\Models\Temp\TemplateRecords;
 use Encore\Admin\Facades\Admin;
 
-class Record extends Model
+class Record2 extends Model
 {
     use HasFactory;
 
-    protected $table = 'records';
+    protected $table = 'record2';
 
     public const CATEGORIES = ['movie'=>'电影','CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧','docu'=>'纪实'];
     public const XKC = ['CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧'];
@@ -64,7 +64,7 @@ class Record extends Model
 
     public static function findRandom($key, $maxduration)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('records.unique_no')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('records.category','like',"%$key%")->pluck('unique_no')->toArray();
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('record2.unique_no')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('record2.category','like',"%$key%")->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   
 
@@ -72,9 +72,9 @@ class Record extends Model
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
-        $program = Record::where('records.unique_no', $id)
-            ->join('material', 'records.unique_no', '=', 'material.unique_no')
-            ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
+        $program = Record2::where('record2.unique_no', $id)
+            ->join('material', 'record2.unique_no', '=', 'material.unique_no')
+            ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.black", "material.duration", "material.frames")->first();
 
         $seconds = ChannelGenerator::parseDuration($program->duration);
         if($seconds > $maxduration) return self::findRandom($key, $maxduration);
@@ -149,7 +149,7 @@ class Record extends Model
     public static function findNextEpisode($episodes, $unique_no='', $category='')
     {
         //if($episodes == null) return self::findRandomEpisode($category);
-        $list = Record::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
+        $list = Record2::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         self::$islast = false;
         foreach($list as $idx=>$l)
         {
@@ -170,7 +170,7 @@ class Record extends Model
 
     public static function findRandomEpisode($c, $maxduration)
     {
-        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c%")->get()->toArray();
+        $list = DB::table('record2')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c%")->get()->toArray();
 
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
@@ -185,10 +185,10 @@ class Record extends Model
         if(self::$bumper) return;
 
         self::$bumper = [];
-        self::$bumper[] = Record::where('category', $category)->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('category', $category)->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('category', $category)->where('seconds','>', 300)->where('seconds','<=', 600)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('category', $category)->where('seconds','>', 600)->where('seconds','<=', 1200)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category)->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category)->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category)->where('seconds','>', 300)->where('seconds','<=', 600)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category)->where('seconds','>', 600)->where('seconds','<=', 1200)->select('unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function findBumper($key) {
@@ -196,23 +196,23 @@ class Record extends Model
         $id = Arr::random(self::$bumper[$key]);
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
 
-        $program = Record::where('records.unique_no', $id)
-            ->join('material', 'records.unique_no', '=', 'material.unique_no')
-            ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
+        $program = Record2::where('record2.unique_no', $id)
+            ->join('material', 'record2.unique_no', '=', 'material.unique_no')
+            ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findBumper($key);
         else return $program;
     }
 
     public static function findPR($category) {
-        if(!self::$pr) self::$pr = Record::where('category', $category)->select('unique_no')->pluck('unique_no')->toArray();
+        if(!self::$pr) self::$pr = Record2::where('category', $category)->select('unique_no')->pluck('unique_no')->toArray();
 
         self::$pr = Arr::shuffle(self::$pr);
         $id = Arr::random(self::$pr);
 
-        $program = Record::where('records.unique_no', $id)
-        ->join('material', 'records.unique_no', '=', 'material.unique_no')
-        ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
+        $program = Record2::where('record2.unique_no', $id)
+        ->join('material', 'record2.unique_no', '=', 'material.unique_no')
+        ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findPR($category);
         else return $program;
@@ -220,9 +220,9 @@ class Record extends Model
 
     public static function findUnique($no)
     {
-        return Record::where('records.unique_no', $no)
-            ->join('material', 'records.unique_no', '=', 'material.unique_no')
-            ->select("records.unique_no","records.name","records.episodes","material.duration","material.frames")->first();
+        return Record2::where('record2.unique_no', $no)
+            ->join('material', 'record2.unique_no', '=', 'material.unique_no')
+            ->select("record2.unique_no","record2.name","record2.episodes","material.duration","material.frames")->first();
     }
 
     public static function getTotal($key) {

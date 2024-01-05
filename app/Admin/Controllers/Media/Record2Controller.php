@@ -4,7 +4,7 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Program\BatchModify;
 use App\Events\CategoryRelationEvent;
-use App\Models\Record;
+use App\Models\Record2 as Record;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -13,17 +13,17 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
-class RecordController extends AdminController
+class Record2Controller extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '星空中国 节目库管理';
+    protected $title = '星空国际 节目库管理';
 
     protected $description = [
-        'index'  => "星空中国 节目库数据",
+        'index'  => "星空国际 节目库数据",
 //        'show'   => 'Show',
 //        'edit'   => 'Edit',
 //        'create' => 'Create',

@@ -22,15 +22,15 @@ use Encore\Admin\Layout\Content;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
 
-class XkcController extends AdminController
+class XkiController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '【 星空中国 】模版';
-    private $group = 'xkc';
+    protected $title = '【 星空国际 】模版';
+    private $group = 'xki';
 
     public function preview(Content $content)
     {
@@ -93,10 +93,10 @@ class XkcController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc');
+        $grid->model()->with('records')->where('group_id', $this->group)->orderBy('sort', 'asc');
         //$grid->column('id', __('Id'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return '<a href="xkc/programs?template_id='.$this->id.'">'.$name.'</a>'; 
+            return '<a href="xki/programs?template_id='.$this->id.'">'.$name.'</a>'; 
         });
         $grid->column('ex', __(" "))->display(function() {
             return "编排";
@@ -230,9 +230,9 @@ class XkcController extends AdminController
     }
 
     public function reset() {
-        $templates = Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
         $data = json_encode($templates->toArray());
-        Storage::disk('data')->put('xkc_reset_template_'.date('YmdHis').'.json', $data);
+        Storage::disk('data')->put('xki_reset_template_'.date('YmdHis').'.json', $data);
 
         foreach($templates as $t)
         {
@@ -257,7 +257,7 @@ class XkcController extends AdminController
 
     public function restore()
     {
-        $templates = \App\Models\Temp\Template::with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc')->get();
+        $templates = \App\Models\Temp\Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
         $data = json_encode($templates->toArray());
         //Storage::disk('data')->put('xkc_reset_template_'.date('YmdHis').'.json', $data);
 

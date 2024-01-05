@@ -22,9 +22,13 @@ class BatchImportor extends BatchAction
             $class = '\App\Models\Program';
             $relation = 'program';
         }
-        else {
+        else if($channel == 'xkc') {
             $class = '\App\Models\Record';
             $relation = 'record';
+        }
+        else  {
+            $class = '\App\Models\Record2';
+            $relation = 'record2';
         }
         
         foreach($models as $model)
@@ -34,8 +38,7 @@ class BatchImportor extends BatchAction
             
             if(in_array($model->category, ['CanXin', 'drama', 'movie','Entertainm','cartoon']))
             {
-                $class = '\App\Models\Record';
-                $program = new $class();
+
                 $program->episodes = $model->group;
                 if(preg_match('/(\d+)$/', $model->name, $matches))
                 {
