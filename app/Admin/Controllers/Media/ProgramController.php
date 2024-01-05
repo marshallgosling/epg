@@ -59,7 +59,7 @@ class ProgramController extends AdminController
         $grid->column('category', __('Category'))->display(function($artist) {
             $category = array_map(function ($c) {
                 $t = Category::findCategory($c);
-                return '<span class="label label-info" title="'.$t.'" data-toggle="tooltip" data-placement="top">'.$c.'</span>';
+                return '<span class="label label-info" title="'.$c.'" data-toggle="tooltip" data-placement="top">'.$t.'</span>';
             }, $this->category);
 
             $black = $this->black ? "<span class='label label-danger'>黑名单</span>" : '';
