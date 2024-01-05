@@ -102,6 +102,7 @@ HTML;
         foreach(['xkv','xkc','xki'] as $k) {
           if(!array_key_exists($k, $channels)) $channels[$k] = 0;
           if(!array_key_exists($k, $audit)) $audit[$k] = 0;
+          if(!array_key_exists($k, $templates)) $templates[$k] = 0;
         }
 
         $channels =[
