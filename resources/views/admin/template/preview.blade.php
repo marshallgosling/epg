@@ -75,7 +75,7 @@
                 
                 </div>
                 <div class="btn-group">
-                <a class="btn btn-success btn-sm" title="模拟编单测试" href="../simulator"><i class="fa fa-android"></i><span class="hidden-xs"> 模拟编单测试</span></a>
+                <a class="btn btn-success btn-sm" title="模拟编单测试" href="../simulator/{{$group}}"><i class="fa fa-android"></i><span class="hidden-xs"> 模拟编单测试</span></a>
                 
                 </div>
                 <div class="btn-group">
