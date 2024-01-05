@@ -47,14 +47,16 @@ class test extends Command
             if($p) {
                 $p->name2 = $words[2];
                 $cates = explode(' ', $words[1]);
+                $categorys = $p->category;
                 foreach($cates as $c)
                 {
-                    $p->category[] = $this->parseTag($c);
-                };
+                    $categorys[] = $this->parseTag($c);
+                }
+                $p->category = $categorys;
                 $p->save();
 
-                print_r($p->toArray());
-                break;
+                //print_r($p->toArray());
+                //break;
             }
             
         }
