@@ -45,8 +45,9 @@ class test extends Command
             $words = explode("\t", $line);
             $p = Record::where('name', $words[0])->first();
             if($p) {
+                if($p->name2 == $words[2]) continue;
                 $p->name2 = $words[2];
-                $cates = explode(' ', $words[1]);
+                $cates = explode(' ', str_replace('/',' ', $words[1]));
                 $categorys = $p->category;
                 foreach($cates as $c)
                 {
@@ -740,7 +741,9 @@ EOF;
     private function parseTag($w)
     {
         $tags = [
-            '动作'=> 'action','喜劇'=> 'comedy','劇情'=> 'story','恐怖'=> 'horror','靈幻'=> 'fantacy', '爱情'=>'romance'
+            '动作'=> 'action','喜劇'=> 'comedy','劇情'=> 'story','恐怖'=> 'horror',
+            '靈幻'=> 'fantacy', '爱情'=>'romance','動作'=>'action','惊悚'=>'thriller',
+            '武俠'=>'kongfu','赌博'=>'gambling'
         ];
         return $tags[$w];
     }
