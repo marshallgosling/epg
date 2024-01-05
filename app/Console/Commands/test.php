@@ -51,7 +51,9 @@ class test extends Command
                 $categorys = $p->category;
                 foreach($cates as $c)
                 {
-                    $categorys[] = $this->parseTag($c);
+                    $cc = $this->parseTag($c);
+                    if($cc)$categorys[] = $cc;
+                    
                 }
                 $p->category = $categorys;
                 $p->save();
@@ -745,7 +747,7 @@ EOF;
             '靈幻'=> 'fantacy', '爱情'=>'romance','動作'=>'action','惊悚'=>'thriller',
             '武俠'=>'kongfu','赌博'=>'gambling'
         ];
-        return $tags[$w];
+        return $w?$tags[$w]:'';
     }
     
 }
