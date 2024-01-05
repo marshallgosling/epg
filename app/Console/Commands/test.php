@@ -747,7 +747,7 @@ EOF;
             '靈幻'=> 'fantacy', '爱情'=>'romance','動作'=>'action','惊悚'=>'thriller',
             '武俠'=>'kongfu','赌博'=>'gambling'
         ];
-        return $w?$tags[$w]:'';
+        return array_key_exists($w, $tags)?$tags[$w]:false;
     }
     
 }
