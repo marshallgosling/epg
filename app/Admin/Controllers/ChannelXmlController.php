@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Channel\ToolEpgList;
 use App\Models\Channel;
 use App\Models\ExportList;
+use App\Tools\Exporter;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -57,8 +58,10 @@ class ChannelXmlController extends AdminController
         $grid->column('created_at', __('Created at'));
         */
         $grid->column('download', __('Download'))->display(function() {
-            return Storage::disk('public')->exists($this->name.'_'.$this->air_date.'.xml') ? 
-                '<a href="'.Storage::disk('public')->url($this->name.'_'.$this->air_date.'.xml').'" target="_blank">下载</a>':'';
+            $filename = $this->name.'_'.$this->air_date.'.xml';
+            return Storage::disk('public')->exists($filename) ? 
+                '<a href="'.Storage::disk('public')->url($filename).'" target="_blank">'.
+                $filename. ' ('.Exporter::filesize(Storage::disk('public')->size($filename)) . ')</a>':'';
         });
 
         $grid->column('updated_at', __('Updated at'))->hide();
