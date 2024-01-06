@@ -40,7 +40,7 @@ class HomeController extends Controller
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
-<div>
+<div style="height:390px">
   <canvas id="myChart"></canvas>
 </div>
 
