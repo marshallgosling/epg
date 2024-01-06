@@ -12,7 +12,10 @@ use Illuminate\Support\Arr;
 
 class HomeController extends Controller
 {
-    public function index(Content $content)
+  
+  public static const VERSION = '1.7';
+  
+  public function index(Content $content)
     {
         return $content
             ->title('欢迎使用编单及节目管理系统')
@@ -133,9 +136,9 @@ HTML;
     public static function environment()
     {
         $envs = [
-            ['name' => 'PHP version',       'value' => 'PHP/'.PHP_VERSION],
+            ['name' => 'App version',       'value' => self::VERSION],
             ['name' => 'Laravel version',   'value' => app()->version()],
-            ['name' => 'Laravel Admin',     'value' => \Encore\Admin\Admin::VERSION],
+            ['name' => 'Admin version',     'value' => \Encore\Admin\Admin::VERSION],
             ['name' => 'Server',            'value' => Arr::get($_SERVER, 'SERVER_SOFTWARE')],
             ['name' => 'Cache driver',      'value' => config('cache.default')],
             ['name' => 'Session driver',    'value' => config('session.driver')],
