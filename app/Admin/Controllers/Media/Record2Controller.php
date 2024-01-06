@@ -42,9 +42,9 @@ class Record2Controller extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
         $grid->column('name', __('Name'))->display(function ($name) {
-            if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
-            else $name2 = '';
-            return $name . $name2;
+            //if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
+            //else $name2 = '';
+            return $this->name2 ? $this->name2 : $name;
         });
         $grid->column('name2', __('English'))->hide();
         $grid->column('category', __('Category'))->display(function($category) {
