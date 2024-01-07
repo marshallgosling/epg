@@ -16,7 +16,7 @@ class fileTool extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:file {path?} {tags?}';
+    protected $signature = 'tools:file {action?} {path?} {tags?}';
 
     /**
      * The console command description.
@@ -41,6 +41,31 @@ class fileTool extends Command
      * @return int
      */
     public function handle()
+    {
+        $action = $this->argument('action') ?? "xml";
+        
+
+        if(in_array($action, ['import', 'clean', 'daily']))
+            $this->$action();
+        
+
+        //Material::upsert($items, ['unique_no'], ['frames', 'group', 'category','duration','md5','name']);
+        //Material::insert($items);
+        
+        return 0;
+    }
+
+    private function daily()
+    {
+        // Copy xml files to CERTAIN folder
+    }
+
+    private function clean()
+    {
+        // Clean xml files 
+    }
+
+    private function import()
     {
         $path = $this->argument('path') ?? "xml";
         $tags = $this->argument('tags') ?? "";
@@ -126,12 +151,6 @@ class fileTool extends Command
             else {
                 $this->error("File name:".$f);
             }
-
         }
-
-        //Material::upsert($items, ['unique_no'], ['frames', 'group', 'category','duration','md5','name']);
-        //Material::insert($items);
-        
-        return 0;
     }
 }
