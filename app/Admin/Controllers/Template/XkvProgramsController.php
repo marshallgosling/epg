@@ -299,7 +299,6 @@ TMP;
 
         foreach($list as $item)
         {
-            
             $template =  TemplatePrograms::find($item['id']);
             $template->sort = $item['sort'];
             if($template->isDirty())

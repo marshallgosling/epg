@@ -261,13 +261,14 @@
                 var newList = [];
                 if(sortChanged) {
                     var list = $('#tree-programs').nestable('serialize');
-                    
+                    console.table(list);
                     for(var i=0;i<list.length;i++)
                     {
-                        if(dataList[i].sort != list[i].id) {
-                            dataList[i].sort = list[i].id;
-                            dataList[i].haschanged = 1;
-                        }
+                        // if(dataList[i].sort != list[i].id) {
+                        //     dataList[i].sort = list[i].id;
+                        //     dataList[i].haschanged = 1;
+                        // }
+                        dataList[i].sort = list[i].id;
                     }
                     action = "sort";
                 }
