@@ -268,7 +268,7 @@
                         //     dataList[i].sort = list[i].id;
                         //     dataList[i].haschanged = 1;
                         // }
-                        dataList[i].sort = list[i].id;
+                        dataList[list[i].id].sort = i;
                     }
                     action = "sort";
                 }
