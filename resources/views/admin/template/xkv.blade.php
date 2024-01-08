@@ -277,6 +277,7 @@
                     data: {
                         data: JSON.stringify(dataList),
                         action: action,
+                        deleted: JSON.stringify(deletedItem),
                         _token: LA.token
                     },
                     success: function (data) {

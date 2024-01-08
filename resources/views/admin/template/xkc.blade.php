@@ -261,26 +261,25 @@
             } 
             else {
                 var action = "";
-                var newList = [];
                 if(sortChanged) {
                     var list = $('#tree-programs').nestable('serialize');
                     
                     for(var i=0;i<list.length;i++)
                     {
-                        newList[i] = dataList[list[i].id];
+                        dataList[list[i].id].sort = i;
                     }
                     action = "sort";
                 }
                 else {
                     action = "modify";
-                    newList = dataList;     
+   
                 }
                 
                 $.ajax({
                     method: 'post',
                     url: '/admin/template/xkc/data/{!! $model->id !!}/save',
                     data: {
-                        data: JSON.stringify(newList),
+                        data: JSON.stringify(dataList),
                         action: action,
                         deleted: JSON.stringify(deletedItem),
                         _token: LA.token
