@@ -258,23 +258,17 @@
             } 
             else {
                 var action = "";
-                var newList = [];
+
                 if(sortChanged) {
                     var list = $('#tree-programs').nestable('serialize');
-                    console.table(list);
                     for(var i=0;i<list.length;i++)
                     {
-                        // if(dataList[i].sort != list[i].id) {
-                        //     dataList[i].sort = list[i].id;
-                        //     dataList[i].haschanged = 1;
-                        // }
                         dataList[list[i].id].sort = i;
                     }
                     action = "sort";
                 }
                 else {
-                    action = "modify";
-                    //newList = dataList;     
+                    action = "modify";    
                 }
                 
                 $.ajax({
@@ -283,7 +277,6 @@
                     data: {
                         data: JSON.stringify(dataList),
                         action: action,
-                        //deleted: JSON.stringify(deletedItem),
                         _token: LA.token
                     },
                     success: function (data) {
