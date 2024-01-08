@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace App\Tools\Plan;
 
 use App\Models\Category;
 use App\Models\Channel;
@@ -8,14 +8,13 @@ use App\Models\Plan;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\Notification;
-use App\Models\Program;
-use App\Models\Record;
 use App\Models\TemplatePrograms;
-use App\Models\Temp\TemplateRecords;
+use App\Models\Record;
+use App\Tools\LoggerTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ChannelPlan
+class ProgramPlan
 {
     use LoggerTrait;
 
@@ -45,7 +44,7 @@ class ChannelPlan
 
     public function loadPlans()
     {
-        $this->plans = Plan::where('group_id', $this->group)->where('status', Plan::STATUS_RUNNING)->get();
+        $this->plans = Plan::where(['group_id'=>$this->group,'status'=>Plan::STATUS_RUNNING,'type'=>TemplatePrograms::TYPE_STATIC])->get();
     }
 
     private function filterPlans()

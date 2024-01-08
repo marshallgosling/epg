@@ -40,7 +40,7 @@ class BatchXkiGenerator extends BatchAction
             
         }
 
-        XkiGeneratorJob::dispatch($group)->onQueue('xki');
+        XkiGeneratorJob::dispatch()->onQueue('xki');
         
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

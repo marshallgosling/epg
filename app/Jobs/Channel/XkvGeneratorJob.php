@@ -16,6 +16,7 @@ use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use App\Models\Notification;
 use App\Tools\Generator\XkvGenerator;
+use App\Tools\Plan\AdvertisePlan;
 
 class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 {
@@ -23,7 +24,7 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 
     // Channel UUID;
     private $uuid;
-    private $group = 'default';
+    private $group = 'xkv';
 
     /**
      * Create a new job instance.
@@ -49,8 +50,8 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        if($this->uuid == 'xkv') {
-            $channels = Channel::where(['name'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->get();
+        if($this->uuid == $this->group) {
+            $channels = Channel::where(['name'=>$this->group, 'status'=>Channel::STATUS_WAITING])->get();
         }
         else {
             $channel = Channel::where('uuid', $this->uuid)->first();
@@ -63,8 +64,11 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 
         $error = false;
 
-        $generator = new XkvGenerator('xkv');
+        $generator = ChannelGenerator::getGenerator($this->group);
         $generator->loadTemplate();
+
+        $planer = new AdvertisePlan($this->group);
+        $planer->loadPlans();
 
         foreach($channels as $channel)
         {
@@ -115,6 +119,8 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
                 $this->info("生成节目编单 {$channel->air_date} 数据成功. ");
 
                 ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
+
+                $planer->run($channel);
             }
         }
         if($error)

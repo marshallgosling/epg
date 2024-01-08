@@ -7,38 +7,21 @@ use App\Models\ChannelPrograms;
 use App\Models\Program;
 use App\Models\Temp\Template;
 use App\Models\Temp\TemplateRecords;
+use App\Tools\Generator\XkvGenerator;
+use App\Tools\Generator\XkcGenerator;
+use App\Tools\Generator\XkiGenerator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
 class ChannelGenerator
 {
-    use LoggerTrait;
-
-    private $channel;
-    private $templates;
-    private $daily;
-    private $weekends;
-    private $special;
-    private $group;
-    /**
-     * 按24小时累加的播出时间，格式为 timestamp ，输出为 H:i:s
-     */
-    private $air;
-
-    /**
-     * 统计一档节目的时长，更换新节目时重新计算
-     */
-    private $duration;
-
-    private $maxDuration = 0;
-
-    public $errors = [];
-    
-    public function __construct($group)
+ 
+    public static function getGenerator($group)
     {
-        $this->log_channel = 'channel';
-        $this->group = $group;
+        if($group == 'xkv') return new XkvGenerator($group);
+        if($group == 'xkc') return new XkcGenerator($group);
+        if($group == 'xki') return new XkiGenerator($group);
     }
 
     public static function makeCopyTemplate($group)
