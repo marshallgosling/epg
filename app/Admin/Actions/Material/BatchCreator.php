@@ -31,8 +31,9 @@ class BatchCreator extends Action
         $frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
         $code = 'XK'.Str::random(12);
 
-        for($ep=$st;$ep<=$total;$ep++)
+        for($i=0;$i<$total;$i++)
         {
+            $ep = $i+$st;
             $unique_no = Str::upper($code.$this->ep($ep));
             $name = $group.' '.$ep;
             Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames'));

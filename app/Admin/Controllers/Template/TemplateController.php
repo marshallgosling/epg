@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Template;
 
 use App\Admin\Actions\Template\BatchDisable;
 use App\Admin\Actions\Template\BatchEnable;
