@@ -169,7 +169,7 @@ class XkvProgramsController extends AdminController
             <span class="label label-labelstyle">categorytype</span></span> 
             <span style="display:inline-block;width:160px;"><small>{$cate}:</small>
             <a href="javascript:showSearchModal(idx);" class="dd-nodrag" title="">category</a></span>
-            <span style="display:inline-block;width:200px;"><small> {$name}:</small> name</span>
+            <span style="display:inline-block;width:320px;"><small> {$name}:</small> name</span>
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
                 <a href="javascript:showEditorModal(idx);" title="{$select}"><i class="fa fa-edit"></i></a>&nbsp;
