@@ -120,7 +120,7 @@ class XkiController extends AdminController
                 $items[] = compact('style', 'item');
             }
 
-            return new MyTable(['ID', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
+            return new MyTable(['ID', '别名', '标签', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';
