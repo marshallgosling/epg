@@ -38,7 +38,7 @@ class ApiController extends Controller
         return response()->json([
             'total' => $model->count(),
             //'sql' => $model->dump(),
-            'result'=> $model->select(DB::raw($sql))->orderByDesc('id')->offset($start)
+            'result'=> $model->select(DB::raw($sql))->orderByDesc('seconds')->offset($start)
                 ->limit($size)->get()->toArray()
             ]);      
 
@@ -72,7 +72,7 @@ class ApiController extends Controller
         return response()->json([
             'total' => $model->count(),
             //'sql' => $model->dump(),
-            'result'=> $model->select(DB::raw($sql))->orderByDesc('id')->offset($start)
+            'result'=> $model->select(DB::raw($sql))->orderByDesc('seconds')->offset($start)
                 ->limit($size)->get()->toArray()
             ]);      
 
