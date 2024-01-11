@@ -85,7 +85,7 @@
                         节目库
                     </span>
                     <select class="form-control library" id="library" data-value="record2">
-                        <option value="records">星空中国</option><option value="record2">星空国际</option><option value="programs">V China</option>
+                        <option value="records">星空中国</option><option value="record2">星空国际</option><option value="program">V China</option>
                     </select>
                     <span class="input-group-btn">
                         <button id="btnSearch" class="btn btn-info" type="button">搜索</button>

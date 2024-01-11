@@ -17,29 +17,28 @@ class ApiController extends Controller
     public function treePrograms(Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        //$o = (int)$request->get('o', 0);
+        $t = $request->get('t', 'program');
         $c = $request->get('c');
         $q = substr($q, 0, 20);
         $size = 20;$start = ($p-1)*$size;
 
         $model = DB::table('program');
-        // if($o) {
-        //     $model = $model->where('category', 'like', "%$q%");
-        // }
-        // else {
-        //     $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
-        // }
+
         if($q)
             $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
         if($c) {
             $model = $model->where('category', 'like', "%$c%");
         }
 
+        if($t == 'program')
+            $sql = 'id, unique_no, duration, name, category, artist, 1 as ep, black';
+        else
+            $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
 
         return response()->json([
             'total' => $model->count(),
             //'sql' => $model->dump(),
-            'result'=> $model->select(DB::raw('id, unique_no, duration, name, category, artist, black'))->orderByDesc('id')->offset($start)
+            'result'=> $model->select(DB::raw($sql))->orderByDesc('id')->offset($start)
                 ->limit($size)->get()->toArray()
             ]);      
 
