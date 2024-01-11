@@ -59,7 +59,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">栏目</span>
-                        <select class="form-control category" name="category" style="width:200px" >
+                        <select class="form-control category" id="category" style="width:200px" >
                         <option value=""></option>
                         @foreach($categories as $key=>$value)
                         <option value="{{$key}}">{{$value}}</option>

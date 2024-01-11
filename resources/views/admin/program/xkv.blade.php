@@ -69,7 +69,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">栏目</span>
-                        <select class="form-control category" name="category" style="width:200px" >
+                        <select class="form-control category" id="category" style="width:200px" >
                         <option value=""></option>
                         @foreach($categories as $key=>$value)
                         <option value="{{$key}}">{{$value}}</option>
@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <div class="input-group">
                     <span class="input-group-addon">关键字</span>
-                    <input type="text" class="form-control" style="width:240px" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                    <input type="text" class="form-control" style="width:240px" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
                     </div>
                 </div> 
                 <div class="form-group">
@@ -441,7 +441,7 @@
             {
                 duration += parseDuration(selectedItems[i].duration);
             }
-            $('#selectedSpan').html('已选择 '+selectedItems.length+' 个节目，共 '+formatTime(duration)+' &nbsp;');
+            $('#selectedSpan').html('已选择 '+selectedItems.length+' 个节目，共 '+formatDuration(duration)+' &nbsp;');
         }
         else {
             selectedItem = repo;
@@ -538,6 +538,17 @@
         a[0] = d.getHours() > 9 ? d.getHours().toString() : '0'+d.getHours().toString();
         a[1] = d.getMinutes() > 9 ? d.getMinutes().toString() : '0'+d.getMinutes().toString();
         a[2] = d.getSeconds() > 9 ? d.getSeconds().toString() : '0'+d.getSeconds().toString();
+        return a.join(':');
+    }
+
+    function formatDuration(seconds)
+    {
+        var h = Math.floor(seconds / 3600);
+        var m = Math.floor((seconds % 3600) / 60);
+        var s = seconds % 60;
+        a[0] = h > 9 ? h : '0'+h;
+        a[1] = m > 9 ? m : '0'+m;
+        a[2] = s > 9 ? s : '0'+s;
         return a.join(':');
     }
 
