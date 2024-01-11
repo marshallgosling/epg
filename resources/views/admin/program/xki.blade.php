@@ -1,14 +1,4 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xki/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
-    <div class="box-body fields-group">
-    
-                    <input type="hidden" name="data" value='' id="data">
-    </div>
-    
-            <input type="hidden" name="_token" value="{{@csrf_token()}}">
-</form>
-</div>
-<div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
@@ -64,17 +54,21 @@
       </div>
       <div class="modal-body">
         <div class="row">
-        <div class="col-md-4">
-                <div class="input-group">    
-                    <span class="input-group-addon">
-                        栏目
-                    </span>
-                    <input type="text" class="form-control" name="category" id="category" placeholder="请输入栏目">
-                    
+            <div class="col-md-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">栏目</span>
+                        <select class="form-control category" name="category" style="width:200px" >
+                        <option value=""></option>
+                        @foreach($categories as $key=>$value)
+                        <option value="{{$key}}">{{$value}}</option>
+                        @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">    
+                <div class="form-group">
+                    <div class="input-group">
                     <div class="input-group-btn">
                         <button id="modalBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="modalText">关键字</span> <span class="caret"></span></button>
                         <ul class="dropdown-menu">
@@ -82,16 +76,22 @@
                             <li><a href="javascript:changeModel('剧集名');">剧集名</a></li>
                         </ul>
                     </div><!-- /btn-group -->
-                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
-                    
-                </div>    
-            </div>
-            <div class="col-md-2">
-                <div class="input-group">
+                    <input type="text" class="form-control" style="width:240px" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="input-group">
+                    <span class="input-group-addon">
+                        节目库
+                    </span>
+                    <select class="form-control library" id="library" data-value="record2">
+                        <option value="records">星空中国</option><option value="record2">星空国际</option><option value="programs">V China</option>
+                    </select>
                     <span class="input-group-btn">
                         <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
                     </span>
-                </div>
+                    </div>
+                </div></form>
             </div>
         </div>
         <div class="row">
@@ -139,6 +139,11 @@
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
+        $(".category").select2({
+            placeholder: {"id":"","text":"请选择栏目"},
+            "allowClear":true
+        });
+        $(".library").select2();
         $('body').on('mouseup', function(e) {
             startmove = false;
             templist = [];
@@ -237,6 +242,7 @@
                     q: keyword,
                     c: $('#category').val(),
                     m: modal,
+                    t: $('#library').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -336,6 +342,7 @@
                     q: keyword,
                     c: $('#category').val(),
                     m: modal,
+                    t: $('#library').val(),
                     p: curPage
                 },
                 success: function (data) {

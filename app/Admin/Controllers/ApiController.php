@@ -29,7 +29,8 @@ class ApiController extends Controller
         // else {
         //     $model = $model->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%");
         // }
-        $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
+        if($q)
+            $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
         if($c) {
             $model = $model->where('category', 'like', "%$c%");
         }
@@ -47,29 +48,26 @@ class ApiController extends Controller
     public function records(Request $request) {
         $q = $request->get('q');
         $p = (int)$request->get('p', 1);
-        //$o = (int)$request->get('o', 0);
         $c = $request->get('c');
         $m = $request->get('m');
-        $size = 20;$start = ($p-1)*$size;
+        $t = $request->get('t', 'records');
+        $size = 20;
+        $start = ($p-1)*$size;
 
-        $model = DB::table('records');
-        $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
-        // if($o == 1) {
-            
-        // }
-        // else {
-        //     $model = DB::table('program');
-        //     $sql = 'id, unique_no, duration, name, category, artist, black';
-        // }
+        $model = DB::table($t);
+        if($t == 'program')
+            $sql = 'id, unique_no, duration, name, category, artist, 1 as ep, black';
+        else
+            $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
+
         if($c) {
             $model = $model->where('category', 'like', "%$c%");
         }
         if($m == '剧集名') {
             $model = $model->where('episodes', 'like', "$q");
         }
-        else {
+        if($q) {
             $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q");
-            
         }
 
         return response()->json([
