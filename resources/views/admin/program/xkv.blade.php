@@ -546,6 +546,7 @@
         var h = Math.floor(seconds / 3600);
         var m = Math.floor((seconds % 3600) / 60);
         var s = seconds % 60;
+        var a = [];
         a[0] = h > 9 ? h : '0'+h;
         a[1] = m > 9 ? m : '0'+m;
         a[2] = s > 9 ? s : '0'+s;
