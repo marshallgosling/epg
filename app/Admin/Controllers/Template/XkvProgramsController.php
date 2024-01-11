@@ -167,7 +167,7 @@ class XkvProgramsController extends AdminController
             <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">&nbsp;
             <span style="display:inline-block;width:80px;"><small>{$type}:</small>
             <span class="label label-labelstyle">categorytype</span></span> 
-            <span style="display:inline-block;width:80px;"><small>{$cate}:</small>
+            <span style="display:inline-block;width:160px;"><small>{$cate}:</small>
             <a href="javascript:showSearchModal(idx);" class="dd-nodrag" title="">category</a></span>
             <small> {$name}:</small> name&nbsp;
             <small class="text-warning">unique_no</small>
