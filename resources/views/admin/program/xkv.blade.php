@@ -115,10 +115,11 @@
             <ul class="pager" style="margin:0;">
                 <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多 <i class="fa fa-angle-double-right"></i></a>
                 <small id="totalSpan"></small>
+                
                 </li>
             </ul>
         </div>
-        
+        <small id="selectedSpan" class="text-danger"></small>
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
         
@@ -333,7 +334,7 @@
             selectedItem = false;
             selectedItems = [];
             $('.search-item').removeClass('info');
-            
+            $('#selectedSpan').html('');
         });
         
         reloadTree();
@@ -426,7 +427,7 @@
         if(repo.artist==null) repo.artist='';
         
         if(multi) {
-            console.log('multi:'+idx);
+            
             if(selectedItems.indexOf(repo)==-1) {
                 selectedItems.push(repo);
                 $('.search-item').eq(idx).addClass('info');
@@ -435,6 +436,12 @@
                 selectedItems.splice(selectedItems.indexOf(repo), 1);
                 $('.search-item').eq(idx).removeClass('info');
             }
+            var duration = 0;
+            for(i=0;i<selectedItems.length;i++)
+            {
+                duration += parseDuration(selectedItems[i].duration);
+            }
+            $('#selectedSpan').html('已选择 '+selectedItems.length+' 个节目，共 '+formatTime(duration)+' &nbsp;');
         }
         else {
             selectedItem = repo;
