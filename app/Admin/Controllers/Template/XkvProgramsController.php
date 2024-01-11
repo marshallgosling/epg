@@ -186,11 +186,12 @@ TMP;
         $form->action(admin_url("template/xkv/$id/edit"));
         $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
 
+        $categories = Category::getFormattedCategories();
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
         return $content->title(__('Advanced Mode'))->description(__('Modify Template Content'))
             ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
-                    'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
+                    'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list, 'categories'=>$categories]));
     }
 
     public function save($id, Request $request)
