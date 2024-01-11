@@ -147,6 +147,11 @@
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
+        $(".category").select2({
+            placeholder: {"id":"","text":"请选择栏目"},
+            "allowClear":true
+        });
+        $(".library").select2();
         $('body').on('mouseup', function(e) {
             startmove = false;
             templist = [];
