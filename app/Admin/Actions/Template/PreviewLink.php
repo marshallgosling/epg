@@ -4,10 +4,10 @@ namespace App\Admin\Actions\Template;
 
 use Encore\Admin\Actions\Action;
 
-class SimulatorLink extends Action
+class PreviewLink extends Action
 {
-    public $name = '模拟编单测试';
-    protected $selector = '.simulator';
+    public $name = '预览模版';
+    protected $selector = '.preview';
 
     public $group = 'xkc';
 
@@ -19,7 +19,7 @@ class SimulatorLink extends Action
 
     public function href()
     {
-        return admin_url('/template/simulator/'.$this->group);
+        return $this->group.'/preview';
     }
 
     public function handle()
@@ -29,6 +29,6 @@ class SimulatorLink extends Action
 
     public function html()
     {
-        return '<a class="simulator btn btn-sm btn-danger" href="'.$this->href().'"><i class="fa fa-android"></i> '.__($this->name).'</a>';
+        return '<a class="preview btn btn-sm btn-warning" href="'.$this->href().'"><i class="fa fa-link"></i> '.__($this->name).'</a>';
     }
 }

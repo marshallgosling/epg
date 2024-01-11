@@ -13,7 +13,7 @@ use App\Admin\Actions\Template\ReplicateTemplate;
 use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
-use App\Admin\Actions\Template\FixStall;
+use App\Admin\Actions\Template\PreviewLink;
 use App\Admin\Actions\Template\SimulatorLink;
 use App\Admin\Extensions\MyTable;
 use App\Models\Epg;
@@ -163,9 +163,9 @@ class XkiController extends AdminController
             $actions->add(new BatchDisable);
         });
 
-        $grid->tools(function (Grid\Tools $tools) {
-            //$tools->disableBatchActions();
-            //$tools->append(new SimulatorLink('xki'));
+        $grid->tools(function ($tools) {
+            $tools->append(new PreviewLink('xki'));
+            $tools->append(new SimulatorLink('xki'));
         });
 
         return $grid;
