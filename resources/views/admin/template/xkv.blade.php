@@ -115,18 +115,39 @@
       <div class="modal-body">
         
         <div class="row">
-            <div class="col-lg-8">
-                <div class="input-group">    
+        <div class="col-md-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">栏目</span>
+                        <select class="form-control category" id="category" style="width:200px" >
+                        <option value=""></option>
+                        @foreach($categories as $key=>$value)
+                        <option value="{{$key}}">{{$value}}</option>
+                        @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                    <span class="input-group-addon">关键字</span>
+                    <input type="text" class="form-control" style="width:240px" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="input-group">
                     <span class="input-group-addon">
-                        <label><input type="checkbox" id="onlycategory" autocomplete="off"> 只搜索栏目字段</label>
+                        节目库
                     </span>
-                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字">
+                    <select class="form-control library" id="library" data-value="program">
+                        <option value="records">星空中国</option><option value="record2">星空国际</option><option value="program" selected>V China</option>
+                    </select>
                     <span class="input-group-btn">
                         <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
                     </span>
-                </div>
+                    </div>
+                </div></form>
             </div>
-            
         </div>
         <div class="row">
             <div class="col-lg-12">
@@ -180,6 +201,11 @@
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
+        $(".category").select2({
+            placeholder: {"id":"","text":"请选择栏目"},
+            "allowClear":true
+        });
+        $(".library").select2();
         $('body').on('mouseup', function(e) {
             //console.log('stop ');
             startmove = false;
@@ -299,6 +325,8 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
+                    c: $('#category').val(),
+                    t: $('#library').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -388,8 +416,9 @@
                 dataType: 'json',
                 data: {
                     q: keyword,
-                    p: curPage,
-                    o: $('#onlycategory').prop('checked') ? 1 : 0
+                    c: $('#category').val(),
+                    t: $('#library').val(),
+                    p: curPage
                 },
                 success: function (data) {
                     uniqueAjax = null;
@@ -404,7 +433,7 @@
                     }
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
-                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var head = ['序号','播出编号','名称','艺人','时长','标签'];
                     var html = '<tr><th>'+head.join('</t'+'h><th>')+'</'+'th></'+'tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
