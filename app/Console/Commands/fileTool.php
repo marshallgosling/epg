@@ -78,8 +78,8 @@ class fileTool extends Command
         $item['name'] = $name;
         $item['unique_no'] = explode('.', $names)[1];
         $item['channel'] = 'xkc';
-        $item['duration'] = $durtion;
-        $item['frames'] = $durtion * 25;
+        $item['frames'] = $durtion;
+        $item['duration'] = ChannelGenerator::parseFrames($item['frames']);
 
             if(preg_match('/(\d+)$/', $name, $matches))
             {
