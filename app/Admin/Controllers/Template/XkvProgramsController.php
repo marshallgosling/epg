@@ -39,11 +39,13 @@ class XkvProgramsController extends AdminController
     {
         $grid = new MyGrid(new TemplatePrograms());
 
+        $grid->model()->orderBy('sort');
+
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
         $grid->column('id', __('Id'))->hide();
         
-        $grid->column('sort', __('Sort'));
+        $grid->column('sort', __('Sort'))->sortable();
 
         $grid->column('type', __('Type'))->filter(TemplatePrograms::TYPES)->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
         
@@ -167,9 +169,9 @@ class XkvProgramsController extends AdminController
             <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">&nbsp;
             <span style="display:inline-block;width:80px;"><small>{$type}:</small>
             <span class="label label-labelstyle">categorytype</span></span> 
-            <span style="display:inline-block;width:80px;"><small>{$cate}:</small>
+            <span style="display:inline-block;width:160px;"><small>{$cate}:</small>
             <a href="javascript:showSearchModal(idx);" class="dd-nodrag" title="">category</a></span>
-            <small> {$name}:</small> name&nbsp;
+            <span style="display:inline-block;width:320px;"><small> {$name}:</small> name</span>
             <small class="text-warning">unique_no</small>
             <span class="pull-right dd-nodrag">
                 <a href="javascript:showEditorModal(idx);" title="{$select}"><i class="fa fa-edit"></i></a>&nbsp;
@@ -186,11 +188,12 @@ TMP;
         $form->action(admin_url("template/xkv/$id/edit"));
         $form->radio('tttt', __('Type'))->options(TemplatePrograms::TYPES);
 
+        $categories = Category::getFormattedCategories();
         $json = str_replace("'","\\'", json_encode($data->toArray()));
         
         return $content->title(__('Advanced Mode'))->description(__('Modify Template Content'))
             ->body(view('admin.template.'.$this->group, ['model'=>$model,'data'=>$data, 'template'=>$template,  'json'=>$json,
-                    'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list]));
+                    'category'=>['types'=>TemplatePrograms::TYPES,'labels'=>TemplatePrograms::LABELS], 'list'=>$list, 'categories'=>$categories]));
     }
 
     public function save($id, Request $request)
@@ -299,7 +302,6 @@ TMP;
 
         foreach($list as $item)
         {
-            
             $template =  TemplatePrograms::find($item['id']);
             $template->sort = $item['sort'];
             if($template->isDirty())

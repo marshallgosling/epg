@@ -13,7 +13,7 @@ use App\Admin\Actions\Template\ReplicateTemplate;
 use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
-use App\Admin\Actions\Template\FixStall;
+use App\Admin\Actions\Template\PreviewLink;
 use App\Admin\Actions\Template\SimulatorLink;
 use App\Admin\Extensions\MyTable;
 use App\Models\Epg;
@@ -73,7 +73,7 @@ class XkiController extends AdminController
 
             }
 
-            $temp['table'] = (new MyTable(['ID', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
+            $temp['table'] = (new MyTable(['ID', '别名', '标签', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']))->render();
             $data[] = $temp; 
         
         }
@@ -120,7 +120,7 @@ class XkiController extends AdminController
                 $items[] = compact('style', 'item');
             }
 
-            return new MyTable(['ID', '别名', '栏目', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
+            return new MyTable(['ID', '别名', '标签', '类型', '剧集', '日期范围', '播出日', '当前选集', '状态', '操作'], $items, ['table-hover']);
         });
         $grid->column('version', __('Version'))->display(function ($version) {
             return '<span class="label label-default">'.$version.'</span>';
@@ -163,9 +163,9 @@ class XkiController extends AdminController
             $actions->add(new BatchDisable);
         });
 
-        $grid->tools(function (Grid\Tools $tools) {
-            //$tools->disableBatchActions();
-            //$tools->append(new SimulatorLink('xki'));
+        $grid->tools(function ($tools) {
+            $tools->append(new PreviewLink('xki'));
+            $tools->append(new SimulatorLink('xki'));
         });
 
         return $grid;

@@ -40,7 +40,7 @@ class BatchXkcGenerator extends BatchAction
             
         }
 
-        XkcGeneratorJob::dispatch($group)->onQueue('xkc');
+        XkcGeneratorJob::dispatch()->onQueue('xkc');
         
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

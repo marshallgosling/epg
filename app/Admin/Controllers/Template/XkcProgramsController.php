@@ -41,10 +41,12 @@ class XkcProgramsController extends AdminController
         $grid = new MyGrid(new TemplateRecords());
 
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
+        
+        $grid->model()->orderBy('sort');
 
         $grid->column('id', __('Id'))->hide();
         
-        $grid->column('sort', __('Sort'));
+        $grid->column('sort', __('Sort'))->sortable();
 
         $grid->column('name', __('Alias'));
 

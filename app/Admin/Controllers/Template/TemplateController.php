@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Template;
 
 use App\Admin\Actions\Template\BatchDisable;
 use App\Admin\Actions\Template\BatchEnable;
+use App\Admin\Actions\Template\PreviewLink;
 use App\Models\Template;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -13,6 +14,7 @@ use Encore\Admin\Widgets\Table;
 use Encore\Admin\Widgets\InfoBox;
 use App\Admin\Actions\Template\Programs;
 use App\Admin\Actions\Template\ReplicateTemplate;
+use App\Admin\Actions\Template\SimulatorLink;
 
 class TemplateController extends AdminController
 {

@@ -13,7 +13,7 @@ use App\Tools\LoggerTrait;
 
 class XkvGenerator implements IGenerator
 {
-
+    public const STALL_FILE = "xkv_stall.txt";
     use LoggerTrait;
 
     private $channel;
@@ -145,16 +145,6 @@ class XkvGenerator implements IGenerator
         
     }
 
-    public function addPRItem($category='XK PR')
-    {
-        
-    }
-
-    public function addBumperItem($schedule_end, $break_level, $class, $category='m1')
-    {
-        
-    }
-
     public function addSpecialPrograms($programs, $sort)
     {
         
@@ -242,9 +232,5 @@ class XkvGenerator implements IGenerator
 
     }
 
-    public function addRecordItem($templates, $maxduration, $air, $dayofweek = '')
-    {
-        
-    }
 
 }

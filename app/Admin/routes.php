@@ -16,12 +16,16 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
-    $router->resource('/media/records', 'Media\\RecordController')->names('media.records');
-    $router->resource('/media/record2', 'Media\\Record2Controller')->names('media.record2');
+    
+    $router->post('/media/xkc/unique', 'Media\\XkcProgramController@unique')->name('media.xkc.unique');
+    $router->post('/media/xkv/unique', 'Media\\XkvProgramController@unique')->name('media.xkv.unique');
+    $router->post('/media/xki/unique', 'Media\\XkiProgramController@unique')->name('media.xki.unique');
+    $router->resource('/media/xkc', 'Media\\XkcProgramController')->names('media.xkc');
+    $router->resource('/media/xki', 'Media\\XkiProgramController')->names('media.xki');
+    $router->resource('/media/xkv', 'Media\\XkvProgramController')->names('media.xkv');
+    
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
-    $router->post('/media/programs/unique', 'Media\\ProgramController@unique')->name('media.material.unique');
-    $router->resource('/media/programs', 'Media\\ProgramController')->names('media.program');
     $router->resource('/media/blacklist', 'Media\\BlackListController')->names('media.blacklist');
 
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');

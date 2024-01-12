@@ -54,7 +54,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="searchModal" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -64,32 +64,39 @@
       <div class="modal-body">
         
         <div class="row">
-            <div class="col-md-4">
-                <div class="input-group">    
-                    <span class="input-group-addon">
-                        栏目
-                    </span>
-                    <input type="text" class="form-control" name="category" id="category" placeholder="请输入栏目">
-                    
+        <div class="col-md-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">栏目</span>
+                        <select class="form-control category" id="category" style="width:200px" >
+                        <option value=""></option>
+                        @foreach($categories as $key=>$value)
+                        <option value="{{$key}}">{{$value}}</option>
+                        @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">    
+                <div class="form-group">
+                    <div class="input-group">
+                    <span class="input-group-addon">关键字</span>
+                    <input type="text" class="form-control" style="width:240px" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="input-group">
                     <span class="input-group-addon">
-                    关键字
+                        节目库
                     </span>
-                    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
-                    
-                </div>    
-            </div>
-            <div class="col-md-2">
-                <div class="input-group">
+                    <select class="form-control library" id="library" data-value="program">
+                        <option value="records">星空中国</option><option value="record2">星空国际</option><option value="program" selected>V China</option>
+                    </select>
                     <span class="input-group-btn">
                         <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
                     </span>
-                </div>
+                    </div>
+                </div></form>
             </div>
-            
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -108,10 +115,11 @@
             <ul class="pager" style="margin:0;">
                 <li><a id="moreBtn" style="margin:0;display:none;" href="#">载入更多 <i class="fa fa-angle-double-right"></i></a>
                 <small id="totalSpan"></small>
+                
                 </li>
             </ul>
         </div>
-        
+        <small id="selectedSpan" class="text-danger"></small>
         <button id="confirmBtn" type="button" class="btn btn-info" disabled="true">确认</button>      
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
         
@@ -140,6 +148,11 @@
             e.preventDefault();
             $(this).find('div.cascade-group.hide :input').attr('disabled', true);
         });
+        $(".category").select2({
+            placeholder: {"id":"","text":"请选择栏目"},
+            "allowClear":true
+        });
+        $(".library").select2();
         $('body').on('mouseup', function(e) {
             startmove = false;
             templist = [];
@@ -165,7 +178,7 @@
             {
                 dataList.splice(selected[i], 1);
             }
-            console.table(dataList);
+
             reCalculate(0);
             reloadTree();
             $('#btnSort').html("保存");
@@ -180,7 +193,7 @@
             }
             //console.log("rollback data");
             dataList = backupList.pop();
-            console.table(dataList);
+
             reloadTree();
             toastr.success("回退成功");
 
@@ -240,6 +253,7 @@
                 data: {
                     q: keyword,
                     c: $('#category').val(),
+                    t: $('#library').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -320,7 +334,7 @@
             selectedItem = false;
             selectedItems = [];
             $('.search-item').removeClass('info');
-            
+            $('#selectedSpan').html('');
         });
         
         reloadTree();
@@ -340,6 +354,7 @@
                 data: {
                     q: keyword,
                     c: $('#category').val(),
+                    t: $('#library').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -357,7 +372,7 @@
                     }
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
-                    var head = ['序号','播出编号','名称','艺人','时长','栏目'];
+                    var head = ['序号','播出编号','名称','艺人','时长','标签'];
                     var html = '<tr><th>'+head.join('</th><th>')+'</th></tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
@@ -412,7 +427,7 @@
         if(repo.artist==null) repo.artist='';
         
         if(multi) {
-            console.log('multi:'+idx);
+            
             if(selectedItems.indexOf(repo)==-1) {
                 selectedItems.push(repo);
                 $('.search-item').eq(idx).addClass('info');
@@ -421,6 +436,12 @@
                 selectedItems.splice(selectedItems.indexOf(repo), 1);
                 $('.search-item').eq(idx).removeClass('info');
             }
+            var duration = 0;
+            for(i=0;i<selectedItems.length;i++)
+            {
+                duration += parseDuration(selectedItems[i].duration);
+            }
+            $('#selectedSpan').html('已选择 '+selectedItems.length+' 个节目，共 '+formatDuration(duration)+' &nbsp;');
         }
         else {
             selectedItem = repo;
@@ -517,6 +538,18 @@
         a[0] = d.getHours() > 9 ? d.getHours().toString() : '0'+d.getHours().toString();
         a[1] = d.getMinutes() > 9 ? d.getMinutes().toString() : '0'+d.getMinutes().toString();
         a[2] = d.getSeconds() > 9 ? d.getSeconds().toString() : '0'+d.getSeconds().toString();
+        return a.join(':');
+    }
+
+    function formatDuration(seconds)
+    {
+        var h = Math.floor(seconds / 3600);
+        var m = Math.floor((seconds % 3600) / 60);
+        var s = seconds % 60;
+        var a = [];
+        a[0] = h > 9 ? h : '0'+h;
+        a[1] = m > 9 ? m : '0'+m;
+        a[2] = s > 9 ? s : '0'+s;
         return a.join(':');
     }
 

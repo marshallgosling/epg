@@ -26,6 +26,7 @@ class Channel extends Model
 
     public const GROUPS = ['xkv'=>'V China', 'xkc'=>'星空中国', 'xki'=>'星空国际'];
     public const DOTS = ['xkv'=>'info','xkc'=>'warning','xki' =>'success'];
+    public const CLASSES = ['xkv'=>Program::class, 'xkc'=>Record::class, 'xki'=>Record2::class];
 
     protected $table = 'channel';
 

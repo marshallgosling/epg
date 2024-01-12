@@ -12,7 +12,8 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
-class ProgramController extends AdminController
+
+class XkvProgramController extends AdminController
 {
     /**
      * Title for current resource.
@@ -222,7 +223,7 @@ $('input[name=unique_no]').on('change', function(e) {
 
     $.ajax({
         method: 'post',
-        url: '/admin/media/programs/unique',
+        url: '/admin/media/xkv/unique',
         data: {
             data: e.currentTarget.value,
             _token:LA.token,

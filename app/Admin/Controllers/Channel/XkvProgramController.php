@@ -6,6 +6,7 @@ use App\Admin\Actions\ChannelProgram\BatchReplicate;
 use App\Admin\Actions\ChannelProgram\Replicate;
 use App\Admin\Actions\ChannelProgram\ToolCalculate;
 use App\Events\Channel\CalculationEvent;
+use App\Models\Category;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use Illuminate\Support\MessageBag;
@@ -196,6 +197,7 @@ class XkvProgramController extends AdminController
 </li>
 TMP;
 
+        $categories = Category::getFormattedCategories();
         $form = new \Encore\Admin\Widgets\Form();
         
         $form->action(admin_url("channel/xkv/$id/edit"));
@@ -218,7 +220,7 @@ TMP;
            
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate')));
+            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate', 'categories')));
     }
 
     public function open($id, Request $request) {

@@ -23,18 +23,19 @@ class XkcGeneratorJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
-    // Channel UUID;
-    //private $uuid;
-    private $group = 'default';
+    /**
+     * Channel Group
+     *  
+     */ 
+    private $group = 'xkc';
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($group)
+    public function __construct()
     {
-        $this->group = $group;
         $this->log_channel = 'channel';
         $this->log_print = false;
     }
@@ -51,8 +52,7 @@ class XkcGeneratorJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        
-        $generator = new XkcGenerator();
+        $generator = ChannelGenerator::getGenerator($this->group);
 
         if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
         {

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Notification;
-use App\Tools\Generator\GenerationException;
+use App\Tools\ChannelGenerator;
 use App\Tools\Generator\XkiGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
@@ -22,18 +22,19 @@ class XkiGeneratorJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
-    // Channel UUID;
-    //private $uuid;
-    private $group = 'default';
+    /**
+     * Channel Group
+     *  
+     */ 
+    private $group = 'xki';
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($group)
+    public function __construct()
     {
-        $this->group = $group;
         $this->log_channel = 'channel';
         $this->log_print = false;
     }
@@ -49,9 +50,8 @@ class XkiGeneratorJob implements ShouldQueue, ShouldBeUnique
      * @return void
      */
     public function handle()
-    {
-        
-        $generator = new XkiGenerator($this->group);
+    {  
+        $generator = ChannelGenerator::getGenerator('xki');
 
         if(Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
         {

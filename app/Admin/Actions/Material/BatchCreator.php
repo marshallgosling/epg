@@ -31,8 +31,9 @@ class BatchCreator extends Action
         $frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
         $code = 'XK'.Str::random(12);
 
-        for($ep=$st;$ep<=$total;$ep++)
+        for($i=0;$i<$total;$i++)
         {
+            $ep = $i+$st;
             $unique_no = Str::upper($code.$this->ep($ep));
             $name = $group.' '.$ep;
             Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames'));
@@ -54,7 +55,7 @@ class BatchCreator extends Action
 
         $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入');
         $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号');
-        $this->text('total', __('总集数'))->placeholder('总集数');
+        $this->text('total', __('集数'))->placeholder('连续创建的集数');
         $this->text('duration', __('Duration'))->placeholder('时长');
         //$this->file('excel', __('Excel'))->placeholder('通过文件导入');
         //$this->text('group', __('Group'));
