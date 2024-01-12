@@ -71,8 +71,8 @@ class fileTool extends Command
             'name' => '', 'md5'=>'', 'duration'=>'', 'frames'=>0,'unique_no'=>'','category'=>'','group'=>''
         ];
 
-        $names = (string) $xml->xeml[0]->project[0]->children[0]->clip[0]->name[0];
-        $durtion = (int) $xml->xeml[0]->project[0]->children[0]->clip[0]->duration[0];
+        $names = (string) $xml->project[0]->children[0]->clip[0]->name[0];
+        $durtion = (int) $xml->project[0]->children[0]->clip[0]->duration[0];
 
         $name = explode('.', $names)[0];
         $item['name'] = $name;
@@ -189,7 +189,9 @@ class fileTool extends Command
 
             if($xml->Object) $item = $this->loadObject($xml);
 
-            if($xml->xmeml) $item = $this->loadEml($xml);
+            if($xml->project) $item = $this->loadEml($xml);
+
+            print_r($xml);exit;
 
             if(!$item) continue;
             if($tags != "") $item['category'] = $tags;
