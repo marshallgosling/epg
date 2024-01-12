@@ -37,32 +37,20 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        
-        $data = $this->getRawData();
 
-        foreach($data as $line)
+        $items = Record::where('episodes', '街舞S4')->get();
+        foreach($items as $item)
         {
-            $words = explode("\t", $line);
-            $p = Record::where('name', $words[0])->first();
-            if($p) {
-                if($p->name2 == $words[2]) continue;
-                $p->name2 = $words[2];
-                $cates = explode(' ', str_replace('/',' ', $words[1]));
-                $categorys = $p->category;
-                foreach($cates as $c)
-                {
-                    $cc = $this->parseTag($c);
-                    if($cc)$categorys[] = $cc;
-                    
-                }
-                $p->category = $categorys;
-                $p->save();
-
-                //print_r($p->toArray());
-                //break;
+            $name = $item->name;
+            if(preg_match('/S(\d)-(\d+)/', $name, $matches))
+            {
+                //print_r($matches);
+                $item->ep = $matches[2];
+                $item->save();
             }
-            
+            //break;
         }
+
         exit;
 
         $day = strtotime($day);
