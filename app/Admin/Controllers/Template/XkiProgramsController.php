@@ -40,11 +40,13 @@ class XkiProgramsController extends AdminController
     {
         $grid = new MyGrid(new TemplateRecords());
 
+        $grid->model()->orderBy('sort');
+
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
         $grid->column('id', __('Id'))->hide();
         
-        $grid->column('sort', __('Sort'));
+        $grid->column('sort', __('Sort'))->sortable();
 
         $grid->column('name', __('Alias'));
 

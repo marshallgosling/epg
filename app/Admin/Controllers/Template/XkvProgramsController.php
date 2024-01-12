@@ -39,11 +39,13 @@ class XkvProgramsController extends AdminController
     {
         $grid = new MyGrid(new TemplatePrograms());
 
+        $grid->model()->orderBy('sort');
+
         $grid->queryString = 'template_id='.$_REQUEST['template_id'];
 
         $grid->column('id', __('Id'))->hide();
         
-        $grid->column('sort', __('Sort'));
+        $grid->column('sort', __('Sort'))->sortable();
 
         $grid->column('type', __('Type'))->filter(TemplatePrograms::TYPES)->using(TemplatePrograms::TYPES, 0)->label(TemplatePrograms::LABELS);
         

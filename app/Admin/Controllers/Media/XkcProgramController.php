@@ -4,7 +4,7 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Program\BatchModify;
 use App\Events\CategoryRelationEvent;
-use App\Models\Record2 as Record;
+use App\Models\Record;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -13,17 +13,17 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
-class Record2Controller extends AdminController
+class XkcProgramController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '星空国际 节目库管理';
+    protected $title = '星空中国 节目库管理';
 
     protected $description = [
-        'index'  => "星空国际 节目库数据",
+        'index'  => "星空中国 节目库数据",
 //        'show'   => 'Show',
 //        'edit'   => 'Edit',
 //        'create' => 'Create',
@@ -42,9 +42,9 @@ class Record2Controller extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
         $grid->column('name', __('Name'))->display(function ($name) {
-            //if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
-            //else $name2 = '';
-            return $this->name2 ? $this->name2 : $name;
+            if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
+            else $name2 = '';
+            return $name . $name2;
         });
         $grid->column('name2', __('English'))->hide();
         $grid->column('category', __('Category'))->display(function($category) {
@@ -116,9 +116,11 @@ class Record2Controller extends AdminController
      */
     protected function form()
     {
+        \Encore\Admin\Admin::script(self::JS);
+
         $form = new Form(new Record());
 
-        $form->text('unique_no', __('Unique no'))->required();
+        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:record,unique_no"]);
         $form->text('name', __('Name'))->required();
         $form->text('name2', __('English'));
         $form->multipleSelect('category', __('Category'))
@@ -170,4 +172,32 @@ class Record2Controller extends AdminController
 
         return $form;
     }
+
+    public function unique(Request $request) {
+        $data = $request->post('data');
+        return response()->json(['result' => Record::where('unique_no', $data)->exists()]);
+    }
+
+    public const JS = <<<EOF
+$('input[name=unique_no]').on('change', function(e) {
+    var parent = $(this).parent();
+
+    $.ajax({
+        method: 'post',
+        url: '/admin/media/xkc/unique',
+        data: {
+            data: e.currentTarget.value,
+            _token:LA.token,
+        },
+        success: function (data) {
+            if(data.result) {
+                parent.addClass('has-error');
+            }
+            else {
+                parent.removeClass('has-error');
+            }
+        }
+    });
+});
+EOF;
 }

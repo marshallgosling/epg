@@ -4,7 +4,7 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Program\BatchModify;
 use App\Events\CategoryRelationEvent;
-use App\Models\Record;
+use App\Models\Record2 as Record;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -13,17 +13,17 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
-class RecordController extends AdminController
+class XkiProgramController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '星空中国 节目库管理';
+    protected $title = '星空国际 节目库管理';
 
     protected $description = [
-        'index'  => "星空中国 节目库数据",
+        'index'  => "星空国际 节目库数据",
 //        'show'   => 'Show',
 //        'edit'   => 'Edit',
 //        'create' => 'Create',
@@ -116,9 +116,11 @@ class RecordController extends AdminController
      */
     protected function form()
     {
+        \Encore\Admin\Admin::script(self::JS);
+
         $form = new Form(new Record());
 
-        $form->text('unique_no', __('Unique no'))->required();
+        $form->text('unique_no', __('Unique no'))->creationRules(['required', "unique:record2,unique_no"]);
         $form->text('name', __('Name'))->required();
         $form->text('name2', __('English'));
         $form->multipleSelect('category', __('Category'))
@@ -165,9 +167,37 @@ class RecordController extends AdminController
 
         $form->saved(function (Form $form) {
             
-            CategoryRelationEvent::dispatch($form->model()->id, $form->category, 'record');
+            CategoryRelationEvent::dispatch($form->model()->id, $form->category, 'record2');
         });
 
         return $form;
     }
+
+    public function unique(Request $request) {
+        $data = $request->post('data');
+        return response()->json(['result' => Record::where('unique_no', $data)->exists()]);
+    }
+
+    public const JS = <<<EOF
+$('input[name=unique_no]').on('change', function(e) {
+    var parent = $(this).parent();
+
+    $.ajax({
+        method: 'post',
+        url: '/admin/media/xki/unique',
+        data: {
+            data: e.currentTarget.value,
+            _token:LA.token,
+        },
+        success: function (data) {
+            if(data.result) {
+                parent.addClass('has-error');
+            }
+            else {
+                parent.removeClass('has-error');
+            }
+        }
+    });
+});
+EOF;
 }
