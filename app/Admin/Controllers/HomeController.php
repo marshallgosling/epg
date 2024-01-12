@@ -13,7 +13,7 @@ use Illuminate\Support\Arr;
 class HomeController extends Controller
 {
   
-  public const VERSION = '1.7';
+  public const VERSION = '1.8';
   
   public function index(Content $content)
     {
@@ -98,22 +98,22 @@ HTML;
 
       $channels =[
         '频道 V China' => [
-          '节目库内容数量 <span class="badge">'.Statistic::countPrograms().'</span>' => admin_url('/media/programs'),
-          '模版库数量 <span class="badge">'.$templates['xkv'].'</span>' => admin_url('/template/xkv'),
-          '编单数量 <span class="badge">'.$channels['xkv'].'</span>' => admin_url('/channel/xkv'),
-          '已审核编单 <span class="badge">'.$audit['xkv'].'</span>' => admin_url('/channel/xkv'),
+          '节目库内容数量 <span class="badge">'.Statistic::countPrograms().'</span>' => admin_url('media/xkv'),
+          '模版库数量 <span class="badge">'.$templates['xkv'].'</span>' => admin_url('template/xkv'),
+          '编单数量 <span class="badge">'.$channels['xkv'].'</span>' => admin_url('channel/xkv'),
+          '已审核编单 <span class="badge">'.$audit['xkv'].'</span>' => admin_url('channel/xkv'),
         ],
         '频道 星空中国' => [
-          '节目库内容数量 <span class="badge">'.Statistic::countRecords().'</span>' => admin_url('/media/records'),
-          '模版库数量 <span class="badge">'.$templates['xkc'].'</span>' => admin_url('/template/xkc'),
-          '编单数量 <span class="badge">'.$channels['xkc'].'</span>' => admin_url('/channel/xkc'),
-          '已审核编单 <span class="badge">'.$audit['xkc'].'</span>' => admin_url('/channel/xkc'),
+          '节目库内容数量 <span class="badge">'.Statistic::countRecords().'</span>' => admin_url('media/xkc'),
+          '模版库数量 <span class="badge">'.$templates['xkc'].'</span>' => admin_url('template/xkc'),
+          '编单数量 <span class="badge">'.$channels['xkc'].'</span>' => admin_url('channel/xkc'),
+          '已审核编单 <span class="badge">'.$audit['xkc'].'</span>' => admin_url('channel/xkc'),
         ],
         '频道 星空国际' => [
-          '节目库内容数量 <span class="badge">'.Statistic::countRecord2().'</span>' => admin_url('/media/record2'),
-          '模版库数量 <span class="badge">'.$templates['xki'].'</span>' => admin_url('/template/xki'),
-          '编单数量 <span class="badge">'.$channels['xki'].'</span>' => admin_url('/channel/xki'),
-          '已审核编单 <span class="badge">'.$audit['xki'].'</span>' => admin_url('/channel/xki'),
+          '节目库内容数量 <span class="badge">'.Statistic::countRecord2().'</span>' => admin_url('media/xki'),
+          '模版库数量 <span class="badge">'.$templates['xki'].'</span>' => admin_url('template/xki'),
+          '编单数量 <span class="badge">'.$channels['xki'].'</span>' => admin_url('channel/xki'),
+          '已审核编单 <span class="badge">'.$audit['xki'].'</span>' => admin_url('channel/xki'),
         ]
       ];
 
@@ -122,7 +122,7 @@ HTML;
 
     public static function links() {
         $links = [
-            '物料管理' => admin_url('/media/material'),
+            '物料管理' => admin_url('media/material'),
             '黑名单' => admin_url('media/blacklist'),
             '播出计划' => admin_url('plans'),
             '串联单' => admin_url('epg'),
