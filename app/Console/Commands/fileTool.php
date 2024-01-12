@@ -181,7 +181,7 @@ class fileTool extends Command
         {
             //$this->info("File name:".$f);
             if(!strpos($f, ".xml")) continue;
-
+            $this->info("Process file name:".$f);
             
             $xml = simplexml_load_file(Storage::disk('data')->path($f));
 
@@ -201,7 +201,7 @@ class fileTool extends Command
             {
                 Material::create($item);
                 //$items[] = $item;
-                $this->info("Process file name:".$f." json:\n".json_encode($item));
+                $this->info("json:".json_encode($item));
             }
             else {
                 $this->error("File name:".$f);
