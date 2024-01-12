@@ -114,7 +114,7 @@ class fileTool extends Command
         ];
 
         $attributes = $xml->Object[0]->attributes();
-            if(!$attributes) continue;
+            if(!$attributes) return false;
 
             foreach($attributes as $name=>$attr)
             {
@@ -126,12 +126,12 @@ class fileTool extends Command
 
             if($item['unique_no'] == 'XK0000000000000000') {
                 $this->error("error xml: ".$item['unique_no'].' ignore');
-                continue;
+                return false;
             }
 
             if($item['frames']<0) {
                 $this->error("error frame: ".$item['frames'].' ignore');
-                continue;
+                return false;
             }
 
             $name = (string) $xml->Object[0]->MetaData[0]->sAttribute[0];
@@ -191,8 +191,10 @@ class fileTool extends Command
 
             if($xml->xmeml) $item = $this->loadEml($xml);
 
+            if(!$item) continue;
             if($tags != "") $item['category'] = $tags;
             
+
             if(! Material::where('unique_no', $item['unique_no'])->exists())
             {
                 Material::create($item);
