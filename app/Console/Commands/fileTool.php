@@ -65,29 +65,55 @@ class fileTool extends Command
         // Clean xml files 
     }
 
-    private function import()
+    private function loadEml($xml)
     {
-        $path = $this->argument('path') ?? "xml";
-        $tags = $this->argument('tags') ?? "";
+        $item = [
+            'name' => '', 'md5'=>'', 'duration'=>'', 'frames'=>0,'unique_no'=>'','category'=>'','group'=>''
+        ];
 
-        $files = Storage::disk('data')->files($path, true);
+        $names = (string) $xml->xeml[0]->project[0]->children[0]->clip[0]->name[0];
+        $durtion = (int) $xml->xeml[0]->project[0]->children[0]->clip[0]->duration[0];
 
-        $items = [];
+        $name = explode('.', $names)[0];
+        $item['name'] = $name;
+        $item['unique_no'] = explode('.', $names)[1];
+        $item['channel'] = 'xkc';
+        $item['duration'] = $durtion;
+        $item['frames'] = $durtion * 25;
 
-        foreach($files as $f)
-        {
-            //$this->info("File name:".$f);
-            if(!strpos($f, ".xml")) continue;
+            if(preg_match('/(\d+)$/', $name, $matches))
+            {
+                $ep = (int) $matches[1];
+                if($ep > 1000) {
+                    $item['category'] = 'Entertainm';
+                }
+                else {
+                    if($item['frames']<30000)
+                        $item['category'] = 'cartoon';
+                    else if($item['frames'] > 90000)
+                        $item['category'] = 'CanXin';
+                    else
+                        $item['category'] = 'drama';
+                    //$group = str_replace($matches[1], "", $name);
+                    
+                }
 
-            $item = [
-                'name' => '', 'md5'=>'', 'duration'=>'', 'frames'=>0,'unique_no'=>'','category'=>'','group'=>''
-            ];
+                $group = preg_replace('/(\d+)$/', "", $name);
+                $item['group'] = trim(trim($group), '_-');
+            }
+            else {
+                $item['category'] = 'movie';
+            }
+        return $item;
+    }
 
-            $xml = simplexml_load_file(Storage::disk('data')->path($f));
+    private function loadObject($xml)
+    {
+        $item = [
+            'name' => '', 'md5'=>'', 'duration'=>'', 'frames'=>0,'unique_no'=>'','category'=>'','group'=>''
+        ];
 
-            if(!$xml || !$xml->Object) continue;
-
-            $attributes = $xml->Object[0]->attributes();
+        $attributes = $xml->Object[0]->attributes();
             if(!$attributes) continue;
 
             foreach($attributes as $name=>$attr)
@@ -136,17 +162,42 @@ class fileTool extends Command
                 $item['category'] = 'movie';
             }
 
-            if($tags != "") $item['category'] = $tags;
-            
+           
             $item['duration'] = ChannelGenerator::parseFrames($item['frames']);
 
             //$items[] = $item;
 
+        return $item;
+    }
+
+    private function import()
+    {
+        $path = $this->argument('path') ?? "xml";
+        $tags = $this->argument('tags') ?? "";
+
+        $files = Storage::disk('data')->files($path, true);
+
+        foreach($files as $f)
+        {
+            //$this->info("File name:".$f);
+            if(!strpos($f, ".xml")) continue;
+
+            
+            $xml = simplexml_load_file(Storage::disk('data')->path($f));
+
+            if(!$xml) continue;
+
+            if($xml->Object) $item = $this->loadObject($xml);
+
+            if($xml->xmeml) $item = $this->loadEml($xml);
+
+            if($tags != "") $item['category'] = $tags;
+            
             if(! Material::where('unique_no', $item['unique_no'])->exists())
             {
                 Material::create($item);
                 //$items[] = $item;
-
+                $this->info("Process file name:".$f." json:\n".json_encode($item));
             }
             else {
                 $this->error("File name:".$f);
