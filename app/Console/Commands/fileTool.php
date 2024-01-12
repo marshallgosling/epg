@@ -191,7 +191,7 @@ class fileTool extends Command
 
             if($xml->project) $item = $this->loadEml($xml);
 
-            print_r($xml);exit;
+            //print_r($xml);exit;
 
             if(!$item) continue;
             if($tags != "") $item['category'] = $tags;
