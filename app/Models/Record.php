@@ -42,12 +42,12 @@ class Record extends Model
 
     public function getCategoryAttribute($value)
     {
-        return explode(',', $value);
+        return explode(',', trim($value, ","));
     }
 
     public function setCategoryAttribute($value)
     {
-        $this->attributes['category'] = implode(',', $value);
+        $this->attributes['category'] = implode(',', $value).',';
     }
 
     private static $cache = [];
