@@ -37,7 +37,11 @@ class MaterialController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('unique_no', __('Unique_no'))->sortable()->width(200);
-        $grid->column('name', __('Name'))->sortable(); 
+        $grid->column('name', __('Name'))->display(function ($name) {
+            if($this->comment) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->comment).'" data-toggle="tooltip" data-placement="top">Eng</small>';
+            else $name2 = '';
+            return $name . $name2;
+        });
         $grid->column('group', __('Group'));  
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
