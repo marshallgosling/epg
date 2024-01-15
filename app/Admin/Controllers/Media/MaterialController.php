@@ -85,6 +85,7 @@ class MaterialController extends AdminController
         $show->field('id', __('Id'));
         $show->field('channel', __('Channel'))->using(Channel::GROUPS);
         $show->field('name', __('Name'));
+        $show->field('comment', __('Name2'));
         $show->field('group', __('Group'));
         $show->field('unique_no', __('Unique no'));
         $show->field('category', __('Category'))->using(Category::getFormattedCategories());
@@ -117,6 +118,7 @@ class MaterialController extends AdminController
         $form->divider(__('BasicInfo'));
         $form->radio('channel', __('Channel'))->options(Channel::GROUPS)->required();
         $form->text('name', __('Name'))->required();
+        $form->text('comment', __('Name2'));
         $form->text('unique_no', __('Unique no'))->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
