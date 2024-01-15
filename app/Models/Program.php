@@ -56,7 +56,7 @@ class Program extends Model
         if(!Arr::exists(self::$cache, $key)) 
             self::$cache[$key] = self::select('program.unique_no')
                 ->join('material', 'program.unique_no', '=', 'material.unique_no')
-                ->where('program.category','like',"%$key%")
+                ->where('program.category','like',"%$key,%")
                 ->where('program.seconds','<',$maxSeconds)
                 ->pluck('unique_no')->toArray();
 
