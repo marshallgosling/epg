@@ -90,7 +90,8 @@ class MaterialController extends AdminController
         $show->field('category', __('Category'))->using(Category::getFormattedCategories());
         $show->field('duration', __('Duration'));
         $show->field('frames', __('Frames'));
-
+        $show->field('air_date', __('Air date'));
+        $show->field('expired_date', __('Expired date'));
         $show->field('filepath', __('Filepath'));
         $show->field('size', __('Size'));
         $show->field('md5', __('MD5'));
@@ -120,6 +121,9 @@ class MaterialController extends AdminController
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('group', __('Group'))->default('');
+
+        $form->date('air_date', __('Air date'));
+        $form->date('expired_date', __('Expired date'));
 
         $form->divider(__('FileInfo'));
         $form->text('frames', __('Frames'))->default(0);

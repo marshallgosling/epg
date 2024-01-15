@@ -103,8 +103,8 @@ class XkiProgramController extends AdminController
         $show->field('category', __('Category'))->implode(',');
         $show->field('duration', __('Duration'));
         
-        $show->field('air_date', __('Air date'));
-        $show->field('expired_date', __('Expired date'));
+        // $show->field('air_date', __('Air date'));
+        // $show->field('expired_date', __('Expired date'));
         $show->field('episodes', __('Episodes'));
         $show->field('ep', __('Ep'));
         $show->field('black', __('BlackList'));
@@ -135,8 +135,8 @@ class XkiProgramController extends AdminController
         $form->text('episodes', __('Episodes'));
         $form->text('ep', __('Ep'));
 
-        $form->text('air_date', __('Air date'));
-        $form->text('expired_date', __('Expired date'));
+        // $form->text('air_date', __('Air date'));
+        // $form->text('expired_date', __('Expired date'));
 
         $form->switch('black', __('BlackList'));
 
