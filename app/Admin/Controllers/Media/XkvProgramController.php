@@ -81,8 +81,8 @@ class XkvProgramController extends AdminController
         $grid->column('duration', __('Duration'))->sortable();
         $grid->column('co_artist', __('Co artist'))->hide();
         
-        $grid->column('product_date', __('Product date'))->hide();
-        $grid->column('air_date', __('Air date'))->hide();
+        // $grid->column('product_date', __('Product date'))->hide();
+        // $grid->column('air_date', __('Air date'))->hide();
 
         $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();
@@ -134,8 +134,8 @@ class XkvProgramController extends AdminController
         $show->field('author', __('Author'));
         $show->field('lyrics', __('Lyrics'));
         $show->field('company', __('Company'));
-        $show->field('air_date', __('Air date'));
-        $show->field('product_date', __('Product date'));
+        // $show->field('air_date', __('Air date'));
+        // $show->field('product_date', __('Product date'));
         $show->field('comment', __('Comment'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -162,8 +162,8 @@ class XkvProgramController extends AdminController
         
         $form->text('comment', __('Comment'));
 
-        $form->text('air_date', __('Air date'));
-        $form->text('product_date', __('Product date'));
+        // $form->text('air_date', __('Air date'));
+        // $form->text('product_date', __('Product date'));
         $form->switch('black', __('BlackList'));
         
         $form->divider(__('TagsInfo'));
