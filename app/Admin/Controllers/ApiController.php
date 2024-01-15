@@ -27,7 +27,7 @@ class ApiController extends Controller
         if($q)
             $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
         if($c) {
-            $model = $model->where('category', 'like', "%$c%");
+            $model = $model->where('category', 'like', "%$c,%");
         }
 
         if($t == 'program')
@@ -60,7 +60,7 @@ class ApiController extends Controller
             $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
 
         if($c) {
-            $model = $model->where('category', 'like', "%$c%");
+            $model = $model->where('category', 'like', "%$c,%");
         }
         if($m == '剧集名') {
             $model = $model->where('episodes', 'like', "$q");
