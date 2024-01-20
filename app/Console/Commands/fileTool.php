@@ -45,7 +45,7 @@ class fileTool extends Command
         $action = $this->argument('action') ?? "xml";
         
 
-        if(in_array($action, ['import', 'clean', 'daily']))
+        if(in_array($action, ['import', 'clean', 'daily', 'compare']))
             $this->$action();
         
 
@@ -53,6 +53,33 @@ class fileTool extends Command
         //Material::insert($items);
         
         return 0;
+    }
+
+    private function compare()
+    {
+        $file = $this->argument('path') ?? "";
+        if(!$file) return;
+        $lines = explode(PHP_EOL, Storage::get($file));
+        foreach($lines as $line)
+        {
+            $items = explode('.', trim($line));
+            if(count($items) > 2) {
+                $code = $items[1];
+
+                $m = Material::where('unique_no', $code)->first();
+                if($m) {
+                    $m->filepath = trim($line);
+                    $m->save();
+                }
+                else {
+                    $this->error($line);
+                }
+                
+            }
+            else {
+                $this->error($line);
+            }
+        }
     }
 
     private function daily()

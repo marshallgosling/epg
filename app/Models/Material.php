@@ -23,6 +23,7 @@ class Material extends Model
         'frames',
         'group',
         'md5',
+        'filepath',
         'comment'
     ];
 
