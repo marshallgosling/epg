@@ -78,7 +78,7 @@ class fileTool extends Command
                     $code = $filenames[1];
                     $m = Material::where('unique_no', $code)->first();
                     if($m) {
-                        $m->comment = $line;
+                        $m->filepath = $line;
                         $m->save();
                         $succ[] = $line;
                     }
