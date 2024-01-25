@@ -32,8 +32,8 @@ class MaterialController extends AdminController
     public function result(Content $content)
     {
         $json = json_decode(Storage::get('result.json'), true);
-        $erro = new Table(['路径'], $json['erro']);
-        $miss = new Table(['路径'], $json['miss']);
+        $erro = new Table(['id','路径'], $json['erro']);
+        $miss = new Table(['id','路径'], $json['miss']);
         $t =  new Tab();
         $t->add('未匹配', $miss);
         $t->add('错误', $erro);
