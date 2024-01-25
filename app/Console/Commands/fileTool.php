@@ -71,7 +71,7 @@ class fileTool extends Command
             }
 
             $info = pathinfo(trim($line));
-            if($info['extension'] == 'mxf') {
+            if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
 
                 if(count($filenames) == 2) {
