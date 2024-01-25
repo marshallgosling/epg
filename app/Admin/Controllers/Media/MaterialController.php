@@ -65,8 +65,8 @@ class MaterialController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         $grid->column('unique_no', __('Unique_no'))->sortable()->width(200);
-        $grid->column('filepath', __('可用'))->display(function($filepath) {
-            return $filepath ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i>';
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
         });
         $grid->column('name', __('Name'))->display(function ($name) {
             if($this->comment) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->comment).'" data-toggle="tooltip" data-placement="top">Eng</small>';
@@ -101,6 +101,7 @@ class MaterialController extends AdminController
             $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
             $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
+            $filter->equal("status", __('Status'))->radio(Material::STATUS);
         
         });
         
