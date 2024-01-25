@@ -12,8 +12,12 @@ use App\Models\Material;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Tab;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 
 class MaterialController extends AdminController
@@ -24,6 +28,20 @@ class MaterialController extends AdminController
      * @var string
      */
     protected $title = '物料管理';
+
+    public function result(Content $content)
+    {
+        $json = json_decode(Storage::get('result.json'), true);
+        $erro = new Table(['路径'], $json['erro']);
+        $miss = new Table(['路径'], $json['miss']);
+        $t =  new Tab();
+        $t->add('未匹配', $miss);
+        $t->add('错误', $erro);
+
+        return $content->title('匹配结果')
+        ->description("物料匹配结果")
+        ->body($t->render());
+    }
 
     /**
      * Make a grid builder.
