@@ -64,7 +64,7 @@ class Record2 extends Model
 
     public static function findRandom($key, $maxduration)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('record2.unique_no')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('record2.category','like',"%$key%")->pluck('unique_no')->toArray();
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('record2.unique_no')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('record2.category','like',"%$key,%")->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   
 
@@ -170,7 +170,7 @@ class Record2 extends Model
 
     public static function findRandomEpisode($c, $maxduration)
     {
-        $list = DB::table('record2')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c%")->get()->toArray();
+        $list = DB::table('record2')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c,%")->get()->toArray();
 
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
@@ -185,10 +185,10 @@ class Record2 extends Model
         if(self::$bumper) return;
 
         self::$bumper = [];
-        self::$bumper[] = Record2::where('category', $category)->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('category', $category)->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('category', $category)->where('seconds','>', 300)->where('seconds','<=', 600)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('category', $category)->where('seconds','>', 600)->where('seconds','<=', 1200)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category.',')->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category.',')->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category.',')->where('seconds','>', 300)->where('seconds','<=', 600)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('category', $category.',')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function findBumper($key) {
@@ -205,7 +205,7 @@ class Record2 extends Model
     }
 
     public static function findPR($category) {
-        if(!self::$pr) self::$pr = Record2::where('category', $category)->select('unique_no')->pluck('unique_no')->toArray();
+        if(!self::$pr) self::$pr = Record2::where('category', $category.',')->select('unique_no')->pluck('unique_no')->toArray();
 
         self::$pr = Arr::shuffle(self::$pr);
         $id = Arr::random(self::$pr);
