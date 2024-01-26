@@ -65,11 +65,7 @@ class fileTool extends Command
         $erro = [];
         foreach($lines as $line)
         {
-            if(strpos($line, '已播')) {
-                $this->info($line);
-                continue;
-            }
-
+            
             $info = pathinfo(trim($line));
             if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
@@ -78,7 +74,12 @@ class fileTool extends Command
                     $code = $filenames[1];
                     $m = Material::where('unique_no', $code)->first();
                     if($m) {
+                        if($m->status == Material::STATUS_READY) {
+                            $this->info("重复 ".$line);
+                            continue;
+                        }
                         $m->filepath = $line;
+                        $m->status = Material::STATUS_READY;
                         $m->save();
                         $succ[] = $line;
                     }
@@ -91,7 +92,7 @@ class fileTool extends Command
                 }
             }
         }
-        Storage::put("result.json", json_encode(compact('succ', 'miss', 'erro')));
+        Storage::put("result1.json", json_encode(compact('succ', 'miss', 'erro')));
     }
 
     private function daily()
