@@ -44,9 +44,28 @@ class MaterialController extends AdminController
         }
         $erro = new Table(['id','路径'], $d1);
         $miss = new Table(['id','路径'], $d2);
+
+        $json = json_decode(Storage::get('result2.json'), true);
+        $d3 = [];
+        foreach($json['erro'] as $k=>$v)
+        {
+            $d3[] = [$k, $v];
+        }
+        $d4 = [];
+        foreach($json['miss'] as $k=>$v)
+        {
+            $d4[] = [$k, $v];
+        }
+
+        $erro1 = new Table(['id','路径'], $d3);
+        $miss1 = new Table(['id','路径'], $d4);
+
         $t =  new Tab();
         $t->add('未匹配', $miss);
         $t->add('错误', $erro);
+
+        $t->add('已播未匹配', $miss1);
+        $t->add('已播错误', $erro1);
 
         return $content->title('匹配结果')
         ->description("物料匹配结果")
