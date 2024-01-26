@@ -63,7 +63,7 @@ class MaterialController extends AdminController
         $grid = new Grid(new Material());
 
         $grid->model()->orderBy('id', 'desc');
-        $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
+        $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('unique_no', __('Unique_no'))->sortable()->width(200);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
