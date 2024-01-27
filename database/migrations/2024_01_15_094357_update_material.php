@@ -16,6 +16,7 @@ class UpdateMaterial extends Migration
         Schema::table('material', function(Blueprint $table) {
             $table->timestamp('air_date')->comment('首播日期')->nullable();
             $table->timestamp('expired_date')->comment('过期日期')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->comment('状态');
         });
     }
 

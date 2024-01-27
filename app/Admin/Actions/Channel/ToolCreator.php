@@ -49,15 +49,8 @@ class ToolCreator extends Action
             $ch->version = 1;
             $ch->status = Channel::STATUS_EMPTY;
             $ch->audit_status = Channel::AUDIT_EMPTY;
+            $ch->save();
             
-            if($generate == '1') {
-                $ch->status = Channel::STATUS_RUNNING;
-                $ch->save();
-                ProgramsJob::dispatch($ch->uuid);
-            }
-            else {
-                $ch->save();
-            }
 
             $s += 86400;
 
@@ -72,7 +65,7 @@ class ToolCreator extends Action
     {
         $this->date('create_start_at', '开始日期')->required();
         $this->date('create_end_at', '结束日期')->required();
-        $this->checkbox('generate', '同时生成节目单')->options([1=>'生成']);
+        //$this->checkbox('generate', '同时生成节目单')->options([1=>'生成']);
         $this->hidden('create_group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default('根据日期范围创建节目单。')->disable();
     }

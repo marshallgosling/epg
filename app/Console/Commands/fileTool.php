@@ -60,26 +60,39 @@ class fileTool extends Command
         $file = $this->argument('path') ?? "";
         if(!$file) return;
         $lines = explode(PHP_EOL, Storage::get($file));
+        $succ = [];
+        $miss = [];
+        $erro = [];
         foreach($lines as $line)
         {
-            $items = explode('.', trim($line));
-            if(count($items) > 2) {
-                $code = $items[1];
+            
+            $info = pathinfo(trim($line));
+            if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
+                $filenames = explode('.', $info['filename']);
 
-                $m = Material::where('unique_no', $code)->first();
-                if($m) {
-                    $m->filepath = trim($line);
-                    $m->save();
+                if(count($filenames) == 2) {
+                    $code = $filenames[1];
+                    $m = Material::where('unique_no', $code)->first();
+                    if($m) {
+                        if($m->status == Material::STATUS_READY) {
+                            $this->info("重复 ".$line);
+                            continue;
+                        }
+                        $m->filepath = $line;
+                        $m->status = Material::STATUS_READY;
+                        $m->save();
+                        $succ[] = $line;
+                    }
+                    else {
+                        $miss[] = $line;
+                    }
                 }
                 else {
-                    $this->error($line);
+                    $erro[] = $line;
                 }
-                
-            }
-            else {
-                $this->error($line);
             }
         }
+        Storage::put("result1.json", json_encode(compact('succ', 'miss', 'erro')));
     }
 
     private function daily()

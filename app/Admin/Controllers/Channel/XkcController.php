@@ -98,7 +98,7 @@ class XkcController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new ToolCreator('xkc'));
+            //$tools->append(new ToolCreator('xkc'));
             $tools->append(new BatchAudit);
             $tools->append(new ToolExporter('xkc'));
             $tools->append(new ToolGenerator('xkc'));

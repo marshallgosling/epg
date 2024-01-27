@@ -23,6 +23,7 @@ Route::group([
     $router->resource('/media/xkc', 'Media\\XkcProgramController')->names('media.xkc');
     $router->resource('/media/xki', 'Media\\XkiProgramController')->names('media.xki');
     $router->resource('/media/xkv', 'Media\\XkvProgramController')->names('media.xkv');
+    $router->get('/media/material/result', 'Media\\MaterialController@result')->name('media.result');
     
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');

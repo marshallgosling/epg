@@ -190,9 +190,9 @@ class ChannelGenerator
     {
         try {
             
-            $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
-            $d2 = strtotime($date);
-            if($d2 > $d)
+            // $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
+            // $d2 = strtotime($date);
+            //if($d2 > $d)
                 Storage::put($group.'.txt', $date);
         }
         catch(\Exception $e)

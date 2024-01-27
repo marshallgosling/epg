@@ -12,6 +12,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use App\Admin\Actions\Program\Record2Material;
 
 class XkiProgramController extends AdminController
 {
@@ -40,7 +41,10 @@ class XkiProgramController extends AdminController
         
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
+        $grid->column('unique_no', __('Unique no'))->width(200)->modal(Record2Material::class);
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Record::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i> ';
+        });
         $grid->column('name', __('Name'))->display(function ($name) {
             if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
             else $name2 = '';
@@ -71,6 +75,7 @@ class XkiProgramController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->clike('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); 
                 $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); 
+                $filter->equal("status", __('Status'))->select(Record::STATUS);
             });
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->mlike('episodes', __('Episodes'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); 

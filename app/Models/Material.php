@@ -12,6 +12,12 @@ class Material extends Model
     
     protected $table = 'material';
 
+    public const STATUS_EMPTY = 0;
+    public const STATUS_READY = 1;
+    public const STATUS_ERROR = 2;
+    public const STATUS_PRO = 3;
+    public const STATUS = ['未知', '可用', '错误', '需处理'];
+
     protected $fillable = [
         'id',
         'name',

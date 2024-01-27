@@ -12,8 +12,12 @@ use App\Models\Material;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Tab;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 
 class MaterialController extends AdminController
@@ -25,6 +29,49 @@ class MaterialController extends AdminController
      */
     protected $title = '物料管理';
 
+    public function result(Content $content)
+    {
+        $json = json_decode(Storage::get('result.json'), true);
+        $d1 = [];
+        foreach($json['erro'] as $k=>$v)
+        {
+            $d1[] = [$k, $v];
+        }
+        $d2 = [];
+        foreach($json['miss'] as $k=>$v)
+        {
+            $d2[] = [$k, $v];
+        }
+        $erro = new Table(['id','路径'], $d1);
+        $miss = new Table(['id','路径'], $d2);
+
+        $json = json_decode(Storage::get('result2.json'), true);
+        $d3 = [];
+        foreach($json['erro'] as $k=>$v)
+        {
+            $d3[] = [$k, $v];
+        }
+        $d4 = [];
+        foreach($json['miss'] as $k=>$v)
+        {
+            $d4[] = [$k, $v];
+        }
+
+        $erro1 = new Table(['id','路径'], $d3);
+        $miss1 = new Table(['id','路径'], $d4);
+
+        $t =  new Tab();
+        $t->add('未匹配', $miss);
+        $t->add('错误', $erro);
+
+        $t->add('已播未匹配', $miss1);
+        $t->add('已播错误', $erro1);
+
+        return $content->title('匹配结果')
+        ->description("物料匹配结果")
+        ->body($t->render());
+    }
+
     /**
      * Make a grid builder.
      *
@@ -35,10 +82,10 @@ class MaterialController extends AdminController
         $grid = new Grid(new Material());
 
         $grid->model()->orderBy('id', 'desc');
-        $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
+        $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('unique_no', __('Unique_no'))->sortable()->width(200);
-        $grid->column('filepath', __('可用'))->display(function($filepath) {
-            return $filepath ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i>';
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
         });
         $grid->column('name', __('Name'))->display(function ($name) {
             if($this->comment) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->comment).'" data-toggle="tooltip" data-placement="top">Eng</small>';
@@ -73,6 +120,7 @@ class MaterialController extends AdminController
             $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
             $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
+            $filter->equal("status", __('Status'))->select(Material::STATUS);
         
         });
         
