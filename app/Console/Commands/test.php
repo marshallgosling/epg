@@ -40,7 +40,7 @@ class test extends Command
         $day = $this->argument('d') ?? "2024-02-06";
 
 
-        $list = DB::table('material')->where('filepath', 'like', '%灿星自制%')->select('filepath','category')->get();
+        $list = Material::where('filepath', 'like', '%灿星自制%')->select('filepath','category')->get();
 
         foreach($list as $line)
         {
