@@ -96,7 +96,7 @@ class XkvController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new ToolCreator('xkv'));
+            //$tools->append(new ToolCreator('xkv'));
             $tools->append(new BatchAudit());
             $tools->append(new ToolExporter('xkv'));
             $tools->append(new ToolGenerator('xkv'));

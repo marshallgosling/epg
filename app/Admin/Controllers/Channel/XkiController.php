@@ -98,7 +98,7 @@ class XkiController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new ToolCreator('xki'));
+            //$tools->append(new ToolCreator('xki'));
             $tools->append(new BatchAudit);
             $tools->append(new ToolExporter('xki'));
             $tools->append(new ToolGenerator('xki'));
