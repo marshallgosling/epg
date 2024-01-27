@@ -39,12 +39,12 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
 
-        $list = Material::where('filepath', 'like', '%灿星自制%')->get();
+        $list = Material::where('filepath', 'like', '%卡通%')->get();
 
         foreach($list as $line)
         {
             $info = explode('\\', $line->filepath);
-            $line->filepath = 'Y:\\音综\\'.array_pop($info);
+            $line->filepath = 'Y:\\卡通\\'.array_pop($info);
             $line->save();
             $this->info($line->filepath);
         }
