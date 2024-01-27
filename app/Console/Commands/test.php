@@ -45,9 +45,9 @@ class test extends Command
         foreach($list as $line)
         {
             $info = pathinfo($line->filepath);
-            $line->filepath = 'Y:/音综/'.$info['basename'];
+            $line->filepath = 'Y:\\音综\\'.$info['filename'].'.'.$info['extension'];
             $line->save();
-            $this->info('Y:/音综/'.$info['basename']);
+            $this->info('Y:\\音综\\'.$info['filename'].'.'.$info['extension']);
         }
 
         return 0;
