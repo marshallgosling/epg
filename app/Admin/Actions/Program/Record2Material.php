@@ -2,15 +2,15 @@
 namespace App\Admin\Actions\Material;
 
 use App\Models\Material;
-use Encore\Admin\Widgets\Box;
+use App\Models\Record2 as Record;
 use Illuminate\Contracts\Support\Renderable;
 
-class ShowMaterial implements Renderable
+class Record2Material implements Renderable
 {
     public function render($key = null)
     {
         $data = '<tr><td><h4>没有匹配到素材信息</h4></td></tr>';
-        $m = Material::where('unique_no', $key)->first();
+        $m = Material::where('unique_no', Record::find($key)->unique_no)->first();
         if($m) {
         
             $data = '<tr><td><b>'.__('Name').'</b></td><td colspan="3">'.$m->name.'</td></tr>';
