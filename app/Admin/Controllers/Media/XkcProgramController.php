@@ -43,7 +43,7 @@ class XkcProgramController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->width(200)->modal(ShowMaterial::class);
         $grid->column('status', __('Status'))->display(function($status) {
-            return $status == Record::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Record::STATUS[$status].'"></i> ';
+            return $status == Record::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i> ';
         });
         $grid->column('name', __('Name'))->display(function ($name) {
             if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
