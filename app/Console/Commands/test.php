@@ -47,6 +47,7 @@ class test extends Command
             $info = pathinfo($line->filepath);
             $line->filepath = 'Y:/音综/'.$info['basename'];
             $line->save();
+            $this->info('Y:/音综/'.$info['basename']);
         }
 
         return 0;
