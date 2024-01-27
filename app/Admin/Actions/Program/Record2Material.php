@@ -17,6 +17,7 @@ class Record2Material implements Renderable
             $data .= '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td></tr><tr><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
             $data .= '<tr><td><b>'.__('Filepath').'</b></td><td>'.$m->filepath.'</td></tr>';
             $data .= '<tr><td><b>'.__('Duration').'</b></td><td>'.$m->duration.'</td></tr><tr><td><b>'.__('Frames').'</b></td><td>'.$m->frames.'</td></tr>';
+            $data .= '<tr><td><b>'.__('Status').'</b></td><td>'.Material::STATUS[$m->status].'</td></tr>';
         }
 
         $html = <<<HTML
