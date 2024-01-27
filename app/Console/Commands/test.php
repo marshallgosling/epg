@@ -40,20 +40,13 @@ class test extends Command
         $day = $this->argument('d') ?? "2024-02-06";
 
 
-        $list = DB::table('material')->where('filepath', 'like', '%已播%')->select('filepath','category')->get();
+        $list = DB::table('material')->where('filepath', 'like', '%灿星自制%')->select('filepath','category')->get();
 
         foreach($list as $line)
         {
-            switch($line->category)
-            {
-                case 'CanXin': $this->info("move '".$line->filepath."' 'Y:\综艺\'" ); break;
-                case 'drama': $this->info("move '".$line->filepath."' 'Y:\电视剧\'" ); break;
-                case 'cartoon': $this->info("move '".$line->filepath."' 'Y:\卡通\'" ); break;
-                case 'Entertainm': $this->info("move '".$line->filepath."' 'Y:\综艺\'" ); break;
-                case 'movie': $this->info("move '".$line->filepath."' 'Y:\电影\'" ); break;
-                default: $this->info("move '".$line->filepath."' 'Y:\宣传片垫片\'" ); break;
-            }
-                
+            $info = pathinfo($line->filepath);
+            $line->filepath = 'Y:/音综/'.$info['basename'];
+            $line->save();
         }
 
         return 0;
