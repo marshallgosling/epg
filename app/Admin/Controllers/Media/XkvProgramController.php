@@ -43,7 +43,7 @@ class XkvProgramController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('unique_no', __('Unique no'))->width(200)->modal(ShowMaterial::class);
         $grid->column('status', __('Status'))->display(function($status) {
-            return $status == Program::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
+            return $status == Program::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Program::STATUS[$status].'"></i> ';
         });
         $grid->column('name', __('Name'))->expand(function() {
             
