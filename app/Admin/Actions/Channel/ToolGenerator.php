@@ -43,18 +43,20 @@ class ToolGenerator extends Action
             return $this->response()->error('节目单有状态为“错误”的情况，请先处理错误的节目单后才能继续。');
         }
 
-        $last = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date', 'desc')->first();
-        if(!$last) {
-            return $this->response()->error('没有节目单需要生成');
-        }
+        // $last = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date', 'desc')->first();
+        // if(!$last) {
+        //     return $this->response()->error('没有节目单需要生成');
+        // }
 
-        $start_at = $request->get('generate_start_at');
-        $end_at = $request->get('generate_end_at') ?? $last->air_date;
         
+        $start_at = $request->get('generate_start_at');
+            
         $s = strtotime($start_at);
-        $e = strtotime($end_at);
-
         $max = $s + 86400 * (int)config('SIMULATOR_DAYS', 14) - 86400;
+
+        $end_at = $request->get('generate_end_at') ?? false;
+        if($end_at) $e = strtotime($end_at);
+        else $e = $max;
 
         if($s > $e) {
             return $this->response()->error('结束日期不能早于开始日期');
@@ -62,36 +64,43 @@ class ToolGenerator extends Action
 
         if($e > $max) $end_at = date('Y-m-d', $max);
 
-        $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])
-                    ->where('air_date','>=',$start_at)->where('air_date','<=',$end_at)->get();
+        // $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])
+        //             ->where('air_date','>=',$start_at)->where('air_date','<=',$end_at)->get();
+        //$channels = Channel::generate($group, $s, $e);
         
-        if($channels) {
-            foreach($channels as $model) {
-                if($model->status == Channel::STATUS_EMPTY) {
-                    $model->status = Channel::STATUS_WAITING;
-                    $model->save();
-                }
-            }
+        //if($channels) {
+            // foreach($channels as $model) {
+            //     if($model->status == Channel::STATUS_EMPTY) {
+            //         $model->status = Channel::STATUS_WAITING;
+            //         $model->save();
+            //     }
+            // }
         
             if($group == 'xkc')
-                XkcGeneratorJob::dispatch($group)->onQueue('xkc');
+                XkcGeneratorJob::dispatch(compact('s','e'))->onQueue('xkc');
             else if($group == 'xki')
-                XkiGeneratorJob::dispatch($group)->onQueue('xki');
+                XkiGeneratorJob::dispatch(compact('s','e'))->onQueue('xki');
             else
-                XkvGeneratorJob::dispatch($group)->onQueue('xkv');
-        }
+                XkvGeneratorJob::dispatch(compact('s','e'))->onQueue('xkv');
+        //}
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }
 
     public function form()
     {
-        $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$this->group])->orderBy('air_date')->first();
-        $c = $channel ? $channel->air_date : date('Y-m-d');
+        $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$this->group])->orderBy('air_date')->first();
+        if($channel) {
+            $c = strtotime($channel->air_date) + 86400;
+            $this->text('info', '开始日期')->default(date('Y-m-d', $c))->disable();
+        }
+        else {
+            $c = time();
+            $this->date('info', '开始日期')->default(date('Y-m-d'));
+        }
         
-        $this->text('info', '开始日期')->default($c)->disable();
         $this->date('generate_end_at', '结束日期')->placeholder('不填则自动结束');
-        $this->hidden('generate_start_at', '开始日期')->default($c);
+        $this->hidden('generate_start_at', '开始日期')->default(date('Y-m-d', $c));
         $this->hidden('generate_group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default("串联单固定按日期生成，从近到远的顺序。\n如果节目单有状态为“错误”的情况，则自动生成不会进行\n最多生成 ".config('SIMULATOR_DAYS', 14). ' 天')->disable();
         

@@ -29,15 +29,18 @@ class XkcGeneratorJob implements ShouldQueue, ShouldBeUnique
      */ 
     private $group = 'xkc';
 
+    private $range;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($range)
     {
         $this->log_channel = 'channel';
         $this->log_print = false;
+        $this->range = $range;
     }
 
     public function uniqueId()
@@ -80,8 +83,10 @@ class XkcGeneratorJob implements ShouldQueue, ShouldBeUnique
             $generator->reset();
             return 0;
         }
-        
-        $generator->generate();
+
+        $channels = Channel::generate($this->group, $this->range['s'], $this->range['e']);
+        if($channels && count($channels) > 0)
+            $generator->generate($channels);
 
     }
 
