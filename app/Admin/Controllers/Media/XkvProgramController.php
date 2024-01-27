@@ -96,6 +96,7 @@ class XkvProgramController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->clike('category', __('Category'))->select(Category::getFormattedCategories('tags', true));
                 $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
+                $filter->equal("status", __('Status'))->select(Program::STATUS);
             });
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');

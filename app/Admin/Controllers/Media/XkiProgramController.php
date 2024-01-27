@@ -75,6 +75,7 @@ class XkiProgramController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->clike('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); 
                 $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); 
+                $filter->equal("status", __('Status'))->select(Record::STATUS);
             });
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->mlike('episodes', __('Episodes'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); 
