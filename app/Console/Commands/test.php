@@ -40,11 +40,11 @@ class test extends Command
         $day = $this->argument('d') ?? "2024-02-06";
 
 
-        $list = Material::where('filepath', 'like', '%灿星自制%')->select('filepath','category')->get();
+        $list = Material::where('filepath', 'like', '%灿星自制%')->get();
 
         foreach($list as $line)
         {
-            $info = pathinfo($line->filepath);
+            $info = pathinfo((string)$line->filepath);
             $line->filepath = 'Y:\\音综\\'.$info['filename'].'.'.$info['extension'];
             $line->save();
             $this->info('Y:\\音综\\'.$info['filename'].'.'.$info['extension']);
