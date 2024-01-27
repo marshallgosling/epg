@@ -13,9 +13,14 @@ class Program extends Model
 
     protected $table = 'program';
 
+    public const STATUS_EMPTY = 0;
+    public const STATUS_READY = 1;
+    public const STATUS_ERROR = 2;
+    public const STATUS = ['不可用', '可用', '错误'];
+
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',
-        'album','artist','co_artist', 'duration',
+        'album','artist','co_artist', 'duration', 'status',
         'company', 'air_date', 'product_date', 'seconds',
         'genre', 'gender','lang','mood','tempo','energy', 'black'
     ];

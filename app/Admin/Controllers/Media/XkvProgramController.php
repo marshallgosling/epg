@@ -12,6 +12,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use App\Admin\Actions\Material\ShowMaterial;
 
 class XkvProgramController extends AdminController
 {
@@ -40,7 +41,10 @@ class XkvProgramController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
+        $grid->column('unique_no', __('Unique no'))->width(200)->modal(ShowMaterial::class);
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Program::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
+        });
         $grid->column('name', __('Name'))->expand(function() {
             
             $table = '<tr><td width="200px">'.__('Artist').'</td><td colspan="3">'.$this->artist.'</td></tr>'.

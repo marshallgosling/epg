@@ -20,11 +20,15 @@ class Record extends Model
 
     public const CATEGORIES = ['movie'=>'电影','CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧','docu'=>'纪实'];
     public const XKC = ['CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧'];
-    
+    public const STATUS_EMPTY = 0;
+    public const STATUS_READY = 1;
+    public const STATUS_ERROR = 2;
+    public const STATUS = ['不可用', '可用', '错误'];
+
     protected $fillable = [
         'id', 'name', 'name2', 'unique_no','category', 'comment',
         'duration', 'air_date', 'expired_date', 'seconds',
-        'ep', 'episodes', 'black'
+        'ep', 'episodes', 'black', 'status'
     ];
 
     protected $casts = [

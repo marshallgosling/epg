@@ -15,6 +15,7 @@ class UpdateRecord extends Migration
     {
         Schema::table('records', function(Blueprint $table) {
             $table->string('name2', 150)->after('name')->nullable()->comment('英文标题');
+            $table->unsignedTinyInteger('status')->default(0)->comment('状态');
         });
     }
 

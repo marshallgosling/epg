@@ -24,7 +24,7 @@ class CreateRecord2 extends Migration
             $table->unsignedInteger('seconds')->default(0)->index('seconds');
             $table->string('duration', 20)->default('')->comment('时长')->nullable();
             $table->string('black', 20)->comment('黑名单')->nullable();
-            
+            $table->unsignedTinyInteger('status')->default(0)->comment('状态');
             $table->string('air_date', 20)->default('')->comment('版权首播日期')->nullable();
             $table->string('expired_date', 20)->default('')->comment('版权过期日期')->nullable();
             $table->string('comment', 128)->default('')->comment('备注')->nullable();

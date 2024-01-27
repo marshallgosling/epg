@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\ShowMaterial;
 use App\Admin\Actions\Program\BatchModify;
 use App\Events\CategoryRelationEvent;
 use App\Models\Record;
@@ -40,7 +41,10 @@ class XkcProgramController extends AdminController
         
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
+        $grid->column('unique_no', __('Unique no'))->width(200)->modal(ShowMaterial::class);
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Record::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
+        });
         $grid->column('name', __('Name'))->display(function ($name) {
             if($this->name2) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->name2).'" data-toggle="tooltip" data-placement="top">Eng</small>';
             else $name2 = '';

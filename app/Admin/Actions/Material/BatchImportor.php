@@ -52,6 +52,7 @@ class BatchImportor extends BatchAction
             $program->duration = $model->duration;
             $program->category = [$model->category];
             $program->seconds = ChannelGenerator::parseDuration($model->duration);
+            $program->status = $model->status;
             
             if($class::where('unique_no', $model->unique_no)->exists())
             {

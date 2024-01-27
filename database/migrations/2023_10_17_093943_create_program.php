@@ -34,6 +34,7 @@ class CreateProgram extends Migration
             $table->string('company', 50)->default('')->comment('唱片公司')->nullable();
             $table->string('air_date', 20)->default('')->comment('首播日期')->nullable();
             $table->string('product_date', 20)->default('')->comment('制作完成日期')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->comment('状态');
             $table->string('comment', 128)->default('')->comment('备注')->nullable();
             $table->string('uuid', 50)->nullable();
             
