@@ -11,7 +11,7 @@ class MediaInfo
         $cmd = [];
         $cmd[] = config("MEDIAINFO_PATH", 'MediaInfo.exe');
         $cmd[] = "--Output=JSON";
-        $cmd[] = '"'.$material->filepath.'"';
+        $cmd[] = $material->filepath;
 
         $process = new Process($cmd);
         $process->run();
