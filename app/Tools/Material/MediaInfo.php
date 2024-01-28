@@ -61,9 +61,6 @@ class MediaInfo
         if ($process->isSuccessful()) {
             return implode(' ', $cmd).$process->getOutput();
         }
-        else {
-            return $process;
-        }
         
         return false;
         

@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Material;
 use App\Models\Material;
 use App\Tools\Material\MediaInfo;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Artisan;
 
 class CheckMediaInfo implements Renderable
 {
@@ -12,7 +13,9 @@ class CheckMediaInfo implements Renderable
         $m = Material::find($key);
         $data = '<tr><td><h4>没有素材 mxf 格式信息，文件：'.$m->filepath.'</h4></td></tr>';
         if($m) {
-            $info = MediaInfo::geRawInfo($m);
+            //$info = MediaInfo::geRawInfo($m);
+            Artisan::call('tools:material',['mediainfo',$key,1]);
+            $info = Artisan::output();
             if($info) {
                 $data = '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
                 $data .= '<tr><td><b>'.__('Filepath').'</b></td><td colspan="3">'.$m->filepath.'</td></tr>';

@@ -12,6 +12,7 @@ use App\Models\Program;
 use App\Models\Record;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter;
+use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -54,7 +55,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move', 'seconds'];
+        $actions = ['import','move', 'seconds','mediainfo'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -64,6 +65,23 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function mediainfo($id, $group=0)
+    {
+        
+        $material = Material::findOrFail($id);
+
+        if(file_exists($material->filepath)) {
+            try{
+                $info = MediaInfo::geRawInfo($material);
+            }catch(\Exception $e)
+            {
+                $info = false;
+            }
+
+            return $info;
+        }
     }
 
     private function seconds() {
