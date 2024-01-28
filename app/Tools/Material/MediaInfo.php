@@ -21,7 +21,7 @@ class MediaInfo
             $data = json_decode($json);
 
             $frames = $data->media->track[0]->FrameCount;
-            $durtion = $data->media->track[0]->Duration;
+            $duration = $data->media->track[0]->Duration;
             $size = $data->media->track[0]->FileSize;
 
             return compact('frames', 'duration', 'size');
