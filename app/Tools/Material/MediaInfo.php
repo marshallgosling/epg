@@ -59,7 +59,7 @@ class MediaInfo
         $process = new Process($cmd);
         $process->run();
         if ($process->isSuccessful()) {
-            return implode(' ', $cmd).$process->getOutput();
+            return $process->getOutput();
         }
         
         return false;
