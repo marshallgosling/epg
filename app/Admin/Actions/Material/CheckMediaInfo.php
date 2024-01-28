@@ -16,7 +16,7 @@ class CheckMediaInfo implements Renderable
             if($info) {
                 $data = '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
                 $data .= '<tr><td><b>'.__('Filepath').'</b></td><td colspan="3">'.$m->filepath.'</td></tr>';
-                $data .= '<tr><td><b>MediaInfo</b></td><td colspan="3" style="height:400px;overflow:scroll;"><code>'.$info.'</code></td></tr>';
+                $data .= '<tr><td><b>MediaInfo</b></td><td colspan="3" style="height:400px;overflow:scroll;"><code>'.print_r($info, true).'</code></td></tr>';
             }
             
         }

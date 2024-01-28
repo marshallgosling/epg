@@ -62,7 +62,7 @@ class MediaInfo
             return $process->getOutput();
         }
         else {
-            return $process->getErrorOutput();
+            return $process;
         }
         
         return false;
