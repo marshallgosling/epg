@@ -20,8 +20,6 @@ class MediaInfo
 
             $data = json_decode($json);
 
-            print_r($data);exit;
-
             $frames = $data->media->track[0]->FrameCount;
             $durtion = $data->media->track[0]->Duration;
             $size = $data->media->track[0]->FileSize;
