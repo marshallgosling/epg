@@ -89,6 +89,8 @@ class fileTool extends Command
                 $seconds = ChannelGenerator::parseDuration($duration);
     
                 $data = compact('status', 'duration', 'seconds');
+
+                print_r($data);
     
                 foreach(['records', 'record2', 'program'] as $table)
                     DB::table($table)->where('unique_no', $unique_no)->update($data);
