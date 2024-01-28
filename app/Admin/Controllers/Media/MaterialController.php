@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Media;
 use App\Admin\Actions\Material\BatchCreator;
 use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
+use App\Admin\Actions\Material\CheckMediaInfo;
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
 use App\Models\Channel;
@@ -83,7 +84,7 @@ class MaterialController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('unique_no', __('Unique_no'))->sortable()->width(200);
+        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("Media Info", CheckMediaInfo::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
         });

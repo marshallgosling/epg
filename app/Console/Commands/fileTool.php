@@ -61,25 +61,47 @@ class fileTool extends Command
     {
         $file = $this->argument('path') ?? "";
         $material = Material::findOrFail($file);
+        $unique_no = $material->unique_no;
 
         if(file_exists($material->filepath)) {
-            $info = MediaInfo::getInfo($material);
+            try{
+                $info = MediaInfo::getInfo($material);
+            }catch(\Exception $e)
+            {
+                $info = false;
+            }
+            
+            if($info) {
+                $status = Material::STATUS_READY;
+                $material->frames = $info['frames'];
+                $material->size = $info['size'];
+                $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+            }
+            else {
+                $status = Material::STATUS_ERROR;
+            }
+            
+            $material->status = $status;
+            if($material->isDirty()) $material->save();
 
-            $material->frames = $info['frames'];
-            $material->size = $info['size'];
-            $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
-            //$material->save();
-
-            $status = Material::STATUS_READY;
-            $unique_no = $material->unique_no;
-            $duration = $material->duration;
-            $seconds = ChannelGenerator::parseDuration($duration);
-
-            $data = compact('status', 'duration', 'seconds');
-
-            print_r($info);
-            // foreach(['records', 'record2', 'program'] as $table)
-            //     DB::table($table)->where('unique_no', $unique_no)->update($data);
+            if($info) {
+                $duration = $material->duration;
+                $seconds = ChannelGenerator::parseDuration($duration);
+    
+                $data = compact('status', 'duration', 'seconds');
+    
+                foreach(['records', 'record2', 'program'] as $table)
+                    DB::table($table)->where('unique_no', $unique_no)->update($data);
+            }
+            else {
+                foreach(['records', 'record2', 'program'] as $table)
+                    DB::table($table)->where('unique_no', $unique_no)->update(['status'=>$status]);
+            }
+            
+        }
+        else {
+            foreach(['records', 'record2', 'program','material'] as $table)
+                DB::table($table)->where('unique_no', $unique_no)->update(['status'=>Material::STATUS_EMPTY]);
         }
     }
 
