@@ -61,6 +61,9 @@ class MediaInfo
         if ($process->isSuccessful()) {
             return $process->getOutput();
         }
+        else {
+            return $process->getErrorOutput();
+        }
         
         return false;
         
