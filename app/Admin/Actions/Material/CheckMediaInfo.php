@@ -14,7 +14,7 @@ class CheckMediaInfo implements Renderable
         $data = '<tr><td><h4>没有素材 mxf 格式信息，文件：'.$m->filepath.'</h4></td></tr>';
         if($m) {
             //$info = MediaInfo::geRawInfo($m);
-            Artisan::call('tools:material mediainfo '.$key);
+            Artisan::call('tools:material',['action'=>'mediainfo','id'=>$key]);
             $info = Artisan::output();
             if($info) {
                 $data = '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
