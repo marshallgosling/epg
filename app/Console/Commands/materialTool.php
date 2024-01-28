@@ -80,7 +80,7 @@ class materialTool extends Command
                 $info = false;
             }
 
-            return $info;
+            echo $info;
         }
     }
 
