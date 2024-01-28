@@ -56,7 +56,7 @@ class MediaInfo
         $cmd[] = config("MEDIAINFO_PATH", 'MediaInfo.exe');
         $cmd[] = $material->filepath;
 
-        $process = new Process($cmd);
+        $process = Process::fromShellCommandline(implode(' ', $cmd));
         $process->run();
         if ($process->isSuccessful()) {
             return $process->getOutput();
