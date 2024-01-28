@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\Material;
 use App\Tools\ChannelGenerator;
+use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 use function PHPSTORM_META\elementType;
@@ -45,7 +47,7 @@ class fileTool extends Command
         $action = $this->argument('action') ?? "xml";
         
 
-        if(in_array($action, ['import', 'clean', 'daily', 'compare']))
+        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo']))
             $this->$action();
         
 
@@ -53,6 +55,32 @@ class fileTool extends Command
         //Material::insert($items);
         
         return 0;
+    }
+
+    private function mediainfo()
+    {
+        $file = $this->argument('path') ?? "";
+        $material = Material::findOrFail($file);
+
+        if(file_exists($material->filepath)) {
+            $info = MediaInfo::getInfo($material);
+
+            $material->frames = $info['frames'];
+            $material->size = $info['size'];
+            $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+            //$material->save();
+
+            $status = Material::STATUS_READY;
+            $unique_no = $material->unique_no;
+            $duration = $material->duration;
+            $seconds = ChannelGenerator::parseDuration($duration);
+
+            $data = compact('status', 'duration', 'seconds');
+
+            print_r($info);
+            // foreach(['records', 'record2', 'program'] as $table)
+            //     DB::table($table)->where('unique_no', $unique_no)->update($data);
+        }
     }
 
     private function compare()

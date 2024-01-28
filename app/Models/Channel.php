@@ -67,10 +67,11 @@ class Channel extends Model
     public static function generate($group, $start, $end)
     {
         $list = [];
-        for(;$start<$end;$start+=86400) {
+        for(;$start<=$end;$start+=86400) {
             
-            if(Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->exists())
+            if(Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->first())
             {
+                //$list[] = $ch;
                 continue;
             }
 

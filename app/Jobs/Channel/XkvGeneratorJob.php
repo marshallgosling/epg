@@ -41,7 +41,7 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId()
     {
-        return "Channel-".$this->uuid;
+        return "Channel-".$this->group;
     }
 
     /**

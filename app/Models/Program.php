@@ -63,6 +63,7 @@ class Program extends Model
                 ->join('material', 'program.unique_no', '=', 'material.unique_no')
                 ->where('program.category','like',"%$key,%")
                 ->where('program.seconds','<',$maxSeconds)
+                //->where('material.status', Material::STATUS_READY)
                 ->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   
