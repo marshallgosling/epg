@@ -59,7 +59,7 @@ class MediaInfo
         $process = Process::fromShellCommandline(implode(' ', $cmd));
         $process->run();
         if ($process->isSuccessful()) {
-            return $process->getOutput();
+            return implode(' ', $cmd).$process->getOutput();
         }
         else {
             return $process;
