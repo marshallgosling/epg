@@ -25,7 +25,7 @@ class CheckMediaInfo implements Renderable
             
             
             if($info) {
-                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;"><textarea cols="140" rows="60">'.$info.'</textarea></td></tr>';
+                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;"><textarea cols="120" rows="30">'.$info.'</textarea></td></tr>';
             }
             else {
                 MediaInfoJob::dispatch($key, 'view')->onQueue('media');
@@ -41,7 +41,7 @@ class CheckMediaInfo implements Renderable
                         url: '/admin/api/mediainfo',
                         data: {unique_no: code},
                         success: function (data) {
-                            $('#code').html('<textarea cols="140" rows="60">'+data+'</textarea>');
+                            $('#code').html('<textarea cols="120" rows="30">'+data+'</textarea>');
                         }
                     });
                 }
