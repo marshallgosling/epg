@@ -111,9 +111,12 @@ class MaterialController extends AdminController
             //$actions->add(new Importor);
         });
 
+        $grid->batchActions(function ($actions) {
+            $actions->append(new BatchSync);
+        });
+
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
-            $tools->append(new BatchSync);
             $tools->append(new BatchImportor);
             $tools->append(new BatchCreator);
         });
