@@ -13,42 +13,45 @@ class CheckMediaInfo implements Renderable
     public function render($key = null)
     {
         $m = Material::find($key);
-        
+        $js = '';
         $data = '<tr><td><h4>没有素材 mxf 格式信息</h4></td></tr>';
         if($m) {
             $unique_no = $m->unique_no;
 
-            $info = Cache::get('mediainfo_'.$unique_no);
+            //$info = Cache::get('mediainfo_'.$unique_no);
+            
 
             $data = '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
             $data .= '<tr><td><b>'.__('Filepath').'</b></td><td colspan="3">'.$m->filepath.'</td></tr>';
+            $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;overflow:scroll;"><code>'.
+                passthru(config("MEDIAINFO_PATH", 'bin\MediaInfo.exe').' "'.$m->filepath.'"')
+                .'</code></td></tr>';
             
-            $js = '';
-            if($info) {
-                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;overflow:scroll;"><code>'.$info.'</code></td></tr>';
-            }
-            else {
-                MediaInfoJob::dispatch($key, 'view');
-                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;overflow:scroll;">loading...</td></tr>';
+            // $js = '';
+            // if($info) {
+            //     }
+            // else {
+            //     MediaInfoJob::dispatch($key, 'view');
+            //     $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;overflow:scroll;">loading...</td></tr>';
             
-                $js = <<<JS
-                <script>
-                function getCode()
-                {
-                    var code = "{$unique_no}";
-                    $.ajax({
-                        method: 'get',
-                        url: '/admin/api/mediainfo',
-                        data: {unique_no: code},
-                        success: function (data) {
-                            $('#code').html('<code>'+data+'</code>');
-                        }
-                    });
-                }
-                setTimeout("getCode()", 3000);
-            </script>
-            JS;
-            }
+            //     $js = <<<JS
+            //     <script>
+            //     function getCode()
+            //     {
+            //         var code = "{$unique_no}";
+            //         $.ajax({
+            //             method: 'get',
+            //             url: '/admin/api/mediainfo',
+            //             data: {unique_no: code},
+            //             success: function (data) {
+            //                 $('#code').html('<code>'+data+'</code>');
+            //             }
+            //         });
+            //     }
+            //     setTimeout("getCode()", 3000);
+            // </script>
+            // JS;
+            // }
             
         }
 
