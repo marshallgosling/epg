@@ -23,14 +23,17 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     // Job ID;
     private $id;
 
+    private $action;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct($id, $action='sync')
     {
         $this->id = $id;
+        $this->action = $action;
         $this->log_channel = 'mediainfo';
         $this->log_print = false;
     }
@@ -42,9 +45,37 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
+        $action = $this->action;
+        if(in_array($action, ['sync', 'view']))
+        {
+            $this->$action();
+        }
+    }
+
+    private function view()
+    {
         $material = Material::findOrFail($this->id);
         $unique_no = $material->unique_no;
-        
+
+        if(file_exists($material->filepath)) {
+            try{
+                $info = MediaInfo::getRawInfo($material);
+
+                Cache::set('mediainfo_'.$unique_no, $info, 300);
+            }catch(\Exception $e)
+            {
+                $info = false;
+            }
+
+        }
+    }
+
+    
+    private function sync()
+    {
+        $material = Material::findOrFail($this->id);
+        $unique_no = $material->unique_no;
+
         if(file_exists($material->filepath)) {
             try{
                 $info = MediaInfo::getInfo($material);
@@ -90,7 +121,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId()
     {
-        return $this->id;
+        return $this->action.'-'.$this->id;
     }
 
     /**

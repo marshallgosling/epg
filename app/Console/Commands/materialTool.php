@@ -74,7 +74,7 @@ class materialTool extends Command
 
         if(file_exists($material->filepath)) {
             try{
-                $info = MediaInfo::geRawInfo($material);
+                $info = MediaInfo::getRawInfo($material);
             }catch(\Exception $e)
             {
                 $info = false;

@@ -50,7 +50,7 @@ class MediaInfo
      * 
      * @return string
      */
-    public static function geRawInfo(Material $material)
+    public static function getRawInfo(Material $material)
     {
         $cmd = [];
         $cmd[] = config("MEDIAINFO_PATH", 'MediaInfo.exe');
