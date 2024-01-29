@@ -36,7 +36,7 @@ class CheckMediaInfo implements Renderable
                 $.ajax({
                     method: 'get',
                     url: '/admin/api/mediainfo',
-                    data: {unique_no: code}
+                    data: {unique_no: code},
                     success: function (data) {
                         $('#code').html('<code>'+data+'</code>');
                     }
