@@ -29,7 +29,7 @@ class CheckMediaInfo implements Renderable
             }
             else {
                 MediaInfoJob::dispatch($key, 'view');
-                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;overflow:scroll;">loading...</td></tr>';
+                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;overflow:scroll;">MediaInfoJob::dispatch('.$key.', "view"); loading...</td></tr>';
             
                 $js = <<<JS
                 <script>
