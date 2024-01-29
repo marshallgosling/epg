@@ -42,7 +42,7 @@ class AuditController extends AdminController
         {
             $json = json_decode($program->data);
 
-            if($json->replicate) continue;
+            if(key_exists('replicate', $json)) continue;
 
             foreach($json as $item) {
                 if(!in_array($item->unique_no, $unique)) $unique[] = $item->unique_no;
