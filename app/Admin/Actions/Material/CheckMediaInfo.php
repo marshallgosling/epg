@@ -23,29 +23,29 @@ class CheckMediaInfo implements Renderable
             $data = '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
             $data .= '<tr><td><b>'.__('Filepath').'</b></td><td colspan="3">'.$m->filepath.'</td></tr>';
             if(!$m->filepath) {
-                $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;"><h4>没有素材 mxf 格式信息</h4></td></tr>';
+                $data .= '<tr><td><b>MediaInfo</b></td><td colspan="3" style="height:400px;"><h4>没有素材 mxf 格式信息</h4></td></tr>';
            
             }
             else {
 
                 if($info) {
-                    $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;"><textarea cols="120" rows="30">'.$info.'</textarea></td></tr>';
+                    $data .= '<tr><td><b>MediaInfo</b></td><td colspan="3" style="height:400px;"><textarea cols="120" rows="30">'.$info.'</textarea></td></tr>';
                 }
                 else {
                     MediaInfoJob::dispatch($key, 'view')->onQueue('media');
-                    $data .= '<tr><td><b>MediaInfo</b></td><td id="code" colspan="3" style="height:400px;">loading...</td></tr>';
+                    $data .= '<tr><td><b>MediaInfo</b></td><td id="mediainfo" colspan="3" style="height:400px;">loading...</td></tr>';
                 
                     $js = <<<JS
                     <script>
                     function getCode()
                     {
-                        var code = "{$unique_no}";
+                        let code = "{$unique_no}";
                         $.ajax({
                             method: 'get',
                             url: '/admin/api/mediainfo',
                             data: {unique_no: code},
                             success: function (data) {
-                                $('#code').html('<textarea cols="120" rows="30">'+data+'</textarea>');
+                                $('#mediainfo').html('<textarea cols="120" rows="30">'+data+'</textarea>');
                             }
                         });
                     }
