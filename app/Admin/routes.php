@@ -107,5 +107,5 @@ Route::group([
     $router->get('/api/programs', 'ApiController@programs');
     $router->get('/api/category', 'ApiController@category');
     $router->get('/api/episodes', 'ApiController@episodes');
-    $router->get('/api/mediainfo/{$code}', 'ApiController@mediainfo');
+    $router->get('/api/mediainfo', 'ApiController@mediainfo');
 });

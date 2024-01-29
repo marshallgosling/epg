@@ -15,9 +15,9 @@ class ApiController extends Controller
         return response()->json(Notify::readDBNotifications());
     }
 
-    public function mediainfo($unique_no)
+    public function mediainfo(Request $request)
     {
-        return Cache::get('mediainfo_'.$unique_no);
+        return Cache::get('mediainfo_'.$request->get('unique_no'));
     }
 
     public function treePrograms(Request $request) {
