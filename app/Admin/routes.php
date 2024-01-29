@@ -101,7 +101,7 @@ Route::group([
     $router->delete('/channel/test/data/{id}/remove/{idx}', 'Channel\\TestProgramController@remove')->name('channel.test.programs.delete');
     $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
-    $router->get('/audit/preview', 'AuditController@preview')->name('audit.preview');
+    $router->get('/audit/preview/{id}', 'AuditController@preview')->name('audit.preview');
     $router->resource('/audit/list', 'AuditController')->names('audit.list');
 
     $router->get('/api/notifications', 'ApiController@notifications');
