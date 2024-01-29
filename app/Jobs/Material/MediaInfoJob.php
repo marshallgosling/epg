@@ -60,8 +60,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         if(file_exists($material->filepath)) {
             try{
                 $info = MediaInfo::getRawInfo($material);
-
-                Cache::set('mediainfo_'.$unique_no, $info, 300);
+                Cache::set('mediainfo_'.$unique_no, $info, 3600);
             }catch(\Exception $e)
             {
                 $info = false;
