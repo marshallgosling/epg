@@ -112,7 +112,7 @@ class MaterialController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->append(new BatchSync);
+            $actions->add(new BatchSync);
         });
 
         $grid->tools(function (Grid\Tools $tools) {
