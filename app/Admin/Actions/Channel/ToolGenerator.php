@@ -93,14 +93,13 @@ class ToolGenerator extends Action
         if($channel) {
             $c = strtotime($channel->air_date) + 86400;
             $this->text('info', '开始日期')->default(date('Y-m-d', $c))->disable();
+            $this->hidden('generate_start_at', '开始日期')->default(date('Y-m-d', $c));
         }
         else {
-            $c = time();
-            $this->date('info', '开始日期')->default(date('Y-m-d'));
+            $this->date('generate_start_at', '开始日期')->default('2024-01-01');
         }
         
         $this->date('generate_end_at', '结束日期')->placeholder('不填则自动结束');
-        $this->hidden('generate_start_at', '开始日期')->default(date('Y-m-d', $c));
         $this->hidden('generate_group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default("串联单固定按日期生成，从近到远的顺序。\n如果节目单有状态为“错误”的情况，则自动生成不会进行\n最多生成 ".config('SIMULATOR_DAYS', 14). ' 天')->disable();
         
