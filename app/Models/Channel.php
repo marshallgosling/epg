@@ -69,9 +69,9 @@ class Channel extends Model
         $list = [];
         for(;$start<=$end;$start+=86400) {
             
-            if(Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->first())
+            if($ch=Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->first())
             {
-                //$list[] = $ch;
+                if($ch->sttus == Channel::STATUS_EMPTY)$list[] = $ch;
                 continue;
             }
 
