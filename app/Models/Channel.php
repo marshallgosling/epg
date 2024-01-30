@@ -71,7 +71,7 @@ class Channel extends Model
             
             if($ch=Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->first())
             {
-                if($ch->sttus == Channel::STATUS_EMPTY)$list[] = $ch;
+                if($ch->status == Channel::STATUS_EMPTY)$list[] = $ch;
                 continue;
             }
 
