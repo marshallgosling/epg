@@ -14,6 +14,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
+    $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
 
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
     
