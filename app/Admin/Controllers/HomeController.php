@@ -41,7 +41,7 @@ class HomeController extends Controller
         return $content
             ->title('Supervisord 管理工具')
             ->description('查看和管理 Laravel Queue 队列进程')
-            ->row('<div class="embed-responsive"><iframe class="embed-responsive-item" src="'.config('SUPERVISOR_URL', 'http://127.0.0.1:9101').'"></iframe></div>');
+            ->row('<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" src="'.config('SUPERVISOR_URL', 'http://127.0.0.1:9101').'"></iframe></div>');
     }
 
     public static function charts()
