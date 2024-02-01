@@ -86,7 +86,7 @@ class XkiGeneratorJob implements ShouldQueue, ShouldBeUnique
                 Notification::LEVEL_WARN
             );
 
-            $generator->reset();
+            $generator->reset($channels);
             return 0;
         }
         
