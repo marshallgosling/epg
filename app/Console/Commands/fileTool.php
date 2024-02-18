@@ -118,8 +118,8 @@ class fileTool extends Command
         $script = [];
         foreach($lines as $line)
         {
-            $this->info($line);
-            $info = pathinfo(trim($line));
+            
+            $info = pathinfo(str_replace("\\","/", trim($line)));
             if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
 
@@ -190,7 +190,7 @@ class fileTool extends Command
                 $m->save();
                 //$succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
                 $move[] = $v;
-                //$this->info($v);
+                
             }
         }
         Storage::put("scripts.txt", implode(PHP_EOL, $move));
