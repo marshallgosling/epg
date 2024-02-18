@@ -33,7 +33,12 @@ class MaterialController extends AdminController
 
     public function result(Content $content)
     {
-        $json = json_decode(Storage::get('result.json'), true);
+        $json = json_decode(Storage::get('result3.json'), true);
+        $d0 = [];
+        foreach($json['succ'] as $k=>$v)
+        {
+            $d0[] = [$k, $v];
+        }
         $d1 = [];
         foreach($json['erro'] as $k=>$v)
         {
@@ -44,30 +49,32 @@ class MaterialController extends AdminController
         {
             $d2[] = [$k, $v];
         }
+        $succ = new Table(['code','路径'], $d0);
         $erro = new Table(['id','路径'], $d1);
         $miss = new Table(['id','路径'], $d2);
 
-        $json = json_decode(Storage::get('result2.json'), true);
-        $d3 = [];
-        foreach($json['erro'] as $k=>$v)
-        {
-            $d3[] = [$k, $v];
-        }
-        $d4 = [];
-        foreach($json['miss'] as $k=>$v)
-        {
-            $d4[] = [$k, $v];
-        }
+        // $json = json_decode(Storage::get('result2.json'), true);
+        // $d3 = [];
+        // foreach($json['erro'] as $k=>$v)
+        // {
+        //     $d3[] = [$k, $v];
+        // }
+        // $d4 = [];
+        // foreach($json['miss'] as $k=>$v)
+        // {
+        //     $d4[] = [$k, $v];
+        // }
 
-        $erro1 = new Table(['id','路径'], $d3);
-        $miss1 = new Table(['id','路径'], $d4);
+        // $erro1 = new Table(['id','路径'], $d3);
+        // $miss1 = new Table(['id','路径'], $d4);
 
         $t =  new Tab();
+        $t->add('成功', $succ);
         $t->add('未匹配', $miss);
         $t->add('错误', $erro);
 
-        $t->add('已播未匹配', $miss1);
-        $t->add('已播错误', $erro1);
+        // $t->add('已播未匹配', $miss1);
+        // $t->add('已播错误', $erro1);
 
         return $content->title('匹配结果')
         ->description("物料匹配结果")

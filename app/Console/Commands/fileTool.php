@@ -115,25 +115,47 @@ class fileTool extends Command
         $succ = [];
         $miss = [];
         $erro = [];
+        $script = [];
         foreach($lines as $line)
         {
             
-            $info = pathinfo(trim($line));
+            $info = pathinfo(str_replace("\\","/", trim($line)));
             if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
 
-                if(count($filenames) == 2) {
-                    $code = $filenames[1];
+                if(count($filenames) == 1) {
+                    $code = $filenames[0];
+                    if(array_key_exists($code, $succ)) continue;
                     $m = Material::where('unique_no', $code)->first();
                     if($m) {
                         if($m->status == Material::STATUS_READY) {
                             $this->info("重复 ".$line);
                             continue;
                         }
-                        $m->filepath = $line;
+                        $m->filepath = "Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf";
                         $m->status = Material::STATUS_READY;
                         $m->save();
-                        $succ[] = $line;
+                        $succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
+        
+                    }
+                    else {
+                        $miss[] = $line;
+                    }
+                }
+                else if(count($filenames) == 2) {
+                    $code = $filenames[1];
+                    if(array_key_exists($code, $succ)) continue;
+                    $m = Material::where('unique_no', $code)->first();
+                    if($m) {
+                        if($m->status == Material::STATUS_READY) {
+                            $this->info("重复 ".$line);
+                            continue;
+                        }
+                        $m->filepath = "Y:\\MV\\".$info['filename'].".mxf";
+                        $m->status = Material::STATUS_READY;
+                        $m->save();
+                        $succ[$code] = "move \"{$line}\" \"Y:\MV\"";
+
                     }
                     else {
                         $miss[] = $line;
@@ -144,7 +166,7 @@ class fileTool extends Command
                 }
             }
         }
-        Storage::put("result1.json", json_encode(compact('succ', 'miss', 'erro')));
+        Storage::put("result3.json", json_encode(compact('succ', 'miss', 'erro')));
     }
 
     private function daily()
