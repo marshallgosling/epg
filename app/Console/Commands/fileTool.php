@@ -118,7 +118,7 @@ class fileTool extends Command
         $script = [];
         foreach($lines as $line)
         {
-            
+            $this->info($line);
             $info = pathinfo(trim($line));
             if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
