@@ -171,7 +171,30 @@ class fileTool extends Command
 
     private function daily()
     {
-        // Copy xml files to CERTAIN folder
+        
+        $json = json_decode(Storage::get('result3.json'), true);
+
+        //$keys = array_keys($json['succ']);
+        $move = [];
+
+        foreach($json['succ'] as $k=>$v)
+        {
+            $m = Material::where('unique_no', $k)->first();
+            if($m) {
+                if($m->status == Material::STATUS_READY) {
+                    $this->info("重复 ".$k);
+                    continue;
+                }
+                $m->filepath = "Y:\\MV\\".$m->name.'.'.$k.".mxf";
+                $m->status = Material::STATUS_READY;
+                $m->save();
+                //$succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
+                $move[] = $v;
+                //$this->info($v);
+            }
+        }
+        Storage::put("scripts.txt", implode(PHP_EOL, $move));
+        
     }
 
     private function clean()
