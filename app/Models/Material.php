@@ -50,7 +50,7 @@ class Material extends Model
 
     public static function findRandom($key)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->where('status', Material::STATUS_READY)->pluck('unique_no')->toArray();
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
