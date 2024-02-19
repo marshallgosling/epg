@@ -18,15 +18,16 @@ class Notification extends Model
     public const TYPE_STATISTIC = 4;
     public const TYPE_BLACKLIST = 5;
     public const TYPE_XML = 6;
+    public const TYPE_MATERIAL = 7;
 
     public const LEVEL_INFO = 'info';
     public const LEVEL_WARN = 'warning';
     public const LEVEL_ERROR = 'danger';
 
-    public const TYPES = ['generate', 'excel', 'epg', 'audit', 'statistic', 'blacklist', 'xml'];
+    public const TYPES = ['generate', 'excel', 'epg', 'audit', 'statistic', 'blacklist', 'xml', 'material'];
     public const LEVELS = ['info'=>'信息', 'warning'=>'警告', 'error'=>'错误'];
 
-    public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
+    public const GROUPS = ['_'=>'None','xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
 
     protected $fillable = [
         'id',

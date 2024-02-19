@@ -7,6 +7,7 @@ use App\Models\Notification;
 use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Material\MediaInfo;
+use App\Tools\Notify;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -104,16 +105,23 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     
                 foreach(['records', 'record2', 'program'] as $table)
                     DB::table($table)->where('unique_no', $unique_no)->update($data);
+
+                Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息成功", "播出号:{$material->unique_no}，数据 Frames: {$info['frames']}。");
             }
             else {
                 foreach(['records', 'record2', 'program'] as $table)
                     DB::table($table)->where('unique_no', $unique_no)->update(['status'=>$status]);
+
+                Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件: {$material->filepath} 不可读。");
+            
             }
             
         }
         else {
             foreach(['records', 'record2', 'program','material'] as $table)
                 DB::table($table)->where('unique_no', $unique_no)->update(['status'=>Material::STATUS_EMPTY]);
+            Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件不存在。");
+            
         }
         
     }
