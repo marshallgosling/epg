@@ -17,7 +17,6 @@ use App\Admin\Actions\Template\PreviewLink;
 use App\Admin\Actions\Template\SimulatorLink;
 use App\Admin\Extensions\MyTable;
 use App\Models\Epg;
-use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;

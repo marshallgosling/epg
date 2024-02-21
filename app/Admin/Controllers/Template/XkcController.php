@@ -18,7 +18,6 @@ use App\Admin\Actions\Template\PreviewLink;
 use App\Admin\Actions\Template\SimulatorLink;
 use App\Admin\Extensions\MyTable;
 use App\Models\Epg;
-use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Layout\Content;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
@@ -35,7 +34,7 @@ class XkcController extends AdminController
 
     public function preview(Content $content)
     {
-        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
+        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('status', 'asc')->orderBy('sort', 'asc')->get();
         $group = $this->group;
         $data = [];
         $colors = [];
