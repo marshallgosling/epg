@@ -34,7 +34,7 @@ class XkiController extends AdminController
 
     public function preview(Content $content)
     {
-        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
+        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('status', 'asc')->orderBy('sort', 'asc')->get();
         $group = $this->group;
         $data = [];
         $colors = [];
