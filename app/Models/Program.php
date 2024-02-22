@@ -16,7 +16,7 @@ class Program extends Model
     public const STATUS_EMPTY = 0;
     public const STATUS_READY = 1;
     public const STATUS_ERROR = 2;
-    public const STATUS = ['不可用', '可用', '错误'];
+    public const STATUS = ['不可用', '可用'];
 
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',

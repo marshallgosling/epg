@@ -26,8 +26,10 @@ class Statistic
     public static function countMaterial()
     {
         return Cache::remember("material_status", 300, function() {
-            return DB::table('material')->selectRaw('count(*) as count_num, `status`')
+            $data = DB::table('material')->selectRaw('count(*) as count_num, `status`')
                     ->groupBy('status')->pluck('count_num', 'status')->toArray();
+            if(!array_key_exists(Material::STATUS_ERROR, $data)) $data[Material::STATUS_ERROR] = 0;
+            return $data;
         });
     }
 
@@ -64,6 +66,6 @@ class Statistic
     {
         $label = implode('\',\'', $labels);
         $data = implode(',', $data);
-        return "new Chart(document.getElementById('$id'), {type: 'pie', plugins:{title:{text:'$title'}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
+        return "new Chart(document.getElementById('$id'), {type: 'pie',options:{plugins:{title:{text:'$title'}}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
     }
 }

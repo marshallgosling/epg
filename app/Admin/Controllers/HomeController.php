@@ -52,8 +52,8 @@ class HomeController extends Controller
     {
       $material = Statistic::generatePieChart('materialChart', Material::STATUS, Statistic::countMaterial(),'素材库');
       $program = Statistic::generatePieChart('programChart', Program::STATUS, Statistic::countPrograms(),'V China 节目库');
-      $records = Statistic::generatePieChart('recordsChart', Record::STATUS, Statistic::countRecords(),'星空中国 节目库');
-      $record2 = Statistic::generatePieChart('record2Chart', Record2::STATUS, Statistic::countRecord2(),'星空国际节目库');
+      $records = Statistic::generatePieChart('recordsChart', Program::STATUS, Statistic::countRecords(),'星空中国 节目库');
+      $record2 = Statistic::generatePieChart('record2Chart', Program::STATUS, Statistic::countRecord2(),'星空国际节目库');
 
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
@@ -67,16 +67,14 @@ class HomeController extends Controller
     <div class="row">
       <canvas id="recordsChart"></canvas>
     </div>
-    <div class="row">
-      <canvas id="record2Chart"></canvas>
-    </div>
+    
   </div>
 </div>
 
 
 <script>
   const colors=[
-    'rgb(255, 99, 132)',
+    'rgb(54, 162, 235)',
     'rgb(75, 192, 192)',
     'rgb(255, 205, 86)',
     'rgb(255, 159, 64)',
@@ -86,7 +84,7 @@ class HomeController extends Controller
   {$material}
   {$program}
   {$records}
-  {$record2}
+
 </script>
 HTML;
 
