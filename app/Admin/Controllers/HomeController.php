@@ -60,7 +60,7 @@ class HomeController extends Controller
 
 <div class="row">
   <div class="col-md-6"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-6"><canvas id="programChart"></canvas><canvas id="recordsChart"></canvas><canvas id="record2Chart"></canvas></div>
+  <div class="col-md-6"><canvas id="programChart" width="200"></canvas><canvas id="recordsChart" width="200"></canvas><canvas id="record2Chart" width="200"></canvas></div>
 </div>
 
 
