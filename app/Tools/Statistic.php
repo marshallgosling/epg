@@ -27,7 +27,7 @@ class Statistic
     {
         return Cache::remember("material_status", 300, function() {
             return DB::table('material')->selectRaw('count(*) as count_num, `status`')
-                    ->groupBy('status')->pluck('status', 'count_num')->toArray();
+                    ->groupBy('status')->pluck('count_num', 'status')->toArray();
         });
     }
 
@@ -35,7 +35,7 @@ class Statistic
     {
         return Cache::remember("programs_status", 300, function() {
             return DB::table('program')->selectRaw('count(*) as count_num, `status`')
-                    ->groupBy('status')->pluck('status', 'count_num')->toArray();
+                    ->groupBy('status')->pluck('count_num', 'status')->toArray();
         });
     }
 
@@ -43,7 +43,7 @@ class Statistic
     {
         return Cache::remember("record_status", 300, function() {
             return DB::table('records')->selectRaw('count(*) as count_num, `status`')
-                    ->groupBy('status')->pluck('status', 'count_num')->toArray();
+                    ->groupBy('status')->pluck('count_num', 'status')->toArray();
         });
     }
 
@@ -51,7 +51,7 @@ class Statistic
     {
         return Cache()->remember("record2_status", 300, function() {
             return DB::table('record2')->selectRaw('count(*) as count_num, `status`')
-                    ->groupBy('status')->pluck('status', 'count_num')->toArray();
+                    ->groupBy('status')->pluck('count_num', 'status')->toArray();
         });
     }
 

@@ -60,14 +60,9 @@ class HomeController extends Controller
 
 <div class="row">
   <div class="col-md-6"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-6"><canvas id="material2Chart"></canvas></div>
+  <div class="col-md-6"><canvas id="programChart"></canvas><canvas id="recordsChart"></canvas><canvas id="record2Chart"></canvas></div>
 </div>
 
-<div class="row">
-  <div class="col-md-4"><canvas id="programChart"></canvas></div>
-  <div class="col-md-4"><canvas id="recordsChart"></canvas></div>
-  <div class="col-md-4"><canvas id="record2Chart"></canvas></div>
-</div>
 
 <script>
   {$material}
