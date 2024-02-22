@@ -40,6 +40,15 @@ class HomeController extends Controller
             });
     }
 
+    public function preview(Content $content)
+    {
+        return $content
+            ->title('星空中国节目单查看工具')
+            ->description('')
+            ->row('');
+    
+    }
+
     public function supervisord(Content $content)
     {
         return $content

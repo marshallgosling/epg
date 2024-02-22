@@ -34,7 +34,7 @@ class BatchImportor extends BatchAction
         
         foreach($models as $model)
         {
-            if($model->status != Material::STATUS_READY) continue;
+            //if($model->status != Material::STATUS_READY) continue;
             
             $program = new $class();
             
