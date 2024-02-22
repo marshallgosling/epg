@@ -59,8 +59,8 @@ class HomeController extends Controller
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
 <div class="row" style="height:390px">
-  <div class="col-md-8"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-4">
+  <div class="col-md-6"><canvas id="materialChart"></canvas></div>
+  <div class="col-md-6">
     <div class="row">
       <canvas id="programChart"></canvas>
     </div>
