@@ -16,8 +16,7 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
 
-    $router->resource('/media/expirations', 'Media\\ExpirationController')->names('media.expiration');
-
+    $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
     
     $router->post('/media/xkc/unique', 'Media\\XkcProgramController@unique')->name('media.xkc.unique');
