@@ -59,16 +59,10 @@ class HomeController extends Controller
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
 <div class="row" style="height:390px">
-  <div class="col-md-6"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-6">
-    <div class="row">
-      <canvas id="programChart"></canvas>
-    </div>
-    <div class="row">
-      <canvas id="recordsChart"></canvas>
-    </div>
-    
-  </div>
+  <div class="col-md-3"><canvas id="materialChart"></canvas></div>
+  <div class="col-md-3"><canvas id="programChart"></canvas></div>
+  <div class="col-md-3"><canvas id="recordsChart"></canvas></div>
+  <div class="col-md-3"><canvas id="record2Chart"></canvas></div>
 </div>
 
 
@@ -84,6 +78,7 @@ class HomeController extends Controller
   {$material}
   {$program}
   {$records}
+  {$record2}
 
 </script>
 HTML;

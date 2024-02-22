@@ -54,8 +54,10 @@ class Statistic
     public static function countRecord2()
     {
         return Cache()->remember("record2_status", 300, function() {
-            return DB::table('record2')->selectRaw('count(*) as count_num, `status`')
+            $data = DB::table('record2')->selectRaw('count(*) as count_num, `status`')
                     ->groupBy('status')->pluck('count_num', 'status')->toArray();
+            if(!array_key_exists(Record::STATUS_EMPTY, $data)) $data[Record::STATUS_EMPTY] = 0;
+            return $data;
         });
     }
 
