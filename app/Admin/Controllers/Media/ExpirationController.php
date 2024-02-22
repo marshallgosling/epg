@@ -53,7 +53,7 @@ class ExpirationController extends AdminController
         $show = new Show(Expiration::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('group_id', __('Group id'));
+        $show->field('group_id', __('Group id'))->using(Channel::GROUPS);
         $show->field('name', __('Name'));
         $show->field('start_at', __('Start at'));
         $show->field('end_at', __('End at'));
@@ -74,7 +74,7 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        $form->text('group_id', __('Group'))->options(Channel::GROUPS);
+        $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
         $form->text('name', __('Name'))->placeholder('输入剧集名或电影名，如 舒克贝塔S02，开心乐园');
         $form->date('start_at', __('Start at'))->default(date('Y-m-d'));
         $form->date('end_at', __('End at'))->default(date('Y-m-d'));
