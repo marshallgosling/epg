@@ -60,10 +60,10 @@ class Statistic
         return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('audit_status', Channel::AUDIT_PASS)->pluck('total', 'name')->toArray();
     }
 
-    public static function generatePieChart($id, $labels, $data)
+    public static function generatePieChart($id, $labels, $data, $title='')
     {
         $label = implode('\',\'', $labels);
         $data = implode(',', $data);
-        return "new Chart(document.getElementById('$id'), {type: 'pie', data: {labels: ['$label'], datasets:[{data:[$data]}]}});";
+        return "new Chart(document.getElementById('$id'), {type: 'pie', plugins:{title:{text:'$title'}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
     }
 }
