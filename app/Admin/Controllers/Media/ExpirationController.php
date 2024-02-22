@@ -16,7 +16,7 @@ class ExpirationController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Expiration';
+    protected $title = '剧集有效期管理';
 
     /**
      * Make a grid builder.
