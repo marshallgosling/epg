@@ -86,6 +86,6 @@ class Channel extends Model
             $ch->save();
             $list[] = $ch;
         }
-        return array_reverse($list);
+        return $list;
     }
 }
