@@ -3,6 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Material;
+use App\Models\Program;
+use App\Models\Record;
+use App\Models\Record2;
 use App\Tools\Statistic;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Column;
@@ -46,43 +50,34 @@ class HomeController extends Controller
 
     public static function charts()
     {
+      $material = Statistic::generatePieChart('materialChart', Material::STATUS, Statistic::countMaterial());
+      $program = Statistic::generatePieChart('programChart', Program::STATUS, Statistic::countPrograms());
+      $records = Statistic::generatePieChart('recordsChart', Record::STATUS, Statistic::countRecords());
+      $record2 = Statistic::generatePieChart('record2Chart', Record2::STATUS, Statistic::countRecord2());
+
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
-<div style="height:390px">
-  <canvas id="myChart"></canvas>
+<div class="row">
+  <div class="col-md-6"><canvas id="materialChart"></canvas></div>
+  <div class="col-md-6"><canvas id="material2Chart"></canvas></div>
+</div>
+
+<div class="row">
+  <div class="col-md-4"><canvas id="programChart"></canvas></div>
+  <div class="col-md-4"><canvas id="recordsChart"></canvas></div>
+  <div class="col-md-4"><canvas id="record2Chart"></canvas></div>
 </div>
 
 <script>
-  const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['周一', '周二', '周三', '周四', '周五', '周六'],
-      datasets: [{
-        label: '更新节目',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      },
-        {
-            label: '更新素材',
-            data: [10, 13, 9, 10, 6, 8],
-            borderWidth: 1,
-            type: 'bar'
-        }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+  {$material}
+  {$program}
+  {$records}
+  {$record2}
 </script>
 HTML;
 
+        
         $box = new Box('图表数据', $html);
 
         $box->style('default');
@@ -106,19 +101,19 @@ HTML;
 
       $channels =[
         '频道 V China' => [
-          '节目库内容数量 <span class="badge">'.Statistic::countPrograms().'</span>' => admin_url('media/xkv'),
+          '节目库内容数量 <span class="badge">'.array_sum(Statistic::countPrograms()).'</span>' => admin_url('media/xkv'),
           '模版库数量 <span class="badge">'.$templates['xkv'].'</span>' => admin_url('template/xkv'),
           '编单数量 <span class="badge">'.$channels['xkv'].'</span>' => admin_url('channel/xkv'),
           '已审核编单 <span class="badge">'.$audit['xkv'].'</span>' => admin_url('channel/xkv'),
         ],
         '频道 星空中国' => [
-          '节目库内容数量 <span class="badge">'.Statistic::countRecords().'</span>' => admin_url('media/xkc'),
+          '节目库内容数量 <span class="badge">'.array_sum(Statistic::countRecords()).'</span>' => admin_url('media/xkc'),
           '模版库数量 <span class="badge">'.$templates['xkc'].'</span>' => admin_url('template/xkc'),
           '编单数量 <span class="badge">'.$channels['xkc'].'</span>' => admin_url('channel/xkc'),
           '已审核编单 <span class="badge">'.$audit['xkc'].'</span>' => admin_url('channel/xkc'),
         ],
         '频道 星空国际' => [
-          '节目库内容数量 <span class="badge">'.Statistic::countRecord2().'</span>' => admin_url('media/xki'),
+          '节目库内容数量 <span class="badge">'.array_sum(Statistic::countRecord2()).'</span>' => admin_url('media/xki'),
           '模版库数量 <span class="badge">'.$templates['xki'].'</span>' => admin_url('template/xki'),
           '编单数量 <span class="badge">'.$channels['xki'].'</span>' => admin_url('channel/xki'),
           '已审核编单 <span class="badge">'.$audit['xki'].'</span>' => admin_url('channel/xki'),
