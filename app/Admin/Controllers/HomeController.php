@@ -58,7 +58,7 @@ class HomeController extends Controller
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
-<div class="row">
+<div class="row" style="height:390px">
   <div class="col-md-8"><canvas id="materialChart"></canvas></div>
   <div class="col-md-4">
     <div class="row">
@@ -74,8 +74,8 @@ class HomeController extends Controller
 
 <script>
   const colors=[
+    'rgb(255, 99, 132)',
     'rgb(54, 162, 235)',
-    'rgb(75, 192, 192)',
     'rgb(255, 205, 86)',
     'rgb(255, 159, 64)',
     'rgb(153, 102, 255)',

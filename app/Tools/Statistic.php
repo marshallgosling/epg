@@ -66,6 +66,6 @@ class Statistic
     {
         $label = implode('\',\'', $labels);
         $data = implode(',', $data);
-        return "new Chart(document.getElementById('$id'), {type: 'pie',options:{plugins:{title:{text:'$title'}}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
+        return "new Chart(document.getElementById('$id'), {type:'pie',options:{plugins:{title:{display:true,text:'$title'}}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
     }
 }
