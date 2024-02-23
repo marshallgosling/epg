@@ -9,6 +9,7 @@ use App\Models\Material;
 use App\Models\Record;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\ExcelWriter;
 use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -40,14 +41,23 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
 
-        $generator = new TableGenerator('xkc');
-        $st = strtotime('2024-02-01');
-        $ed = strtotime('2024-02-07');
-        $days = $generator->generateDays($st, $ed);
-        $data = $generator->processData($days);
-        $template = $generator->loadTemplate();
-        //$table = $generator->export($days, $template, $data);
-        print_r($data);
+        $data = [];
+        $materials = DB::table('material')->where('status', Material::STATUS_EMPTY)->get();
+        foreach($materials as $m)
+        {
+            $data[] = [
+                Channel::GROUPS[$m->channel], $m->unique_no, $m->name, $m->duration, $m->category
+            ];
+        }
+
+        $filename = Storage::path('material.xlsx');
+
+        ExcelWriter::initialExcel('素材列表');
+        ExcelWriter::setupColumns(['频道','播出编号','名称','时长','分类']);
+
+        ExcelWriter::printData($data, 2);
+
+        ExcelWriter::outputFile($filename, 'file');
         return 0;
 
 
