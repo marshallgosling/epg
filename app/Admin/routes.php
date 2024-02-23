@@ -15,7 +15,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
-    $router->get('/preview', 'HomeController@preview')->name('home.preview');
+    $router->get('/channel/export', 'HomeController@preview')->name('home.preview');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
