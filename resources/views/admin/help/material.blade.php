@@ -112,7 +112,7 @@ Y:\其他\
 </ul>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/1708692865086.jpg" /></p>
 
-<h4 class="page-header">3. 批量选择</h4>
+<h4 class="page-header">3. 批量同步</h4>
 <p>确认好素材文件已经复制到指定的目录以后，就可以进行批量同步操作了</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-3.png" /></p>
 <p>点击完以后，就可以等待通知结果，查看同步信息。<br/>如果同步成功，素材和对应节目库里的记录状态都会变为“可用”状态</p>
