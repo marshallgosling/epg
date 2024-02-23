@@ -87,14 +87,14 @@ ol.breadcrumb {
 <div class="row">
     <div class="col-md-8 docs-section">
 
-<h1 id="section1" class="page-header">1. 同步和扫描素材入库</h1>
-<h4>检查素材记录信息</h4>
+<h1 id="section1" class="page-header">同步和扫描素材入库</h1>
+<h4>1. 检查素材记录信息</h4>
 <p>找到素材状态为不可用的记录</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-1.png"/></p>
 <p>点击“编辑”按钮，可以查看素材是否有文件路径信息</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-2.png"/></p>
 
-<h4>准备及检查素材文件（mxf格式文件）</h4>
+<h4>2. 准备及检查素材文件（mxf格式文件）</h4>
 <p>准备好相应的素材文件，mxf格式的媒体文件，复制到相应的目录<br/>可用的目录有:</p>
 <figure class="highlight"><pre><code class="language-html" data-lang="html">//可用路径，请确认盘符
 Y:\MV\
@@ -112,24 +112,24 @@ Y:\其他\
 </ul>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/1708692865086.jpg" /></p>
 
-<h4 class="page-header">批量选择</h4>
+<h4 class="page-header">3. 批量选择</h4>
 <p>确认好素材文件已经复制到指定的目录以后，就可以进行批量同步操作了</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-3.png" /></p>
 <p>点击完以后，就可以等待通知结果，查看同步信息。<br/>如果同步成功，素材和对应节目库里的记录状态都会变为“可用”状态</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-4.png" /></p>
 <p>&nbsp;</p><p>&nbsp;</p>
-<h1 id="section2" class="page-header">2. 添加全新素材入库</h1>
+<h1 id="section2" class="page-header">添加全新素材入库</h1>
 <p>该情况下，请先手动添加素材信息（可批量创建）</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-5.png" /></p>
-<h4> 新增单条详细记录 </h4>
+<h4>1. 新增单条详细记录 </h4>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-6.png" /></p>
-<h4> 批量添加记录 </h4>
+<h4>2. 批量添加记录 </h4>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-7.png" /></p>
 <p>注：批量创建会自动生成播出编号（按序列生成），请注意文件名中的编号是否一致。</p>
-<h4> 同步和扫描素材入库</h4>
+<h4>3. 同步和扫描素材入库</h4>
 <p>此处和情况 1 的处理流程完全一致，请参考上述流程</p>
 <p>&nbsp;</p><p>&nbsp;</p>
-<h1 id="section3" class="page-header">3. 通知</h1>
+<h1 id="section3" class="page-header">通知</h1>
 <p>不管同步情况如何，都会在通知列表里得到一个同步结果通知，可以去菜单 统计 -> 通知 内查看</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/1708696765986.jpg" /></p>
 
