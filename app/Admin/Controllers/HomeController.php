@@ -114,6 +114,15 @@ FILTER;
     
     }
 
+    public function help(Content $content)
+    {
+        return $content
+            ->title('素材入库帮助文档')
+            ->description('Help')
+            ->row('<div class="embed-responsive embed-responsive-4by3"><iframe class="embed-responsive-item" src="'.config('SUPERVISOR_URL', 'http://127.0.0.1:9101').'"></iframe></div>');
+   
+    }
+
     public function supervisord(Content $content)
     {
         return $content
@@ -133,10 +142,12 @@ FILTER;
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
 <div class="row" style="height:390px">
-  <div class="col-md-3"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-3"><canvas id="programChart"></canvas></div>
-  <div class="col-md-3"><canvas id="recordsChart"></canvas></div>
-  <div class="col-md-3"><canvas id="record2Chart"></canvas></div>
+  <div class="col-md-6"><canvas id="materialChart"></canvas></div>
+  <div class="col-md-4">
+    <div class="row"><canvas id="programChart"></canvas></div>
+    <div class="row"><canvas id="recordsChart"></canvas></div>
+    <div class="row"><canvas id="record2Chart"></canvas></div>
+  </div>
 </div>
 
 
