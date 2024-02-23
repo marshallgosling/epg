@@ -30,7 +30,7 @@ class TableGenerator
 
         foreach($template as $t)
         {
-            $table .= '<tr><td>'.$t['start_at'].'<br>'.$t['end_at'].'</td>';
+            $table .= '<tr><td>'.$t['lable_start'].'<br>'.$t['lable_end'].'</td>';
             
             foreach($days as $day) {
                 if(!array_key_exists($day['day'], $data))
@@ -65,7 +65,8 @@ class TableGenerator
                 $st = strtotime('2024-01-01 '.$item->start_at) - $offset * 3600;
                 $ed = strtotime('2024-01-01 '.$item->end_at) - $offset * 3600;
 
-                $templates[] = ['start_at'=>date('h:i', $st), 'end_at'=>date('h:i', $ed),'duration'=>$item->duration];
+                $templates[] = ['start_at'=>date('H:i:s', $st), 'end_at'=>date('H:i:s', $ed),
+                    'duration'=>$item->duration, 'label_start'=>date('G:i', $st), 'label_end'=>date('G:i', $ed)];
 
             }
             $offset -= 8;
