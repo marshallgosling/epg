@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace App\Tools\Exporter;
 
 use Nathan\PHPExcel\IOFactory;
 use Nathan\PHPExcel\PHPExcel;

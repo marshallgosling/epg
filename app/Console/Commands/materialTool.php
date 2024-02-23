@@ -2,21 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Channel\CalculationEvent;
-use App\Models\Category;
-use App\Models\ChannelPrograms;
-use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\Record;
 use App\Tools\ChannelGenerator;
-use App\Tools\Exporter;
 use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class materialTool extends Command
 {

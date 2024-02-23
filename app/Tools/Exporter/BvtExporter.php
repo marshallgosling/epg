@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace App\Tools\Exporter;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -8,9 +8,10 @@ use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
+use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
-class Exporter
+class BvtExporter
 {
     private static $json;
     private static $xml;
@@ -130,7 +131,7 @@ class Exporter
 
     public static function exportXml($json=false, $name=false)
     {
-        $exporter = new \App\Tools\XmlWriter();
+        $exporter = new XmlWriter();
         if(!$json) $json = self::$json;
 
         $xml = $exporter->export($json, 'PgmItem');

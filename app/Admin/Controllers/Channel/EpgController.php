@@ -6,7 +6,7 @@ use App\Models\Category;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
-use App\Tools\Exporter;
+use App\Tools\Exporter\BvtExporter;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -96,7 +96,7 @@ class EpgController extends AdminController
         $group = $model->name;
         $color = $group == 'xkv' ? "info" : "primary";
 
-        $data = Exporter::collectData($air_date, $group, function ($t) {
+        $data = BvtExporter::collectData($air_date, $group, function ($t) {
             return substr($t->start_at, 11).' - '. substr($t->end_at, 11). ' <small class="pull-right text-warning">'.$t->unique_no.'</small> &nbsp;'.  $t->name . ' &nbsp; <small class="text-info">'.substr($t->duration, 0, 8).'</small>';
         });
 

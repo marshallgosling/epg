@@ -19,7 +19,7 @@ class Record extends Model
     protected $table = 'records';
 
     public const CATEGORIES = ['movie'=>'电影','CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧','docu'=>'纪实'];
-    public const XKC = ['CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧'];
+    public const XKC = ['CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧','movie'=>'电影'];
     public const STATUS_EMPTY = 0;
     public const STATUS_READY = 1;
     public const STATUS_ERROR = 2;

@@ -5,8 +5,8 @@ namespace App\Jobs;
 use App\Models\ExportList;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
-use App\Tools\Exporter;
-use App\Tools\ExcelWriter;
+use App\Tools\Exporter\BvtExporter;
+use App\Tools\Exporter\ExcelWriter;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Nathan\PHPExcel\Exception;
@@ -53,7 +53,7 @@ class ExcelJob implements ShouldQueue, ShouldBeUnique
         $export = ExportList::findOrFail($this->id);
 
         $this->info('导出Excel串联单任务: '.$export->name.' 日期: '.$export->start_at .' '.$export->end_at);
-        $lines = Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
+        $lines = BvtExporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {
             $export->status = ExportList::STATUS_ERROR;
