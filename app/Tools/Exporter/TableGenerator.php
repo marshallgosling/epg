@@ -30,7 +30,7 @@ class TableGenerator
 
         foreach($template as $t)
         {
-            $table .= '<tr><td>'.$t['lable_start'].'<br>'.$t['lable_end'].'</td>';
+            $table .= '<tr><td>'.$t['label_start'].'<br>'.$t['label_end'].'</td>';
             
             foreach($days as $day) {
                 if(!array_key_exists($day['day'], $data))
