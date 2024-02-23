@@ -47,7 +47,7 @@ class fileTool extends Command
         $action = $this->argument('action') ?? "xml";
         
 
-        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo']))
+        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo', 'scan']))
             $this->$action();
         
 
@@ -55,6 +55,26 @@ class fileTool extends Command
         //Material::insert($items);
         
         return 0;
+    }
+
+    private function scan()
+    {
+        $filename = "test.mxf";
+        $list = config('MEDIA_SOURCE_FOLDER');
+        if($list) {
+            $list = explode(PHP_EOL, $list);
+
+            foreach($list as $item)
+            {
+                $path = $item.$filename;
+                $this->info($path);
+
+                if(file_exists($path))
+                {
+                    return $path;
+                }
+            }
+        }
     }
 
     private function mediainfo()

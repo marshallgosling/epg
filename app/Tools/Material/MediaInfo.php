@@ -68,4 +68,23 @@ class MediaInfo
         
     }
 
+    public static function scanPath($filename)
+    {
+        $list = config('MEDIA_SOURCE_FOLDER');
+        if($list) {
+            $list = explode(PHP_EOL, $list);
+
+            foreach($list as $item)
+            {
+                $path = $item.$filename;
+                if(file_exists($path))
+                {
+                    return $path;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

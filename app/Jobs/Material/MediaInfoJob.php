@@ -75,8 +75,18 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     {
         $material = Material::findOrFail($this->id);
         $unique_no = $material->unique_no;
+        $filepath = $material->filepath;
+        if(empty($filepath))
+        {
+            $filepath = MediaInfo::scanPath($material->name.'.'.$unique_no.'.mxf');
+        }
+
+        if($filepath) {
+            $material->filepath = $filepath;
+        }
 
         if(file_exists($material->filepath)) {
+
             try{
                 $info = MediaInfo::getInfo($material);
             }catch(\Exception $e)
