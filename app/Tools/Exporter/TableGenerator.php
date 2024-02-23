@@ -41,8 +41,8 @@ class TableGenerator
                 $items = $data[$day['day']];
                 $table .= '<td>';
                 foreach($items as $item) {
-                    if($item['schedule_start_at'] == $t['start_at'])
-                        $table .= $item['name'].'<br>';
+                    if($item->schedule_start_at == $t['start_at'])
+                        $table .= $item->name.'<br>';
                 }
                 $table .= '</td>';
             }
