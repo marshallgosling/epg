@@ -36,7 +36,7 @@ class MaterialController extends AdminController
         $material = view('admin.help.material');
         return $content
             ->title('素材入库帮助文档')
-            ->description('Help')
+            ->description('Ver 1.0')
             ->row(view('admin.help.layout', ['content'=>$material]));
     }
 
