@@ -133,11 +133,11 @@ FILTER;
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
 <div class="row" style="height:390px">
-  <div class="col-md-6"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-4">
+  <div class="col-md-4"><canvas id="materialChart"></canvas></div>
+  <div class="col-md-8">
     <div class="row">
-      <div class="col-md-6"><canvas id="programChart"></canvas></div>
-      <div class="col-md-6"><canvas id="recordsChart"></canvas></div>
+      <div class="col-md-6" style="height:160px"><canvas id="programChart"></canvas></div>
+      <div class="col-md-6" style="height:160px"><canvas id="recordsChart"></canvas></div>
     </div>
     <div class="row"><div class="col-md-6"><canvas id="record2Chart"></canvas></div></div>
   </div>
