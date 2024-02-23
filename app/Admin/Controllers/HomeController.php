@@ -50,7 +50,7 @@ class HomeController extends Controller
         $data = $generator->processData($days);
         $template = $generator->loadTemplate();
         $table = $generator->export($days, $template, $data);
-      
+        $table = '<div class="col-md-12"><div class="box box grid-box"><div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
         return $content
             ->title('星空中国节目单查看工具')
             ->description('')
