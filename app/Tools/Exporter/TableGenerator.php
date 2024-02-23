@@ -94,7 +94,7 @@ class TableGenerator
         $data = [];
         foreach($days as $day)
         {
-            $start = $day['day'].' 00:58:00';
+            $start = $day['day'].' 00:55:00';
             $end = strtotime($start) + 86400;
             $data[$day['day']] = $this->collectData($start, date('Y-m-d H:i:s', $end));
         }
