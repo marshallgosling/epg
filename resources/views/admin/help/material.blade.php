@@ -118,8 +118,8 @@ Y:\其他\
 <p>点击完以后，就可以等待通知结果，查看同步信息。<br/>如果同步成功，素材和对应节目库里的记录状态都会变为“可用”状态</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-4.png" /></p>
 <p>&nbsp;</p><p>&nbsp;</p>
-<h1 id="section2" class="page-header">添加全新素材入库</h1>
-<p>该情况下，请先手动添加素材信息（可批量创建）</p>
+<h1 id="section2" class="page-header">添加全新素材入库（可批量创建）</h1>
+<p>如未找到对应的素材记录，请先手动添加素材信息</p>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-5.png" /></p>
 <h4>1. 新增单条详细记录 </h4>
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-6.png" /></p>
@@ -127,7 +127,7 @@ Y:\其他\
 <p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-7.png" /></p>
 <p>注：批量创建会自动生成播出编号（按序列生成），请注意文件名中的编号是否一致。</p>
 <h4>3. 同步和扫描素材入库</h4>
-<p>此处和情况 1 的处理流程完全一致，请参考上述流程</p>
+<p>此处和情况 “同步和扫描素材入库” 的处理流程完全一致，请参考上述流程</p>
 <p>&nbsp;</p><p>&nbsp;</p>
 <h1 id="section3" class="page-header">通知</h1>
 <p>不管同步情况如何，都会在通知列表里得到一个同步结果通知，可以去菜单 统计 -> 通知 内查看</p>
@@ -138,9 +138,9 @@ Y:\其他\
                 <nav class="epg-sidebar epg-sidebar-info hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     
-                    <li> <a href="#section1"> 1. 同步和扫描素材入库 </a> </li>
-                    <li> <a href="#section2"> 2. 添加全新素材入库 </a> </li>
-                    <li> <a href="#section3"> 3. 通知 </a> </li>
+                    <li> <a href="#section1"> 同步和扫描素材入库 </a> </li>
+                    <li> <a href="#section2"> 添加全新素材入库 </a> </li>
+                    <li> <a href="#section3"> 通知 </a> </li>
                    
                   </ul>
               </div>
