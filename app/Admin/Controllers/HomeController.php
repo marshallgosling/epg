@@ -53,7 +53,7 @@ class HomeController extends Controller
 
         if($st=='') $table = '<p>请选择日期范围，一次最多7天</p>';
         else {
-          $tmp = $st + 7 * 86400;
+          $tmp = $st + 6 * 86400;
         if($ed>$tmp) $ed = $tmp;
         if($ed<$st) $ed = $tmp;
 
