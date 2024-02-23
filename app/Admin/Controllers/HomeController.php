@@ -139,7 +139,7 @@ FILTER;
       <div class="col-md-6" style="height:160px"><canvas id="programChart"></canvas></div>
       <div class="col-md-6" style="height:160px"><canvas id="recordsChart"></canvas></div>
     </div>
-    <div class="row"><div class="col-md-6"><canvas id="record2Chart"></canvas></div></div>
+    <div class="row"><div class="col-md-6" style="height:160px"><canvas id="record2Chart"></canvas></div></div>
   </div>
 </div>
 
