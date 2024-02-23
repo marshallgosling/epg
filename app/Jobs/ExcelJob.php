@@ -7,6 +7,7 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 use App\Tools\Exporter\BvtExporter;
 use App\Tools\Exporter\ExcelWriter;
+use App\Tools\Exporter\TableGenerator;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Nathan\PHPExcel\Exception;
@@ -53,6 +54,32 @@ class ExcelJob implements ShouldQueue, ShouldBeUnique
         $export = ExportList::findOrFail($this->id);
 
         $this->info('导出Excel串联单任务: '.$export->name.' 日期: '.$export->start_at .' '.$export->end_at);
+
+        if($export->type == ExportList::TYPE_NORMAL)
+        {
+            $this->processNormal($export);
+        }
+
+        if($export->type == ExportList::TYPE_HK)
+        {
+            $this->processHK($export);
+        }
+    }
+
+    private function processHK($export)
+    {
+        $generator = new TableGenerator($export->group_id);
+        $st = strtotime($export->start_at);
+        $ed = strtotime($export->end_at);
+        $days = $generator->generateDays($st, $ed);
+        $data = $generator->processData($days);
+        $template = $generator->loadTemplate();
+        $table = $generator->export($days, $template, $data);
+        
+    }
+
+    private function processNormal($export)
+    {
         $lines = BvtExporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {

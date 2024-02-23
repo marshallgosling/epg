@@ -33,8 +33,9 @@ class ExportListController extends AdminController
         $grid->column('id', __('Id'))->sortable();
         $grid->column('group_id', __('Group'))->using(Channel::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
         
+        $grid->column('type', __('Type'))->using(ExportList::TYPES);
         $grid->column('name', __('Name'));
-        
+
         $grid->column('start_at', __('Start at'))->sortable();
         $grid->column('end_at', __('End at'))->sortable();
 

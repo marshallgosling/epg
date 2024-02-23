@@ -7,6 +7,7 @@ use App\Models\Material;
 use App\Models\Program;
 use App\Models\Record;
 use App\Models\Record2;
+use App\Tools\Exporter\TableGenerator;
 use App\Tools\Statistic;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Column;
@@ -20,8 +21,8 @@ class HomeController extends Controller
   public const VERSION = '1.9';
   
   public function index(Content $content)
-    {
-        return $content
+  {
+    return $content
             ->title('欢迎使用编单及节目管理系统')
             ->description('查看、管理频道编单及节目内容和素材管理')
             ->row(HomeController::links())
@@ -42,10 +43,18 @@ class HomeController extends Controller
 
     public function preview(Content $content)
     {
+        $generator = new TableGenerator('xkc');
+        $st = strtotime('2024-03-01');
+        $ed = strtotime('2024-03-07');
+        $days = $generator->generateDays($st, $ed);
+        $data = $generator->processData($days);
+        $template = $generator->loadTemplate();
+        $table = $generator->export($days, $template, $data);
+      
         return $content
             ->title('星空中国节目单查看工具')
             ->description('')
-            ->row('');
+            ->row($table);
     
     }
 

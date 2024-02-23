@@ -4,6 +4,7 @@ namespace App\Tools\Exporter;
 
 use App\Models\Epg;
 use App\Models\Record;
+use App\Models\Template;
 use Illuminate\Support\Facades\DB;
 
 class TableGenerator
@@ -11,6 +12,12 @@ class TableGenerator
     private $indentation = '    ';
     private $xml;
     private $group = 'xkc';
+
+    public function __construct($group='xkc')
+    {
+        $this->group = $group;
+    }
+
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
     public function export($days, $template, $data)
     {
@@ -25,7 +32,7 @@ class TableGenerator
         {
             $table .= '<tr><td>'.$t['start_at'].'<br>'.$t['end_at'].'</td>';
             
-            foreach($days as $day){
+            foreach($days as $day) {
                 if(!array_key_exists($day['day'], $data))
                 {
                     $table .= '<td>&nbsp;</td>';
@@ -45,11 +52,36 @@ class TableGenerator
         return $table;
     }
 
-    public function generateDays($month)
+    public function loadTemplate()
     {
-        $day = date('Y').'-'.$month.'-01';
-        $stamp = strtotime($day);
-        $dayofweek = date('N', $stamp); // 1 - 7
+        $items = DB::table('template')->where(['group_id'=>$this->group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $templates = [];
+        $offset = 16;
+
+        for($i=0;$i<3;$i++)
+        {
+            foreach($items as $item)
+            {
+                $st = strtotime('2024-01-01 '.$item->start_at) - $offset * 3600;
+                $ed = strtotime('2024-01-01 '.$item->end_at) - $offset * 3600;
+
+                $templates[] = ['start_at'=>date('h:i', $st), 'end_at'=>date('h:i', $ed),'duration'=>$item->duration];
+
+            }
+            $offset -= 8;
+        }
+
+        return $templates;
+    }
+
+    public function generateDays($st, $ed)
+    {
+        $days = [];
+        for(;$st<=$ed;$st+=86400)
+        {
+            $days[] = ['day' => date('Y-m-d', $st), 'dayofweek'=>date('w', $st)];
+        }
+        return $days;
     }
 
     public function processData($days)
