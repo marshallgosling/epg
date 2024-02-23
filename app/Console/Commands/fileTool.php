@@ -59,7 +59,7 @@ class fileTool extends Command
 
     private function scan()
     {
-        $filename = "test.mxf";
+        $filename = $this->argument('path') ?? "";
         $list = config('MEDIA_SOURCE_FOLDER');
         if($list) {
             $list = explode(PHP_EOL, $list);
