@@ -13,6 +13,7 @@ use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class HomeController extends Controller
@@ -41,15 +42,30 @@ class HomeController extends Controller
             });
     }
 
-    public function preview(Content $content)
+    public function preview(Content $content, Request $request)
     {
+        
         $generator = new TableGenerator('xkc');
-        $st = strtotime('2024-03-01');
-        $ed = strtotime('2024-03-07');
+        $st = strtotime($request->get('start_at', ''));
+        $ed = strtotime($request->get('end_at', ''));
+        $label_st = '';
+        $label_ed = '';
+
+        if($st=='') $table = '<p>请选择日期范围，一次最多7天</p>';
+        else {
+          $tmp = $st + 7 * 86400;
+        if($ed>$tmp) $ed = $tmp;
+        if($ed<$st) $ed = $tmp;
+
+        $label_st = date('Y-m-d', $st);
+        $label_ed = date('Y-m-d', $ed);
+
         $days = $generator->generateDays($st, $ed);
         $data = $generator->processData($days);
         $template = $generator->loadTemplate();
         $table = $generator->export($days, $template, $data);
+        }
+
         $filter= <<<FILTER
         <div class="box-header with-border filter-box" id="filter-box">
     <form action="" class="form-horizontal" pjax-container method="get">
@@ -65,12 +81,17 @@ class HomeController extends Controller
             <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control" id="start_at_start" placeholder="时间范围" name="start_at" value="" autocomplete="off">
+            <input type="text" class="form-control" id="start_at_start" placeholder="时间范围" name="start_at" value="{$label_st}" autocomplete="off">
 
             <span class="input-group-addon" style="border-left: 0; border-right: 0;">-</span>
 
-            <input type="text" class="form-control" id="start_at_end" placeholder="时间范围" name="end_at" value="" autocomplete="off">
+            <input type="text" class="form-control" id="start_at_end" placeholder="时间范围" name="end_at" value="{$label_ed}" autocomplete="off">
         </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="btn-group pull-left">
+                            <button class="btn btn-info submit btn-sm"><i class="fa fa-search"></i>  搜索</button>
+                        </div>
     </div>
 </div>
                                             </div>
@@ -79,25 +100,10 @@ class HomeController extends Controller
                     </div>
         <!-- /.box-body -->
 
-        <div class="box-footer">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <div class="btn-group pull-left">
-                            <button class="btn btn-info submit btn-sm"><i class="fa fa-search"></i>  搜索</button>
-                        </div>
-                        <div class="btn-group pull-left " style="margin-left: 10px;">
-                            <a href="?expand=1" class="btn btn-default btn-sm"><i class="fa fa-undo"></i>  重置</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </form>
 </div>
 FILTER;
+        
         $head = '<div class="box-header with-border clearfix"></div>';
         $box = '<div class="col-md-12"><div class="box box grid-box">'.$filter.$head.'<div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
         
