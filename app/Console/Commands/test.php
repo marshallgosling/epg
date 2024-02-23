@@ -9,6 +9,7 @@ use App\Models\Material;
 use App\Models\Record;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +39,17 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
+
+        $generator = new TableGenerator('xkc');
+        $st = strtotime('2024-02-01');
+        $ed = strtotime('2024-02-07');
+        $days = $generator->generateDays($st, $ed);
+        $data = $generator->processData($days);
+        $template = $generator->loadTemplate();
+        //$table = $generator->export($days, $template, $data);
+        print_r($data);
+        return 0;
+
 
         $list = Material::where('filepath', 'like', '%卡通%')->get();
 

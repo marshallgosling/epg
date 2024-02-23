@@ -21,12 +21,12 @@ class TableGenerator
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
     public function export($days, $template, $data)
     {
-        $table = '<table class="table table-bordered"><th><td>HKT</td>';
+        $table = '<table class="table table-bordered"><tr><th>HKT</th>';
         foreach($days as $day)
         {
-            $table .= '<td>'.$day['day'].'<br />'.$day['dayofweek'].'</td>';
+            $table .= '<th>'.$day['day'].'<br />'.$day['dayofweek'].'</th>';
         }
-        $table .= '</th>';
+        $table .= '</tr>';
 
         foreach($template as $t)
         {
@@ -67,7 +67,7 @@ class TableGenerator
                 $end_at = date('H:i:s', $ed);
                 $start_at = date('H:i:s', $st);
                 if($start_at == '00:00:00') $start_at = '24:00:00';
-                if($end_at == '00:00:00') $startend_at_at = '24:00:00';
+                if($end_at == '00:00:00') $end_at = '24:00:00';
                 $templates[] = ['start_at'=>$start_at, 'end_at'=>$end_at,
                     'duration'=>$item->duration, 'label_start'=>date('G:i', $st), 'label_end'=>date('G:i', $ed)];
 
