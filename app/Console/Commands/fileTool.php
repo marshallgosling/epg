@@ -71,7 +71,7 @@ class fileTool extends Command
 
                 if(file_exists($path))
                 {
-                    return $path;
+                    $this->info("found:".$path);
                 }
             }
         }
