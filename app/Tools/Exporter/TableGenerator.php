@@ -5,6 +5,7 @@ namespace App\Tools\Exporter;
 use App\Models\Epg;
 use App\Models\Record;
 use App\Models\Template;
+use App\Models\TemplateRecords;
 use Illuminate\Support\Facades\DB;
 
 class TableGenerator
@@ -24,13 +25,13 @@ class TableGenerator
         $table = '<table class="table table-bordered"><tr><th>HKT</th>';
         foreach($days as $day)
         {
-            $table .= '<th>'.$day['day'].'<br />'.$day['dayofweek'].'</th>';
+            $table .= '<th>'.$day['day'].'<br />'.TemplateRecords::DAYS[$day['dayofweek']].'</th>';
         }
         $table .= '</tr>';
 
         foreach($template as $t)
         {
-            $table .= '<tr><td>'.$t['start_at'].'<br>'.$t['end_at'].'</td>';
+            $table .= '<tr><td>'.$t['label_start_at'].'<br>'.$t['label_end_at'].'</td>';
             
             foreach($days as $day) {
                 if(!array_key_exists($day['day'], $data))
@@ -69,7 +70,7 @@ class TableGenerator
                 if($start_at == '00:00:00') $start_at = '24:00:00';
                 if($end_at == '00:00:00') $end_at = '24:00:00';
                 $templates[] = ['start_at'=>$start_at, 'end_at'=>$end_at,
-                    'duration'=>$item->duration, 'label_start'=>date('G:i', $st), 'label_end'=>date('G:i', $ed)];
+                    'duration'=>$item->duration, 'label_start_at'=>date('G:i', $st), 'label_end_at'=>date('G:i', $ed)];
 
             }
             $offset -= 8;
@@ -83,7 +84,7 @@ class TableGenerator
         $days = [];
         for(;$st<=$ed;$st+=86400)
         {
-            $days[] = ['day' => date('Y-m-d', $st), 'dayofweek'=>date('w', $st)];
+            $days[] = ['day' => date('Y-m-d', $st), 'dayofweek'=>date('N', $st)];
         }
         return $days;
     }

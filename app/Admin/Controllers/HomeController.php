@@ -50,11 +50,61 @@ class HomeController extends Controller
         $data = $generator->processData($days);
         $template = $generator->loadTemplate();
         $table = $generator->export($days, $template, $data);
-        $table = '<div class="col-md-12"><div class="box box grid-box"><div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
+        $filter= <<<FILTER
+        <div class="box-header with-border filter-box" id="filter-box">
+    <form action="" class="form-horizontal" pjax-container method="get">
+
+        <div class="row">
+                        <div class="col-md-8">
+                <div class="box-body">
+                    <div class="fields-group">
+                                                    <div class="form-group">
+    <label class="col-sm-2 control-label">时间范围</label>
+    <div class="col-sm-8">
+        <div class="input-group input-group-sm">
+            <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </div>
+            <input type="text" class="form-control" id="start_at_start" placeholder="时间范围" name="start_at" value="" autocomplete="off">
+
+            <span class="input-group-addon" style="border-left: 0; border-right: 0;">-</span>
+
+            <input type="text" class="form-control" id="start_at_end" placeholder="时间范围" name="end_at" value="" autocomplete="off">
+        </div>
+    </div>
+</div>
+                                            </div>
+                </div>
+            </div>
+                    </div>
+        <!-- /.box-body -->
+
+        <div class="box-footer">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="btn-group pull-left">
+                            <button class="btn btn-info submit btn-sm"><i class="fa fa-search"></i>  搜索</button>
+                        </div>
+                        <div class="btn-group pull-left " style="margin-left: 10px;">
+                            <a href="?expand=1" class="btn btn-default btn-sm"><i class="fa fa-undo"></i>  重置</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+FILTER;
+        $head = '<div class="box-header with-border clearfix"></div>';
+        $box = '<div class="col-md-12"><div class="box box grid-box">'.$filter.$head.'<div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
+        
         return $content
             ->title('星空中国节目单查看工具')
             ->description('')
-            ->row($table);
+            ->row($box);
     
     }
 
