@@ -106,7 +106,8 @@ class TableGenerator
         $items = DB::table('epg')->join('channel_program', 'epg.program_id','=','channel_program.id')
                 ->select(['epg.name','epg.program_id','epg.start_at','epg.category','channel_program.schedule_start_at','channel_program.schedule_end_at'])
                 ->where('epg.group_id', $this->group)->where('epg.start_at', '>', $start)->where('epg.end_at','<',$end)
-                ->where('epg.category', 'in', array_keys(Record::XKC))->orderBy('epg.start_at')->get();
+                ->where('epg.category', 'in', array_keys(Record::XKC))->orderBy('epg.start_at')->dd();
+        
         return $items->toArray();
     }
 }
