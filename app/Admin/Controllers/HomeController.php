@@ -135,11 +135,13 @@ FILTER;
 <div class="row" style="height:390px">
   <div class="col-md-4"><canvas id="materialChart"></canvas></div>
   <div class="col-md-8">
-    <div class="row">
-      <div class="col-md-6" style="height:160px"><canvas id="programChart"></canvas></div>
-      <div class="col-md-6" style="height:160px"><canvas id="recordsChart"></canvas></div>
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-6" style="height:170px"><canvas id="programChart"></canvas></div>
+      <div class="col-md-6" style="height:170px"><canvas id="recordsChart"></canvas></div>
     </div>
-    <div class="row"><div class="col-md-6" style="height:160px"><canvas id="record2Chart"></canvas></div></div>
+    <div class="row">
+      <div class="col-md-6" style="height:170px"><canvas id="record2Chart"></canvas></div>
+    </div>
   </div>
 </div>
 
