@@ -51,7 +51,7 @@ class HomeController extends Controller
         $label_st = '';
         $label_ed = '';
 
-        if($st=='') $table = '<p>请选择日期范围，一次最多7天</p>';
+        if($st=='') $table = '<p>请选择日期范围</p>';
         else {
           $tmp = $st + 6 * 86400;
         if($ed>$tmp) $ed = $tmp;
@@ -104,7 +104,7 @@ class HomeController extends Controller
 </div>
 FILTER;
         
-        $head = '<div class="box-header with-border clearfix"></div>';
+        $head = '<div class="box-header with-border clearfix">选择开始日期及结束日期（可选），一次最多展示7天</div>';
         $box = '<div class="col-md-12"><div class="box box grid-box">'.$filter.$head.'<div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
         
         return $content
