@@ -11,7 +11,7 @@ class HelpController extends Controller
     {
         $title = '素材入库帮助文档';
         $ver = 'Ver 1.0';
-        $content = view('admin.help.template');
+        $content = view('admin.help.material');
         return $layout
             ->title($title)
             ->description($ver)
