@@ -15,8 +15,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
-    $router->get('/channel/export', 'HomeController@preview')->name('home.preview');
-
+    
     $router->get('/media/help', 'HelpController@material')->name('media.help');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
@@ -36,6 +35,7 @@ Route::group([
 
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');
     $router->get('/channel/xkc/preview/{id}', 'Channel\\XkcController@preview')->name('channel.xkc.preview');
+    $router->get('/channel/xkc/export', 'Channel\\XkcController@export')->name('channel.xkc.export');
     $router->resource('/channel/xkc/programs', 'Channel\\XkcProgramController')->names('channel.xkc.programs');
     $router->resource('/channel/xkc', 'Channel\\XkcController')->names('channel.xkc');
     $router->delete('/channel/xkc/data/{id}/remove/{idx}', 'Channel\\XkcProgramController@remove')->name('channel.xkc.programs.delete');
@@ -43,6 +43,7 @@ Route::group([
     
     $router->get('/channel/xki/tree/{id}', 'Channel\\XkiProgramController@tree')->name('channel.xki.programs.tree');
     $router->get('/channel/xki/preview/{id}', 'Channel\\XkiController@preview')->name('channel.xki.preview');
+    $router->get('/channel/xki/export', 'Channel\\XkiController@export')->name('channel.xki.export');
     $router->resource('/channel/xki/programs', 'Channel\\XkiProgramController')->names('channel.xki.programs');
     $router->resource('/channel/xki', 'Channel\\XkiController')->names('channel.xki');
     $router->delete('/channel/xki/data/{id}/remove/{idx}', 'Channel\\XkiProgramController@remove')->name('channel.xki.programs.delete');
