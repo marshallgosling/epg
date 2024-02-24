@@ -125,9 +125,9 @@ FILTER;
     public static function charts()
     {
       $material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'素材库');
-      $program = Statistic::generatePieChart('programChart', Program::STATUS, Statistic::countPrograms(),'V China 节目库');
-      $records = Statistic::generatePieChart('recordsChart', Program::STATUS, Statistic::countRecords(),'星空中国 节目库');
-      $record2 = Statistic::generatePieChart('record2Chart', Program::STATUS, Statistic::countRecord2(),'星空国际节目库');
+      $program = Statistic::generatePieChart('programChart', Program::STATUS, Statistic::countPrograms(),'V China 节目库','right');
+      $records = Statistic::generatePieChart('recordsChart', Program::STATUS, Statistic::countRecords(),'星空中国 节目库','right');
+      $record2 = Statistic::generatePieChart('record2Chart', Program::STATUS, Statistic::countRecord2(),'星空国际节目库','right');
 
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
@@ -135,12 +135,12 @@ FILTER;
 <div class="row" style="height:390px">
   <div class="col-md-4"><canvas id="materialChart"></canvas></div>
   <div class="col-md-8">
-    <div class="row" style="margin-bottom:20px;">
-      <div class="col-md-6" style="height:170px"><canvas id="recordsChart"></canvas></div>
-      <div class="col-md-6" style="height:170px"><canvas id="record2Chart"></canvas></div>
+    <div class="row">
+      <div class="col-md-6" style="height:190px"><canvas id="recordsChart"></canvas></div>
+      <div class="col-md-6" style="height:190px"><canvas id="record2Chart"></canvas></div>
     </div>
     <div class="row">
-      <div class="col-md-6" style="height:170px"><canvas id="programChart"></canvas></div>
+      <div class="col-md-6" style="height:190px"><canvas id="programChart"></canvas></div>
     </div>
   </div>
 </div>
