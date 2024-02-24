@@ -31,15 +31,6 @@ class MaterialController extends AdminController
      */
     protected $title = '物料管理';
 
-    public function help(Content $content)
-    {
-        $material = view('admin.help.material');
-        return $content
-            ->title('素材入库帮助文档')
-            ->description('Ver 1.0')
-            ->row(view('admin.help.layout', ['content'=>$material]));
-    }
-
     public function result(Content $content)
     {
         $json = json_decode(Storage::get('result3.json'), true);
