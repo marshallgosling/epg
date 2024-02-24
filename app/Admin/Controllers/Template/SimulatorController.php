@@ -19,7 +19,7 @@ class SimulatorController extends Controller
         $days = $days == 0 ? (int)config('SIMULATOR_DAYS', 14) : $days;
 
         $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
-        $begin = $channel ? $channel->air_date : date('Y-m-d');
+        $begin = $channel ? $channel->air_date : config('START_DATE','2024-01-01');
         $channels = XkcSimulator::generateFakeChannels($begin, $days);
         $simulator = new XkcSimulator($group, $days, $channels);
 
@@ -40,7 +40,7 @@ class SimulatorController extends Controller
         $days = $days == 0 ? (int)config('SIMULATOR_DAYS', 14) : $days;
 
         $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
-        $begin = $channel ? $channel->air_date : date('Y-m-d');
+        $begin = $channel ? $channel->air_date : config('START_DATE','2024-01-01');
         $channels = XkiSimulator::generateFakeChannels($begin, $days, 'xki');
         $simulator = new XkiSimulator($group, $days, $channels);
 

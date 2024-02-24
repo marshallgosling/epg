@@ -17,15 +17,20 @@ class ExportList extends Model
     public const STATUS_READY = 2;
     public const STATUS_ERROR = 3;
 
+    public const TYPE_NORMAL = 0;
+    public const TYPE_HK = 1;
+
     public const STATUS = ['未生成', '运行中', '可下载', '错误'];
 
     public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
+    public const TYPES = ['普通','香港'];
 
     protected $fillable = [
         'id',
         'name',
         'start_at',
         'end_at',
+        'type',
         'filename',
         'status',
         'reason',

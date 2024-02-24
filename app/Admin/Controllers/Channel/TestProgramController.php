@@ -9,7 +9,7 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Tools\ChannelGenerator;
-use App\Tools\Exporter;
+use App\Tools\Exporter\BvtExporter;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;

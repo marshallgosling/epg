@@ -5,6 +5,8 @@ namespace App\Admin\Controllers\Media;
 use App\Admin\Actions\Material\BatchCreator;
 use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
+use App\Admin\Actions\Material\BatchSync;
+use App\Admin\Actions\Material\CheckMediaInfo;
 use App\Admin\Actions\Material\Importor;
 use App\Models\Category;
 use App\Models\Channel;
@@ -29,9 +31,23 @@ class MaterialController extends AdminController
      */
     protected $title = '物料管理';
 
+    public function help(Content $content)
+    {
+        $material = view('admin.help.material');
+        return $content
+            ->title('素材入库帮助文档')
+            ->description('Ver 1.0')
+            ->row(view('admin.help.layout', ['content'=>$material]));
+    }
+
     public function result(Content $content)
     {
-        $json = json_decode(Storage::get('result.json'), true);
+        $json = json_decode(Storage::get('result3.json'), true);
+        $d0 = [];
+        foreach($json['succ'] as $k=>$v)
+        {
+            $d0[] = [$k, $v];
+        }
         $d1 = [];
         foreach($json['erro'] as $k=>$v)
         {
@@ -42,30 +58,32 @@ class MaterialController extends AdminController
         {
             $d2[] = [$k, $v];
         }
+        $succ = new Table(['code','路径'], $d0);
         $erro = new Table(['id','路径'], $d1);
         $miss = new Table(['id','路径'], $d2);
 
-        $json = json_decode(Storage::get('result2.json'), true);
-        $d3 = [];
-        foreach($json['erro'] as $k=>$v)
-        {
-            $d3[] = [$k, $v];
-        }
-        $d4 = [];
-        foreach($json['miss'] as $k=>$v)
-        {
-            $d4[] = [$k, $v];
-        }
+        // $json = json_decode(Storage::get('result2.json'), true);
+        // $d3 = [];
+        // foreach($json['erro'] as $k=>$v)
+        // {
+        //     $d3[] = [$k, $v];
+        // }
+        // $d4 = [];
+        // foreach($json['miss'] as $k=>$v)
+        // {
+        //     $d4[] = [$k, $v];
+        // }
 
-        $erro1 = new Table(['id','路径'], $d3);
-        $miss1 = new Table(['id','路径'], $d4);
+        // $erro1 = new Table(['id','路径'], $d3);
+        // $miss1 = new Table(['id','路径'], $d4);
 
         $t =  new Tab();
+        $t->add('成功', $succ);
         $t->add('未匹配', $miss);
         $t->add('错误', $erro);
 
-        $t->add('已播未匹配', $miss1);
-        $t->add('已播错误', $erro1);
+        // $t->add('已播未匹配', $miss1);
+        // $t->add('已播错误', $erro1);
 
         return $content->title('匹配结果')
         ->description("物料匹配结果")
@@ -83,7 +101,7 @@ class MaterialController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('unique_no', __('Unique_no'))->sortable()->width(200);
+        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("Media Info", CheckMediaInfo::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
         });
@@ -108,7 +126,11 @@ class MaterialController extends AdminController
             $actions->disableView();
             //$actions->add(new Importor);
         });
-        
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchSync);
+        });
+
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
             $tools->append(new BatchImportor);

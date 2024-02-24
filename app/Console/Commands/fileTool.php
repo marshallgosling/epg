@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\Material;
 use App\Tools\ChannelGenerator;
+use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 use function PHPSTORM_META\elementType;
@@ -45,7 +47,7 @@ class fileTool extends Command
         $action = $this->argument('action') ?? "xml";
         
 
-        if(in_array($action, ['import', 'clean', 'daily', 'compare']))
+        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo', 'scan']))
             $this->$action();
         
 
@@ -53,6 +55,76 @@ class fileTool extends Command
         //Material::insert($items);
         
         return 0;
+    }
+
+    private function scan()
+    {
+        $filename = $this->argument('path') ?? "";
+        $list = config('MEDIA_SOURCE_FOLDER');
+        if($list) {
+            $list = explode(PHP_EOL, $list);
+
+            foreach($list as $item)
+            {
+                $path = $item.$filename;
+                $this->info($path);
+
+                if(file_exists($path))
+                {
+                    $this->info("found:".$path);
+                }
+            }
+        }
+    }
+
+    private function mediainfo()
+    {
+        $file = $this->argument('path') ?? "";
+        $material = Material::findOrFail($file);
+        $unique_no = $material->unique_no;
+
+        if(file_exists($material->filepath)) {
+            try{
+                $info = MediaInfo::getInfo($material);
+            }catch(\Exception $e)
+            {
+                $info = false;
+            }
+            
+            if($info) {
+                $status = Material::STATUS_READY;
+                $material->frames = $info['frames'];
+                $material->size = $info['size'];
+                $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+            }
+            else {
+                $status = Material::STATUS_ERROR;
+            }
+            
+            $material->status = $status;
+            if($material->isDirty()) $material->save();
+
+            if($info) {
+                $duration = $material->duration;
+                $seconds = ChannelGenerator::parseDuration($duration);
+    
+                $data = compact('status', 'duration', 'seconds');
+
+                print_r($data);
+    
+                foreach(['records', 'record2', 'program'] as $table)
+                    DB::table($table)->where('unique_no', $unique_no)->update($data);
+            }
+            else {
+                foreach(['records', 'record2', 'program'] as $table)
+                    DB::table($table)->where('unique_no', $unique_no)->update(['status'=>$status]);
+            }
+            
+        }
+        else {
+            foreach(['records', 'record2', 'program','material'] as $table)
+                DB::table($table)->where('unique_no', $unique_no)->update(['status'=>Material::STATUS_EMPTY]);
+        }
     }
 
     private function compare()
@@ -63,25 +135,47 @@ class fileTool extends Command
         $succ = [];
         $miss = [];
         $erro = [];
+        $script = [];
         foreach($lines as $line)
         {
             
-            $info = pathinfo(trim($line));
+            $info = pathinfo(str_replace("\\","/", trim($line)));
             if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
 
-                if(count($filenames) == 2) {
-                    $code = $filenames[1];
+                if(count($filenames) == 1) {
+                    $code = $filenames[0];
+                    if(array_key_exists($code, $succ)) continue;
                     $m = Material::where('unique_no', $code)->first();
                     if($m) {
                         if($m->status == Material::STATUS_READY) {
                             $this->info("重复 ".$line);
                             continue;
                         }
-                        $m->filepath = $line;
+                        $m->filepath = "Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf";
                         $m->status = Material::STATUS_READY;
                         $m->save();
-                        $succ[] = $line;
+                        $succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
+        
+                    }
+                    else {
+                        $miss[] = $line;
+                    }
+                }
+                else if(count($filenames) == 2) {
+                    $code = $filenames[1];
+                    if(array_key_exists($code, $succ)) continue;
+                    $m = Material::where('unique_no', $code)->first();
+                    if($m) {
+                        if($m->status == Material::STATUS_READY) {
+                            $this->info("重复 ".$line);
+                            continue;
+                        }
+                        $m->filepath = "Y:\\MV\\".$info['filename'].".mxf";
+                        $m->status = Material::STATUS_READY;
+                        $m->save();
+                        $succ[$code] = "move \"{$line}\" \"Y:\MV\"";
+
                     }
                     else {
                         $miss[] = $line;
@@ -92,12 +186,35 @@ class fileTool extends Command
                 }
             }
         }
-        Storage::put("result1.json", json_encode(compact('succ', 'miss', 'erro')));
+        Storage::put("result3.json", json_encode(compact('succ', 'miss', 'erro')));
     }
 
     private function daily()
     {
-        // Copy xml files to CERTAIN folder
+        
+        $json = json_decode(Storage::get('result3.json'), true);
+
+        //$keys = array_keys($json['succ']);
+        $move = [];
+
+        foreach($json['succ'] as $k=>$v)
+        {
+            $m = Material::where('unique_no', $k)->first();
+            if($m) {
+                if($m->status == Material::STATUS_READY) {
+                    $this->info("重复 ".$k);
+                    continue;
+                }
+                $m->filepath = "Y:\\MV\\".$m->name.'.'.$k.".mxf";
+                $m->status = Material::STATUS_READY;
+                $m->save();
+                //$succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
+                $move[] = $v;
+                
+            }
+        }
+        Storage::put("scripts.txt", implode(PHP_EOL, $move));
+        
     }
 
     private function clean()

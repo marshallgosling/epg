@@ -110,7 +110,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
                 {
                     $old = $json[$line['offset']];
 
-                    $new = Program::findRandom($old['category']);
+                    $new = Program::findRandom($old['category'], 3600);
                     $l = ChannelGenerator::createItem($new, $old['category'], $old['start_at']);
                     $json[$line['offset']] = $l;
                 }

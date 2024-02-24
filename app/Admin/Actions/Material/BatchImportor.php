@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Material;
 
 use App\Models\Category;
 use App\Models\Channel;
+use App\Models\Material;
 use App\Tools\ChannelGenerator;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,6 +34,7 @@ class BatchImportor extends BatchAction
         
         foreach($models as $model)
         {
+            //if($model->status != Material::STATUS_READY) continue;
             
             $program = new $class();
             

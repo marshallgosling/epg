@@ -6,7 +6,7 @@ use App\Models\Channel;
 use App\Models\ExportList;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
-use App\Tools\Exporter;
+use App\Tools\Exporter\BvtExporter;
 use App\Tools\ExcelWriter;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
@@ -53,10 +53,10 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
     {
         $channel = Channel::findOrFail($this->id);
 
-        $data = Exporter::collectData($channel->air_date, $channel->name);
+        $data = BvtExporter::collectData($channel->air_date, $channel->name);
 
-        Exporter::generateData($channel, $data);
-        Exporter::exportXml();
+        BvtExporter::generateData($channel, $data);
+        BvtExporter::exportXml();
 
         Notify::fireNotify(
             $channel->name,

@@ -19,7 +19,7 @@ class Record extends Model
     protected $table = 'records';
 
     public const CATEGORIES = ['movie'=>'电影','CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧','docu'=>'纪实'];
-    public const XKC = ['CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧'];
+    public const XKC = ['CanXin'=>'灿星制作','Entertainm'=>'综艺','cartoon'=>'卡通','drama'=>'电视剧','movie'=>'电影'];
     public const STATUS_EMPTY = 0;
     public const STATUS_READY = 1;
     public const STATUS_ERROR = 2;
@@ -153,7 +153,8 @@ class Record extends Model
     public static function findNextEpisode($episodes, $unique_no='', $category='')
     {
         //if($episodes == null) return self::findRandomEpisode($category);
-        $list = Record::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
+        $list = Record::where('episodes', $episodes)->orderBy('ep')
+                    ->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         self::$islast = false;
         foreach($list as $idx=>$l)
         {
@@ -174,7 +175,12 @@ class Record extends Model
 
     public static function findRandomEpisode($c, $maxduration)
     {
-        $list = DB::table('records')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c,%")->get()->toArray();
+        $list = DB::table('records')->selectRaw('distinct(episodes)')
+                    ->where('seconds','<',$maxduration)
+                    ->where('ep', 1)
+                    ->where('category', 'like', "%$c,%")
+                    //->where('status', Material::STATUS_READY)
+                    ->get()->toArray();
 
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);

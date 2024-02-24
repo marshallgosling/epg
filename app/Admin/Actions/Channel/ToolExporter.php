@@ -23,9 +23,10 @@ class ToolExporter extends Action
     public function handle(Request $request)
     {
         $start_at = $request->get('export_start_at');
-        $end_at = $request->get('export_end_at') ?? $start_at;
-        $name = $request->get('export_name') ?? "{$start_at}-{$end_at}";
-        $group = $request->get('export_group');
+        $end_at = $request->get('export_end_at', $start_at);
+        $name = $request->get('export_name', "{$start_at}-{$end_at}");
+        $group = $request->get('export_group', 'xkc');
+        $type = $request->get('export_type', 0);
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
@@ -38,6 +39,7 @@ class ToolExporter extends Action
         $model->end_at = $end_at;
         $model->status = ExportList::STATUS_RUNNING;
         $model->name = $name;
+        $model->type = $type;
         $model->group_id = $group;
         $model->save();
 
@@ -51,6 +53,7 @@ class ToolExporter extends Action
         $this->date('export_start_at', '开始日期')->required();
         $this->date('export_end_at', '结束日期');
         $this->text('export_name', '别名');
+        $this->radio('export_type', '类型')->options(ExportList::TYPES)->default(0);
         $this->hidden('export_group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default('只会导出的状态为正常的节目单。')->disable();
     }

@@ -16,7 +16,7 @@ class Program extends Model
     public const STATUS_EMPTY = 0;
     public const STATUS_READY = 1;
     public const STATUS_ERROR = 2;
-    public const STATUS = ['不可用', '可用', '错误'];
+    public const STATUS = ['不可用', '可用'];
 
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',
@@ -63,6 +63,7 @@ class Program extends Model
                 ->join('material', 'program.unique_no', '=', 'material.unique_no')
                 ->where('program.category','like',"%$key,%")
                 ->where('program.seconds','<',$maxSeconds)
+                ->where('material.status', Material::STATUS_READY)
                 ->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   

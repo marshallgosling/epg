@@ -2,20 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Channel\CalculationEvent;
-use App\Models\Category;
-use App\Models\ChannelPrograms;
-use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\Record;
 use App\Tools\ChannelGenerator;
-use App\Tools\Exporter;
+use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class materialTool extends Command
 {
@@ -54,7 +48,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move', 'seconds'];
+        $actions = ['import','move', 'seconds','mediainfo'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -64,6 +58,23 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function mediainfo($id, $group=0)
+    {
+        
+        $material = Material::findOrFail($id);
+
+        if(file_exists($material->filepath)) {
+            try{
+                $info = MediaInfo::getRawInfo($material);
+            }catch(\Exception $e)
+            {
+                $info = false;
+            }
+
+            echo $info;
+        }
     }
 
     private function seconds() {

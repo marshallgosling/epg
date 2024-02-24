@@ -9,6 +9,8 @@ use App\Models\Material;
 use App\Models\Record;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\ExcelWriter;
+use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -39,21 +41,34 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
 
+        $data = [];
+        $materials = DB::table('material')->where('status', Material::STATUS_EMPTY)->get();
+        foreach($materials as $m)
+        {
+            $data[] = [
+                Channel::GROUPS[$m->channel], $m->unique_no, $m->name, $m->duration, $m->category
+            ];
+        }
 
-        $list = DB::table('material')->where('filepath', 'like', '%已播%')->select('filepath','category')->get();
+        $filename = Storage::path('material.xlsx');
+
+        ExcelWriter::initialExcel('素材列表');
+        ExcelWriter::setupColumns(['频道','播出编号','名称','时长','分类']);
+
+        ExcelWriter::printData($data, 2);
+
+        ExcelWriter::outputFile($filename, 'file');
+        return 0;
+
+
+        $list = Material::where('filepath', 'like', '%卡通%')->get();
 
         foreach($list as $line)
         {
-            switch($line->category)
-            {
-                case 'CanXin': $this->info("move '".$line->filepath."' 'Y:\综艺\'" ); break;
-                case 'drama': $this->info("move '".$line->filepath."' 'Y:\电视剧\'" ); break;
-                case 'cartoon': $this->info("move '".$line->filepath."' 'Y:\卡通\'" ); break;
-                case 'Entertainm': $this->info("move '".$line->filepath."' 'Y:\综艺\'" ); break;
-                case 'movie': $this->info("move '".$line->filepath."' 'Y:\电影\'" ); break;
-                default: $this->info("move '".$line->filepath."' 'Y:\宣传片垫片\'" ); break;
-            }
-                
+            $info = explode('\\', $line->filepath);
+            $line->filepath = 'Y:\\卡通\\'.array_pop($info);
+            $line->save();
+            $this->info($line->filepath);
         }
 
         return 0;

@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Tools\Notify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -12,6 +13,11 @@ class ApiController extends Controller
     public function notifications()
     {
         return response()->json(Notify::readDBNotifications());
+    }
+
+    public function mediainfo(Request $request)
+    {
+        return Cache::get('mediainfo_'.$request->get('unique_no'));
     }
 
     public function treePrograms(Request $request) {
