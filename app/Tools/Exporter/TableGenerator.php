@@ -22,7 +22,7 @@ class TableGenerator
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
     public function export($days, $template, $data)
     {
-        $table = '<table class="table table-bordered"><tr><th>HKT</th>';
+        $table = '<table class="table table-bordered table-responsive"><tr><th>HKT</th>';
         foreach($days as $day)
         {
             $table .= '<th>'.$day['day'].'<br />'.TemplateRecords::DAYS[$day['dayofweek']].'</th>';
