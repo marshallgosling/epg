@@ -14,7 +14,12 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
+    $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
+    $router->get('/channel/export', 'HomeController@preview')->name('home.preview');
 
+    $router->get('/media/help', 'HelpController@material')->name('media.help');
+
+    $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
     
     $router->post('/media/xkc/unique', 'Media\\XkcProgramController@unique')->name('media.xkc.unique');
@@ -23,6 +28,7 @@ Route::group([
     $router->resource('/media/xkc', 'Media\\XkcProgramController')->names('media.xkc');
     $router->resource('/media/xki', 'Media\\XkiProgramController')->names('media.xki');
     $router->resource('/media/xkv', 'Media\\XkvProgramController')->names('media.xkv');
+    $router->get('/media/material/result', 'Media\\MaterialController@result')->name('media.result');
     
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
@@ -100,10 +106,14 @@ Route::group([
     $router->delete('/channel/test/data/{id}/remove/{idx}', 'Channel\\TestProgramController@remove')->name('channel.test.programs.delete');
     $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
+    $router->get('/audit/preview/{id}', 'AuditController@preview')->name('audit.preview');
+    $router->resource('/audit/list', 'AuditController')->names('audit.list');
+
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');
     $router->get('/api/tree/records', 'ApiController@records');
     $router->get('/api/programs', 'ApiController@programs');
     $router->get('/api/category', 'ApiController@category');
     $router->get('/api/episodes', 'ApiController@episodes');
+    $router->get('/api/mediainfo', 'ApiController@mediainfo');
 });

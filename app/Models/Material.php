@@ -12,6 +12,12 @@ class Material extends Model
     
     protected $table = 'material';
 
+    public const STATUS_EMPTY = 0;
+    public const STATUS_READY = 1;
+    public const STATUS_ERROR = 2;
+    public const STATUS_PRO = 3;
+    public const STATUS = ['不可用', '可用', '错误'];
+
     protected $fillable = [
         'id',
         'name',
@@ -23,6 +29,7 @@ class Material extends Model
         'frames',
         'group',
         'md5',
+        'filepath',
         'comment'
     ];
 
@@ -43,7 +50,7 @@ class Material extends Model
 
     public static function findRandom($key)
     {
-        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->pluck('unique_no')->toArray();
+        if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('unique_no')->where('category','like',"%$key%")->where('status', Material::STATUS_READY)->pluck('unique_no')->toArray();
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);

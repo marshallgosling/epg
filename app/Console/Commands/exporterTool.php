@@ -6,8 +6,8 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\ExportList;
 use App\Models\Notification;
-use App\Tools\ExcelWriter;
-use App\Tools\Exporter;
+use App\Tools\Exporter\ExcelWriter;
+use App\Tools\Exporter\BvtExporter;
 use App\Tools\Notify;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -70,10 +70,10 @@ class exporterTool extends Command
     {
         $channel = Channel::findOrFail($id);
 
-        $data = Exporter::collectData($channel->air_date, $channel->name);
+        $data = BvtExporter::collectData($channel->air_date, $channel->name);
 
-        Exporter::generateData($channel, $data, $date);
-        Exporter::exportXml();
+        BvtExporter::generateData($channel, $data, $date);
+        BvtExporter::exportXml();
 
         $fake = $date ? " -> $date":"";
         Notify::fireNotify(
@@ -104,11 +104,11 @@ class exporterTool extends Command
         $channel->name = 'xkv';
         $channel->air_date = $date;
 
-        $json = Exporter::generateData2($channel, $data);
+        $json = BvtExporter::generateData2($channel, $data);
 
         //print_r($json);
 
-        Exporter::exportXml(false, 'test');
+        BvtExporter::exportXml(false, 'test');
     }
 
     private function simplexml($id, $date)
@@ -128,18 +128,18 @@ class exporterTool extends Command
         $channel->name = 'xkv';
         $channel->air_date = $date;
 
-        $json = Exporter::generateSimple($channel, $data);
+        $json = BvtExporter::generateSimple($channel, $data);
 
         //print_r($json);
 
-        Exporter::exportXml(false, 'test');
+        BvtExporter::exportXml(false, 'test');
     }
 
     private function excel($id, $p=false)
     {
         $export = ExportList::findOrFail($id);
 
-        $lines = Exporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
+        $lines = BvtExporter::gatherLines($export->start_at, $export->end_at, $export->group_id);
 
         if(count($lines) == 0) {
             $export->status = ExportList::STATUS_ERROR;
@@ -190,6 +190,11 @@ class exporterTool extends Command
         ExcelWriter::printData($data, config('EXCEL_OFFSET', 10));
 
         ExcelWriter::outputFile($filename, 'file');
+    }
+
+    private function material()
+    {
+        
     }
 
 }

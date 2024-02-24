@@ -12,6 +12,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use App\Admin\Actions\Program\ProgramMaterial;
 
 class XkvProgramController extends AdminController
 {
@@ -40,7 +41,10 @@ class XkvProgramController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->sortable()->width(200);
+        $grid->column('unique_no', __('Unique no'))->width(200)->modal(ProgramMaterial::class);
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Program::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i> ';
+        });
         $grid->column('name', __('Name'))->expand(function() {
             
             $table = '<tr><td width="200px">'.__('Artist').'</td><td colspan="3">'.$this->artist.'</td></tr>'.
@@ -81,16 +85,23 @@ class XkvProgramController extends AdminController
         $grid->column('duration', __('Duration'))->sortable();
         $grid->column('co_artist', __('Co artist'))->hide();
         
-        $grid->column('product_date', __('Product date'))->hide();
-        $grid->column('air_date', __('Air date'))->hide();
+        // $grid->column('product_date', __('Product date'))->hide();
+        // $grid->column('air_date', __('Air date'))->hide();
 
         $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->filter(function(Grid\Filter $filter){
 
-            $filter->column(6, function(Grid\Filter $filter) { $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');});
-            $filter->column(6, function(Grid\Filter $filter) { $filter->mlike('artist', __('Artist'))->placeholder('输入%作为通配符，如 张学% 或 %学友%');$filter->like('category', __('Category'))->select(Category::getFormattedCategories('tags', true)); });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->clike('category', __('Category'))->select(Category::getFormattedCategories('tags', true));
+                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
+                $filter->equal("status", __('Status'))->select(Program::STATUS);
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
+                $filter->mlike('artist', __('Artist'))->placeholder('输入%作为通配符，如 张学% 或 %学友%');
+            });
     
         });
 
@@ -128,8 +139,8 @@ class XkvProgramController extends AdminController
         $show->field('author', __('Author'));
         $show->field('lyrics', __('Lyrics'));
         $show->field('company', __('Company'));
-        $show->field('air_date', __('Air date'));
-        $show->field('product_date', __('Product date'));
+        // $show->field('air_date', __('Air date'));
+        // $show->field('product_date', __('Product date'));
         $show->field('comment', __('Comment'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -156,8 +167,8 @@ class XkvProgramController extends AdminController
         
         $form->text('comment', __('Comment'));
 
-        $form->text('air_date', __('Air date'));
-        $form->text('product_date', __('Product date'));
+        // $form->text('air_date', __('Air date'));
+        // $form->text('product_date', __('Product date'));
         $form->switch('black', __('BlackList'));
         
         $form->divider(__('TagsInfo'));

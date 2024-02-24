@@ -5,6 +5,7 @@ namespace App\Models;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Channel extends Model
 {
@@ -61,5 +62,30 @@ class Channel extends Model
     public function programs()
     {
         return $this->hasMany(ChannelPrograms::class, 'channel_id', 'id');
+    }
+
+    public static function generate($group, $start, $end)
+    {
+        $list = [];
+        for(;$start<=$end;$start+=86400) {
+            
+            if($ch=Channel::where('air_date', date('Y-m-d', $start))->where('name', $group)->first())
+            {
+                if($ch->status == Channel::STATUS_EMPTY)$list[] = $ch;
+                continue;
+            }
+
+            $ch = new Channel();
+
+            $ch->name = $group;
+            $ch->air_date = date('Y-m-d', $start);
+            $ch->uuid = (string) Str::uuid();
+            $ch->version = 1;
+            $ch->status = Channel::STATUS_EMPTY;
+            $ch->audit_status = Channel::AUDIT_EMPTY;
+            $ch->save();
+            $list[] = $ch;
+        }
+        return $list;
     }
 }

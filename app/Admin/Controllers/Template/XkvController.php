@@ -35,7 +35,7 @@ class XkvController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->where('group_id', $this->group)->orderBy('sort', 'asc');
+        $grid->model()->where('group_id', $this->group)->orderBy('status', 'asc')->orderBy('sort', 'asc');
  
         $grid->column('name', __('Name'))->display(function($name) {
             return '<a href="xkv/programs?template_id='.$this->id.'">'.$name.'</a>'; 

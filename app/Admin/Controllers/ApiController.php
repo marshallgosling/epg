@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Tools\Notify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -12,6 +13,11 @@ class ApiController extends Controller
     public function notifications()
     {
         return response()->json(Notify::readDBNotifications());
+    }
+
+    public function mediainfo(Request $request)
+    {
+        return Cache::get('mediainfo_'.$request->get('unique_no'));
     }
 
     public function treePrograms(Request $request) {
@@ -27,7 +33,7 @@ class ApiController extends Controller
         if($q)
             $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
         if($c) {
-            $model = $model->where('category', 'like', "%$c%");
+            $model = $model->where('category', 'like', "%$c,%");
         }
 
         if($t == 'program')
@@ -60,7 +66,7 @@ class ApiController extends Controller
             $sql = 'id, unique_no, duration, name, category, episodes as artist, ep, black';
 
         if($c) {
-            $model = $model->where('category', 'like', "%$c%");
+            $model = $model->where('category', 'like', "%$c,%");
         }
         if($m == '剧集名') {
             $model = $model->where('episodes', 'like', "$q");

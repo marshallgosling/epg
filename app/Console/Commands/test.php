@@ -5,9 +5,12 @@ namespace App\Console\Commands;
 use App\Models\Channel;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
+use App\Models\Material;
 use App\Models\Record;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\ExcelWriter;
+use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -37,129 +40,60 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        
-        $data = $this->getRawData();
 
+        $data = [];
+        $materials = DB::table('material')->where('status', Material::STATUS_EMPTY)->get();
+        foreach($materials as $m)
+        {
+            $data[] = [
+                Channel::GROUPS[$m->channel], $m->unique_no, $m->name, $m->duration, $m->category
+            ];
+        }
+
+        $filename = Storage::path('material.xlsx');
+
+        ExcelWriter::initialExcel('素材列表');
+        ExcelWriter::setupColumns(['频道','播出编号','名称','时长','分类']);
+
+        ExcelWriter::printData($data, 2);
+
+        ExcelWriter::outputFile($filename, 'file');
+        return 0;
+
+
+        $list = Material::where('filepath', 'like', '%卡通%')->get();
+
+        foreach($list as $line)
+        {
+            $info = explode('\\', $line->filepath);
+            $line->filepath = 'Y:\\卡通\\'.array_pop($info);
+            $line->save();
+            $this->info($line->filepath);
+        }
+
+        return 0;
+
+
+        $data = $this->getRawData();
         foreach($data as $line)
         {
-            $words = explode("\t", $line);
-            $p = Record::where('name', $words[0])->first();
-            if($p) {
-                if($p->name2 == $words[2]) continue;
-                $p->name2 = $words[2];
-                $cates = explode(' ', str_replace('/',' ', $words[1]));
-                $categorys = $p->category;
-                foreach($cates as $c)
-                {
-                    $cc = $this->parseTag($c);
-                    if($cc)$categorys[] = $cc;
-                    
-                }
-                $p->category = $categorys;
-                $p->save();
+            $items = explode("\t", $line);
 
-                //print_r($p->toArray());
-                //break;
-            }
-            
-        }
-        exit;
-
-        $day = strtotime($day);
-
-        $channel = new Channel();
-            $channel->id = 1;
-            $channel->name = $group;
-            $channel->air_date = date('Y-m-d', $day);
-
-        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
-        
-        foreach($templates as $template)
-        {
-            $template_items = $template->records;
-
-            $template_item = $this->findAvailableTemplateItem($channel, $template_items);
-
-            print_r($template_item->toArray());
-        }
-
-        return 0 ;
-
-        for($i=0;$i<20;$i++)
-        {
-            $channel = new Channel();
-            $channel->id = $i;
-            $channel->name = $group;
-            $channel->air_date = date('Y-m-d', $day);
-            $day += 86400;
-
-            $this->warn("start date:" . $channel->air_date);
-            $air = 0;
-            $duration = 0;
-            $epglist = [];
-            
-            foreach($templates as $template)
+            $m = Material::where('name', $items[0])->first();
+            if($m)
             {
-                if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
-                $epglist = []; 
-                // This is one single Program
-                $program = ChannelGenerator::createChannelProgram($template);
-
-                $program->channel_id = $channel->id;
-                $program->start_at = date('Y-m-d H:i:s', $air);
-
-                $template_items = $template->records;
-
-                $template_item = $this->findAvailableTemplateItem($channel, $template_items);
-
-                if(!$template_item) {
-                    $this->info("没有找到匹配的模版数据: {$template->id} {$template->category}");
-                    continue;
-                }
-
-                $this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
-
-                $maxDuration = ChannelGenerator::parseDuration($template->duration); + (int)config('MAX_DURATION_GAP', 600);
-                $items = $this->findAvailableRecords($template_item, $maxDuration);
-
-                if(count($items)) {
-                    foreach($items as $item) {
-                        $seconds = ChannelGenerator::parseDuration($item->duration);
-                        if($seconds > 0) {
-                            
-                            $duration += $seconds;
-                            
-                            $line = ChannelGenerator::createItem($item, $template_item->category, date('H:i:s', $air));
-                            
-                            $air += $seconds;
-
-                            $line['end_at'] = date('H:i:s', $air);
-
-                            $epglist[] = $line;
-                                
-                            //$this->info("添加节目: {$template_item->category} {$item->name} {$item->duration}");
-
-
-
-                        }
-                        else {
-
-                            $this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
-                            //throw new GenerationException("{$item->name} 的时长为 0 （{$item->duration}）", Notification::TYPE_GENERATE);
-                        }
-                    }
-                    if(count($epglist) == 0) {
-                        $this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                    }
-                }
-                else {
-                    $this->error(" 异常2，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                }
-
-                $program->duration = $duration;
-                $program->data = json_encode($epglist);
-                $program->end_at = date('Y-m-d H:i:s', $air);
+                $m->comment = trim($items[2]);
+                $m->save();
             }
+        }
+
+        $data = $this->getRawTitle();
+        foreach($data as $line)
+        {
+            $items = explode("\t", trim($line));
+
+            if(count($items)==2)
+                DB::table('material')->where('group', trim($items[1]))->update(['comment'=>trim($items[0])]);
         }
 
         return 0;
@@ -248,11 +182,95 @@ class test extends Command
         return false;
     }
 
+    private function getRawTitle()
+    {
+        $str = <<<EOF
+        Sing My Song S1	中国好歌曲S1
+        Sing My Song S2	中国好歌曲S2
+        Sing My Song S3	中国好歌曲S3
+        Amazing Chinese S1	出彩中国人S1
+        Amazing Chinese S2	出彩中国人S2
+        Brilliant Chinese-Path to Glory	出彩中国人-出彩之路
+        China Got Talent S1	中国达人秀第一季
+        China Got Talent S2	中国达人秀第二季
+        China Got Talent S3	中国达人秀第三季
+        Let's Shake It S1	舞林大会第一季
+        Let's Shake It S2	舞林大会第二季
+        Let's Shake It S3	舞林大会第三季
+        Talent S6	中国达人秀S6
+        Sing! China S1	中国新歌声S1
+        Sing! China S2	中国新歌声S2
+        Sing! Kids	歌声的翅膀
+        Grammy Salute to China Star	中国之星
+        Great Challenge	了不起的挑战
+        Awesome Challenge	我们的挑战
+        Shake It Up	新舞林大会
+        So You Think You Can Dance	中国好舞蹈
+        Dancing with the Stars	与星共舞
+        Guess The Mask Singer S1	蒙面唱将猜猜猜S1
+        Guess The Mask Singer S2	蒙面唱将猜猜猜S2
+        Guess The Mask Singer S3	蒙面唱将猜猜猜S3
+        Guess The Mask Singer S4	蒙面唱将猜猜猜S4
+        Guess The Mask Singer S5	蒙面唱将猜猜猜S5
+        Guess The Mask Singer S6	蒙面唱将猜猜猜S6
+        Street Dance of China	这!就是街舞
+        Street Dance of China S2	这!就是街舞 S2
+        Street Dance of China S3	这!就是街舞 S3
+        Street Dance of China S4	这!就是街舞 S4
+        Street Dance of China S5	这!就是街舞 S5
+        Street Dance of China S6	这!就是街舞 S6
+        Rave Now	即刻电音
+        CHUANG	这就是原创
+        Jin Xing Show	金星秀
+        A Class S1	同一堂课S1
+        A Class S2	同一堂课S2
+        Mum, Mate, Computer Date	爱情找对门
+        Little Masters	拜见小师父
+        Theory of Youth Evolution	青年进化论
+        Liu Xue 	留学吧！少年
+        Heroes of Remix	盖世英雄
+            
+        Sing! China 2018	中国好声音2018
+        Sing! China 2019	中国好声音2019
+        Sing! China 2020	中国好声音2020
+        Sing! China 2021	中国好声音2021
+        Sing! China 2022	中国好声音2022
+        BOOM S1	爆款来了S1
+        BOOM S2	爆款来了S2
+        The Great Wall	了不起的长城
+        Guess The Mask Dancer	蒙面舞王
+        Guess The Mask Dancer S2	蒙面舞王S2
+        Let's Dance S1	师父！我要跳舞了S1
+        Let's Dance S2	师父！我要跳舞了S2
+        Sing Tour	唱给世界听
+        Let's Band	一起乐队吧
+        Amazing Sofa	了不起的沙发
+        Shifu GoGoGo！	出发吧，师傅！
+        Shine!Super Brothers	追光吧！哥哥
+        Shine!Super Brothers S2	追光吧！
+        Great Dance Crew	了不起！舞社
+        Great Dance Crew S2	了不起！舞社 S2
+        E-POP of China	超感星电音
+        Nice Little Voice	中国小童声(AKA:小小好声音)
+        Frontier of Love	爱情的边疆
+FEBRUARY 	二月
+LATE MING DYNASTY	明末风云
+LEGEND OF LIJI	骊姬传奇
+LANG ZI YAN QING	浪子燕青
+CHUAN YUE WEI CHENG	穿越围城
+STORIES  IN STUDIO	直播室的故事
+THE BEAUTY HAS ROUGHLY	佳人有约
+UPS AND DOWNS	沉与浮
+GE'S STORY	葛定国同志的夕阳红
+FEBRUARY 	二月
+LATE MING DYNASTY	明末风云
+EOF;
+        return explode(PHP_EOL, $str);
+    }
 
     private function getRawData()
     {
         $str = <<<EOF
-        物料库 节目库现已导入的482部电影的【标题】	GENRE	ENGLISH TITLE	CHINESE TITLE	Duration
 2分之1段情	劇情	Infatuation	1/2段情(N.G.慢半拍)	88min
 A计划	动作	Project A	A計劃	99min
 A计划续集	动作	Project A Part II	A計劃續集	102min
@@ -735,6 +753,34 @@ YES一族	劇情	Fruit Punch	YES一族(菜鳥大亨)	92min
 最佳拍档大显神通	喜劇	Aces Go Places II	最佳拍檔大顯神通	97min
 最佳拍档女皇密令	喜劇	Aces Go Places III	最佳拍檔女皇密令	92min
 最佳拍档之千里救差婆	喜劇	Aces Go Places IV	最佳拍檔之千里救差婆	85min
+八彩林亚珍	喜劇	Plain Jane To The Rescue
+跛豪	劇情	To Be Number One
+彩云曲	劇情	Once Upon A Rainbow
+恶男	劇情	Goodbye My Love
+富贵开心鬼	靈幻	Lost Souls, The
+鬼马天师	恐怖	Taoism Drunkard
+欢场	劇情	Seven Angels
+僵尸家族	恐怖	Mr. Vampire II
+僵尸少爷	恐怖	Magic Story
+开心鬼救开心鬼	喜劇	Happy Ghost IV
+开心乐园	喜劇	Isle Of Fantasy
+狂情	劇情	Body Is Willing, The
+猛鬼差馆1	恐怖	Haunted Cop Shop, The
+猛鬼佛跳墙	劇情	Bless This House
+猛鬼舞厅	喜劇	Ghost Ballroom
+猛鬼撞鬼	劇情	Funny Ghost
+名剑	武俠	Sword, The
+魔胎	恐怖	Devil Fetus(Devil Baby)
+人吓鬼	恐怖	Hocus Pocus
+人吓人	恐怖	Dead And The Deadly, The
+阮玲玉	劇情	Center Stage
+尸家重地	恐怖	Mortuary Blues
+无名火	動作	Profile In Anger
+凶蝎	動作	Hired Guns, The
+狱凤之再战江湖	動作	Do Unto Others
+僵尸先生	恐怖	Mr. Vampire
+孔雀童子	恐怖	Magic Of Spell
+追鬼七雄	恐怖	Trail, The
 EOF;
         return explode(PHP_EOL, $str);
     }

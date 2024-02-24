@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Notification\BatchViewed;
 use App\Admin\Actions\Notification\ToolViewed;
+use App\Models\Channel;
 use App\Models\Notification;
 use App\Tools\Notify;
 use Encore\Admin\Controllers\AdminController;
@@ -33,7 +34,7 @@ class NotificationController extends AdminController
         //$grid->column('id', __('Id'));
         $grid->column('viewed', __('Viewed'))->bool();
 
-        $grid->column('group_id', __('Group'))->using(Notification::GROUPS)->dot(['xkv'=>'info','xkc'=>'warning','xki' =>'success'], 'info');
+        $grid->column('group_id', __('Group'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('name', __('Name'));
         $grid->column('message', __('Message'))->style('max-width:200px;word-break:break-all;');
         $grid->column('type', __('Type'))->display(function ($type) {
@@ -54,7 +55,7 @@ class NotificationController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(4, function (Grid\Filter $filter) {
-                $filter->equal('group_id', __('Group'))->radio(Notification::GROUPS);
+                $filter->equal('group_id', __('Group'))->radio(Channel::GROUPS);
                 $filter->equal('level', __('Level'))->radio(Notification::LEVELS);
               
             });
@@ -89,7 +90,7 @@ class NotificationController extends AdminController
         $show = new Show(Notification::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('group_id', __('Group'))->using(Notification::GROUPS);
+        $show->field('group_id', __('Group'))->using(Channel::GROUPS);
         $show->field('name', __('Name'));
         $show->field('message', __('Message'));
         $show->field('type', __('Type'))->using(Notification::TYPES);
@@ -112,7 +113,7 @@ class NotificationController extends AdminController
     {
         $form = new Form(new Notification());
 
-        $form->radio('group_id', __('Group'))->options(Notification::GROUPS);
+        $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
         $form->text('name', __('Name'));
         $form->text('message', __('Message'));
         $form->radio('type', __('Type'))->options(Notification::TYPES);

@@ -25,22 +25,23 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
     // Channel UUID;
     private $uuid;
     private $group = 'xkv';
+    private $range;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($uuid)
+    public function __construct($range)
     {
-        $this->uuid = $uuid;
+        $this->range = $range;
         $this->log_channel = 'channel';
         $this->log_print = false;
     }
 
     public function uniqueId()
     {
-        return "Channel-".$this->uuid;
+        return "Channel-".$this->group;
     }
 
     /**
@@ -50,12 +51,11 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        if($this->uuid == $this->group) {
+        if($this->range == $this->group) {
             $channels = Channel::where(['name'=>$this->group, 'status'=>Channel::STATUS_WAITING])->get();
         }
         else {
-            $channel = Channel::where('uuid', $this->uuid)->first();
-            $channels = [$channel];
+            $channels = Channel::generate($this->group, $this->range['s'], $this->range['e']);
         }
         if(!$channels) {
             $this->error("频道 {$this->uuid} 是空数组");

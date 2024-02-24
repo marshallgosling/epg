@@ -13,9 +13,14 @@ class Program extends Model
 
     protected $table = 'program';
 
+    public const STATUS_EMPTY = 0;
+    public const STATUS_READY = 1;
+    public const STATUS_ERROR = 2;
+    public const STATUS = ['不可用', '可用'];
+
     protected $fillable = [
         'id', 'name', 'unique_no','category', 'comment',
-        'album','artist','co_artist', 'duration',
+        'album','artist','co_artist', 'duration', 'status',
         'company', 'air_date', 'product_date', 'seconds',
         'genre', 'gender','lang','mood','tempo','energy', 'black'
     ];
@@ -35,12 +40,12 @@ class Program extends Model
 
     public function getCategoryAttribute($value)
     {
-        return explode(',', $value);
+        return explode(',', trim($value, ","));
     }
 
     public function setCategoryAttribute($value)
     {
-        $this->attributes['category'] = implode(',', $value);
+        $this->attributes['category'] = implode(',', $value).',';
     }
 
     private static $cache = [];
@@ -56,8 +61,9 @@ class Program extends Model
         if(!Arr::exists(self::$cache, $key)) 
             self::$cache[$key] = self::select('program.unique_no')
                 ->join('material', 'program.unique_no', '=', 'material.unique_no')
-                ->where('program.category','like',"%$key%")
+                ->where('program.category','like',"%$key,%")
                 ->where('program.seconds','<',$maxSeconds)
+                ->where('material.status', Material::STATUS_READY)
                 ->pluck('unique_no')->toArray();
 
         if(!self::$cache[$key]) return false;   

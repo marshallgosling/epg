@@ -36,15 +36,12 @@ class XkcGenerator
     {
         $this->log_channel = 'channel';
         $this->group = $group;
-        $days = (int)config('SIMULATOR_DAYS', 14);
-        $this->channels = Channel::where(['status'=>Channel::STATUS_WAITING,'name'=>$this->group])->orderBy('air_date')->limit($days)->get();
-        
     }
 
-    public function test()
+    public function test($channels)
     {
         $days = (int)config('SIMULATOR_DAYS', 14);
-        $simulator = new XkcSimulator($this->group, $days, $this->channels);
+        $simulator = new XkcSimulator($this->group, $days, $channels);
         //$simulator->saveTemplateState();
         $simulator->handle();
 
@@ -53,9 +50,9 @@ class XkcGenerator
         return $error;
     }
 
-    public function reset()
+    public function reset($channels)
     {
-        foreach($this->channels as $channel)
+        foreach($channels as $channel)
         {
             $channel->status = Channel::STATUS_EMPTY;
             $channel->save();
@@ -75,13 +72,13 @@ class XkcGenerator
 
     }
 
-    public function generate()
+    public function generate($channels)
     {
         ChannelGenerator::makeCopyTemplate($this->group);
         Record::loadBumpers();
 
         $days = (int)config('SIMULATOR_DAYS', 14);
-        $channels = $this->channels;
+        //$channels = $this->channels;
         if(!$channels) return false;
         
         $simulator = new XkcSimulator($this->group, $days, $channels);

@@ -9,7 +9,7 @@ use App\Models\Channel;
 use App\Models\Notification;
 use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
-use App\Tools\Exporter;
+use App\Tools\Exporter\BvtExporter;
 use App\Tools\Generator\GenerationException;
 use App\Tools\Generator\XkcGenerator;
 use App\Tools\Generator\XkvGenerator;
@@ -152,8 +152,8 @@ class channelTool extends Command
 
     private function export($id, $pid)
     {
-        Exporter::generate($id);
-        Exporter::exportXml(true);
+        BvtExporter::generate($id);
+        BvtExporter::exportXml(true);
     }
 
     private function generate($id, $group='default')

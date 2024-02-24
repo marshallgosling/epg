@@ -34,6 +34,7 @@ class Importor extends RowAction
         
         $program->unique_no = $model->unique_no;
         $program->name = $model->name;
+        if($model->comment) $program->name2 = $model->comment;
         $program->duration = $model->duration;
         $program->category = [$model->category];
         
