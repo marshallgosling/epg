@@ -258,12 +258,23 @@ FILTER;
         
         $head = '<div class="box-header with-border clearfix">选择开始日期(必须）, 结束日期（可选），一次最多展示 <code>'.$max.'</code> 天</div>';
         $box = '<div class="col-md-12"><div class="box box grid-box">'.$filter.$head.'<div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
-        
+        \Encore\Admin\Admin::script(self::JS);
         return $content
             ->title($this->title.'查看工具')
             ->description('')
             ->row($box);
     
     }
+
+    public const JS = <<<DATE
+    $('#start_at_start').datetimepicker({"format":"YYYY-MM-DD HH:mm:ss","locale":"zh-CN"});
+            $('#start_at_end').datetimepicker({"format":"YYYY-MM-DD HH:mm:ss","locale":"zh-CN","useCurrent":false});
+            $("#start_at_start").on("dp.change", function (e) {
+                $('#start_at_end').data("DateTimePicker").minDate(e.date);
+            });
+            $("#start_at_end").on("dp.change", function (e) {
+                $('#start_at_start').data("DateTimePicker").maxDate(e.date);
+            });
+DATE;
 
 }
