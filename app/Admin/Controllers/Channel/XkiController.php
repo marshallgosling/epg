@@ -269,8 +269,8 @@ FILTER;
     }
 
     public const JS = <<<DATE
-    $('#start_at_start').datetimepicker({"format":"YYYY-MM-DD HH:mm:ss","locale":"zh-CN"});
-            $('#start_at_end').datetimepicker({"format":"YYYY-MM-DD HH:mm:ss","locale":"zh-CN","useCurrent":false});
+    $('#start_at_start').datetimepicker({"format":"YYYY-MM-DD","locale":"zh-CN"});
+            $('#start_at_end').datetimepicker({"format":"YYYY-MM-DD","locale":"zh-CN","useCurrent":false});
             $("#start_at_start").on("dp.change", function (e) {
                 $('#start_at_end').data("DateTimePicker").minDate(e.date);
             });
