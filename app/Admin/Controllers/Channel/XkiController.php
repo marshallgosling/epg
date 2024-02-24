@@ -258,7 +258,7 @@ class XkiController extends AdminController
 </div>
 FILTER;
         
-        $head = '<div class="box-header with-border clearfix">选择开始日期(必须）, 结束日期（可选），一次最多展示 <code>'.$max.'</code> 天</div>';
+        $head = '<div class="box-header with-border clearfix">选择开始日期（必须）, 结束日期（可选），一次最多展示 <code>'.$max.'</code> 天</div>';
         $box = '<div class="col-md-12"><div class="box box grid-box">'.$filter.$head.'<div class="box-body table-responsive no-padding">'.$table.'</div></div></div>';
         \Encore\Admin\Admin::script(self::JS);
         return $content
