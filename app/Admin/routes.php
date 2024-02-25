@@ -76,7 +76,6 @@ Route::group([
     $router->post('/template/xki/reset/state', 'Template\\XkiController@reset')->name('template.xki.reset');
     $router->post('/template/xki/restore/state', 'Template\\XkiController@restore')->name('template.xki.restore');
 
-
     $router->get('/template/xkv/tree/{id}', 'Template\\XkvProgramsController@tree')->name('template.xkv.tree');
     $router->post('/template/xkv/data/{id}/save', 'Template\\XkvProgramsController@save')->name('template.xkv.tree.save');
     $router->delete('/template/xkv/data/{id}/remove/{idx}', 'Template\\XkvProgramsController@remove')->name('template.xkv.tree.delete');
@@ -89,7 +88,8 @@ Route::group([
     
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
     $router->get('/template/temp/programs/{program}', 'Template\\TempProgramsController@show')->name('template.temp.show');
-    
+    $router->get('/template/help', 'HelpController@template')->name('template.help');
+
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
     $router->resource('/export/excel', 'ExportListController')->names('export.list');
     $router->resource('/export/xml', 'ChannelXmlController')->names('export.xml');
