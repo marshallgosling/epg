@@ -32,7 +32,7 @@ class NotificationController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('viewed', __('Viewed'))->bool();
+        $grid->column('viewed', __('Viewed'))->using(['未读','已读']);
 
         $grid->column('group_id', __('Group'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('name', __('Name'));

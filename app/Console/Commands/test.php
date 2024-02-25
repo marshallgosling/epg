@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Channel;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
+use App\Models\Expiration;
 use App\Models\Material;
 use App\Models\Record;
 use App\Models\Template;
@@ -41,23 +42,10 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
 
-        $data = [];
-        $materials = DB::table('material')->where('status', Material::STATUS_EMPTY)->get();
-        foreach($materials as $m)
-        {
-            $data[] = [
-                Channel::GROUPS[$m->channel], $m->unique_no, $m->name, $m->duration, $m->category
-            ];
-        }
 
-        $filename = Storage::path('material.xlsx');
-
-        ExcelWriter::initialExcel('素材列表');
-        ExcelWriter::setupColumns(['频道','播出编号','名称','时长','分类']);
-
-        ExcelWriter::printData($data, 2);
-
-        ExcelWriter::outputFile($filename, 'file');
+        $item = Expiration::where('end_at', '>=', $day)->pluck('name')->toArray();
+        print_r($item);
+        
         return 0;
 
 
