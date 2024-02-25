@@ -240,7 +240,7 @@ class BvtExporter
         return $data;
     }
 
-    public static function collectData2($air_date, $group, \Closure $callback=null) 
+    public static function collectDataGroupWithProgram($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
         $order = [];

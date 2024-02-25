@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class TableGenerator
 {
-    private $indentation = '    ';
-    private $xml;
     private $group = 'xkc';
 
     public function __construct($group='xkc')
@@ -27,7 +25,7 @@ class TableGenerator
         {
             $table .= '<th>'.$day['day'].'<br />'.TemplateRecords::DAYS[$day['dayofweek']].'</th>';
         }
-        $table .= '</tr>';
+        $table .= '<th>HKT</th></tr>';
 
         foreach($template as $t)
         {
@@ -47,7 +45,7 @@ class TableGenerator
                 }
                 $table .= '</td>';
             }
-            $table .= '</tr>';
+            $table .= '<td>'.$t['label_start_at'].'<br>'.$t['label_end_at'].'</td></tr>';
         }
         $table .= '</table>';
         return $table;
