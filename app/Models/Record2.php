@@ -60,10 +60,18 @@ class Record2 extends Model
     private static $pr = false;
     public static $daysofweek = '0';
     public static $islast = false;
+    private static $expiration = [];
+    public static $air = date('Y-m-d');
 
     public static function loadBlackList()
     {
         self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
+    }
+
+    public static function loadExpiration($air)
+    {
+        self::$expiration = Expiration::where('end_at', '<', $air)->pluck('name')->toArray();
+        self::$air = $air;
     }
 
     public static function findRandom($key, $maxduration)
@@ -83,7 +91,10 @@ class Record2 extends Model
         $seconds = ChannelGenerator::parseDuration($program->duration);
         if($seconds > $maxduration) return self::findRandom($key, $maxduration);
         if($program && $program->black) return self::findRandom($key, $maxduration);
-        else return $program;
+        if(in_array($program->name, self::$expiration)) return self::findRandom($key, $maxduration);
+        if(in_array($program->episodes, self::$expiration)) return self::findRandom($key, $maxduration);
+        
+        return $program;
     }
 
     /**
@@ -180,6 +191,8 @@ class Record2 extends Model
         $list = Arr::shuffle($list);
 
         $name = $list[0];
+
+        if(in_array($name->episodes, self::$expiration)) return self::findRandomEpisode($c, $maxduration);
 
         return self::findNextEpisode($name->episodes);
 

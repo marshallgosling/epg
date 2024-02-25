@@ -43,7 +43,7 @@ class test extends Command
         $day = $this->argument('d') ?? "2024-02-06";
 
 
-        $item = Expiration::where('end_at', '>=', $day)->pluck('name')->toArray();
+        $item = Expiration::where('end_at', '<', $day)->pluck('name')->toArray();
         print_r($item);
         
         return 0;

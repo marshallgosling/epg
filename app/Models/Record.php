@@ -70,7 +70,7 @@ class Record extends Model
 
     public static function loadExpiration($air)
     {
-        self::$expiration = Expiration::where('end_at', '>=', $air)->pluck('name')->toArray();
+        self::$expiration = Expiration::where('end_at', '<', $air)->pluck('name')->toArray();
         self::$air = $air;
     }
 
