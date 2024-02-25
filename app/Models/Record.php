@@ -61,7 +61,7 @@ class Record extends Model
     public static $daysofweek = '0';
     public static $islast = false;
     private static $expiration = [];
-    public static $air = date('Y-m-d');
+    public static $air = '2024-03-01';
     private static $_count = 3;
 
     public static function loadBlackList()
