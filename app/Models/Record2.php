@@ -62,7 +62,8 @@ class Record2 extends Model
     public static $islast = false;
     private static $expiration = [];
     public static $air = date('Y-m-d');
-
+    private static $_count = 3;
+    
     public static function loadBlackList()
     {
         self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
@@ -78,7 +79,9 @@ class Record2 extends Model
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('record2.unique_no')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('record2.category','like',"%$key,%")->pluck('unique_no')->toArray();
 
-        if(!self::$cache[$key]) return false;   
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        if(!self::$cache[$key]) { self::$_count = 3; return false; }
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
@@ -94,6 +97,7 @@ class Record2 extends Model
         if(in_array($program->name, self::$expiration)) return self::findRandom($key, $maxduration);
         if(in_array($program->episodes, self::$expiration)) return self::findRandom($key, $maxduration);
         
+        self::$_count = 3;
         return $program;
     }
 
@@ -187,6 +191,10 @@ class Record2 extends Model
     {
         $list = DB::table('record2')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c,%")->get()->toArray();
 
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        if(!$list) { self::$_count = 3; return false; }
+
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
 
@@ -194,6 +202,7 @@ class Record2 extends Model
 
         if(in_array($name->episodes, self::$expiration)) return self::findRandomEpisode($c, $maxduration);
 
+        self::$_count = 3;
         return self::findNextEpisode($name->episodes);
 
     }

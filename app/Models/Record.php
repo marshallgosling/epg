@@ -62,6 +62,7 @@ class Record extends Model
     public static $islast = false;
     private static $expiration = [];
     public static $air = date('Y-m-d');
+    private static $_count = 3;
 
     public static function loadBlackList()
     {
@@ -77,8 +78,9 @@ class Record extends Model
     public static function findRandom($key, $maxduration)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('records.unique_no')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('records.category','like',"%$key,%")->pluck('unique_no')->toArray();
-
-        if(!self::$cache[$key]) return false;   
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        if(!self::$cache[$key]) { self::$_count = 3; return false; }
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
@@ -94,6 +96,7 @@ class Record extends Model
         if(in_array($program->name, self::$expiration)) return self::findRandom($key, $maxduration);
         if(in_array($program->episodes, self::$expiration)) return self::findRandom($key, $maxduration);
         
+        self::$_count = 3;
         return $program;
     }
 
@@ -105,9 +108,8 @@ class Record extends Model
      * @param int $maxduration 可选择的最大时长
      * 
      */
-    public static function findNextAvaiable(&$template, int $maxduration) {
-        
-
+    public static function findNextAvaiable(&$template, int $maxduration)
+    {
         if($template->category == 'movie')
             return [self::findRandom($template->category, $maxduration)];
         
@@ -196,6 +198,10 @@ class Record extends Model
                     //->where('status', Material::STATUS_READY)
                     ->get()->toArray();
 
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        if(!$list) { self::$_count = 3; return false; }
+
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
 
@@ -203,6 +209,7 @@ class Record extends Model
 
         if(in_array($name->episodes, self::$expiration)) return self::findRandomEpisode($c, $maxduration);
 
+        self::$_count = 3;
         return self::findNextEpisode($name->episodes);
 
     }
