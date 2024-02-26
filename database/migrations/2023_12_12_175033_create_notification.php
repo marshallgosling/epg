@@ -16,7 +16,7 @@ class CreateNotification extends Migration
         Schema::create('notification', function (Blueprint $table) {
             $table->id();
             $table->string('name', 40)->comment('标题');
-            $table->string('message', 255)->comment('通知内容');
+            $table->text('message')->comment('通知内容');
             $table->unsignedTinyInteger('type')->default(0)->comment('通知类型');
             $table->string('level', 20)->comment('通知级别')->nullable();
             $table->string('user', 50)->comment('用户')->nullable();

@@ -56,8 +56,8 @@ class XkiController extends AdminController
 
         $grid->model()->where('name', 'xki')->orderBy('air_date', 'desc');
 
-        $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="xki/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+        $grid->column('id', __('编单'))->display(function($id) {
+            return '<a href="xkv/programs?channel_id='.$id.'">查看编单</a>';
         });
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
             return '<a href="xki/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
@@ -70,10 +70,9 @@ class XkiController extends AdminController
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
         $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
-        /*$grid->column('audit_date', __('Audit date'));
+        $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('distribution_date', __('Distribution date'));
-        $grid->column('created_at', __('Created at'));
-        */
+        $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
 
         $grid->actions(function ($actions) {

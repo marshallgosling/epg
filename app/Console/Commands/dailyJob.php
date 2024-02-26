@@ -74,14 +74,19 @@ class dailyJob extends Command
                     Notify::fireNotify($ch->name, Notification::TYPE_XML, '分发格非串联单错误', 
                         '串联单'.$ch->air_date.'存在物料状态不可用的节目内容，'.implode(',', array_values($fail)),
                         Notification::LEVEL_ERROR);
+                    $this->warn("error {$ch->name} {$air}");
                 }
                 else
                 {
                     $ch->distribution_date = date('Y-m-d H:i:s');
                     $ch->save();
+                    $this->info("save distribution date {$ch->name} {$air}");
                     if(config('BVT_XML_PATH', false))
                         file_put_contents(config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', $file);
                 }
+            }
+            else {
+                $this->warn("xml error {$ch->name} {$air}");
             }
         }
         
