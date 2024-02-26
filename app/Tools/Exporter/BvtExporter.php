@@ -18,6 +18,7 @@ class BvtExporter
     public static $file = true;
 
     public const TIMES = ['xkv'=>'06:00:00', 'xkc'=>'17:00:00'];
+    public const NAMES = ['xkc'=>'XKC','xki'=>'XKI','xkv'=>'CNV'];
 
     public static function generateSimple($channel, $programs)
     {
@@ -26,7 +27,7 @@ class BvtExporter
         $template = json_decode($jsonstr);
 
         $json = clone $template->PgmItem;
-        $json->ChannelName = $channel->name;
+        $json->ChannelName = self::NAMES[$channel->name];
         $json->PgmDate = $channel->air_date;
         $json->Version = $channel->version;
         $json->Count = count($programs);

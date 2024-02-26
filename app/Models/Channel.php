@@ -17,12 +17,13 @@ class Channel extends Model
     public const STATUS_ERROR = 3;
     public const STATUS_CLOSE = 4;
     public const STATUS_WAITING = 5;
+    public const STATUS_DISTRIBUTE = 6;
 
     public const AUDIT_EMPTY = 0;
     public const AUDIT_PASS = 1;
     public const AUDIT_FAIL = 2;
 
-    public const STATUS = ['未编单', '运行中', '正常', '错误', '下线', '等待中'];
+    public const STATUS = ['未编单', '运行中', '正常', '错误', '下线', '等待中', '分发播出'];
     public const AUDIT = ['未审核', '通过', '不通过'];
 
     public const GROUPS = ['xkv'=>'V China', 'xkc'=>'星空中国', 'xki'=>'星空国际'];
