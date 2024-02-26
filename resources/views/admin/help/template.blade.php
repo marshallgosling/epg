@@ -24,7 +24,7 @@
 <li>第五步，保存编排规则记录</li>
 <li>第六步，启用模版</li>
 </ul>
-<p><img class="img-thumbnail img-responsive" src="/images/help/template/编单系统-星空中国-模版-1.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/template/编单系统-星空中国-模版-1.png" /></p>
 
 <p>&nbsp;</p>
 <div class="bs-callout bs-callout-warning"> 
@@ -32,7 +32,7 @@
   <p>编排规则代表某一个模版内可以编排的内容类型和约束</p>
   <p>生成节目单时，会根据<code>上下文</code>选择符合逻辑的节目</p>
 </div>
-<p><img class="img-thumbnail img-responsive" src="/images/help/template/编单系统-普通模版编排-1.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/template/编单系统-普通模版编排-1.png" /></p>
 <h4>规则：类型</h4>
 <p>类型： 固定、随机、广告。 </p>
 <ul>
@@ -52,7 +52,7 @@
   <p>可以<code>手动修改</code>这部分数据，影响上下文编排，如强制更换节目，重复播放等</p>
 </div>
 
-<p><img class="img-thumbnail img-responsive" src="/images/help/template/编单系统-普通模版编排-2.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/template/编单系统-普通模版编排-2.png" /></p>
 <h4>编排数据：剧集</h4>
 <p>在规则类型为<code>固定</code>时，必须要指定一个剧集名。</p>
 <p>这里保存着编排时的剧集名称</p> 

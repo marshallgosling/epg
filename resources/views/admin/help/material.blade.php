@@ -20,9 +20,9 @@
 </div>
 
 <p>找到物料状态为不可用的记录</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-1.png"/></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-1.png"/></p>
 <p>点击“编辑”按钮，可以查看物料是否有文件路径信息</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-2.png"/></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-2.png"/></p>
 
 <h4>2. 准备及检查物料文件（mxf格式文件）</h4>
 <p>准备好相应的物料文件，mxf格式的媒体文件，复制到相应的目录<br/>可用的目录有:</p>
@@ -40,28 +40,28 @@ Y:\其他\
 <ul>
 <li>文件夹必须是上述列出的位置</li> <li>文件名必须是以 <code>物料名称</code>.<code>播出编号</code>.<code>mxf</code> 统一命名规则 </li>
 </ul>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/1708692865086.jpg" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/1708692865086.jpg" /></p>
 
 <h4 class="page-header">3. 批量同步</h4>
 <p>确认好物料文件已经复制到指定的目录以后，就可以进行批量同步操作了</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-3.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-3.png" /></p>
 <p>点击完以后，就可以等待通知结果，查看同步信息。<br/>如果同步成功，物料和对应节目库里的记录状态都会变为“可用”状态</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-4.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-4.png" /></p>
 <p>&nbsp;</p><p>&nbsp;</p>
 <h1 id="section2" class="page-header">添加全新物料入库（可批量创建）</h1>
 <p>如未找到对应的物料记录，请先手动添加物料信息</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-5.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-5.png" /></p>
 <h4>1. 新增单条详细记录 </h4>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-6.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-6.png" /></p>
 <h4>2. 批量添加记录 </h4>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/编单系统-物料管理-7.png" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-7.png" /></p>
 <p>注：批量创建会自动生成播出编号（按序列生成），请注意文件名中的编号是否一致。</p>
 <h4>3. 同步和扫描物料入库</h4>
 <p>此处和情况 “同步和扫描物料入库” 的处理流程完全一致，请参考上述流程</p>
 <p>&nbsp;</p><p>&nbsp;</p>
 <h1 id="section3" class="page-header">检查媒体文件信息</h1>
 <p>不管何时，都可以进行媒体文件信息的检查，只需在<code>物料库</code>里<code>点击</code>相应的<code>播出编号</code>字段即可</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/1708829998580.jpg" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/1708829998580.jpg" /></p>
 <div class="bs-callout bs-callout-warning"> 
   <h4>使用说明</h4> 
   <p>读取媒体文件的信息需要时间，首次分析一般需要 3 秒，因此需要耐心等待，成功后再次查看则无需等待。</p> 
@@ -70,7 +70,7 @@ Y:\其他\
 <p>&nbsp;</p><p>&nbsp;</p>
 <h1 id="section4" class="page-header">通知</h1>
 <p>不管同步情况如何，都会在通知列表里得到一个同步结果通知，可以去菜单 统计 -> 通知 内查看</p>
-<p><img class="img-thumbnail img-responsive" src="/images/help/material/1708696765986.jpg" /></p>
+<p><img class="img-thumbnail img-responsive" src="/storage/images/material/1708696765986.jpg" /></p>
 
 </div>
 <div class="col-md-4"> 
@@ -79,16 +79,16 @@ Y:\其他\
                     
                     <li> <a href="#section1"> 同步和扫描物料入库 </a>
                     <ul class="nav"> 
-            <li class=""><a href="#overview-doctype">0. 前置说明</a></li> 
-            <li class=""><a href="#overview-mobile">1. 检查物料记录信息</a></li> 
-            <li class=""><a href="#overview-type-links">2. 准备及检查物料文件</a></li> 
-            <li class=""><a href="#overview-type-links">3. 批量同步</a></li> 
+            <li ><a href="#">0. 前置说明</a></li> 
+            <li ><a href="#">1. 检查物料记录信息</a></li> 
+            <li ><a href="#">2. 准备及检查物料文件</a></li> 
+            <li ><a href="#">3. 批量同步</a></li> 
             
         </ul> </li>
                     <li> <a href="#section2"> 添加全新物料入库 </a> <ul class="nav"> 
-            <li class=""><a href="#overview-doctype">1. 新增单条详细记录</a></li> 
-            <li class=""><a href="#overview-mobile">2. 批量添加记录</a></li> 
-            <li class=""><a href="#overview-type-links">3. 同步和扫描物料入库</a></li> 
+            <li ><a href="#">1. 新增单条详细记录</a></li> 
+            <li ><a href="#">2. 批量添加记录</a></li> 
+            <li ><a href="#">3. 同步和扫描物料入库</a></li> 
             
         </ul></li>
                     <li> <a href="#section3"> 检查媒体文件信息 </a> </li>
