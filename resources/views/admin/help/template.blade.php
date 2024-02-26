@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-8 docs-section">
 
-<h1 id="section1" class="page-header">模版类型</h1>
+<h1 id="section0" class="page-header">模版类型</h1>
 <h4>前置说明</h4>
 <div class="bs-callout bs-callout-primary"> 
   <h4>星空中国和星空国际模版为有状态模版</h4> 
@@ -73,4 +73,31 @@
 <p><code>标题</code>仅用于展示播出编号对应的节目标题，方便识别</p>
 <p><code>状态</code>标识该规则当前的状态，编排中，编排完成，错误</p> 
 <p>&nbsp;</p> 
-<p></p>
+
+</div>
+<div class="col-md-4"> 
+<nav class="epg-sidebar epg-sidebar-info hidden-print hidden-sm hidden-xs" id="epgAffix">
+  <ul class="nav epg-sidenav"> 
+    <li> 
+        <a href="#section1"> 模版类型，前置说明 </a> 
+        
+    </li>
+    <li> <a href="#section2"> 星空中国和星空国际模版 </a> 
+        <ul class="nav"> 
+            <li class=""><a href="#overview-doctype">创建单条模版记录</a></li> 
+            <li class=""><a href="#overview-mobile">编排规则</a></li> 
+            <li class=""><a href="#overview-type-links">编排数据</a></li> 
+            
+        </ul>
+    </li>
+
+                   
+   </ul>
+</div>
+</div>
+<script type="text/javascript">
+  $(function () {
+    $('#epgAffix').affix({offset: {top: 130}});
+    $('body').scrollspy({ target: '#epgAffix' })
+  });
+</script>

@@ -77,8 +77,20 @@ Y:\其他\
                 <nav class="epg-sidebar epg-sidebar-info hidden-print hidden-sm hidden-xs" id="epgAffix">
                   <ul class="nav epg-sidenav"> 
                     
-                    <li> <a href="#section1"> 同步和扫描物料入库 </a> </li>
-                    <li> <a href="#section2"> 添加全新物料入库 </a> </li>
+                    <li> <a href="#section1"> 同步和扫描物料入库 </a>
+                    <ul class="nav"> 
+            <li class=""><a href="#overview-doctype">0. 前置说明</a></li> 
+            <li class=""><a href="#overview-mobile">1. 检查物料记录信息</a></li> 
+            <li class=""><a href="#overview-type-links">2. 准备及检查物料文件</a></li> 
+            <li class=""><a href="#overview-type-links">3. 批量同步</a></li> 
+            
+        </ul> </li>
+                    <li> <a href="#section2"> 添加全新物料入库 </a> <ul class="nav"> 
+            <li class=""><a href="#overview-doctype">1. 新增单条详细记录</a></li> 
+            <li class=""><a href="#overview-mobile">2. 批量添加记录</a></li> 
+            <li class=""><a href="#overview-type-links">3. 同步和扫描物料入库</a></li> 
+            
+        </ul></li>
                     <li> <a href="#section3"> 检查媒体文件信息 </a> </li>
                     <li> <a href="#section4"> 通知 </a> </li>
                    
