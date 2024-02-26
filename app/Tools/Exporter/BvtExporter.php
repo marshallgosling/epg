@@ -140,7 +140,7 @@ class BvtExporter
         if(!$name) $name = $json->ChannelName;
 
         if(self::$file) {
-            Storage::disk('public')->put($name.'_'.$json->PgmDate.'.xml', $xml);
+            Storage::disk('xml')->put($name.'_'.$json->PgmDate.'.xml', $xml);
 
         }
         self::$xml = $xml;

@@ -81,12 +81,12 @@ class ExportListController extends AdminController
 
         $filename = $file->filename;
 
-        if(!Storage::disk($file->group_id)->exists($filename)) {
+        if(!Storage::disk('excel')->exists($filename)) {
             return response('文件不存在或者仍在处理中。', 404);
         }
 
         if($file->status == ExportList::STATUS_READY) {
-            return Storage::disk($file->group_id)->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+            return Storage::disk('excel')->download($filename, $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
         }
         else {
             return response('文件仍在处理中。', 404);

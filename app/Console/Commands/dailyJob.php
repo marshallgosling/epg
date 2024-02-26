@@ -58,9 +58,9 @@ class dailyJob extends Command
         foreach($list as $ch)
         {
             $air = date('Y-m-d', strtotime($ch->air_date));
-            if(!Storage::disk('public')->exists('xml\\'.$ch->name.'_'.$air.'.xml'))
+            if(!Storage::disk('xml')->exists($ch->name.'_'.$air.'.xml'))
                 continue;
-            $file = Storage::disk('public')->get('xml\\'.$ch->name.'_'.$air.'.xml');
+            $file = Storage::disk('xml')->get($ch->name.'_'.$air.'.xml');
             
             $items = XmlReader::parseXml($file);
 
