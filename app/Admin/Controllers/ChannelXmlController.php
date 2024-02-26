@@ -58,7 +58,7 @@ class ChannelXmlController extends AdminController
         $grid->column('created_at', __('Created at'));
         */
         $grid->column('download', __('Download'))->display(function() {
-            $filename = $this->name.'_'.$this->air_date.'.xml';
+            $filename = 'xml/'.$this->name.'_'.$this->air_date.'.xml';
             return Storage::disk('public')->exists($filename) ? 
                 '<a href="'.Storage::disk('public')->url($filename).'" target="_blank">'.
                 $filename. ' ('.BvtExporter::filesize(Storage::disk('public')->size($filename)) . ')</a>':'';

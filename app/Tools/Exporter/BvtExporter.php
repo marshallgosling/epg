@@ -130,10 +130,10 @@ class BvtExporter
         self::$json = $json;
     }
 
-    public static function exportXml($json=false, $name=false)
+    public static function exportXml($name=false)
     {
         $exporter = new XmlWriter();
-        if(!$json) $json = self::$json;
+        $json = self::$json;
 
         $xml = $exporter->export($json, 'PgmItem');
 

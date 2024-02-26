@@ -56,7 +56,7 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
         $data = BvtExporter::collectData($channel->air_date, $channel->name);
 
         BvtExporter::generateData($channel, $data);
-        BvtExporter::exportXml();
+        BvtExporter::exportXml($channel->name);
 
         Notify::fireNotify(
             $channel->name,

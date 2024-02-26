@@ -58,9 +58,9 @@ class dailyJob extends Command
         foreach($list as $ch)
         {
             $air = date('Y-m-d', strtotime($ch->air_date));
-            if(!Storage::disk('public')->exists(BvtExporter::NAMES[$ch->name].'_'.$air.'.xml'))
+            if(!Storage::disk('public')->exists($ch->name.'_'.$air.'.xml'))
                 continue;
-            $file = Storage::disk('public')->get(BvtExporter::NAMES[$ch->name].'_'.$air.'.xml');
+            $file = Storage::disk('public')->get($ch->name.'_'.$air.'.xml');
             
             $items = XmlReader::parseXml($file);
 
@@ -82,7 +82,9 @@ class dailyJob extends Command
                     $ch->save();
                     $this->info("save distribution date {$ch->name} {$air}");
                     if(config('BVT_XML_PATH', false))
-                        file_put_contents(config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', $file);
+                        file_put_contents(
+                            config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', 
+                            $file);
                 }
             }
             else {
