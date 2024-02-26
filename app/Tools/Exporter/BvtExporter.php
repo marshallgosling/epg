@@ -18,6 +18,7 @@ class BvtExporter
     public static $file = true;
 
     public const TIMES = ['xkv'=>'06:00:00', 'xkc'=>'17:00:00'];
+    public const NAMES = ['xkc'=>'XKC','xki'=>'XKI','xkv'=>'CNV'];
 
     public static function generateSimple($channel, $programs)
     {
@@ -26,7 +27,7 @@ class BvtExporter
         $template = json_decode($jsonstr);
 
         $json = clone $template->PgmItem;
-        $json->ChannelName = $channel->name;
+        $json->ChannelName = self::NAMES[$channel->name];
         $json->PgmDate = $channel->air_date;
         $json->Version = $channel->version;
         $json->Count = count($programs);
@@ -129,17 +130,17 @@ class BvtExporter
         self::$json = $json;
     }
 
-    public static function exportXml($json=false, $name=false)
+    public static function exportXml($name=false)
     {
         $exporter = new XmlWriter();
-        if(!$json) $json = self::$json;
+        $json = self::$json;
 
         $xml = $exporter->export($json, 'PgmItem');
 
         if(!$name) $name = $json->ChannelName;
 
         if(self::$file) {
-            Storage::disk('public')->put($name.'_'.$json->PgmDate.'.xml', $xml);
+            Storage::disk('xml')->put($name.'_'.$json->PgmDate.'.xml', $xml);
 
         }
         self::$xml = $xml;
@@ -240,7 +241,7 @@ class BvtExporter
         return $data;
     }
 
-    public static function collectData2($air_date, $group, \Closure $callback=null) 
+    public static function collectDataGroupWithProgram($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
         $order = [];

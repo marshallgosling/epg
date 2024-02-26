@@ -32,7 +32,7 @@ class NotificationController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('viewed', __('Viewed'))->bool();
+        $grid->column('viewed', __('Viewed'))->using(['未读','已读']);
 
         $grid->column('group_id', __('Group'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('name', __('Name'));
@@ -43,7 +43,7 @@ class NotificationController extends AdminController
         $grid->column('level', __('Level'))->using(Notification::LEVELS)->label([
            'info' => 'info',
             'warning' => 'warning',
-            'error' => 'danger'
+            'danger' => 'danger'
         ]);
         $grid->column('user', __('User'))->hide();
         
@@ -115,7 +115,7 @@ class NotificationController extends AdminController
 
         $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
         $form->text('name', __('Name'));
-        $form->text('message', __('Message'));
+        $form->textarea('message', __('Message'));
         $form->radio('type', __('Type'))->options(Notification::TYPES);
         $form->radio('level', __('Level'))->options(Notification::LEVELS);
         $form->text('user', __('User'));

@@ -60,17 +60,27 @@ class Record extends Model
     private static $pr = false;
     public static $daysofweek = '0';
     public static $islast = false;
+    private static $expiration = [];
+    public static $air = '2024-03-01';
+    private static $_count = 3;
 
     public static function loadBlackList()
     {
         self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
     }
 
+    public static function loadExpiration($air)
+    {
+        self::$expiration = Expiration::where('end_at', '<', $air)->pluck('name')->toArray();
+        self::$air = $air;
+    }
+
     public static function findRandom($key, $maxduration)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('records.unique_no')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('records.category','like',"%$key,%")->pluck('unique_no')->toArray();
-
-        if(!self::$cache[$key]) return false;   
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        if(!self::$cache[$key]) { self::$_count = 3; return false; }
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
@@ -83,19 +93,25 @@ class Record extends Model
         $seconds = ChannelGenerator::parseDuration($program->duration);
         if($seconds > $maxduration) return self::findRandom($key, $maxduration);
         if($program && $program->black) return self::findRandom($key, $maxduration);
-        else return $program;
+        if(in_array($program->name, self::$expiration)) return self::findRandom($key, $maxduration);
+        if(in_array($program->episodes, self::$expiration)) return self::findRandom($key, $maxduration);
+        
+        self::$_count = 3;
+        return $program;
     }
 
     /**
      * 根据模版数据寻找匹配的节目，并更新模版数据
-     * 这里假设模版条件已经符合要求
+     * 模版条件已经符合要求
      * 
-     * @param TemplateRecords $template
+     * @param TemplateRecords $template 当前模版信息记录
+     * @param int $maxduration 可选择的最大时长
+     * 
      */
-    public static function findNextAvaiable(&$template, int $maxduration) {
+    public static function findNextAvaiable(&$template, int $maxduration)
+    {
         if($template->category == 'movie')
             return [self::findRandom($template->category, $maxduration)];
-       
         
         $data = $template->data;
         $total = 1; $ep = 0;
@@ -182,11 +198,18 @@ class Record extends Model
                     //->where('status', Material::STATUS_READY)
                     ->get()->toArray();
 
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        if(!$list) { self::$_count = 3; return false; }
+
         $list = Arr::shuffle($list);
         $list = Arr::shuffle($list);
 
         $name = $list[0];
 
+        if(in_array($name->episodes, self::$expiration)) return self::findRandomEpisode($c, $maxduration);
+
+        self::$_count = 3;
         return self::findNextEpisode($name->episodes);
 
     }

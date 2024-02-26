@@ -135,7 +135,7 @@ class ExcelJob implements ShouldQueue, ShouldBeUnique
              
     }
 
-    private function printToExcel($data, $filename, $disk='public')
+    private function printToExcel($data, $filename, $disk='excel')
     {
         $filename = Storage::disk($disk)->path($filename);
 

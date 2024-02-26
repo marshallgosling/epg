@@ -49,24 +49,17 @@ return [
             'visibility' => 'public',
         ],
 
-        'xkv' => [
+        'excel' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/xkv'),
-            'url' => env('APP_URL').'/storage/xkv',
+            'root' => storage_path('app/public/excel'),
+            'url' => env('APP_URL').'/storage/excel',
             'visibility' => 'public',
         ],
 
-        'xkc' => [
+        'xml' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/xkc'),
-            'url' => env('APP_URL').'/storage/xkc',
-            'visibility' => 'public',
-        ],
-
-        'xki' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/xki'),
-            'url' => env('APP_URL').'/storage/xki',
+            'root' => storage_path('app/public/xml'),
+            'url' => env('APP_URL').'/storage/xml',
             'visibility' => 'public',
         ],
 
