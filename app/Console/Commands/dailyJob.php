@@ -46,7 +46,7 @@ class dailyJob extends Command
 
     private function xml($args)
     {
-        $now = time() - 3 * 86400;
+        $now = time() + 7 * 86400;
         $list = DB::table('channel')
                 ->where('status', Channel::STATUS_READY)
                 ->where('audit_status', Channel::AUDIT_PASS)
