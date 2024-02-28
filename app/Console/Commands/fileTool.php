@@ -142,7 +142,7 @@ class fileTool extends Command
                             $this->info("重复 ".$line);
                             continue;
                         }
-                        $m->filepath = "Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf";
+                        $m->filepath = $line;
                         $m->status = Material::STATUS_READY;
                         $m->save();
                         $succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
@@ -161,14 +161,27 @@ class fileTool extends Command
                             $this->info("重复 ".$line);
                             continue;
                         }
-                        $m->filepath = "Y:\\MV\\".$info['filename'].".mxf";
+                        $m->filepath = $line;
                         $m->status = Material::STATUS_READY;
                         $m->save();
                         $succ[$code] = "move \"{$line}\" \"Y:\MV\"";
 
+                        foreach(['records', 'record2', 'program'] as $table)
+                            DB::table($table)->where('unique_no', $code)->update(['status'=>Material::STATUS_READY]);
+
                     }
                     else {
-                        $miss[] = $line;
+                        $m = new Material();
+                        $m->name = $filenames[0];
+                        $m->unique_no = $code;
+                        $m->filepath = $line;
+                        $m->channel = 'xkc';
+                        $m->status = Material::STATUS_READY;
+                        $m->category = 'drama';
+                        $group = preg_replace('/(\d+)$/', "", $filenames[0]);
+                        $m->group = trim(trim($group), '_-');
+                        $m->save();
+                        
                     }
                 }
                 else {
@@ -176,7 +189,7 @@ class fileTool extends Command
                 }
             }
         }
-        Storage::put("result3.json", json_encode(compact('succ', 'miss', 'erro')));
+        Storage::put($file.".json", json_encode(compact('succ', 'miss', 'erro')));
     }
 
     private function daily()

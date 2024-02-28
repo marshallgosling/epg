@@ -89,11 +89,9 @@ Y:\其他\
             <li ><a href="#">1. 新增单条详细记录</a></li> 
             <li ><a href="#">2. 批量添加记录</a></li> 
             <li ><a href="#">3. 同步和扫描物料入库</a></li> 
-            
         </ul></li>
                     <li> <a href="#section3"> 检查媒体文件信息 </a> </li>
                     <li> <a href="#section4"> 通知 </a> </li>
-                   
                   </ul>
               </div>
 </div>
