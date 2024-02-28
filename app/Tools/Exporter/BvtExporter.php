@@ -79,7 +79,7 @@ class BvtExporter
         $channel = Channel::find($id);
 
         $json = clone $template->PgmItem;
-        $json->ChannelName = $channel->name;
+        $json->ChannelName = self::NAMES[$channel->name];
         $json->PgmDate = $channel->air_date;
         $json->Version = $channel->version;
 
@@ -300,7 +300,7 @@ class BvtExporter
         if(!$fixDate) $fixDate = $channel->air_date;
         $json = clone $template->PgmItem;
 
-        $json->ChannelName = $channel->name;
+        $json->ChannelName = self::NAMES[$channel->name];
         $json->PgmDate = $fixDate;
         $json->Version = $channel->version;
 
@@ -317,7 +317,7 @@ class BvtExporter
                        
                 $itemList->StartTime = $start;
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                $itemList->Name = $program['name'];
+                $itemList->Name = '<![CDATA['.$program['name'].']]>';
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = 0;
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
