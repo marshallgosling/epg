@@ -57,7 +57,7 @@ class XkcController extends AdminController
         $grid->model()->where('name', 'xkc')->orderBy('air_date', 'desc');
 
         $grid->column('id', __('编单'))->display(function($id) {
-            return '<a href="xkv/programs?channel_id='.$id.'">查看编单</a>';
+            return '<a href="xkc/programs?channel_id='.$id.'">查看编单</a>';
         });
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
             return '<a href="xkc/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';

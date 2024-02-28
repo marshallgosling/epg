@@ -128,8 +128,8 @@ class fileTool extends Command
         $script = [];
         foreach($lines as $line)
         {
-            
-            $info = pathinfo(str_replace("\\","/", trim($line)));
+            $tmp = explode("\\", trim($line));
+            $info = pathinfo($tmp);
             if(array_key_exists('extension', $info) && $info['extension'] == 'mxf') {
                 $filenames = explode('.', $info['filename']);
 
