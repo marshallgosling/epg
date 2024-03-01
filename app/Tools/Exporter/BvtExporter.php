@@ -20,6 +20,11 @@ class BvtExporter
     public const TIMES = ['xkv'=>'06:00:00', 'xkc'=>'17:00:00'];
     public const NAMES = ['xkc'=>'XKC','xki'=>'XKI','xkv'=>'CNV'];
 
+    /**
+     * 弃用
+     * 
+     * @deprecated
+     */
     public static function generateSimple($channel, $programs)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
@@ -70,6 +75,11 @@ class BvtExporter
         self::$json = $json;
     }
 
+     /**
+     * 弃用
+     * 
+     * @deprecated
+     */
     public static function generate($id)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
@@ -291,6 +301,13 @@ class BvtExporter
 
     }
 
+    /**
+     * 根据编排数据，生成格非串联单结构数据
+     * 
+     * @param Channel $channel 编单日期信息
+     * @param array $data 编排数据
+     * @param bool $fixDate 强制更换日期
+     */
     public static function generateData($channel, $data, $fixDate = false)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
