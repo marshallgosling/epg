@@ -51,13 +51,13 @@ class BatchCreator extends Action
     public function form()
     {
         $this->radio('channel', __('Channel'))->options(['xkc'=>'星空中国'])->default('xkc');
-        $this->select('category', __('Category'))->options(Category::getXkcCategories());
+        $this->select('category', __('Category'))->options(Category::getXkcCategories())->required();
         //$this->text('unique_no', __('Unique no'))->placeholder('首集播出编号，后续集数自动累加');
 
-        $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入');
-        $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号');
-        $this->text('total', __('集数'))->placeholder('连续创建的集数');
-        $this->text('duration', __('Duration'))->placeholder('时长');
+        $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入')->required();
+        $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号')->required();
+        $this->text('total', __('集数'))->placeholder('连续创建的集数')->required();
+        $this->text('duration', __('Duration'))->placeholder('时长')->required();
         //$this->file('excel', __('Excel'))->placeholder('通过文件导入');
         //$this->text('group', __('Group'));
 
