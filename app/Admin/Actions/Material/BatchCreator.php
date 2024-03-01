@@ -30,13 +30,14 @@ class BatchCreator extends Action
         $duration = $request->get('duration');
         $frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
         $code = 'XK'.Str::random(12);
+        $status = Material::STATUS_EMPTY;
 
         for($i=0;$i<$total;$i++)
         {
             $ep = $i+$st;
             $unique_no = Str::upper($code.$this->ep($ep));
             $name = $group.' '.$ep;
-            Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames'));
+            Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status'));
         }
         
         return $this->response()->success(__('BatchCreator success message.'))->refresh();

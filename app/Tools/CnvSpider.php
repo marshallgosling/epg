@@ -6,6 +6,9 @@ use App\Models\Category;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 
+/**
+ * @deprecated
+ */
 class CnvSpider
 {
     private $client;
