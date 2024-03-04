@@ -76,7 +76,7 @@ class ExpirationController extends AdminController
         $form = new Form(new Expiration());
 
         $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
-        $form->select('name', __('Episode'))->placeholder('输入剧集名或电影名，如 舒克贝塔S02，开心乐园')->ajax('/admin/api/episode');;
+        $form->select('name', __('Episodes'))->placeholder('输入剧集名或电影名，如 舒克贝塔S02，开心乐园')->ajax('/admin/api/episode');;
         $form->date('start_at', __('Start at'))->default(date('Y-m-d'));
         $form->date('end_at', __('End at'))->default(date('Y-m-d'));
         $form->switch('status', __('Status'))->options(Expiration::STATUS);
