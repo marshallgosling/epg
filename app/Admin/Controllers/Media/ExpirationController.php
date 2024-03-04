@@ -36,7 +36,7 @@ class ExpirationController extends AdminController
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
         
-        $grid->column('comment', __('Comment'))->hide();
+        $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
 
