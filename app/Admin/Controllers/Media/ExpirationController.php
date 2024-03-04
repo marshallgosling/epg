@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\MessageBag;
 
 class ExpirationController extends AdminController
 {
@@ -75,11 +76,40 @@ class ExpirationController extends AdminController
         $form = new Form(new Expiration());
 
         $form->radio('group_id', __('Group'))->options(Channel::GROUPS);
-        $form->text('name', __('Name'))->placeholder('输入剧集名或电影名，如 舒克贝塔S02，开心乐园');
+        $form->select('name', __('Episode'))->placeholder('输入剧集名或电影名，如 舒克贝塔S02，开心乐园')->ajax('/admin/api/episode');;
         $form->date('start_at', __('Start at'))->default(date('Y-m-d'));
         $form->date('end_at', __('End at'))->default(date('Y-m-d'));
         $form->switch('status', __('Status'))->options(Expiration::STATUS);
         $form->textarea('comment', __('Comment'));
+
+        $form->saving(function(Form $form) {
+
+            if($form->isCreating()) {
+                $error = new MessageBag([
+                    'title'   => '创建失败',
+                    'message' => '该剧集名称 '. $form->name.' 已存在。',
+                ]);
+    
+                if(Expiration::where('name', $form->name)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+
+            if($form->isEditing()) {
+                $error = new MessageBag([
+                    'title'   => '修改失败',
+                    'message' => '该剧集名称 '. $form->name.' 已存在。',
+                ]);
+    
+                if(Expiration::where('name', $form->name)->where('id','<>',$form->model()->id)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+
+            
+        });
 
         return $form;
     }
