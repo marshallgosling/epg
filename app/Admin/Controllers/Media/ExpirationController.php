@@ -29,7 +29,7 @@ class ExpirationController extends AdminController
         $grid = new Grid(new Expiration());
 
         $grid->column('id', __('Id'));
-        $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        //$grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('status', __('Status'))->bool();
 
         $grid->column('name', __('Name'));
@@ -54,7 +54,7 @@ class ExpirationController extends AdminController
         $show = new Show(Expiration::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('group_id', __('Group id'))->using(Channel::GROUPS);
+        //$show->field('group_id', __('Group id'))->using(Channel::GROUPS);
         $show->field('name', __('Name'));
         $show->field('start_at', __('Start at'));
         $show->field('end_at', __('End at'));
@@ -75,8 +75,11 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        $form->radio('group_id', __('Group'))->options(Channel::GROUPS)->required();
-        $form->select('name', __('Episodes'))->placeholder('输入剧集名或电影名，如 舒克贝塔S02，开心乐园')->ajax('/admin/api/episode')->required();
+        //$form->radio('group_id', __('Group'))->options(Channel::GROUPS)->required();
+        $form->hidden('group_id', '')->default('xkc');
+        $form->select('name', __('Episodes'))->options(function ($id) {
+            return [$id => $id];
+        })->ajax('/admin/api/episode')->required();
         $form->date('start_at', __('Start at'))->default(date('Y-m-d'))->required();
         $form->date('end_at', __('End at'))->default(date('Y-m-d'))->required();
         $form->switch('status', __('Status'))->options(Expiration::STATUS);
