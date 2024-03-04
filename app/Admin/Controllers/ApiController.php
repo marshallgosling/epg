@@ -105,7 +105,7 @@ class ApiController extends Controller
         $q = $request->get('q');
     
         return DB::table('records')->where('episodes', 'like', "%$q%")
-            ->select(DB::raw('`episodes` as `id`, `episodes` as `text`'))
+            ->select(DB::raw('distinct(`episodes`) as `id`, distinct(`episodes`) as `text`'))
             ->paginate(15);
     }
 
