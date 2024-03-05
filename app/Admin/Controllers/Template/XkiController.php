@@ -114,7 +114,7 @@ class XkiController extends AdminController
                     if($p->data['result'] == '编排完' || $p->data['result'] == '错误') $style = 'bg-danger';
                 }
                 else {
-                    $item = [ $p->id, $p->name, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>' ];
+                    $item = [ $p->id, $p->name, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '', '<a href="xki/programs/'.$p->id.'/edit">编辑</a>' ];
                 }
                 $items[] = compact('style', 'item');
             }
