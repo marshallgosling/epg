@@ -193,7 +193,6 @@ class Record extends Model
     {
         $list = DB::table('records')->selectRaw('distinct(episodes)')
                     ->where('seconds','<',$maxduration)
-                    ->where('ep', 1)
                     ->where('category', 'like', "%$c,%")
                     //->where('status', Material::STATUS_READY)
                     ->get()->toArray();
