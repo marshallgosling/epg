@@ -16,8 +16,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //$schedule->command('tools:crawler',['daily'])->twiceDailyAt(6, 18);
-        $schedule->command('tools:file',['daily'])->dailyAt(6);
-        $schedule->command('tools:file',['clean'])->dailyAt(18);
+        $schedule->command('daily:job',['xml'])->twiceDailyAt(6, 18);
+        //$schedule->command('tools:file',['clean'])->dailyAt(18);
     }
 
     /**

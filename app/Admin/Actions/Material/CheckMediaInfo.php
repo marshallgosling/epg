@@ -23,13 +23,13 @@ class CheckMediaInfo implements Renderable
             $data = '<tr><td><b>'.__('Unique no').'</b></td><td>'.$m->unique_no.'</td><td><b>'.__('Category').'</b></td><td>'.$m->category.'</td></tr>';
             $data .= '<tr><td><b>'.__('Filepath').'</b></td><td colspan="3">'.$m->filepath.'</td></tr>';
             if(!$m->filepath) {
-                $data .= '<tr><td><b>MediaInfo</b></td><td colspan="3" style="height:400px;"><h4>没有素材 mxf 格式信息</h4></td></tr>';
+                $data .= '<tr><td><b>媒体文件信息</b></td><td colspan="3" style="height:400px;"><h4>没有素材 mxf 格式信息</h4></td></tr>';
            
             }
             else {
 
                 if($info) {
-                    $data .= '<tr><td><b>MediaInfo</b></td><td colspan="3" style="height:400px;"><textarea cols="120" rows="30">'.$info.'</textarea></td></tr>';
+                    $data .= '<tr><td><b>媒体文件信息</b></td><td colspan="3" style="height:400px;"><textarea cols="120" rows="30">'.$info.'</textarea></td></tr>';
                 }
                 else {
                     MediaInfoJob::dispatch($key, 'view')->onQueue('media');

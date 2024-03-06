@@ -2,14 +2,18 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\Record;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\ExcelWriter;
 use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class materialTool extends Command
 {
@@ -48,7 +52,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move', 'seconds','mediainfo'];
+        $actions = ['import','move', 'seconds','mediainfo','export'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -58,6 +62,28 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function export($status=Material::STATUS_EMPTY, $group=false)
+    {
+        $data = [];
+        
+        $materials = DB::table('material')->where('status', $status)->get();
+        foreach($materials as $m)
+        {
+            $data[] = [
+                Channel::GROUPS[$m->channel], $m->unique_no, $m->name, $m->duration, $m->category
+            ];
+        }
+
+        $filename = Storage::path('material.xlsx');
+
+        ExcelWriter::initialExcel('素材列表');
+        ExcelWriter::setupColumns(['频道','播出编号','名称','时长','分类']);
+
+        ExcelWriter::printData($data, 2);
+
+        ExcelWriter::outputFile($filename, 'file');
     }
 
     private function mediainfo($id, $group=0)

@@ -111,6 +111,7 @@ class XkiSimulator
         
         foreach($this->channels as &$channel)
         {
+            Record::loadExpiration($channel->air_date);
             
             $result = $channel->toArray();
             $result['data'] = [];

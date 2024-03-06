@@ -31,15 +31,6 @@ class MaterialController extends AdminController
      */
     protected $title = '物料管理';
 
-    public function help(Content $content)
-    {
-        $material = view('admin.help.material');
-        return $content
-            ->title('素材入库帮助文档')
-            ->description('Ver 1.0')
-            ->row(view('admin.help.layout', ['content'=>$material]));
-    }
-
     public function result(Content $content)
     {
         $json = json_decode(Storage::get('result3.json'), true);
@@ -101,7 +92,7 @@ class MaterialController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("Media Info", CheckMediaInfo::class);
+        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
         });
@@ -168,8 +159,8 @@ class MaterialController extends AdminController
         $show->field('category', __('Category'))->using(Category::getFormattedCategories());
         $show->field('duration', __('Duration'));
         $show->field('frames', __('Frames'));
-        $show->field('air_date', __('Air date'));
-        $show->field('expired_date', __('Expired date'));
+        // $show->field('air_date', __('Air date'));
+        // $show->field('expired_date', __('Expired date'));
         $show->field('filepath', __('Filepath'));
         $show->field('size', __('Size'));
         $show->field('md5', __('MD5'));
@@ -201,8 +192,8 @@ class MaterialController extends AdminController
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('group', __('Group'))->default('');
 
-        $form->date('air_date', __('Air date'));
-        $form->date('expired_date', __('Expired date'));
+        // $form->date('air_date', __('Air date'));
+        // $form->date('expired_date', __('Expired date'));
 
         $form->divider(__('FileInfo'));
         $form->text('frames', __('Frames'))->default(0);

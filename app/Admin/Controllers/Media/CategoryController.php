@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\MessageBag;
 
 class CategoryController extends AdminController
 {
@@ -93,6 +94,27 @@ class CategoryController extends AdminController
         $form->select('type', __('CategoryType'))->options(Category::TYPES)->rules('required');
         
         $form->radio('duration', __('Duration'))->options(TemplatePrograms::TYPES)->default('0');
+
+        $form->saving(function(Form $form) {
+
+            if($form->isCreating()) {
+                $error = new MessageBag([
+                    'title'   => '创建失败',
+                    'message' => __('CategoryNo').' '. $form->no.' 已存在。',
+                ]);
+    
+                if(Category::where('CategoryNo', $form->no)->exists())
+                {
+                    return back()->with(compact('error'));
+                }
+            }
+
+            if($form->isEditing()) {
+                $form->ignore('no');
+            }
+
+            
+        });
 
         return $form;
     }

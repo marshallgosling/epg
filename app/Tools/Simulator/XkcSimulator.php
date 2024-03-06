@@ -111,7 +111,9 @@ class XkcSimulator
         
         foreach($this->channels as &$channel)
         {
-            
+            // setup $air value, for record items expiration check 
+            Record::loadExpiration($channel->air_date);
+
             $result = $channel->toArray();
             $result['data'] = [];
             $result['error'] = false;

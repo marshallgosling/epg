@@ -7,8 +7,6 @@ use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\ToolExporter;
-use App\Admin\Actions\Channel\BatchXkvGenerator as BatchGenerator;
-use App\Admin\Actions\Channel\ToolCreator;
 use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
 use Encore\Admin\Controllers\AdminController;
@@ -27,6 +25,7 @@ class XkvController extends AdminController
      * @var string
      */
     protected $title = "【 V China 】节目单";
+    private $group = 'xkv';
 
     protected $description = [
                 'index'  => "查看和编辑每日节目单数据",
@@ -37,13 +36,13 @@ class XkvController extends AdminController
 
     public function preview($air_date, Content $content)
     {
-        $model = Channel::where('name', 'xkv')->where('air_date', $air_date)->first();
+        $model = Channel::where('name', $this->group)->where('air_date', $air_date)->first();
 
         $data = $model->programs()->get();
         $color = 'info';
           
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.xkv', compact('data', 'model', 'color')));
+        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color')));
     }
 
     /**
@@ -55,24 +54,24 @@ class XkvController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('name', 'xkv')->orderBy('air_date', 'desc');
+        $grid->model()->where('name', $this->group)->orderBy('air_date', 'desc');
 
-        $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="xkv/programs?channel_id='.$this->id.'">'.$uuid.'</a>';
+        $grid->column('id', __('编单'))->display(function($id) {
+            return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
         });
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
-            return '<a href="xkv/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
+            return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
         });
         $grid->column('start_end', __('StartEnd'));
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
-        $grid->column('reviewer', __('Reviewer'));
+        $grid->column('reviewer', __('Reviewer'))->hide();
         $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
-        /*$grid->column('audit_date', __('Audit date'));
+        $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('distribution_date', __('Distribution date'));
-        $grid->column('created_at', __('Created at'));
-        */
+        $grid->column('created_at', __('Created at'))->hide();
+        
         $grid->column('updated_at', __('Updated at'));
 
         $grid->actions(function ($actions) {
@@ -141,7 +140,7 @@ class XkvController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->hidden('name', __('Name'))->default('xkv');
+        $form->hidden('name', __('Name'))->default($this->group);
         $form->display('uuid', __('Uuid'))->default('自动生成');
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
