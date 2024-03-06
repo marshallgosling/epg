@@ -15,25 +15,33 @@
 ## 功能截图
 
 ### 首页
-[首页](https://drive.google.com/file/d/1oo6MtL_rHxO_qBWNRm4Ouujsid5h6GND/view?usp=sharing)
+![首页](./docs/screenshots/home.png)
 
 ### 有状态编单模版
-[有状态编单模版](https://drive.google.com/file/d/1NJKgtj1-yW9fxX1mA8AOA6NlhL9gJvm0/view?usp=sharing)
+![有状态编单模版](./docs/screenshots/template.png)
 
 ### 编单模版预览
-[编单模版预览](https://drive.google.com/file/d/1zhOeo_KrOQBFzgUeyUgFeHttTdnQh7oD/view?usp=sharing)
+![编单模版预览](./docs/screenshots/preview.png)
 
 ### 自动编单
-[自动编单](https://drive.google.com/file/d/1zKIMq3Ju7mn3k1qJnWDayoUoBbBmUAnW/view?usp=sharing)
+![自动编单](./docs/screenshots/epg.pngg)
 
 ### 通知列表
-[通知列表](https://drive.google.com/file/d/1MUCnvSFkZoY_CvEjczn-YkjoJh6C8Eiy/view?usp=sharing)
+![通知列表](./docs/screenshots/notification.png)
 
-### Excel 导出
-[Excel 导出](https://drive.google.com/file/d/1xs5U0MOOrtcEHS382R2n4jEiSBKrQwjY/view?usp=sharing)
+### 编单预览
+![编单预览](./docs/screenshots/preview2.png)
 
-### 修改编单内容
-[修改编单内容](https://drive.google.com/file/d/1aQAFmTlUNeESZM3vaP5ol9iHFoKDHbOb/view?usp=sharing)
+### 无状态编单模版
+![无状态编单模版](./docs/screenshots/list.png)
+
+### 其他功能
+- Excel 导出
+- XML 生成
+- 串联单查询
+- 物料素材导入
+- 黑名单
+- 节目有效期管理
 
 ## Contributing
 
