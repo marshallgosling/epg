@@ -24,7 +24,7 @@
 ![编单模版预览](./docs/screenshots/preview.png)
 
 ### 自动编单
-![自动编单](./docs/screenshots/epg.pngg)
+![自动编单](./docs/screenshots/epg.png)
 
 ### 通知列表
 ![通知列表](./docs/screenshots/notification.png)
