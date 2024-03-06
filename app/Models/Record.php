@@ -125,7 +125,7 @@ class Record extends Model
             // { 
             //     return [$item];
             // }
-
+            if(!$item) return ['empty'];
             if(in_array($item, ['finished', 'empty'])) return [$item];
 
             $ep = 1;
