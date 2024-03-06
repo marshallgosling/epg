@@ -52,7 +52,13 @@
   color: #337ab7;
   border-left-color: #337ab7;
 }
-
+.epg-sidebar .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+    font-weight: 400;
+}
 /* Show and affix the side nav when space allows it */
 @media (min-width: 992px) {
   .epg-sidebar .nav > .active > ul {

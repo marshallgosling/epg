@@ -20,7 +20,7 @@ class ToolEpgList extends BatchAction
                 // 空编单和停止使用的编单不能通过审核
                 continue;
             }
-            if($model->name == 'xkc')
+            //if($model->name == 'xkc')
                 ExportJob::dispatch($model->id);
         }
         

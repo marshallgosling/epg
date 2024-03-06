@@ -52,7 +52,7 @@ class XmlWriter
     {
         // TODO: htmlspecialchars
         if( strpos($value, '<![CDATA[') != -1) return $value;
-        else return htmlspecialchars($value);
+        else return $value;
     }
     private function getArrayName($parentName)
     {

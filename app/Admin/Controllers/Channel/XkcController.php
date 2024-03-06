@@ -27,6 +27,8 @@ class XkcController extends AdminController
      */
     protected $title = "【 星空中国 】节目单";
 
+    private $group = 'xkc';
+
     protected $description = [
                 'index'  => "查看和编辑每日节目单数据",
         //        'show'   => 'Show',
@@ -36,13 +38,13 @@ class XkcController extends AdminController
 
     public function preview($air_date, Content $content)
     {
-        $model = Channel::where('name', 'xkc')->where('air_date', $air_date)->first();
+        $model = Channel::where('name', $this->group)->where('air_date', $air_date)->first();
 
         $data = $model->programs()->get();
         $color = 'primary';
           
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.xkc', compact('data', 'model', 'color')));
+        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color')));
     }
 
     /**
@@ -54,13 +56,13 @@ class XkcController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('name', 'xkc')->orderBy('air_date', 'desc');
+        $grid->model()->where('name', $this->group)->orderBy('air_date', 'desc');
 
         $grid->column('id', __('编单'))->display(function($id) {
-            return '<a href="xkv/programs?channel_id='.$id.'">查看编单</a>';
+            return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
         });
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
-            return '<a href="xkc/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
+            return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
         });
 
         $grid->column('start_end', __('StartEnd'));
@@ -142,7 +144,7 @@ class XkcController extends AdminController
     {
         $form = new Form(new Channel());
 
-        $form->hidden('name', __('Name'))->default('xkc');
+        $form->hidden('name', __('Name'))->default($this->group);
         $form->display('uuid', __('Uuid'))->default('自动生成');
         $form->date('air_date', __('Air date'))->required();      
         $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
@@ -194,7 +196,7 @@ class XkcController extends AdminController
 
     public function export(Content $content, Request $request)
     {
-        $generator = new TableGenerator('xkc');
+        $generator = new TableGenerator($this->group);
         $st = strtotime($request->get('start_at', ''));
         $ed = strtotime($request->get('end_at', ''));
         $label_st = '';

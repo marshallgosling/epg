@@ -16,3 +16,4 @@ yarn-error.log
 composer.lock
 /.idea
 /.vscode
+public/phpMyAdmin

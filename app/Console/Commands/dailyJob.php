@@ -51,7 +51,7 @@ class dailyJob extends Command
                 ->where('status', Channel::STATUS_READY)
                 ->where('audit_status', Channel::AUDIT_PASS)
                 ->where('distribution_date', null)
-                ->where('air_date','<=', date('Y-m-d', $now))
+                ->where('air_date', date('Y-m-d', $now))
                 ->orderBy('air_date')
                 ->get();
         if(!$list) return;
@@ -83,7 +83,7 @@ class dailyJob extends Command
                     $this->info("save distribution date {$ch->name} {$air}");
                     if(config('BVT_XML_PATH', false))
                         file_put_contents(
-                            config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', 
+                            config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', 
                             $file);
                 }
             }

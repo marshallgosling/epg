@@ -102,7 +102,7 @@ class ExcelJob implements ShouldQueue, ShouldBeUnique
         $filename = $export->group_id.'_'.$export->start_at .'_'. $export->end_at.'_'. Str::random(4).'.xlsx';
 
         try {
-            $this->printToExcel($lines, $filename, $export->group_id);
+            $this->printToExcel($lines, $filename);
             $export->status = ExportList::STATUS_READY;
             $export->filename = $filename;
             $export->save();
