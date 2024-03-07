@@ -48,6 +48,8 @@ class dailyJob extends Command
     {
         $now = $args ? strtotime($args) : (time() + 7 * 86400);
 
+        $is_today = $args == date('Y-m-d');
+
         $list = Channel::where('status', Channel::STATUS_READY)
                 ->where('audit_status', Channel::AUDIT_PASS)
                 ->where('distribution_date', null)
@@ -83,10 +85,12 @@ class dailyJob extends Command
                     $ch->distribution_date = date('Y-m-d H:i:s');
                     $ch->save();
                     $this->info("save distribution date {$ch->name} {$air}");
-                    if(config('BVT_XML_PATH', false))
-                        file_put_contents(
-                            config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', 
-                            $file);
+                    
+                    if($is_today) $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$ch->name].'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml' : false;
+                    else $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml': false; 
+                    
+                    if($path)
+                        file_put_contents($path, $file);
                 }
             }
             else {
