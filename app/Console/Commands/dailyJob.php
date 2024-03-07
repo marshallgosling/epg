@@ -52,7 +52,7 @@ class dailyJob extends Command
 
         $list = Channel::where('status', Channel::STATUS_READY)
                 ->where('audit_status', Channel::AUDIT_PASS)
-                ->where('distribution_date', null)
+                //->where('distribution_date', null)
                 ->where('air_date', date('Y-m-d', $now))
                 //->orderBy('air_date')
                 ->get();
