@@ -125,6 +125,7 @@ class Record2 extends Model
             //     return [$item];
             // }
 
+            if(!$item) return ['empty'];
             if(in_array($item, ['finished', 'empty'])) return [$item];
 
             $ep = 1;
@@ -189,7 +190,9 @@ class Record2 extends Model
 
     public static function findRandomEpisode($c, $maxduration)
     {
-        $list = DB::table('record2')->selectRaw('distinct(episodes)')->where('seconds','<',$maxduration)->where('ep', 1)->where('category', 'like', "%$c,%")->get()->toArray();
+        $list = DB::table('record2')->selectRaw('distinct(episodes)')
+            ->where('seconds','<',$maxduration)
+            ->where('category', 'like', "%$c,%")->get()->toArray();
 
         self::$_count --;
         if(self::$_count < 0) { self::$_count = 3; return false; }
