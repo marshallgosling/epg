@@ -53,7 +53,7 @@ class XkiSimulator
     /**
      * 单纯模拟运行时，生成虚拟频道列表（按日期）
      */
-    public static function generateFakeChannels($begin, $days, $group='xkc')
+    public static function generateFakeChannels($begin, $days, $group='xki')
     {
         $day = strtotime($begin);
         $channels = [];

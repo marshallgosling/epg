@@ -75,6 +75,13 @@ class Record2 extends Model
         self::$air = $air;
     }
 
+    public static function cleanCache()
+    {
+        self::$bumper = [];
+        self::$pr = null;
+        self::$cache = [];
+    }
+
     public static function findRandom($key, $maxduration)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('record2.unique_no')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('record2.category','like',"%$key,%")->pluck('unique_no')->toArray();
@@ -169,7 +176,7 @@ class Record2 extends Model
     public static function findNextEpisode($episodes, $unique_no='', $category='')
     {
         //if($episodes == null) return self::findRandomEpisode($category);
-        $list = Record2::where('episodes', $episodes)->orderBy('ep')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
+        $list = Record2::where('episodes', $episodes)->orderBy('ep', 'asc')->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
         self::$islast = false;
         foreach($list as $idx=>$l)
         {

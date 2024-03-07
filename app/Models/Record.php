@@ -75,6 +75,13 @@ class Record extends Model
         self::$air = $air;
     }
 
+    public static function cleanCache()
+    {
+        self::$bumper = [];
+        self::$pr = null;
+        self::$cache = [];
+    }
+
     public static function findRandom($key, $maxduration)
     {
         if(!Arr::exists(self::$cache, $key)) self::$cache[$key] = self::select('records.unique_no')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('records.category','like',"%$key,%")->pluck('unique_no')->toArray();

@@ -75,6 +75,7 @@ class XkcGenerator
     public function generate($channels)
     {
         ChannelGenerator::makeCopyTemplate($this->group);
+        Record::cleanCache();
         Record::loadBumpers();
 
         $days = (int)config('SIMULATOR_DAYS', 14);
