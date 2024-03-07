@@ -171,6 +171,12 @@ class MaterialController extends AdminController
         return $show;
     }
 
+    public function import()
+    {
+        $form = new Form(new Material());
+        $form->listbox('items', __('Items'))->options([1 => 'foo', 2 => 'bar', 'val' => 'Option name']);
+    }
+
     /**
      * Make a form builder.
      *
