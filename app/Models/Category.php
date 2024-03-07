@@ -16,6 +16,7 @@ class Category extends Model
     public const TYPES = ['tags'=>'标签', 'mood'=>'情绪', 'energy'=>'力量', 'tempo'=>'节奏', 'genre'=>'风格', 'sex'=>'性别'];
     public const CATES = ['movie', 'cartoon', 'drama', 'Entertainm', 'CanXin'];
     public const TYPE_TAGS = 0;
+    public const GROUPS = ['普通','广告','导出'];
     
     protected $fillable = [
         'id',

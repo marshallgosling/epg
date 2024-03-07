@@ -101,9 +101,11 @@ class TableGenerator
 
     public function collectData($start, $end)
     {
+        $category = config("EXPORT_CATEGORIES", false);
+        if(!$category) $category = array_keys(Record::XKC);
         return DB::table('epg')->join('channel_program', 'epg.program_id','=','channel_program.id')
                 ->select(['epg.name','epg.program_id','epg.start_at','epg.category','channel_program.schedule_start_at','channel_program.schedule_end_at'])
                 ->where('epg.group_id', $this->group)->where('epg.start_at', '>', $start)->where('epg.end_at','<',$end)
-                ->whereIn('epg.category', array_keys(Record::XKC))->orderBy('epg.start_at')->get()->toArray();
+                ->whereIn('epg.category', $category)->orderBy('epg.start_at')->get()->toArray();
     }
 }
