@@ -54,8 +54,19 @@ Y:\其他\
 <h4>1. 新增单条详细记录 </h4>
 <p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-6.png" /></p>
 <h4>2. 批量添加记录 </h4>
-<p><img class="img-thumbnail img-responsive" src="/storage/images/material/编单系统-物料管理-7.png" /></p>
-<p>注：批量创建会自动生成播出编号（按序列生成），请注意文件名中的编号是否一致。</p>
+<ul>
+<li><p><img class="img-thumbnail img-responsive" src="/storage/images/material/WechatIMG1910.jpg" /></p>
+<p><code>搜索</code>出需要同步的mxf文件列表</p></li>
+<li><p><img class="img-thumbnail img-responsive" src="/storage/images/material/WechatIMG1912.jpg" /></p>
+<p><code>全选</code>或<code>选中</code>需要同步的条目</p></li>
+<li><p><img class="img-thumbnail img-responsive" src="/storage/images/material/WechatIMG1913.jpg" /></p>
+<p>在菜单内，找到<code>主页</code>，然后点击<code>复制路径</code></p></li>
+<li><p><img class="img-thumbnail img-responsive" src="/storage/images/material/WechatIMG1915.jpg" /></p>
+<p>复制的内容如上图所示</p></li>
+<li><p><img class="img-thumbnail img-responsive" src="/storage/images/material/WechatIMG1923.jpg" /></p>
+<p>把该列表数据填入批量创建对话框内的<code>文件路径</code>内</p></li>
+</ul>
+
 <h4>3. 同步和扫描物料入库</h4>
 <p>此处和情况 “同步和扫描物料入库” 的处理流程完全一致，请参考上述流程</p>
 <p>&nbsp;</p><p>&nbsp;</p>
