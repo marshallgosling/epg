@@ -52,6 +52,7 @@ class BatchCreator extends Action
             $model = Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status','filepath'));
             MediaInfoJob::dispatch($model->id, 'sync')->onQueue('media');
         }
+        return $this->response()->success(__('BatchCreator success message.'))->refresh();
     }
 
     public function handle2(Request $request)
