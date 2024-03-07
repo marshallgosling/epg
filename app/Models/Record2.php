@@ -221,10 +221,10 @@ class Record2 extends Model
         if(self::$bumper) return;
 
         self::$bumper = [];
-        self::$bumper[] = Record2::where('records.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('record2.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('records.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('record2.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('records.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('record2.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('records.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('record2.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('record2.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('record2.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('record2.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('record2.unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function findBumper($key) {
@@ -241,7 +241,7 @@ class Record2 extends Model
     }
 
     public static function findPR($category) {
-        if(!self::$pr) self::$pr = Record2::where('category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->select('record2.unique_no')->pluck('unique_no')->toArray();
+        if(!self::$pr) self::$pr = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->select('record2.unique_no')->pluck('unique_no')->toArray();
 
         self::$pr = Arr::shuffle(self::$pr);
         $id = Arr::random(self::$pr);
