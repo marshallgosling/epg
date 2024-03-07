@@ -224,10 +224,10 @@ class Record extends Model
         if(self::$bumper) return;
 
         self::$bumper = [];
-        self::$bumper[] = Record::where('category', $category.',')->where('seconds','<=', 60)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('category', $category.',')->where('seconds','>', 60)->where('seconds','<=', 300)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('category', $category.',')->where('seconds','>', 300)->where('seconds','<=', 600)->select('unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('category', $category.',')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', $category.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', $category.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', $category.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', $category.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('records.unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function findBumper($key) {
@@ -244,7 +244,7 @@ class Record extends Model
     }
 
     public static function findPR($category) {
-        if(!self::$pr) self::$pr = Record::where('category', $category.',')->select('unique_no')->pluck('unique_no')->toArray();
+        if(!self::$pr) self::$pr = Record::where('records.category', $category.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->select('records.unique_no')->pluck('unique_no')->toArray();
 
         self::$pr = Arr::shuffle(self::$pr);
         $id = Arr::random(self::$pr);
