@@ -85,8 +85,8 @@ class dailyJob extends Command
                     $ch->distribution_date = date('Y-m-d H:i:s');
                     $ch->save();
                     $this->info("save distribution date {$ch->name} {$air}");
-                    
-                    if($is_today) $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$ch->name].'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml' : false;
+
+                    if($is_today) $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$ch->name].'\\'.BvtExporter::NAMES[$ch->name].'.xml' : false;
                     else $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml': false; 
                     
                     if($path)
