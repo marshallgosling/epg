@@ -69,7 +69,7 @@ class dailyJob extends Command
             if($items)
             {
                 
-                $fail = config('IGNORE_MATERIAL_CHECK', 'false') == 'true' ? true : DB::table('material')->whereIn('unique_no', array_unique($items))
+                $fail = config('IGNORE_MATERIAL_CHECK', 'false') == 'true' ? false : DB::table('material')->whereIn('unique_no', array_unique($items))
                         ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
                         ->pluck('name', 'unique_no')->toArray();
                 if($fail)
