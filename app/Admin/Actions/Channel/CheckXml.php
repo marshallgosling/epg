@@ -30,13 +30,14 @@ class CheckXml implements Renderable
                     {
                         $data .= '<tr><td>'.$m->name.'</td><td>'.$m->unique_no.'</td><td>'.$m->duration.'</td><td>物料缺失</td></tr>';
                     }
+                    $data .= '<tr><td colspan="4">播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-danger">不通过</span></td></tr>';
                 }
                 else {
-                    $data = '<tr><td>播出编单 '.$ch->name.'_'.$ch->air_date.'.xml 检查通过</td></tr>';
+                    $data = '<tr><td>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-success">通过</span></td></tr>';
                 }
             }
             else {
-                $data = '<tr><td>播出编单不存在</td></tr>';
+                $data = '<tr><td>播出编单:'.$ch->name.'_'.$ch->air_date.'.xml 文件不存在</td></tr>';
             }
         }
         
