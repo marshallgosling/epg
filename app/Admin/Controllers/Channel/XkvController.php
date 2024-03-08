@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Channel;
 
 use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
+use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\ToolExporter;
@@ -69,6 +70,8 @@ class XkvController extends AdminController
         $grid->column('reviewer', __('Reviewer'))->hide();
         $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
         $grid->column('audit_date', __('Audit date'))->hide();
+        $grid->column('status', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'))->hide();
         
