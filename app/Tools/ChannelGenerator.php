@@ -4,6 +4,7 @@ namespace App\Tools;
 
 
 use App\Models\ChannelPrograms;
+use App\Models\Material;
 use App\Models\Program;
 use App\Models\Temp\Template;
 use App\Models\Temp\TemplateRecords;
@@ -199,6 +200,30 @@ class ChannelGenerator
         {
 
         }
+    }
+
+    public static function checkMaterials($programs)
+    {
+        $unique_no = [];
+        foreach($programs as $pro)
+        {
+            $items = json_decode($pro->data);
+            if(array_key_exists('replicate', $items))
+            {
+                continue;
+            }
+            else {
+                
+                foreach($items as $item) {
+                    if(!in_array($item->unique_no, $unique_no))
+                        $unique_no[] = $item->unique_no;
+                }
+            }
+        }
+
+        return DB::table('material')->whereIn('unique_no', $unique_no)
+                            ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
+                            ->pluck('unique_no')->toArray();
     }
 
 }

@@ -166,7 +166,7 @@ ol.breadcrumb {
                         <li class="list-group-item disabled"> 副本节目单 </li>
                       @else
                       @foreach (json_decode($program->data) as $t)
-                      <li class="list-group-item">{{$t->start_at}} - {{$t->end_at}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
+                      <li class="list-group-item {{@in_array($t->unique_no, $miss)?'list-group-item-danger':''}}">{{$t->start_at}} - {{$t->end_at}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
                       @endforeach
                       @endif
                     </ul>   

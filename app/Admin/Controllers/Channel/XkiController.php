@@ -18,6 +18,7 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
+use App\Tools\ChannelGenerator;
 
 class XkiController extends AdminController
 {
@@ -43,9 +44,9 @@ class XkiController extends AdminController
 
         $data = $model->programs()->get();
         $color = 'danger';
-          
+        $miss = ChannelGenerator::checkMaterials($data);
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color')));
+        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color','miss')));
     }
 
     /**

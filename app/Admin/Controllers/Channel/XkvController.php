@@ -10,6 +10,7 @@ use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
+use App\Tools\ChannelGenerator;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -41,9 +42,11 @@ class XkvController extends AdminController
 
         $data = $model->programs()->get();
         $color = 'info';
+
+        $miss = ChannelGenerator::checkMaterials($data);
           
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color')));
+        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color', 'miss')));
     }
 
     /**
