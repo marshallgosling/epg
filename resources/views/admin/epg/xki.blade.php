@@ -149,11 +149,11 @@ ol.breadcrumb {
                   {{ \App\Models\Channel::GROUPS[$model->name] }}</li>
                   <li><b>{{ @__('Air date')}}</b></li>
                   <li class="active"> {{$model->air_date}} </li>
+                  <li><b>{{ @__('Status')}}</b></li>
                   <li><span class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </span></li>
-                  <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>
-                  
-                </ol>
-                
+                  <li><b>{{ @__('Audit status')}}</b></li>
+                  <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>             
+                </ol>                
             </div>
             <div class="box-body">
               @if(count($data) > 0)
