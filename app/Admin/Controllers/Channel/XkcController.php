@@ -75,7 +75,7 @@ class XkcController extends AdminController
         $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
         $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('distribution_date', __('Distribution date'));
-        $grid->column('status', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
