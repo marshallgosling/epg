@@ -56,6 +56,11 @@ class Program extends Model
         self::$blacklist = BlackList::get()->pluck('keyword')->toArray();
     }
 
+    public static function clearCache()
+    {
+        self::$cache = [];
+    }
+
     public static function findRandom($key, $maxSeconds)
     {
         if(!Arr::exists(self::$cache, $key)) 

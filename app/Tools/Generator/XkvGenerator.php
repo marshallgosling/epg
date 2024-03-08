@@ -135,6 +135,7 @@ class XkvGenerator implements IGenerator
             $this->addSpecialPrograms($programs, $sort);
         }
 
+        Program::clearCache();
 
         if($start_end != '') {
             $start_end .= ' - '. date('H:i:s', $this->air);
