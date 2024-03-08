@@ -48,8 +48,9 @@ class BatchCreator extends Action
                 $group = preg_replace('/(\d+)$/', "", $name);
                 $group = trim(trim($group), '_-');
             }
-            
-            $model = Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status','filepath'));
+            $model = Material::where('unique_no', $unique_no)->first();
+            if(!$model)
+                $model = Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status','filepath'));
             MediaInfoJob::dispatch($model->id, 'sync')->onQueue('media');
         }
         return $this->response()->success(__('BatchCreator success message.'))->refresh();
@@ -60,12 +61,12 @@ class BatchCreator extends Action
         $category = $request->get('category');
         $channel = $request->get('channel');
         //$unique = $request->get('unique_no');
-        //$group = $request->get('name');
-        //$total = (int)$request->get('total');
-        //$st = (int)$request->get('st');
-        //$duration = $request->get('duration');
-        //$frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
-        //$code = 'XK'.Str::random(12);
+        $group = $request->get('name');
+        $total = (int)$request->get('total');
+        $st = (int)$request->get('st');
+        $duration = $request->get('duration');
+        $frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
+        $code = 'XK'.Str::random(12);
         $status = Material::STATUS_EMPTY;
 
         for($i=0;$i<$total;$i++)
