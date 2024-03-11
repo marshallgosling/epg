@@ -58,6 +58,9 @@ class Record2 extends Model
     private static $blacklist = [];
     private static $bumper = false;
     private static $pr = false;
+    private static $last_pr = false;
+    private static $last_bumper = false;
+    
     public static $daysofweek = '0';
     public static $islast = false;
     private static $expiration = [];
@@ -231,6 +234,8 @@ class Record2 extends Model
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
         $id = Arr::random(self::$bumper[$key]);
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
+        if(self::$last_bumper == $id) return self::findBumper($key);
+        self::$last_bumper = $id;
 
         $program = Record2::where('record2.unique_no', $id)
             ->join('material', 'record2.unique_no', '=', 'material.unique_no')
@@ -245,6 +250,8 @@ class Record2 extends Model
 
         self::$pr = Arr::shuffle(self::$pr);
         $id = Arr::random(self::$pr);
+        if(self::$last_pr == $id) return self::findPR($category);
+        self::$last_pr = $id;
 
         $program = Record2::where('record2.unique_no', $id)
         ->join('material', 'record2.unique_no', '=', 'material.unique_no')

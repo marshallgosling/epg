@@ -23,64 +23,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 
-class MaterialController extends AdminController
+class DistinctMaterialController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '物料管理';
-
-    public function result(Content $content)
-    {
-        $json = json_decode(Storage::get('result3.json'), true);
-        $d0 = [];
-        foreach($json['succ'] as $k=>$v)
-        {
-            $d0[] = [$k, $v];
-        }
-        $d1 = [];
-        foreach($json['erro'] as $k=>$v)
-        {
-            $d1[] = [$k, $v];
-        }
-        $d2 = [];
-        foreach($json['miss'] as $k=>$v)
-        {
-            $d2[] = [$k, $v];
-        }
-        $succ = new Table(['code','路径'], $d0);
-        $erro = new Table(['id','路径'], $d1);
-        $miss = new Table(['id','路径'], $d2);
-
-        // $json = json_decode(Storage::get('result2.json'), true);
-        // $d3 = [];
-        // foreach($json['erro'] as $k=>$v)
-        // {
-        //     $d3[] = [$k, $v];
-        // }
-        // $d4 = [];
-        // foreach($json['miss'] as $k=>$v)
-        // {
-        //     $d4[] = [$k, $v];
-        // }
-
-        // $erro1 = new Table(['id','路径'], $d3);
-        // $miss1 = new Table(['id','路径'], $d4);
-
-        $t =  new Tab();
-        $t->add('成功', $succ);
-        $t->add('未匹配', $miss);
-        $t->add('错误', $erro);
-
-        // $t->add('已播未匹配', $miss1);
-        // $t->add('已播错误', $erro1);
-
-        return $content->title('匹配结果')
-        ->description("物料匹配结果")
-        ->body($t->render());
-    }
+    protected $title = '物料剧集管理';
 
     /**
      * Make a grid builder.
@@ -91,51 +41,23 @@ class MaterialController extends AdminController
     {
         $grid = new Grid(new Material());
 
-        $grid->model()->orderBy('id', 'desc');
-        $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);
-        $grid->column('status', __('Status'))->display(function($status) {
-            return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
-        });
-        $grid->column('name', __('Name'))->display(function ($name) {
-            if($this->comment) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->comment).'" data-toggle="tooltip" data-placement="top">Eng</small>';
-            else $name2 = '';
-            return $name . $name2;
-        });
+        $grid->model()->selectRaw("distinct(`group`)");
+       
         $grid->column('group', __('Group'));  
-        $grid->column('category', __('Category'))->display(function ($category) {
-            return Category::findCategory($category). '&nbsp;('.$category.')';
-        });
-        $grid->column('duration', __('Duration'));
-        $grid->column('size', __('Size'))->hide();
-        $grid->column('md5', __('MD5'))->hide();
-        $grid->column('frames', __('Frames'))->sortable();
-        $grid->column('created_at', __('Created at'))->sortable()->hide();
-        $grid->column('updated_at', __('Updated at'))->sortable();
+        
 
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->add(new Replicate);
+            //$actions->add(new Replicate);
         });
 
-        $grid->batchActions(function ($actions) {
-            //$actions->add(new BatchSync);
-        });
-
-        $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchModify);
-            $tools->append(new BatchImportor);
-            $tools->append(new BatchSync);
-            $tools->append(new BatchCreator);
-        });
+       
 
         $grid->filter(function(Grid\Filter $filter){
 
             $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
-            $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
-            $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-            $filter->equal("status", __('Status'))->select(Material::STATUS);
+            
         
         });
         

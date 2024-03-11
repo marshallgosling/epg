@@ -13,12 +13,12 @@ class Replicate extends RowAction
 
     public function handle(Material $model)
     {
-        $m = Material::find($model->id);
+        $m = Material::find($model->id)->replicate();
         $m->unique_no = 'TEMP'.Str::random(8);
         $m->status = Material::STATUS_EMPTY;
         $m->filepath = '';
 
-        $model->replicate()->save();
+        $m->save();
 
         return $this->response()->success(__('Replicate Success message'))->refresh();
     }

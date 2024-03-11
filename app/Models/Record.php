@@ -58,6 +58,9 @@ class Record extends Model
     private static $blacklist = [];
     private static $bumper = false;
     private static $pr = false;
+    private static $last_pr = false;
+    private static $last_bumper = false;
+
     public static $daysofweek = '0';
     public static $islast = false;
     private static $expiration = [];
@@ -196,13 +199,18 @@ class Record extends Model
         return 'empty';
     }
 
-    public static function findRandomEpisode($c, $maxduration)
+    public static function findRandomEpisode($category, $maxduration)
     {
-        $list = DB::table('records')->selectRaw('distinct(episodes)')
-                    ->where('seconds','<',$maxduration)
-                    ->where('category', 'like', "%$c,%")
-                    //->where('status', Material::STATUS_READY)
-                    ->get()->toArray();
+        $categories = explode(',', $category);
+
+        $query = DB::table('records')->selectRaw('distinct(episodes)')
+                    ->where('seconds','<',$maxduration);
+        foreach($categories as $c)
+        {
+            $query = $query->where('category', 'like', "%$c,%");
+        }
+        
+        $list = $query->get()->toArray();
 
         self::$_count --;
         if(self::$_count < 0) { self::$_count = 3; return false; }
@@ -235,6 +243,9 @@ class Record extends Model
         $id = Arr::random(self::$bumper[$key]);
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
 
+        if(self::$last_bumper == $id) return self::findBumper($key);
+        self::$last_bumper = $id;
+
         $program = Record::where('records.unique_no', $id)
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
             ->select("records.unique_no", "records.name", "records.episodes", "records.black", "material.duration", "material.frames")->first();
@@ -248,6 +259,8 @@ class Record extends Model
 
         self::$pr = Arr::shuffle(self::$pr);
         $id = Arr::random(self::$pr);
+        if(self::$last_pr == $id) return self::findPR($category);
+        self::$last_pr = $id;
 
         $program = Record::where('records.unique_no', $id)
         ->join('material', 'records.unique_no', '=', 'material.unique_no')
