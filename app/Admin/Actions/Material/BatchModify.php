@@ -44,7 +44,7 @@ class BatchModify extends BatchAction
 
     public function html()
     {
-        return "<a class='batch-modify btn btn-sm btn-warning'><i class='fa fa-info-circle'></i>{$this->name}</a>";
+        return "<a class='batch-modify btn btn-sm btn-warning'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

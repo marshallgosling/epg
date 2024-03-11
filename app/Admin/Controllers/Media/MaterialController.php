@@ -109,8 +109,8 @@ class MaterialController extends AdminController
         $grid->column('size', __('Size'))->hide();
         $grid->column('md5', __('MD5'))->hide();
         $grid->column('frames', __('Frames'))->sortable();
-        $grid->column('created_at', __('Created at'))->sortable();
-        //$grid->column('updated_at', __('Updated at'));
+        $grid->column('created_at', __('Created at'))->sortable()->hide();
+        $grid->column('updated_at', __('Updated at'))->sortable();
 
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
@@ -119,12 +119,13 @@ class MaterialController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchSync);
+            //$actions->add(new BatchSync);
         });
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
             $tools->append(new BatchImportor);
+            $tools->append(new BatchSync);
             $tools->append(new BatchCreator);
         });
 

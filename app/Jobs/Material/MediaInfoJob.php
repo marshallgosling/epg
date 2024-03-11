@@ -70,6 +70,11 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         }
     }
 
+    private function scan()
+    {
+        
+    }
+
     
     private function sync()
     {

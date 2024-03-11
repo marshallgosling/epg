@@ -79,7 +79,7 @@ class BatchImportor extends BatchAction
 
     public function html()
     {
-        return "<a class='batch-import btn btn-sm btn-danger'><i class='fa fa-info-circle'></i>{$this->name}</a>";
+        return "<a class='batch-import btn btn-sm btn-danger'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

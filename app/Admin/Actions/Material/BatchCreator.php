@@ -104,7 +104,7 @@ class BatchCreator extends Action
 
     public function html()
     {
-        return "<a class='batch-creator btn btn-sm btn-success'><i class='fa fa-info-circle'></i>{$this->name}</a>";
+        return "<a class='batch-creator btn btn-sm btn-success'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }
