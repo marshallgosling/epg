@@ -4,9 +4,11 @@ namespace App\Admin\Controllers\Channel;
 
 use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
+use App\Admin\Actions\Channel\BatchReplicate;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
+use App\Admin\Actions\Channel\Replicate;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
@@ -83,11 +85,13 @@ class XkvController extends AdminController
         $grid->actions(function ($actions) {
             $actions->add(new Generator);
             $actions->add(new Clean);
+            $actions->add(new Replicate);
         });
 
         $grid->batchActions(function ($actions) {
             //$actions->add(new BatchGenerator());
             $actions->add(new BatchClean);
+            $actions->add(new BatchReplicate);
         });
 
         $grid->filter(function($filter){

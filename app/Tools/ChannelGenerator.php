@@ -2,7 +2,7 @@
 
 namespace App\Tools;
 
-
+use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Material;
 use App\Models\Program;
@@ -224,6 +224,17 @@ class ChannelGenerator
         return DB::table('material')->whereIn('unique_no', $unique_no)
                             ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
                             ->pluck('unique_no')->toArray();
+    }
+
+    public static function getLatestAirDate($group)
+    {
+        $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date','desc')->first();
+        if($channel) {
+            $c = strtotime($channel->air_date) + 86400;
+            return $c;
+        }
+
+        return false;
     }
 
 }
