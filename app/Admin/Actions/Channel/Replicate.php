@@ -23,6 +23,7 @@ class Replicate extends RowAction
         $new->audit_status = Channel::AUDIT_EMPTY;
         $new->air_date = date('Y-m-d', $air);
         $new->version = 1;
+        $new->distribution_date = null;
         $new->save();
         
         $newid = $new->id;

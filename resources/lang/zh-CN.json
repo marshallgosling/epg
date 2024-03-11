@@ -76,7 +76,8 @@
     "Ep no":    "连载集数",
     "ChannelController" : "Channel【V】节目单",
     "ChannelIndexDesc" : "查看和编辑每日节目单数据",
-    
+    "TargetPath": "目标位置",
+    "Storage": "临时存储",
     "Advanced Mode": "高级编排模式",
     "Modify Template Content": "调整模版编排内容",
     "Preview EPG Content": "预览串联单详细编排",

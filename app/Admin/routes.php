@@ -20,7 +20,8 @@ Route::group([
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
-    
+    $router->resource('/media/large-files', 'Media\\LargeFileController')->names('media.largefile');
+
     $router->post('/media/xkc/unique', 'Media\\XkcProgramController@unique')->name('media.xkc.unique');
     $router->post('/media/xkv/unique', 'Media\\XkvProgramController@unique')->name('media.xkv.unique');
     $router->post('/media/xki/unique', 'Media\\XkiProgramController@unique')->name('media.xki.unique');
@@ -109,6 +110,8 @@ Route::group([
 
     $router->get('/audit/preview/{id}', 'AuditController@preview')->name('audit.preview');
     $router->resource('/audit/list', 'AuditController')->names('audit.list');
+
+    
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');

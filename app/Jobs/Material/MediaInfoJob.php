@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Material;
 
+use App\Models\LargeFile;
 use App\Models\Material;
 use App\Models\Notification;
 use App\Tools\ChannelGenerator;
@@ -16,6 +17,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 {
@@ -47,7 +49,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         $action = $this->action;
-        if(in_array($action, ['sync', 'view']))
+        if(in_array($action, ['sync', 'view', 'process']))
         {
             $this->$action();
         }
@@ -70,9 +72,62 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         }
     }
 
-    private function scan()
+    private function process()
     {
-        
+        $largefile = LargeFile::findOrFail($this->id);
+        $filepath = Storage::path(str_replace('_', '\\', $largefile->path));
+        $targetpath = $largefile->target_path.$largefile->name;
+        if(file_exists($filepath))
+        {
+            @copy($filepath, $targetpath);
+
+            if(file_exists($targetpath))
+            {
+                @unlink($filepath);
+
+                $names = explode('.', $largefile->name);
+
+                if(count($names) != 3) {
+                    return;
+                }
+                
+                $unique_no = $names[1];
+
+                $material = Material::where('unique_no', $unique_no)->first();
+
+                if(!$material) {
+                    $material = new Material();
+                    $material->unique_no = $unique_no;
+                    $material->name = $names[0];
+                    $material->filepath = $largefile->target_path.$largefile->name;
+                    $material->status = Material::STATUS_EMPTY;
+                    $group = preg_replace('/(\d+)$/', "", $names[0]);
+                    $material->group = trim(trim($group), '_-');
+                    $material->channel = 'xkc';
+
+                    try{
+                        $info = MediaInfo::getInfo($material);
+                    }catch(\Exception $e)
+                    {
+                        $info = false;
+                    }
+                    
+                    if($info) {
+                        $status = Material::STATUS_READY;
+                        $material->frames = $info['frames'];
+                        $material->size = $info['size'];
+                        $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+                    }
+                    else {
+                        $status = Material::STATUS_ERROR;
+                    }
+                    
+                    $material->status = $status;
+                    $material->save();
+                }
+            }
+            
+        }
     }
 
     

@@ -24,6 +24,7 @@ class BatchReplicate extends BatchAction
             $new->audit_status = Channel::AUDIT_EMPTY;
             $new->air_date = date('Y-m-d', $air);
             $new->version = 1;
+            $new->distribution_date = null;
             $air += 86400;
 
             $new->save();
