@@ -21,6 +21,8 @@ class Material extends Model
     protected $fillable = [
         'id',
         'name',
+        'name2',
+        'ep',
         'unique_no',
         'category',
         'channel',

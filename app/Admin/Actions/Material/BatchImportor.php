@@ -38,14 +38,12 @@ class BatchImportor extends BatchAction
             
             $program = new $class();
             
-            if(in_array($model->category, ['CanXin', 'drama', 'movie','Entertainm','cartoon']))
+            if($channel != 'xkv')
             {
 
                 $program->episodes = $model->group;
-                if(preg_match('/(\d+)$/', $model->name, $matches))
-                {
-                    $program->ep = (int) $matches[1];
-                }
+                $program->ep = (int) $model->ep;
+                
             }
             
             $program->name = $model->name;
