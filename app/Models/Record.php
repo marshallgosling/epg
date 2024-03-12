@@ -118,7 +118,7 @@ class Record extends Model
      * @param int $maxduration 可选择的最大时长
      * 
      */
-    public static function findNextAvaiable(&$template, int $maxduration)
+    public static function findNextAvaiable(&$template, int $maxduration, int $air)
     {
         if($template->category == 'movie')
             return [self::findRandom($template->category, $maxduration)];
@@ -146,31 +146,41 @@ class Record extends Model
         }
 
         if($data['result'] == '编排完') return ['finished'];
-        
-        for($i=$ep;$i<$total;$i++) {
-            $item = self::findNextEpisode($data['episodes'], $data['unique_no']);
 
-            if($item == 'finished') {
-                if($template->type == TemplateRecords::TYPE_STATIC) {
-                    //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
-                }
-                //$item = '编排完';
-                $data['result'] = '编排完';
-            }
-            else if($item == 'empty') {
-                if($template->type == TemplateRecords::TYPE_STATIC) {
-                    //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
-                }
-                //$item = '未找到';
-                $data['result'] = '未找到';
-            }
-            else {
-                $data['episodes'] = $item->episodes;
-                $data['unique_no'] = $item->unique_no;
-                $data['result'] = '编排中';
-            }
-            
+        $dayofweek = date('N', $air);
+        if(array_key_exists('airday', $template->data) && !in_array($dayofweek, $template->data['airday']))
+        {
+            // 有配置过首播日记录信息，且不是首播日，则会进入这段代码逻辑
+            $item = self::findUnique($template->data['unique_no']);
             $items[] = $item;
+        }
+        else
+        {
+            for($i=$ep;$i<$total;$i++) {
+                $item = self::findNextEpisode($data['episodes'], $data['unique_no']);
+
+                if($item == 'finished') {
+                    if($template->type == TemplateRecords::TYPE_STATIC) {
+                        //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 已播完，请确认是否换新', '', 'warning');
+                    }
+                    //$item = '编排完';
+                    $data['result'] = '编排完';
+                }
+                else if($item == 'empty') {
+                    if($template->type == TemplateRecords::TYPE_STATIC) {
+                        //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
+                    }
+                    //$item = '未找到';
+                    $data['result'] = '未找到';
+                }
+                else {
+                    $data['episodes'] = $item->episodes;
+                    $data['unique_no'] = $item->unique_no;
+                    $data['result'] = '编排中';
+                }
+                
+                $items[] = $item;
+            }
         }
  
         return $items;
@@ -274,7 +284,7 @@ class Record extends Model
     {
         return Record::where('records.unique_no', $no)
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
-            ->select("records.unique_no","records.name","records.episodes","material.duration","material.frames")->first();
+            ->select("records.unique_no","records.name","records.episodes","records.black", "material.duration","material.frames")->first();
     }
 
     public static function getTotal($key) {

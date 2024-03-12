@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Channel;
 
 use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
+use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
@@ -103,7 +104,7 @@ class XkiController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            //$tools->append(new ToolCreator('xki'));
+            $tools->append(new BatchDistributor());
             $tools->append(new BatchAudit);
             $tools->append(new ToolExporter('xki'));
             $tools->append(new ToolGenerator('xki'));

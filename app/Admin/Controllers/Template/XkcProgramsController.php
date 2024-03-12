@@ -151,6 +151,7 @@ class XkcProgramsController extends AdminController
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
             $form->dateRange('date_from', 'date_to', __('DateRange'));
             $form->checkbox('dayofweek', __('Daysofweek'))->options(TemplateRecords::DAYS)->canCheckAll();
+            $form->checkbox('airday', __('AirDay'))->options(TemplateRecords::DAYS)->canCheckAll();
             $form->number('ep', __('Ep no'))->min(1)->max(4)->default(1);
 
             $form->text("name", __('Name'));
