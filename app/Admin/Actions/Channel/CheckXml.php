@@ -26,7 +26,7 @@ class CheckXml implements Renderable
                             ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no','duration'])
                             ->get();
                 $data = '<tr><th>'.__('Name').'</th><th>'.__('Unique no').'</th><th>'.__('Duration').'</th><th></th></tr>';
-                if($list) {
+                if(count($list)) {
                     foreach($list as $m)
                     {
                         $data .= '<tr><td>'.$m->name.'</td><td>'.$m->unique_no.'</td><td>'.$m->duration.'</td><td>物料缺失</td></tr>';

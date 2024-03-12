@@ -90,11 +90,14 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                 return;
             }
 
-                $names = explode('.', $largefile->name);
+            $largefile->status = LargeFile::STATUS_READY;
+            $largefile->save();
+            @unlink($filepath);
+
+            $names = explode('.', $largefile->name);
 
                 if(count($names) != 3) {
-                    $largefile->status = LargeFile::STATUS_ERROR;
-                    $largefile->save();
+                    
                     return;
                 }
                 
@@ -133,7 +136,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                     $material->save();
                 
             
-                @unlink($filepath);
+                
         }
     }
 
