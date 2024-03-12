@@ -148,7 +148,7 @@ class Record extends Model
         if($data['result'] == '编排完') return ['finished'];
 
         $dayofweek = date('N', $air);
-        if(array_key_exists('airday', $template->data) && !in_array($dayofweek, $template->data['airday']))
+        if(array_key_exists('airday', $template->data) && count($template->data['airday']) && !in_array($dayofweek, $template->data['airday']))
         {
             // 有配置过首播日记录信息，且不是首播日，则会进入这段代码逻辑
             $item = self::findUnique($template->data['unique_no']);

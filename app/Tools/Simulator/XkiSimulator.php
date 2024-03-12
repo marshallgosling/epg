@@ -173,7 +173,7 @@ class XkiSimulator
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
                 $maxDuration = ChannelGenerator::parseDuration($template->duration) + (int)config('MAX_DURATION_GAP', 600);
-                $items = $this->findAvailableRecords($template_item, $maxDuration);
+                $items = $this->findAvailableRecords($template_item, $maxDuration, $air);
 
                 if(count($items)) {
                     foreach($items as $item) {
@@ -242,11 +242,11 @@ class XkiSimulator
         $this->saveState = true;
     }
 
-    private function findAvailableRecords(&$template, $maxDuration)
+    private function findAvailableRecords(&$template, $maxDuration, $air)
     {
         $items = [];
         if($template->type == TemplateRecords::TYPE_RANDOM) {
-            $temps = Record::findNextAvaiable($template, $maxDuration);
+            $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             if(in_array($temps[0], ['finished', 'empty'])) {
                 $d = $template->data;
                 $d['episodes'] = null;
@@ -255,7 +255,7 @@ class XkiSimulator
                 $d['result'] = '';
                 $template->data = $d;
 
-                $temps = Record::findNextAvaiable($template, $maxDuration);
+                $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             }
             $d = $template->data;
             foreach($temps as $item) {
@@ -272,7 +272,7 @@ class XkiSimulator
         }
         else if($template->type == TemplateRecords::TYPE_STATIC) {
                 
-            $temps = Record::findNextAvaiable($template, $maxDuration);
+            $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             $items = [];
 
             $d = $template->data;
