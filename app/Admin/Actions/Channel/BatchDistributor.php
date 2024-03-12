@@ -16,7 +16,7 @@ class BatchDistributor extends BatchAction
     public function handle(Collection $collection, Request $request)
     {
         foreach ($collection as $model) {
-            DistributionJob::dispatch($model->id);
+            MediaInfoJob::dispatch($model->id)->onQueue('media');
         }
 
         return $this->response()->success(__('BatchSync Success message'))->refresh();
