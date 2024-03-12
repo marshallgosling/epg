@@ -114,28 +114,10 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                     $group = preg_replace('/(\d+)$/', "", $names[0]);
                     $material->group = trim(trim($group), '_-');
                     $material->channel = 'xkc';
-                }
-                    try{
-                        $info = MediaInfo::getInfo($material);
-                    }catch(\Exception $e)
-                    {
-                        $info = false;
-                    }
-                    
-                    if($info) {
-                        $status = Material::STATUS_READY;
-                        $material->frames = $info['frames'];
-                        $material->size = $info['size'];
-                        $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
-                    }
-                    else {
-                        $status = Material::STATUS_ERROR;
-                    }
-                    
-                    $material->status = $status;
                     $material->save();
-                
-            
+                }
+
+                MediaInfoJob::dispatch($material->id, 'sync')->onQueue('media');
                 
         }
     }
