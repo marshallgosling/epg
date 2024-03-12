@@ -52,7 +52,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move', 'seconds','mediainfo','export'];
+        $actions = ['import','move', 'seconds','mediainfo','export','ep'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -62,6 +62,20 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function ep()
+    {
+        $list = Material::where('channel', 'xkc')->where('ep', 1)->get();
+        foreach($list as $m)
+        {
+            if(preg_match('/(\d+)$/', $m->name, $matches))
+            {
+                $m->ep = (int) $matches[1];
+                $m->save();
+            }
+            
+        }
     }
 
     private function export($status=Material::STATUS_EMPTY, $group=false)
