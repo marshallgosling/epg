@@ -34,7 +34,7 @@ class CheckXml implements Renderable
                     $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-danger">不通过</span></p>';
                 }
                 else {
-                    $label = '<tr><td>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-success">通过</span></td></tr>';
+                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-success">通过</span></p>';
                 }
             }
             else {
