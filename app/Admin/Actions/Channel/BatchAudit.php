@@ -44,7 +44,7 @@ class BatchAudit extends BatchAction
 
     public function form()
     {
-        $this->radio('audit', '状态')->options(Channel::AUDIT)->rules('required');
+        $this->select('audit', '状态')->options(Channel::AUDIT)->rules('required');
         $this->textarea('comment', '审核意见')->rules('required');
         $this->text("help", "注意说明")->default('空编单和停止使用的编单不能通过审核')->disable();
     }

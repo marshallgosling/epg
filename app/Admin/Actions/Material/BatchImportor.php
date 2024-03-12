@@ -70,7 +70,7 @@ class BatchImportor extends BatchAction
 
     public function form()
     {
-        $this->radio('channel', __('Channel'))->options(Channel::GROUPS);
+        $this->select('channel', __('Channel'))->options(Channel::GROUPS);
 
         $this->textarea("help", "注意说明")->default('选择需要导入的频道')->disable();
     }
