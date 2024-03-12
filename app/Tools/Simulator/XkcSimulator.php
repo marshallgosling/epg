@@ -100,15 +100,29 @@ class XkcSimulator
             return false;
     }
 
+    public function saveTemplate($templates)
+    {
+        $temp = ['templates'=>[], 'records'=>[]];
+        foreach($templates as $template)
+        {
+            $t = $template->toArray();
+            $items = $template->records->toArray();
+            $temp['records'][] = $items;
+            $temp['templates'][] = $t;
+        }
+        return $temp;
+    }
+
     public function handle(\Closure $callback=null)
     {
         //$day = strtotime($start);
         $group = $this->group;
         $errors = [];
         $data = [];
-
-        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
+        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $temp = $this->saveTemplate($templates);
+
         foreach($this->channels as &$channel)
         {
             // setup $air value, for record items expiration check 
@@ -221,7 +235,7 @@ class XkcSimulator
         $this->errors = $errors;
         $this->templates = $templates;
 
-        return $data;
+        return ['template'=>$temp, 'data'=>$data];
     }
 
     public function saveTemplateState()

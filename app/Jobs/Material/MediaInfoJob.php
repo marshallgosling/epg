@@ -36,7 +36,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct($id, $action='distribute')
+    public function __construct($id, $action='')
     {
         $this->id = $id;
         $this->action = $action;
@@ -56,9 +56,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         {
             $this->$action();
         }
-        else {
-            $this->distribute();
-        }
+        
     }
 
     private function distribute()

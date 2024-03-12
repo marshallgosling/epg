@@ -25,7 +25,7 @@ class SimulatorController extends Controller
 
         $data = $simulator->handle(function ($t) {
             return ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
-        });
+        })['data'];
 
         $error = $simulator->getErrorMark();
 
@@ -46,7 +46,7 @@ class SimulatorController extends Controller
 
         $data = $simulator->handle(function ($t) {
             return ' <small class="pull-right text-warning">'.$t['unique_no'].'</small> &nbsp;'.  $t['name'] . ' &nbsp; <small class="text-info">'.substr($t['duration'], 0, 8).'</small>';
-        });
+        })['data'];
 
         $error = $simulator->getErrorMark();
 
