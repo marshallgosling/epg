@@ -52,9 +52,12 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         $action = $this->action;
-        if(in_array($action, ['sync', 'view', 'process','distribute']))
+        if(in_array($action, ['sync', 'view', 'process', 'distribute']))
         {
             $this->$action();
+        }
+        else {
+            $this->distribute();
         }
     }
 
