@@ -29,14 +29,14 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     // Job ID;
     private $id;
 
-    private $action;
+    private $action = '';
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($id, $action='sync')
+    public function __construct($id, $action='distribute')
     {
         $this->id = $id;
         $this->action = $action;
