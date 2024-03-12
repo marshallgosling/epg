@@ -86,7 +86,7 @@ class XkiGenerator
         if(!$channels) return false;
         
         $simulator = new XkiSimulator($this->group, $days, $channels);
-        $simulator->saveTemplateState();
+        $simulator->setSaveTemplateState(true);
         $data = $simulator->handle();
 
         $error = $simulator->getErrorMark();

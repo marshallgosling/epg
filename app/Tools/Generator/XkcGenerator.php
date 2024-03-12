@@ -83,7 +83,7 @@ class XkcGenerator
         if(!$channels) return false;
         
         $simulator = new XkcSimulator($this->group, $days, $channels);
-        $simulator->saveTemplateState();
+        $simulator->setSaveTemplateState(true);
         $data = $simulator->handle();
 
         $error = $simulator->getErrorMark();

@@ -2,19 +2,40 @@
 
 namespace App\Admin\Actions\Template;
 
-use Encore\Admin\Actions\RowAction;
+use App\Jobs\Template\ReverseJob;
+use App\Models\Channel;
+use Encore\Admin\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class Reverse extends RowAction
+class Reverse extends Action
 {
-    public $name = '回退';
+    public $name = '回退模版及编单';
+    protected $selector = '.reverse-action';
 
-    public function handle(Model $model)
+    public function handle(Request $request)
     {
-        // $model ...
-        $model->replicate()->save();
+        $group = $request->get('channel', 'xkc');
+        $action = $request->get('action', 'none');
+        if(Storage::exists($group.'_reverse_stall')) 
+            return $this->response()->error("不能进行回退操作！同一编单不可重复回退或多次回退。");
+        Storage::put($group."_reverse_stall", $action);
+        ReverseJob::dispatch($group, $action);
 
-        return $this->response()->success(__('Replicate Success message'))->refresh();
+        return $this->response()->success(__('Replicate Success message'));
+    }
+
+    public function form()
+    {
+        $this->select('channel', __('Channel'))->options(['xkc'=>'星空中国', 'xki'=>'星空国际'])->default('xkc')->required();
+        $this->radio('action', __('其他'))->options(['none'=>'不删除编单数据', 'clear'=>'同时删除编单数据'])->default('clear')->required();
+        $this->textarea("help", "注意说明")->default('回退操作不可撤销'.PHP_EOL.'请再次确认是否要继续该操作！')->disable();
+    }
+
+    public function html()
+    {
+        return "<a class='reverse-action btn btn-sm btn-danger'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

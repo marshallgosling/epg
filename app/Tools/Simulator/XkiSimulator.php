@@ -102,6 +102,7 @@ class XkiSimulator
 
     public function saveTemplate($templates)
     {
+        if(!$this->saveState) return;
         $temp = ['templates'=>[], 'records'=>[]];
         foreach($templates as $template)
         {
@@ -110,7 +111,7 @@ class XkiSimulator
             $temp['records'][] = $items;
             $temp['templates'][] = $t;
         }
-        return $temp;
+        Storage::put($this->group.'_saved_template.json', json_encode($temp));
     }
 
     public function handle(\Closure $callback=null)
@@ -121,7 +122,7 @@ class XkiSimulator
         $data = [];
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
-        $temp = $this->saveTemplate($templates);
+        $this->saveTemplate($templates);
 
         foreach($this->channels as &$channel)
         {
@@ -234,12 +235,12 @@ class XkiSimulator
         $this->errors = $errors;
         $this->templates = $templates;
 
-        return ['template'=>$temp, 'data'=>$data];
+        return $data;
     }
 
-    public function saveTemplateState()
+    public function setSaveTemplateState(bool $state)
     {
-        $this->saveState = true;
+        $this->saveState = $state;
     }
 
     private function findAvailableRecords(&$template, $maxDuration, $air)

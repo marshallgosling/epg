@@ -92,7 +92,7 @@ class XkcGeneratorJob implements ShouldQueue, ShouldBeUnique
         }
         
         $generator->generate($channels);
-
+        Storage::delete($this->group."_reverse_stall");
     }
 
     /**
