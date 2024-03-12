@@ -75,8 +75,10 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     private function process()
     {
         $largefile = LargeFile::findOrFail($this->id);
-        $filepath = Storage::path(str_replace('_', '\\', $largefile->path));
+        $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
         $targetpath = $largefile->target_path.$largefile->name;
+        $this->info("filepath: ".$filepath);
+        $this->info("targetpath: ".$targetpath);
         if(file_exists($filepath))
         {
             @copy($filepath, $targetpath);
