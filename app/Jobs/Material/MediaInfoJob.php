@@ -75,21 +75,26 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     private function process()
     {
         $largefile = LargeFile::findOrFail($this->id);
+        $folders = explode(PHP_EOL, config('MEDIA_SOURCE_FOLDER', ''));
         $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
-        $targetpath = $largefile->target_path.$largefile->name;
-        $this->info("filepath: ".$filepath);
-        $this->info("targetpath: ".$targetpath);
+        $targetpath = $folders[$largefile->target_path].$largefile->name;
+
         if(file_exists($filepath))
         {
             @copy($filepath, $targetpath);
 
-            if(file_exists($targetpath))
+            if(!file_exists($targetpath))
             {
-                @unlink($filepath);
+                $largefile->status = LargeFile::STATUS_ERROR;
+                $largefile->save();
+                return;
+            }
 
                 $names = explode('.', $largefile->name);
 
                 if(count($names) != 3) {
+                    $largefile->status = LargeFile::STATUS_ERROR;
+                    $largefile->save();
                     return;
                 }
                 
@@ -101,12 +106,12 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                     $material = new Material();
                     $material->unique_no = $unique_no;
                     $material->name = $names[0];
-                    $material->filepath = $largefile->target_path.$largefile->name;
+                    $material->filepath = $targetpath;
                     $material->status = Material::STATUS_EMPTY;
                     $group = preg_replace('/(\d+)$/', "", $names[0]);
                     $material->group = trim(trim($group), '_-');
                     $material->channel = 'xkc';
-
+                }
                     try{
                         $info = MediaInfo::getInfo($material);
                     }catch(\Exception $e)
@@ -126,9 +131,9 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                     
                     $material->status = $status;
                     $material->save();
-                }
-            }
+                
             
+                @unlink($filepath);
         }
     }
 

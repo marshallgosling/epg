@@ -52,8 +52,9 @@ class fileTool extends Command
     {
         $id = $this->argument('path') ?? "";
         $largefile = LargeFile::findOrFail($id);
+        $folders = explode(PHP_EOL, config('MEDIA_SOURCE_FOLDER', ''));
         $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
-        $targetpath = $largefile->target_path.$largefile->name;
+        $targetpath = $folders[$largefile->target_path].$largefile->name;
         $this->info("filepath: ".$filepath);
         $this->info("targetpath: ".$targetpath);
         if(file_exists($filepath))
@@ -85,12 +86,12 @@ class fileTool extends Command
                     $material = new Material();
                     $material->unique_no = $unique_no;
                     $material->name = $names[0];
-                    $material->filepath = $largefile->target_path.$largefile->name;
+                    $material->filepath = $targetpath;
                     $material->status = Material::STATUS_EMPTY;
                     $group = preg_replace('/(\d+)$/', "", $names[0]);
                     $material->group = trim(trim($group), '_-');
                     $material->channel = 'xkc';
-
+                }
                     try{
                         $info = MediaInfo::getInfo($material);
                     }catch(\Exception $e)
@@ -110,7 +111,7 @@ class fileTool extends Command
                     
                     $material->status = $status;
                     $material->save();
-                }
+                
             
             
         }
