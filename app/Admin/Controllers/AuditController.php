@@ -10,6 +10,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -53,6 +54,16 @@ class AuditController extends AdminController
 
         $grid->column('reason', __('Reason'))->display(function () {
             return "展开";
+        })->expand(function() {
+            $data = json_decode($this->reason, true);
+            $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
+            $rows = [];
+            foreach($data['duration'] as $item) {
+                $rows[] = [
+                    $item['start_at'], $item['end_at'], $item['name'], $item['unique_no'], $item['duration'], $item['duration2'], ''
+                ];
+            }
+            return new Table($head, $rows);
         });
         
         //$grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
