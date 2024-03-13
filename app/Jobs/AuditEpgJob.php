@@ -6,7 +6,7 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Audit;
 use App\Models\Channel;
 use App\Models\Material;
-use App\Tools\ChannelDatabase;
+use Encore\Admin\Facades\Admin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -46,7 +46,6 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             return;
         }
 
-        
         $this->cache = [];
         $programs = $channel->programs()->get();
 
@@ -62,7 +61,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $audit->name = $channel->name;
         $audit->status = $duration['result'] && $material['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
         $audit->reason = json_encode($reason);
-        $audit->admin = '';
+        $audit->admin = Admin::user()->name;
         $audit->channel_id = $channel->id;
         $audit->save();
     }

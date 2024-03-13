@@ -41,9 +41,9 @@ class AuditController extends AdminController
     {
         $grid = new Grid(new Audit());
 
-        $grid->model()->with('channel')->orderBy('updated_at', 'desc');
+        $grid->model()->with('channel')->orderBy('audit.id', 'desc');
 
-        //$grid->column('id', __('ID'));
+        $grid->column('id', __('ID'));
         $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');;
 
         $grid->column('air_date', __('Air date'))->display(function () {
