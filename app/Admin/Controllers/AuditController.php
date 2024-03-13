@@ -58,12 +58,18 @@ class AuditController extends AdminController
             $data = json_decode($model->reason, true);
             $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
             $rows = [];
-            foreach($data['duration'] as $item) {
-                $rows[] = [
-                    $item['start_at'], $item['end_at'], $item['name'], $item['unique_no'], $item['duration'], $item['duration2'], ''
-                ];
+            if($data['duration']['result']) {
+                return "<p>没有错误</p>";
             }
-            return new Table($head, $rows);
+            else
+            {
+                foreach($data['duration']['logs'] as $item) {
+                    $rows[] = [
+                        $item['start_at'], $item['end_at'], $item['name'], $item['unique_no'], $item['duration'], $item['duration2'], ''
+                    ];
+                }
+                return new Table($head, $rows);
+            }
         });
         
         //$grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
