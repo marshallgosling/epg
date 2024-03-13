@@ -6,7 +6,6 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Audit;
 use App\Models\Channel;
 use App\Models\Material;
-use Encore\Admin\Facades\Admin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,6 +19,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $id;
+    private $name;
     private $cache;
 
     /**
@@ -27,9 +27,10 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct($id, $name="")
     {
         $this->id = $id;
+        $this->name = $name;
     }
 
     /**
@@ -62,7 +63,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $audit->name = $channel->name;
         $audit->status = $duration['result'] && $material['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
         $audit->reason = json_encode($reason);
-        $audit->admin = Admin::user()->name;
+        $audit->admin = $this->name;
         $audit->channel_id = $channel->id;
         $audit->save();
 

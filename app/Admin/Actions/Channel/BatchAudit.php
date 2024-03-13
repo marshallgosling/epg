@@ -23,7 +23,7 @@ class BatchAudit extends BatchAction
         {
             
             if($model->status == Channel::STATUS_READY) {
-                AuditEpgJob::dispatch($model->id);
+                AuditEpgJob::dispatch($model->id, Admin::user()->name);
             }
         }
         
