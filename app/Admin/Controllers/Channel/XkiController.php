@@ -74,7 +74,7 @@ class XkiController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['warning','success']);
+        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['default','warning']);
         $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
