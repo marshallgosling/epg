@@ -104,6 +104,7 @@
     "BatchEnabled Success message": "批量启用模版成功",
     "Scanner start failed message.": "扫描编单任务启动失败",
     "Scanner start success message.": "扫描编单任务启动成功",
+    "BatchDelete Success message": "批量删除剧集成功",
     "Viewed success message.": "一键已读设置成功",
     "Confirm all viewed?": "确定一键已读？",
     "No data selected!": "请先选择内容！",

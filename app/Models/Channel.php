@@ -60,6 +60,11 @@ class Channel extends Model
         });
     }
 
+    public function audit()
+    {
+        return $this->hasMany(Audit::class, 'channel_id', 'id');
+    }
+
     public function programs()
     {
         return $this->hasMany(ChannelPrograms::class, 'channel_id', 'id');

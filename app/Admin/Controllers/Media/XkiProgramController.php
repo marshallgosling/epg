@@ -13,6 +13,7 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Admin\Actions\Program\Record2Material;
+use App\Admin\Actions\Program\BatchRecord2Delete;
 
 class XkiProgramController extends AdminController
 {
@@ -83,6 +84,10 @@ class XkiProgramController extends AdminController
                 $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
             });
     
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchRecord2Delete);
         });
 
         $grid->tools(function (Grid\Tools $tools) {

@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\BatchCreator;
+use App\Admin\Actions\Material\BatchDelete;
 use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
 use App\Admin\Actions\Material\BatchSync;
@@ -72,7 +73,7 @@ class MaterialController extends AdminController
         });
 
         $grid->batchActions(function ($actions) {
-            //$actions->add(new BatchSync);
+            $actions->add(new BatchDelete);
         });
 
         $grid->tools(function (Grid\Tools $tools) {
