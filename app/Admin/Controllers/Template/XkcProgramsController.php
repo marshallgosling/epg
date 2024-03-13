@@ -144,7 +144,7 @@ class XkcProgramsController extends AdminController
        
         $form->text('name', __('Alias'));
         //$form->text('data', __('Unique no'));
-        $form->multipleSelect('category', __('Category'))->options(Category::getFormattedCategories())->required();
+        $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
 
         $form->embeds('data', __('TemplateInfo'), function (EmbeddedForm $form) {
             
