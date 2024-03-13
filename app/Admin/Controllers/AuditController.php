@@ -54,8 +54,8 @@ class AuditController extends AdminController
 
         $grid->column('reason', __('Reason'))->display(function () {
             return "展开";
-        })->expand(function() {
-            $data = json_decode($this->reason, true);
+        })->expand(function($model) {
+            $data = json_decode($model->reason, true);
             $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
             $rows = [];
             foreach($data['duration'] as $item) {
