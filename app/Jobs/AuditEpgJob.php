@@ -107,7 +107,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 }
 
                 if($duration != $m->duration) {
-                    $log = clone $item;
+                    $log = json_decode(json_encode($item), true);
                     $item['duration'] = $m->duration;
                     $log['duration2'] = $m->duration;
                     $log['pro'] = $pro->id;
