@@ -64,6 +64,9 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $audit->admin = Admin::user()->name;
         $audit->channel_id = $channel->id;
         $audit->save();
+
+        $channel->audit_date = now();
+        $channel->save();
     }
 
     private function checkMaterial($cache)

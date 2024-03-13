@@ -61,7 +61,9 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
     private function distribute()
     {
-        $channel = Channel::findOrFail($this->id);
+        $channel = Channel::find($this->id);
+
+        if(!$channel) return;
 
         $is_today = $channel->air_dat == date('Y-m-d');
 
@@ -100,7 +102,8 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
     private function view()
     {
-        $material = Material::findOrFail($this->id);
+        $material = Material::find($this->id);
+        if(!$material) return;
         $unique_no = $material->unique_no;
 
         if(file_exists($material->filepath)) {
@@ -117,7 +120,8 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
     private function process()
     {
-        $largefile = LargeFile::findOrFail($this->id);
+        $largefile = LargeFile::find($this->id);
+        if(!$largefile) return;
         $folders = explode(PHP_EOL, config('MEDIA_SOURCE_FOLDER', ''));
         $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
         $targetpath = $folders[$largefile->target_path].$largefile->name;
@@ -168,7 +172,8 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     
     private function sync()
     {
-        $material = Material::findOrFail($this->id);
+        $material = Material::find($this->id);
+        if(!$material) return;
         $unique_no = $material->unique_no;
         $filepath = $material->filepath;
         if(empty($filepath))
