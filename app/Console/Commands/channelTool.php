@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
+use App\Jobs\AuditEpgJob;
 use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel;
@@ -78,29 +79,34 @@ class channelTool extends Command
         
     }
 
-    private function fixer($id)
+    private function fixer($id, $e)
     {
-        $programs = ChannelPrograms::where('channel_id', $id)->get();
+        $job = new AuditEpgJob($id);
+        $job->handle();
 
-        foreach($programs as $p) {
 
-            $data = json_decode($p->data, true);
-            $list = [];
-            for($i=0;$i<100;$i++)
-            {
-                if(array_key_exists($i, $data))
-                {
-                    $list[] = $data[$i];
-                }
-                else {
-                    break;
-                }
-            }
+        
+        // $programs = ChannelPrograms::where('channel_id', $id)->get();
 
-            if(array_key_exists('replicate', $data)) continue;
-            $p->data = json_encode($list);
-            $p->save();
-        }
+        // foreach($programs as $p) {
+
+        //     $data = json_decode($p->data, true);
+        //     $list = [];
+        //     for($i=0;$i<100;$i++)
+        //     {
+        //         if(array_key_exists($i, $data))
+        //         {
+        //             $list[] = $data[$i];
+        //         }
+        //         else {
+        //             break;
+        //         }
+        //     }
+
+        //     if(array_key_exists('replicate', $data)) continue;
+        //     $p->data = json_encode($list);
+        //     $p->save();
+        // }
         
         
         // $channels = Channel::where('status', Channel::STATUS_READY)->where('name', $id)->get();
