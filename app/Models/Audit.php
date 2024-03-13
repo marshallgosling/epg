@@ -11,9 +11,9 @@ class Audit extends Model
 
     protected $table = 'audit';
 
-    public const STATUS_EMPTY = 0;
-    public const STATUS_READY = 1;
-    public const STATUS_ERROR = 2;
+    public const STATUS_WAIT = 0;
+    public const STATUS_PASS = 1;
+    public const STATUS_FAIL = 2;
     public const STATUS = ['未审核', '通过', '不通过'];
 
     protected $fillable = [

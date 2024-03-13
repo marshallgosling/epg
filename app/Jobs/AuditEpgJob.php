@@ -60,7 +60,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $audit = new Audit();
         $audit->name = $channel->name;
-        $audit->status = $duration['result'] && $material['result'];
+        $audit->status = $duration['result'] && $material['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
         $audit->reason = json_encode($reason);
         $audit->admin = '';
         $audit->channel_id = $channel->id;

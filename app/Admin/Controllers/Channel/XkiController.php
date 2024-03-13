@@ -28,12 +28,12 @@ class XkiController extends AdminController
      *
      * @var string
      */
-    protected $title = "【 星空国际 】节目单";
+    protected $title = "【 星空国际 】编单";
 
     private $group = 'xki';
 
     protected $description = [
-                'index'  => "查看和编辑每日节目单数据",
+                'index'  => "查看和编辑每日编单数据",
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
@@ -73,8 +73,8 @@ class XkiController extends AdminController
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
-        $grid->column('reviewer', __('Reviewer'));
-        $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
+        $grid->column('reviewer', __('Reviewer'))->hide();
+        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['warning','success']);
         $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
@@ -131,7 +131,7 @@ class XkiController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Audit status'))->using(Channel::AUDIT);
+        $show->field('audit_status', __('Lock status'))->using(Channel::LOCKS);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -157,7 +157,7 @@ class XkiController extends AdminController
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
+        $form->radio('audit_status', __('Lock status'))->options(Channel::LOCKS)->required();
         $form->date('audit_date', __('Audit date'));
         $form->textarea('comment', __('Comment'));
 
@@ -167,24 +167,25 @@ class XkiController extends AdminController
 
             if($form->isCreating()) {
                 $error = new MessageBag([
-                    'title'   => '创建节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                    'title'   => '创建编单失败',
+                    'message' => '编单不可手动创建。',
                 ]);
-
-                $form->uuid = (string) Str::uuid();
-                $form->version = 1;
-    
-                if(Channel::where('air_date', $form->air_date)->where('name', 'xki')->exists())
-                {
-                    return back()->with(compact('error'));
-                }
+                return back()->with(compact('error'));
             }
 
             if($form->isEditing()) {
                 $error = new MessageBag([
-                    'title'   => '修改节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                    'title'   => '修改编单失败',
+                    'message' => '该日期 '. $form->air_date.' 编单已存在。',
                 ]);
+
+                if($form->model()->audit_status == Channel::LOCK_ENABLE) {
+                    $error = new MessageBag([
+                        'title'   => '修改编单失败',
+                        'message' => '该日期 '. $form->air_date.' 编单已锁定，无法修改。请先取消“锁"状态。',
+                    ]);
+                    return back()->with(compact('error'));
+                }
     
                 if(Channel::where('air_date', $form->air_date)->where('name', 'xki')->where('id','<>',$form->model()->id)->exists())
                 {

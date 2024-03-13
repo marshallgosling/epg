@@ -12,28 +12,27 @@ use Encore\Admin\Facades\Admin;
 
 class BatchAudit extends BatchAction
 {
-    public $name = '批量审核';
-    protected $selector = '.audit-channel';
+    public $name = '批量锁定';
+    protected $selector = '.lock-channel';
 
     public function handle(Collection $collection, Request $request)
     {
-        $audit = (int)$request->get('audit');
+        $lock = (int)$request->get('lock');
         $comment = $request->get('comment');
         foreach ($collection as $model) 
         {
-            
-            if($audit == Channel::AUDIT_PASS && $model->status != Channel::STATUS_READY) {
-                // 空编单和停止使用的编单不能通过审核
+            if($lock == Channel::LOCK_ENABLE && $model->status != Channel::STATUS_READY) {
+                // 空编单和停止使用的编单不能通过锁定
                 continue;
             }
-            $model->audit_status = $audit;
+            $model->audit_status = $lock;
             $model->comment = $comment;
             $model->reviewer = Admin::user()->name;
-            $model->audit_date = now();
+            //$model->audit_date = now();
             $model->save();
             // Channel::where('id', $model->id)->update(['audit_status', $request->get('audit'), 'comment'=>$request->get('comment')]);
 
-            if($audit == Channel::AUDIT_PASS) {
+            if($lock == Channel::LOCK_ENABLE) {
                 StatisticJob::dispatch($model->id);
                 EpgJob::dispatch($model->id);
             }
@@ -44,14 +43,14 @@ class BatchAudit extends BatchAction
 
     public function form()
     {
-        $this->select('audit', '状态')->options(Channel::AUDIT)->rules('required');
-        $this->textarea('comment', '审核意见')->rules('required');
-        $this->text("help", "注意说明")->default('空编单和停止使用的编单不能通过审核')->disable();
+        $this->select('lock', '状态')->options(Channel::LOCKS)->rules('required');
+        $this->textarea('comment', '意见');
+        $this->text("help", "注意说明")->default('空编单和停止使用的编单不能锁定')->disable();
     }
 
     public function html()
     {
-        return "<a class='audit-channel btn btn-sm btn-warning'><i class='fa fa-info-circle'></i> 批量审核</a>";
+        return "<a class='lock-channel btn btn-sm btn-warning'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

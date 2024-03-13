@@ -34,6 +34,7 @@
     "Version"       : "版本号",
     "Reviewer"      : "审核人",
     "Audit status"  : "审核状态",
+    "Lock status"   : "状态锁",
     "Uuid"          : "UUID",
     "Status"        : "状态",
     "Type"          : "类型",

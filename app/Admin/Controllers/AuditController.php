@@ -76,8 +76,14 @@ class AuditController extends AdminController
         $grid->column('created_at', __('Created at'))->sortable()->hide();
         $grid->column('updated_at', __('Updated at'))->sortable();
 
+        $grid->disableCreateButton();
+
         $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
             
+            $actions->disableDelete();
+        });
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
         });
 
@@ -85,11 +91,6 @@ class AuditController extends AdminController
             //$tools->disableBatchActions();
             
         });
-
-        //$grid->disableCreateButton();
-        //$grid->disableBatchActions();
-    
-        //$grid->disableActions();
 
         return $grid;
     }
@@ -106,7 +107,7 @@ class AuditController extends AdminController
 
         $show->field('id', __('Id'));
         
-        $show->field('name', __('Name'));
+        $show->field('name', __('Group'))->using(Channel::GROUPS);
         $show->field('channel_id', __('Channel'));
         $show->field('status', __('Status'))->using(Channel::STATUS);
         $show->field('admin', __('Reviewer'));
@@ -127,7 +128,7 @@ class AuditController extends AdminController
     {
         $form = new Form(new Audit());
 
-        $form->radio('name', __('Name'))->options(Channel::GROUPS);
+        $form->radio('name', __('Group'))->options(Channel::GROUPS);
         $form->text('channel_id', __('Channel'));
         $form->radio('status', __('Status'))->options(Audit::STATUS)->required();
         
