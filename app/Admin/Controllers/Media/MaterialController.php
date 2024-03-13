@@ -157,7 +157,7 @@ class MaterialController extends AdminController
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('group', __('Group'))->default('');
-
+        $form->text('ep', __('Ep'));
         // $form->date('air_date', __('Air date'));
         // $form->date('expired_date', __('Expired date'));
 
