@@ -152,8 +152,13 @@ class channelTool extends Command
 
     private function export($id, $pid)
     {
-        BvtExporter::generate($id);
-        BvtExporter::exportXml(true);
+        $channel = Channel::findOrFail($id);
+
+        $data = BvtExporter::collectData($channel->air_date, $channel->name);
+
+        BvtExporter::generateData($channel, $data);
+        print_r($data);
+        BvtExporter::exportXml($channel->name);
     }
 
     private function generate($id, $group='default')
