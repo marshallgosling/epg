@@ -38,7 +38,7 @@ class Category extends Model
 
     public static function getXkcCategories()
     {
-        return ['CanXin'=>'灿星制作 (CanXin)','Entertainm'=>'综艺 (Entertainm)','drama'=>'电视剧 (drama)','cartoon'=>'卡通 (cartoon)'];
+        return ['CanXin'=>'灿星制作 (CanXin)','Entertainm'=>'综艺 (Entertainm)','drama'=>'电视剧 (drama)','cartoon'=>'卡通 (cartoon)','XK PR'=>'XK PR 宣传片'];
     }
 
     public static function getFormattedCategories($type='tags', $withEmpty=false)

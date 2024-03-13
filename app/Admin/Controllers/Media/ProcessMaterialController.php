@@ -44,7 +44,7 @@ class ProcessMaterialController extends Controller
             }
             else {
                 $result = '<i class="fa fa-close text-red" title="不匹配"></i>';
-                $material = '无';
+                $material = ($item['name'] == $item['unique_no']) ? '无' : '无（可新建）';
             }
             $rows[] = ['style'=>'','item'=>[
                 '<input type="checkbox" class="grid-row-checkbox" data-id="'.$idx.'" autocomplete="off">', 
@@ -52,7 +52,10 @@ class ProcessMaterialController extends Controller
             ]];
         }
 
-        return new Box('匹配目标路径文件结果', (new MyTable($head, $rows, ['table-hover', 'grid-table']))->render());
+        $html = (new MyTable($head, $rows, ['table-hover', 'grid-table']))->render();
+        $html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
+
+        return new Box('目标路径文件夹 '.config('CUSTOMER_MATERIAL_FOLDER'), $html);
 
     }
 
@@ -69,4 +72,9 @@ class ProcessMaterialController extends Controller
         $d->close();
         return $list;
     }
+
+    public function process()
+    {
+        return response()->json();
+    } 
 }
