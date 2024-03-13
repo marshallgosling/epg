@@ -55,8 +55,9 @@ class RecognizeFileInfo
             {
                 $unique_no = $unknow;
             }
-            else if(preg_match('/^[VC|XK|X]/', $unknow, $matches))
+            else if(preg_match('/(\d+)$/', $unknow, $matches))
             {
+                $name = $unknow;
             }
 
         }

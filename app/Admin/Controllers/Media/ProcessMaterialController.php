@@ -44,7 +44,16 @@ class ProcessMaterialController extends Controller
             }
             else {
                 $result = '<i class="fa fa-close text-red" title="不匹配"></i>';
-                $material = ($item['name'] == $item['unique_no']) ? '无' : '无（可新建）';
+                $material =  '无';
+
+                if($item['name'] == '' || $item['unique_no'] == '') {
+                    if($item['name']) $material .= '，可新建物料（自动生成播出编号）';
+                    if($item['unique_no']) $material .= '，不可新建物料（缺少节目标题）';
+                }
+                else {
+                    $material .= '，可新建物料';
+                }
+                
             }
             $rows[] = ['style'=>'','item'=>[
                 '<input type="checkbox" class="grid-row-checkbox" data-id="'.$idx.'" autocomplete="off">', 
