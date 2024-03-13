@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers\Channel;
 
 use App\Admin\Actions\Channel\BatchAudit;
+use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\BatchReplicate;
@@ -106,6 +107,7 @@ class XkvController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchDistributor());
+            $tools->append(new BatchLock());
             $tools->append(new BatchAudit());
             $tools->append(new ToolExporter('xkv'));
             $tools->append(new ToolGenerator('xkv'));
