@@ -30,16 +30,17 @@ class ProcessMaterialController extends Controller
      */
     protected function grid()
     {
-        $head = ["", "文件名", "匹配结果", "物料", "操作"];
+        $head = ["", "文件名", "扫描结果", "物料", "操作"];
         $list = $this->compare();
         $rows = [];
         if($list)foreach($list as $idx=>$item) {
             if($item['m']){
                 $m = $item['m'];
                 $result = '<i class="fa fa-check text-green"></i>';
+                $s = $m->status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>' : '<i class="fa fa-close text-red"></i>';
                 $material = 
-                    ' <span class="label label-default">播出编号</span> '.$m->unique_no.
-                    ' <span class="label label-default">状态</span> <small>'. Material::STATUS[$m->status].'</small>'.
+                    ' <span class="label label-default">播出编号</span> <small>'.$m->unique_no.'</small>'.
+                    ' <span class="label label-default">状态</span> '. $s .
                     ' <span class="label label-default">时长</span> <small>'.$m->duration.'</small>';
             }
             else {
@@ -47,10 +48,16 @@ class ProcessMaterialController extends Controller
                 $material =  '无';
 
                 if($item['name'] == '' || $item['unique_no'] == '') {
-                    if($item['name']) $material .= '，可新建物料（自动生成播出编号）';
-                    if($item['unique_no']) $material .= '，不可新建物料（缺少节目标题）';
+                    if($item['name']) {
+                        $material .= '，可新建物料（自动生成播出编号）';
+                        $result = '<i class="fa fa-check text-green"></i>';
+                    }
+                    if($item['unique_no']) {
+                        $material .= '，不可新建物料（缺少节目标题）';
+                    }
                 }
                 else {
+                    $result = '<i class="fa fa-check text-green"></i>';
                     $material .= '，可新建物料';
                 }
                 
