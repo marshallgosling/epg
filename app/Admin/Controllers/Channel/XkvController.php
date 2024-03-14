@@ -89,7 +89,8 @@ class XkvController extends AdminController
             $rows = [];
             foreach($model->audit as $item) {
                 $rows[] = [
-                    $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', $item->created_at, ''
+                    $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
+                    $item->created_at, '<a href="../audit">查看详细</a>'
                 ];
             }
             $head = ['ID','审核结果','日期',''];
