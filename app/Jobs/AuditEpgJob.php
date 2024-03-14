@@ -83,8 +83,6 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 $m->name = '';
                 $m->status = 0;
                 $m->duration = '';
-                $logs[] = $m;
-                $result = false;
             }
             if($m->status != Material::STATUS_READY)
             {
