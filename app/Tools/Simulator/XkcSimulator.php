@@ -285,6 +285,9 @@ class XkcSimulator
                 else if($item == 'finished') {
                     $d['result'] = '编排完';
                 }
+                else if($item == 'empty2') {
+                    $d['result'] = '错误:不是首播日，导致编排无法进行';
+                }
                 else {
                     $items[] = $item;
                     $d['episodes'] = $item->episodes;

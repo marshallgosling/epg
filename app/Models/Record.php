@@ -156,7 +156,7 @@ class Record extends Model
             if(!$item) 
             {
                 $data['result'] = '未找到';
-                $item = 'empty';
+                $item = 'empty2';
             }
             $items[] = $item;
         }
