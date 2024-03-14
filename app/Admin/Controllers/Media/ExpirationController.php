@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\AgreementLink;
 use App\Admin\Actions\Material\CreateAgreement;
 use App\Models\Agreement;
 use App\Models\Channel;
@@ -51,6 +52,7 @@ class ExpirationController extends AdminController
 
         $grid->tools(function ($tools) {
             $tools->append(new CreateAgreement);
+            $tools->append(new AgreementLink);
         });
 
         $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
