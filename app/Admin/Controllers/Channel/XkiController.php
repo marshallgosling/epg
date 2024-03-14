@@ -61,19 +61,21 @@ class XkiController extends AdminController
 
         $grid->model()->where('name', $this->group)->orderBy('air_date', 'desc');
 
-        $grid->column('version', __('Version'))->label('default');
-        $grid->column('lock_status', __('Lock status'))->display(function($lock) {
+        $grid->column('version', __('Version'))->label('default')->width(50);
+        $grid->column('lock_status', __('Lock'))->display(function($lock) {
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
-        });
+        })->width(40);
+
         $grid->column('id', __('编单'))->display(function($id) {
             return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
-        });
+        })->width(100);
+        
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
             return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
-        });
+        })->width(100);
 
-        $grid->column('start_end', __('StartEnd'));
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)
+        $grid->column('start_end', __('StartEnd'))->width(160);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(80)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         

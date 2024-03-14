@@ -39,6 +39,7 @@ class CheckXml implements Renderable
             }
             else {
                 $label = '<p>播出编单:'.$ch->name.'_'.$ch->air_date.'.xml 文件不存在</p>';
+                $data = '';
             }
         }
         

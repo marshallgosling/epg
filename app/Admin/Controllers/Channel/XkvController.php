@@ -66,20 +66,22 @@ class XkvController extends AdminController
 
         $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
 
-        $grid->column('version', __('Version'))->label('default');
+        $grid->column('version', __('Version'))->label('default')->width(50);
         $grid->column('lock_status', __('Lock'))->display(function($lock) {
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
-        });
+        })->width(40);
 
         $grid->column('id', __('编单'))->display(function($id) {
             return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
-        });
+        })->width(100);
+        
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
             return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
-        });
-        $grid->column('start_end', __('StartEnd'));
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
-        //$grid->column('comment', __('Comment'));
+        })->width(100);
+
+        $grid->column('start_end', __('StartEnd'))->width(160);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(80)
+            ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         
         $grid->column('audit', __('Audit status'))->display(function () { return "查看记录"; })->expand(function ($model) {
             $labels = ['warning', 'success', 'danger'];
@@ -98,6 +100,7 @@ class XkvController extends AdminController
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
+        $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->hide();
         
         $grid->column('updated_at', __('Updated at'))->sortable();
