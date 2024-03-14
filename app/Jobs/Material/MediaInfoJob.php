@@ -70,7 +70,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
         $is_today = $channel->air_dat == date('Y-m-d');
 
-        if($channel->status == Channel::STATUS_READY && $channel->audit_status == Channel::LOCK_ENABLE)
+        if($channel->status == Channel::STATUS_READY && $channel->lock_status == Channel::LOCK_ENABLE)
         {
             $air = date('Y-m-d', strtotime($channel->air_date));
             if(!Storage::disk('xml')->exists($channel->name.'_'.$air.'.xml'))

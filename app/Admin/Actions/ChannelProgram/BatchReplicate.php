@@ -18,7 +18,7 @@ class BatchReplicate extends BatchAction
         foreach ($collection as $model) {
             if($channel == null) {
                 $channel = Channel::find($model->channel_id);
-                if($channel->audit_status == Channel::AUDIT_PASS) {
+                if($channel->lock_status == Channel::LOCK_ENABLE) {
                     return $this->response()->success(__('BatchReplicate Failed message'))->refresh();
                 }
             }

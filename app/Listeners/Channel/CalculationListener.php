@@ -26,7 +26,7 @@ class CalculationListener
         $this->log_print = false;
 
         $channel = Channel::find($event->getChannelId());
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $this->warn("Channel {$event->getChannelId()} is locked.");
             return;
         }

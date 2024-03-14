@@ -43,7 +43,7 @@ class dailyTasks extends Command
         $now = $args ? strtotime($args) : (time() + 7 * 86400);
 
         $list = Channel::where('status', Channel::STATUS_READY)
-                ->where('audit_status', Channel::LOCK_ENABLE)
+                ->where('lock_status', Channel::LOCK_ENABLE)
                 ->where('distribution_date', null)
                 ->where('air_date', date('Y-m-d', $now))
                 //->orderBy('air_date')

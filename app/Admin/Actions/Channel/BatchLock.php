@@ -25,7 +25,7 @@ class BatchLock extends BatchAction
                 // 空编单和停止使用的编单不能通过锁定
                 continue;
             }
-            $model->audit_status = $lock;
+            $model->lock_status = $lock;
             //$model->comment = $comment;
             $model->reviewer = Admin::user()->name;
             //$model->audit_date = now();

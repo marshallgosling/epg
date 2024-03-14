@@ -74,7 +74,7 @@ class XkcController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('audit_status', __('Lock status'))->display(function($lock) {
+        $grid->column('lock_status', __('Lock status'))->display(function($lock) {
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-warning"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
         });
         $grid->column('audit_date', __('Audit date'))->hide();
@@ -133,7 +133,7 @@ class XkcController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Lock status'))->using(Channel::LOCKS);
+        $show->field('lock_status', __('Lock status'))->using(Channel::LOCKS);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -159,7 +159,7 @@ class XkcController extends AdminController
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Lock status'))->options(Channel::LOCKS)->required();
+        $form->radio('lock_status', __('Lock status'))->options(Channel::LOCKS)->required();
         $form->date('audit_date', __('Audit date'));
         $form->textarea('comment', __('Comment'));
 
@@ -181,7 +181,7 @@ class XkcController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 编单已存在。',
                 ]);
 
-                if($form->model()->audit_status == Channel::LOCK_ENABLE) {
+                if($form->model()->lock_status == Channel::LOCK_ENABLE) {
                     $error = new MessageBag([
                         'title'   => '修改编单失败',
                         'message' => '该日期 '. $form->air_date.' 编单已锁定，无法修改。请先取消“锁"状态。',
