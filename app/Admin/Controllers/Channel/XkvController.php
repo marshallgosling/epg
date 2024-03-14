@@ -13,6 +13,7 @@ use App\Admin\Actions\Channel\Generator;
 use App\Admin\Actions\Channel\Replicate;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
+use App\Models\Audit;
 use App\Models\Channel;
 use App\Tools\ChannelGenerator;
 use Encore\Admin\Controllers\AdminController;
@@ -20,6 +21,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 
@@ -62,7 +64,12 @@ class XkvController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('name', $this->group)->orderBy('air_date', 'desc');
+        $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
+
+        $grid->column('version', __('Version'))->label('default');
+        $grid->column('lock_status', __('Lock'))->display(function($lock) {
+            return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
+        });
 
         $grid->column('id', __('编单'))->display(function($id) {
             return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
@@ -73,11 +80,20 @@ class XkvController extends AdminController
         $grid->column('start_end', __('StartEnd'));
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
-        $grid->column('version', __('Version'))->label('default');
-        $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('lock_status', __('Lock status'))->display(function($lock) {
-            return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-warning"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
+        
+        $grid->column('audit', __('Audit status'))->display(function () { return "查看记录"; })->expand(function ($model) {
+            $labels = ['warning', 'success', 'danger'];
+            if(!$model->audit) return "<p>无审核记录</p>";
+            $rows = [];
+            foreach($model->audit as $item) {
+                $rows[] = [
+                    $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', $item->created_at, ''
+                ];
+            }
+            $head = ['ID','审核结果','日期',''];
+            return new Table($head, $rows);
         });
+        
         $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
@@ -108,11 +124,12 @@ class XkvController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchDistributor());
-            $tools->append(new BatchLock());
-            $tools->append(new BatchAudit());
-            $tools->append(new ToolExporter('xkv'));
             $tools->append(new ToolGenerator('xkv'));
+            $tools->append(new BatchAudit());
+            $tools->append(new BatchLock());
+            $tools->append(new BatchDistributor());
+            $tools->append(new ToolExporter('xkv'));
+            
         });
 
         return $grid;

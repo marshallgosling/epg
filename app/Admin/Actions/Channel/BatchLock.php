@@ -50,7 +50,7 @@ class BatchLock extends BatchAction
 
     public function html()
     {
-        return "<a class='lock-channel btn btn-sm btn-warning'><i class='fa fa-lock'></i> {$this->name}</a>";
+        return "<a class='lock-channel btn btn-sm btn-primary'><i class='fa fa-lock'></i> {$this->name}</a>";
     }
 
 }

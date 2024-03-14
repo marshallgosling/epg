@@ -39,7 +39,7 @@ class BatchAudit extends BatchAction
 
     public function html()
     {
-        return "<a class='audit-channel btn btn-sm btn-primary'><i class='fa fa-info-circle'></i> {$this->name}</a>";
+        return "<a class='audit-channel btn btn-sm btn-warning'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

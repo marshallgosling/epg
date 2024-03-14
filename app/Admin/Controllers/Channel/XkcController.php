@@ -61,6 +61,11 @@ class XkcController extends AdminController
 
         $grid->model()->where('name', $this->group)->orderBy('air_date', 'desc');
 
+        $grid->column('version', __('Version'))->label('default');
+        $grid->column('lock_status', __('Lock status'))->display(function($lock) {
+            return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
+        });
+
         $grid->column('id', __('编单'))->display(function($id) {
             return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
         });
@@ -72,11 +77,9 @@ class XkcController extends AdminController
         $grid->column('status', __('Status'))->filter(Channel::STATUS)
             ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
-        $grid->column('version', __('Version'))->label('default');
+        
         $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('lock_status', __('Lock status'))->display(function($lock) {
-            return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-warning"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
-        });
+        
         $grid->column('audit_date', __('Audit date'))->hide();
         
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
@@ -107,10 +110,12 @@ class XkcController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchDistributor());
-            $tools->append(new BatchLock);
-            $tools->append(new ToolExporter('xkc'));
             $tools->append(new ToolGenerator('xkc'));
+            $tools->append(new BatchLock);
+            $tools->append(new BatchDistributor());
+            
+            $tools->append(new ToolExporter('xkc'));
+            
         });
 
         return $grid;

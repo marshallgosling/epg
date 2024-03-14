@@ -49,7 +49,8 @@ class AuditController extends AdminController
         $grid->column('reason', __('Details'))->display(function () {
             return "展开";
         })->expand(function($model) {
-            $data = json_decode($model->reason, true);        
+            $data = json_decode($model->reason, true);    
+            if(!$data) return "<p>没有数据</p>";
             $rows = [];
             if($data['duration']['result']) {
                 if($data['material']['result']) {
