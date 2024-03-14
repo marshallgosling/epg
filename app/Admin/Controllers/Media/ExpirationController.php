@@ -96,7 +96,7 @@ class ExpirationController extends AdminController
                     return [$id => $id];
                 })->ajax('/admin/api/episode')->required();
     
-        $form->switch('status', __('Status'))->options(Expiration::STATUS);
+        $form->switch('status', __('Status'))->options(Expiration::STATUS)->default(Expiration::STATUS_READY);
         $form->textarea('comment', __('Comment'));
         $form->hidden('group_id', 'group');
         $form->saving(function(Form $form) {
