@@ -83,7 +83,7 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        $form->select('agreement_id', 'Agreement')->options(Agreement::all()->pluck('name', 'id')->toArray());
+        $form->select('agreement_id', __('Agreement'))->options(Agreement::all()->pluck('name', 'id')->toArray());
         $form->select('name', __('Episodes'))->options(function ($id) {
             return [$id => $id];
         })->ajax('/admin/api/episode')->required();
