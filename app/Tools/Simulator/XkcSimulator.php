@@ -280,7 +280,7 @@ class XkcSimulator
             $d = $template->data;
             foreach($temps as $item) {
                 if($item == 'empty') {
-                    $d['result'] = '错误';
+                    $d['result'] = '错误:找不到匹配的节目';
                 }
                 else if($item == 'finished') {
                     $d['result'] = '编排完';
