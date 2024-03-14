@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\CreateAgreement;
 use App\Models\Agreement;
 use App\Models\Channel;
 use App\Models\Expiration;
@@ -46,6 +47,10 @@ class ExpirationController extends AdminController
         
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->tools(function ($tools) {
+            $tools->append(new CreateAgreement);
+        });
 
         return $grid;
     }
