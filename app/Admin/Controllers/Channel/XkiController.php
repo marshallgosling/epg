@@ -2,9 +2,9 @@
 
 namespace App\Admin\Controllers\Channel;
 
-use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
+use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
@@ -105,7 +105,7 @@ class XkiController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchDistributor());
-            $tools->append(new BatchAudit);
+            $tools->append(new BatchLock);
             $tools->append(new ToolExporter('xki'));
             $tools->append(new ToolGenerator('xki'));
         });
