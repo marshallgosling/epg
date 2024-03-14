@@ -81,10 +81,10 @@ class XkiController extends AdminController
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(80)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         $grid->column('audit', __('Audit status'))->display(function () { 
-            $labels = ['warning', 'success', 'danger'];
+            
             if($this->audit) {
                 foreach($this->audit()->orderBy('id','desc')->get() as $item) {
-                    return '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>';
+                    return Audit::STATUS[$item->status];
                 }
             }
             return "无记录"; 
