@@ -53,6 +53,16 @@ class ExpirationController extends AdminController
             $tools->append(new CreateAgreement);
         });
 
+        $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
+            $agreements = DB::table('agreement')->selectRaw("id,concat(name, ' (', start_at, ' ~ ', end_at,')') as name")->pluck('name', 'id')->toArray();
+        
+            $create->select('agreement_id', __('Agreement'))->options($agreements)->required();
+            $create->select('name', __('Episodes'))->options(function ($id) {
+                return [$id => $id];
+            })->ajax('/admin/api/episode')->required();
+            $create->select('status', __('Status'))->options(Expiration::STATUS)->default(Expiration::STATUS_READY);
+        });
+
         return $grid;
     }
 
@@ -67,8 +77,8 @@ class ExpirationController extends AdminController
         $show = new Show(Expiration::findOrFail($id));
 
         $show->field('id', __('Id'));
-        //$show->field('group_id', __('Group id'))->using(Channel::GROUPS);
-        $show->field('agreement_id', __('Agreement'))->using(Agreement::all()->pluck('name', 'id')->toArray());
+        $agreements = DB::table('agreement')->selectRaw("id,concat(name, ' (', start_at, ' ~ ', end_at,')') as name")->pluck('name', 'id')->toArray();
+        $show->field('agreement_id', __('Agreement'))->using($agreements);
         $show->field('name', __('Name'));
         // $show->field('start_at', __('Start at'));
         // $show->field('end_at', __('End at'));
