@@ -49,11 +49,21 @@ class AuditController extends AdminController
         $grid->column('reason', __('Details'))->display(function () {
             return "展开";
         })->expand(function($model) {
-            $data = json_decode($model->reason, true);
-            $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
+            $data = json_decode($model->reason, true);        
             $rows = [];
             if($data['duration']['result']) {
-                return "<p>没有错误</p>";
+                if($data['material']['result']) {
+                    return "<p>没有错误</p>";
+                }
+                else {
+                    foreach($data['material']['logs'] as $item) {
+                        $rows[] = [
+                            $item['name'], $item['unique_no'], $item['duration'], '缺失物料'
+                        ];
+                    }
+                    $head = ['名称','播出编号','时长',''];
+                    return new Table($head, $rows);
+                }
             }
             else
             {
@@ -62,6 +72,7 @@ class AuditController extends AdminController
                         $item['start_at'], $item['end_at'], $item['name'], $item['unique_no'], $item['duration'], $item['duration2'], ''
                     ];
                 }
+                $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
                 return new Table($head, $rows);
             }
         });
