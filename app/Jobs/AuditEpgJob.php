@@ -110,8 +110,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
                 if(!array_key_exists($unique_no, $this->cache))
                 {
-                    $m = Material::where('unique_no', $unique_no)->first();
-                    $cache[$unique_no] = $m;
+                    $m = Material::where('unique_no', $unique_no)->select(['id','name','unique_no','status','duration'])->first();
+                    $this->cache[$unique_no] = $m;
                 }
                 else {
                     $m = $this->cache[$unique_no];
