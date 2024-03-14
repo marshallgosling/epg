@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Models\Agreement;
 use App\Models\Channel;
 use App\Models\Expiration;
 use Encore\Admin\Controllers\AdminController;
@@ -27,16 +28,22 @@ class ExpirationController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Expiration());
+        $grid->model()->with('agreement')->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'));
         //$grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('status', __('Status'))->bool();
 
         $grid->column('name', __('Name'));
-        $grid->column('start_at', __('Start at'));
-        $grid->column('end_at', __('End at'));
         
-        $grid->column('comment', __('Comment'));
+        $grid->column('expiration', __('Air date').__('TimeRange'))->display(function() {
+            return $this->agreement->start_at .' - '. $this->agreement->end_at;
+        });
+
+        $grid->column('agreement', __('From Agreement'))->display(function() {
+            return $this->agreement->name;
+        });
+        
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
 
@@ -55,11 +62,12 @@ class ExpirationController extends AdminController
 
         $show->field('id', __('Id'));
         //$show->field('group_id', __('Group id'))->using(Channel::GROUPS);
+        $show->field('agreement_id', __('Agreement'))->using(Agreement::all()->pluck('name', 'id')->toArray());
         $show->field('name', __('Name'));
-        $show->field('start_at', __('Start at'));
-        $show->field('end_at', __('End at'));
+        // $show->field('start_at', __('Start at'));
+        // $show->field('end_at', __('End at'));
         $show->field('status', __('Status'))->using(Expiration::STATUS);
-        $show->field('comment', __('Comment'));
+        
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -75,16 +83,15 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        //$form->radio('group_id', __('Group'))->options(Channel::GROUPS)->required();
-        $form->hidden('group_id', '')->default('xkc');
+        $form->select('agreement_id', '')->options(Agreement::all()->pluck('name', 'id')->toArray());
         $form->select('name', __('Episodes'))->options(function ($id) {
             return [$id => $id];
         })->ajax('/admin/api/episode')->required();
-        $form->date('start_at', __('Start at'))->default(date('Y-m-d'))->required();
-        $form->date('end_at', __('End at'))->default(date('Y-m-d'))->required();
+        // $form->date('start_at', __('Start at'))->default(date('Y-m-d'))->required();
+        // $form->date('end_at', __('End at'))->default(date('Y-m-d'))->required();
         $form->switch('status', __('Status'))->options(Expiration::STATUS);
         $form->textarea('comment', __('Comment'));
-
+        $form->hidden('group_id', 'group');
         $form->saving(function(Form $form) {
 
             if($form->isCreating()) {
