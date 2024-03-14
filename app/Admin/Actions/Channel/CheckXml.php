@@ -30,7 +30,7 @@ class CheckXml implements Renderable
                     
                     foreach(array_unique($items) as $item)
                     {
-                        $m = Material::where('uniuqe_no', $item)->select(['name','unique_no','duration','status'])->get();
+                        $m = Material::where('unique_no', $item)->select(['name','unique_no','duration','status'])->first();
                         if(!$m) {
                             $data .= '<tr><td> </td><td>'.$item.'</td><td> </td><td>物料不存在</td></tr>';
                             $error = true;
