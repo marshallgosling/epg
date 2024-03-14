@@ -74,7 +74,9 @@ class XkcController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['default','warning']);;
+        $grid->column('audit_status', __('Lock status'))->display(function($lock) {
+            return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-warning"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
+        });
         $grid->column('audit_date', __('Audit date'))->hide();
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
