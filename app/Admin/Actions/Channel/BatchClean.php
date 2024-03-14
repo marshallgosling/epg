@@ -19,7 +19,7 @@ class BatchClean extends BatchAction
             //     continue;
             // }
 
-            if($model->audit_status == Channel::AUDIT_PASS) {
+            if($model->lock_status == Channel::LOCK_ENABLE) {
                 continue;
             }
             

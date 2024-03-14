@@ -163,7 +163,7 @@ class BvtExporter
         $channels = DB::table('channel')->whereBetween('air_date', [$start_at, $end_at])
                                         ->where('name', $group_id)
                                         ->where('status', Channel::STATUS_READY)
-                                        // ->where('audit_status', Channel::AUDIT_PASS)
+                                        // ->where('lock_status', Channel::LOCK_ENABLE)
                                         ->select('id','air_date','uuid')
                                         ->orderBy('air_date')->get();
 

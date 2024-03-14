@@ -99,8 +99,6 @@ class exporterTool extends Command
 
         $channel = new Channel();
         $channel->id = $id;
-        $channel->audit_status = Channel::AUDIT_EMPTY;
-        $channel->status = Channel::STATUS_READY;
         $channel->name = 'xkv';
         $channel->air_date = $date;
 
@@ -123,7 +121,7 @@ class exporterTool extends Command
 
         $channel = new Channel();
         $channel->id = $id;
-        $channel->audit_status = Channel::AUDIT_EMPTY;
+       
         $channel->status = Channel::STATUS_READY;
         $channel->name = 'xkv';
         $channel->air_date = $date;

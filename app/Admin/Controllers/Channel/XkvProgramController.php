@@ -144,7 +144,7 @@ class XkvProgramController extends AdminController
                 
                 $form->version = (int)$form->version + 1;
                 $channel = Channel::find($form->model()->channel_id);
-                if($channel && $channel->audit_status == Channel::AUDIT_PASS)
+                if($channel && $channel->lock_status == Channel::LOCK_ENABLE)
                 {
                     $error = new MessageBag([
                         'title'   => '修改节目单失败',
@@ -207,7 +207,7 @@ TMP;
         $view = 'admin.program.xkv';
         $channel = Channel::find($model->channel_id);
 
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
         }
@@ -246,7 +246,7 @@ TMP;
 
         $channel = Channel::findOrFail($model->channel_id);
 
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $response = [
                 'status'  => false,
                 'message' => trans('admin.save_failed'),

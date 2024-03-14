@@ -25,7 +25,6 @@ class StatisticProgram implements IStatistic
     ];
 
     public function load($channel) {
-        //$this->channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
         $this->channel = $channel;
     }
 

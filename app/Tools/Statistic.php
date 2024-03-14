@@ -63,7 +63,7 @@ class Statistic
 
     public static function countAudit()
     {
-        return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('audit_status', Channel::AUDIT_PASS)->pluck('total', 'name')->toArray();
+        return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('lock_status', Channel::LOCK_ENABLE)->pluck('total', 'name')->toArray();
     }
 
     public static function generatePieChart($id, $labels, $data, $title='',$pos='top')

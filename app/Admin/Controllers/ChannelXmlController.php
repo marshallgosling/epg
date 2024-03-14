@@ -40,7 +40,7 @@ class ChannelXmlController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('audit_status', Channel::AUDIT_PASS)->where('status', Channel::STATUS_READY)
+        $grid->model()->where('lock_status', Channel::LOCK_ENABLE)->where('status', Channel::STATUS_READY)
             ->orderBy('air_date', 'desc');
 
         $grid->column('id', __('ID'));
@@ -50,11 +50,7 @@ class ChannelXmlController extends AdminController
         $grid->column('reviewer', __('Reviewer'));
         
         $grid->column('distribution_date', __('Distribution date'));
-        //$grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
-        /*$grid->column('audit_date', __('Audit date'));
-        $grid->column('distribution_date', __('Distribution date'));
-        $grid->column('created_at', __('Created at'));
-        */
+
         $grid->column('status', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
         $grid->column('download', __('Download'))->display(function() {
@@ -113,7 +109,7 @@ class ChannelXmlController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Audit status'))->using(Channel::AUDIT);
+        $show->field('lock_status', __('Audit status'))->using(Channel::LOCKS);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -139,7 +135,7 @@ class ChannelXmlController extends AdminController
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
+        $form->radio('lock_status', __('Lock status'))->options(Channel::LOCKS)->required();
         $form->date('audit_date', __('Audit date'));
         $form->text('comment', __('Comment'));
 
