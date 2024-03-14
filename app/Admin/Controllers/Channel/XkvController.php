@@ -83,7 +83,7 @@ class XkvController extends AdminController
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(80)
             ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         
-        $grid->column('audit', __('Audit status'))->display(function () { return "查看记录"; })->expand(function ($model) {
+        $grid->column('audit', __('Audit status'))->display(function () { return "查看记录"; })->modal('审核记录列表', function ($model) {
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";
             $rows = [];
