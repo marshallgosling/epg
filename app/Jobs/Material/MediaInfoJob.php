@@ -59,6 +59,9 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         
     }
 
+    /**
+     * Distribute EPG xml files
+     */
     private function distribute()
     {
         $channel = Channel::find($this->id);
