@@ -37,7 +37,7 @@ class ExpirationController extends AdminController
         $grid->column('name', __('Name'));
         
         $grid->column('expiration', __('Air date').__('TimeRange'))->display(function() {
-            return $this->agreement->start_at .' - '. $this->agreement->end_at;
+            return substr($this->agreement->start_at,0,10) .' - '. substr($this->agreement->end_at, 0, 10);
         });
 
         $grid->column('agreement', __('From Agreement'))->display(function() {
@@ -83,7 +83,7 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        $form->select('agreement_id', '')->options(Agreement::all()->pluck('name', 'id')->toArray());
+        $form->select('agreement_id', 'Agreement')->options(Agreement::all()->pluck('name', 'id')->toArray());
         $form->select('name', __('Episodes'))->options(function ($id) {
             return [$id => $id];
         })->ajax('/admin/api/episode')->required();

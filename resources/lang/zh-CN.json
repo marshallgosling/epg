@@ -61,6 +61,7 @@
     "Viewed"        : "是否已读",
     "BlackList"     : "黑名单",
     "Details"       : "详细数据",
+    "Agreement"     : "合同",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Expired date"  : "过期时间",
@@ -137,6 +138,7 @@
     "Restore Mode": "模版回退模式",
     "Preview Restore Template Content": "上次运行成功的模版结果",
     "具体节目编排": "具体节目编排",
-    "返回普通模式": "返回普通模式"
+    "返回普通模式": "返回普通模式",
+    "From Agreement": "来自合同"
 
 }
