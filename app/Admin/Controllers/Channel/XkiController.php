@@ -78,7 +78,7 @@ class XkiController extends AdminController
         })->width(100);
 
         $grid->column('start_end', __('StartEnd'))->width(160);
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(80)
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(120)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         $grid->column('audit', __('Audit status'))->display(function () { 
             
