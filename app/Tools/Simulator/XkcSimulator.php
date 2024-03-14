@@ -100,15 +100,30 @@ class XkcSimulator
             return false;
     }
 
+    public function saveTemplate($templates)
+    {
+        if(!$this->saveState) return;
+        $temp = ['templates'=>[], 'records'=>[]];
+        foreach($templates as $template)
+        {
+            $t = $template->toArray();
+            $items = $template->records->toArray();
+            $temp['records'][] = $items;
+            $temp['templates'][] = $t;
+        }
+        Storage::put($this->group.'_saved_template.json', json_encode($temp));
+    }
+
     public function handle(\Closure $callback=null)
     {
         //$day = strtotime($start);
         $group = $this->group;
         $errors = [];
         $data = [];
-
-        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
+        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $this->saveTemplate($templates);
+
         foreach($this->channels as &$channel)
         {
             // setup $air value, for record items expiration check 
@@ -160,7 +175,7 @@ class XkcSimulator
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
                 $maxDuration = ChannelGenerator::parseDuration($template->duration) + (int)config('MAX_DURATION_GAP', 600);
-                $items = $this->findAvailableRecords($template_item, $maxDuration);
+                $items = $this->findAvailableRecords($template_item, $maxDuration, $air);
 
                 if(count($items)) {
                     foreach($items as $item) {
@@ -224,16 +239,16 @@ class XkcSimulator
         return $data;
     }
 
-    public function saveTemplateState()
+    public function setSaveTemplateState(bool $state)
     {
-        $this->saveState = true;
+        $this->saveState = $state;
     }
 
-    private function findAvailableRecords(&$template, $maxDuration)
+    private function findAvailableRecords(&$template, $maxDuration, $air)
     {
         $items = [];
         if($template->type == TemplateRecords::TYPE_RANDOM) {
-            $temps = Record::findNextAvaiable($template, $maxDuration);
+            $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             if(in_array($temps[0], ['finished', 'empty'])) {
                 $d = $template->data;
                 $d['episodes'] = null;
@@ -242,7 +257,7 @@ class XkcSimulator
                 $d['result'] = '';
                 $template->data = $d;
 
-                $temps = Record::findNextAvaiable($template, $maxDuration);
+                $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             }
             $d = $template->data;
             foreach($temps as $item) {
@@ -259,7 +274,7 @@ class XkcSimulator
         }
         else if($template->type == TemplateRecords::TYPE_STATIC) {
                 
-            $temps = Record::findNextAvaiable($template, $maxDuration);
+            $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             $items = [];
 
             $d = $template->data;

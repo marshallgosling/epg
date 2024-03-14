@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Template\Reverse;
 use App\Models\Channel;
 use App\Models\EpgJob;
 use Encore\Admin\Controllers\AdminController;
@@ -37,6 +38,10 @@ class EpgJobController extends AdminController
         $grid->column('updated_at', __('Updated at'));
 
         $grid->disableCreateButton();
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new Reverse);
+        });
 
         return $grid;
     }

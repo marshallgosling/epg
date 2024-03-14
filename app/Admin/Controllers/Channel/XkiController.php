@@ -4,6 +4,8 @@ namespace App\Admin\Controllers\Channel;
 
 use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
+use App\Admin\Actions\Channel\BatchDistributor;
+use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
@@ -17,6 +19,7 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
+use App\Tools\ChannelGenerator;
 
 class XkiController extends AdminController
 {
@@ -25,12 +28,12 @@ class XkiController extends AdminController
      *
      * @var string
      */
-    protected $title = "【 星空国际 】节目单";
+    protected $title = "【 星空国际 】编单";
 
     private $group = 'xki';
 
     protected $description = [
-                'index'  => "查看和编辑每日节目单数据",
+                'index'  => "查看和编辑每日编单数据",
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
@@ -42,9 +45,9 @@ class XkiController extends AdminController
 
         $data = $model->programs()->get();
         $color = 'danger';
-          
+        $miss = ChannelGenerator::checkMaterials($data);
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color')));
+        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color','miss')));
     }
 
     /**
@@ -70,9 +73,11 @@ class XkiController extends AdminController
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
-        $grid->column('reviewer', __('Reviewer'));
-        $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
+        $grid->column('reviewer', __('Reviewer'))->hide();
+        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['default','warning']);
         $grid->column('audit_date', __('Audit date'))->hide();
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
@@ -99,7 +104,7 @@ class XkiController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            //$tools->append(new ToolCreator('xki'));
+            $tools->append(new BatchDistributor());
             $tools->append(new BatchAudit);
             $tools->append(new ToolExporter('xki'));
             $tools->append(new ToolGenerator('xki'));
@@ -126,7 +131,7 @@ class XkiController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Audit status'))->using(Channel::AUDIT);
+        $show->field('audit_status', __('Lock status'))->using(Channel::LOCKS);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -152,7 +157,7 @@ class XkiController extends AdminController
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
+        $form->radio('audit_status', __('Lock status'))->options(Channel::LOCKS)->required();
         $form->date('audit_date', __('Audit date'));
         $form->textarea('comment', __('Comment'));
 
@@ -162,24 +167,25 @@ class XkiController extends AdminController
 
             if($form->isCreating()) {
                 $error = new MessageBag([
-                    'title'   => '创建节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                    'title'   => '创建编单失败',
+                    'message' => '编单不可手动创建。',
                 ]);
-
-                $form->uuid = (string) Str::uuid();
-                $form->version = 1;
-    
-                if(Channel::where('air_date', $form->air_date)->where('name', 'xki')->exists())
-                {
-                    return back()->with(compact('error'));
-                }
+                return back()->with(compact('error'));
             }
 
             if($form->isEditing()) {
                 $error = new MessageBag([
-                    'title'   => '修改节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                    'title'   => '修改编单失败',
+                    'message' => '该日期 '. $form->air_date.' 编单已存在。',
                 ]);
+
+                if($form->model()->audit_status == Channel::LOCK_ENABLE) {
+                    $error = new MessageBag([
+                        'title'   => '修改编单失败',
+                        'message' => '该日期 '. $form->air_date.' 编单已锁定，无法修改。请先取消“锁"状态。',
+                    ]);
+                    return back()->with(compact('error'));
+                }
     
                 if(Channel::where('air_date', $form->air_date)->where('name', 'xki')->where('id','<>',$form->model()->id)->exists())
                 {

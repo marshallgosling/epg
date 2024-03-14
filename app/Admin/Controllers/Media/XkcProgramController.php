@@ -13,6 +13,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use App\Admin\Actions\Program\BatchRecordDelete;
 
 class XkcProgramController extends AdminController
 {
@@ -80,8 +81,13 @@ class XkcProgramController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->mlike('episodes', __('Episodes'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); 
                 $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配'); 
+                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
             });
     
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchRecordDelete);
         });
 
         $grid->tools(function (Grid\Tools $tools) {

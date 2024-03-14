@@ -60,7 +60,8 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         //                                 ->orderBy('air_date')->get();
         //$blacklist = BlackList::get()->pluck('keyword');
         $model = BlackList::find($this->id);
-
+        if(!$model) return;
+        
         $action = $this->action;
 
         if(in_array($action, ['scan', 'apply']))

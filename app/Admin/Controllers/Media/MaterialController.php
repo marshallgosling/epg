@@ -3,11 +3,13 @@
 namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\BatchCreator;
+use App\Admin\Actions\Material\BatchDelete;
 use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
 use App\Admin\Actions\Material\BatchSync;
 use App\Admin\Actions\Material\CheckMediaInfo;
 use App\Admin\Actions\Material\Importor;
+use App\Admin\Actions\Material\Replicate;
 use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Material;
@@ -31,56 +33,6 @@ class MaterialController extends AdminController
      */
     protected $title = '物料管理';
 
-    public function result(Content $content)
-    {
-        $json = json_decode(Storage::get('result3.json'), true);
-        $d0 = [];
-        foreach($json['succ'] as $k=>$v)
-        {
-            $d0[] = [$k, $v];
-        }
-        $d1 = [];
-        foreach($json['erro'] as $k=>$v)
-        {
-            $d1[] = [$k, $v];
-        }
-        $d2 = [];
-        foreach($json['miss'] as $k=>$v)
-        {
-            $d2[] = [$k, $v];
-        }
-        $succ = new Table(['code','路径'], $d0);
-        $erro = new Table(['id','路径'], $d1);
-        $miss = new Table(['id','路径'], $d2);
-
-        // $json = json_decode(Storage::get('result2.json'), true);
-        // $d3 = [];
-        // foreach($json['erro'] as $k=>$v)
-        // {
-        //     $d3[] = [$k, $v];
-        // }
-        // $d4 = [];
-        // foreach($json['miss'] as $k=>$v)
-        // {
-        //     $d4[] = [$k, $v];
-        // }
-
-        // $erro1 = new Table(['id','路径'], $d3);
-        // $miss1 = new Table(['id','路径'], $d4);
-
-        $t =  new Tab();
-        $t->add('成功', $succ);
-        $t->add('未匹配', $miss);
-        $t->add('错误', $erro);
-
-        // $t->add('已播未匹配', $miss1);
-        // $t->add('已播错误', $erro1);
-
-        return $content->title('匹配结果')
-        ->description("物料匹配结果")
-        ->body($t->render());
-    }
-
     /**
      * Make a grid builder.
      *
@@ -101,40 +53,49 @@ class MaterialController extends AdminController
             else $name2 = '';
             return $name . $name2;
         });
-        $grid->column('group', __('Group'));  
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
         });
+        $grid->column('group', __('Group'));  
+        $grid->column('ep', __('Ep'))->sortable();
+        
         $grid->column('duration', __('Duration'));
         $grid->column('size', __('Size'))->hide();
         $grid->column('md5', __('MD5'))->hide();
         $grid->column('frames', __('Frames'))->sortable();
-        $grid->column('created_at', __('Created at'))->sortable();
-        //$grid->column('updated_at', __('Updated at'));
+        $grid->column('created_at', __('Created at'))->sortable()->hide();
+        $grid->column('updated_at', __('Updated at'))->sortable();
 
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
-            //$actions->add(new Importor);
+            $actions->add(new Replicate);
         });
 
         $grid->batchActions(function ($actions) {
-            $actions->add(new BatchSync);
+            $actions->add(new BatchDelete);
         });
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
             $tools->append(new BatchImportor);
+            $tools->append(new BatchSync);
             $tools->append(new BatchCreator);
         });
 
         $grid->filter(function(Grid\Filter $filter){
-
-            $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
-            $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
-            $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-            $filter->equal("status", __('Status'))->select(Material::STATUS);
-        
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
+                $filter->equal("status", __('Status'))->select(Material::STATUS);
+                
+                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
+                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
+                $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
+                
+            });
         });
         
         return $grid;
@@ -171,6 +132,12 @@ class MaterialController extends AdminController
         return $show;
     }
 
+    public function import()
+    {
+        $form = new Form(new Material());
+        $form->listbox('items', __('Items'))->options([1 => 'foo', 2 => 'bar', 'val' => 'Option name']);
+    }
+
     /**
      * Make a form builder.
      *
@@ -191,7 +158,7 @@ class MaterialController extends AdminController
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
         $form->text('duration', __('Duration'))->inputmask(['mask' => '99:99:99:99'])->required();
         $form->text('group', __('Group'))->default('');
-
+        $form->text('ep', __('Ep'));
         // $form->date('air_date', __('Air date'));
         // $form->date('expired_date', __('Expired date'));
 

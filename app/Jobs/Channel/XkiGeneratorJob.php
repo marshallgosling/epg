@@ -54,7 +54,7 @@ class XkiGeneratorJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {  
-        $generator = ChannelGenerator::getGenerator('xki');
+        $generator = ChannelGenerator::getGenerator($this->group);
 
         $channels = Channel::generate($this->group, $this->range['s'], $this->range['e']);
 
@@ -91,7 +91,7 @@ class XkiGeneratorJob implements ShouldQueue, ShouldBeUnique
         }
         
         $generator->generate($channels);
-
+        Storage::delete($this->group."_reverse_stall");
     }
 
     /**

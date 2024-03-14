@@ -51,7 +51,8 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $channel = Channel::findOrFail($this->id);
+        $channel = Channel::find($this->id);
+        if(!$channel) return;
 
         $data = BvtExporter::collectData($channel->air_date, $channel->name);
 

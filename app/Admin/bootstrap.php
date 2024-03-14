@@ -118,3 +118,4 @@ Encore\Admin\Form::init(function (Encore\Admin\Form $form) {
 Encore\Admin\Form::forget(['map', 'editor']);
 Encore\Admin\Grid\Filter::extend('mlike', \App\Admin\Extensions\MyLike::class);
 Encore\Admin\Grid\Filter::extend('clike', \App\Admin\Extensions\CategoryLike::class);
+Encore\Admin\Form::extend('largefile', \App\Admin\Extensions\LargeFileField::class);

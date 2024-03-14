@@ -3,12 +3,18 @@
 namespace App\Admin\Controllers\Channel;
 
 use App\Admin\Actions\Channel\BatchAudit;
+use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
+use App\Admin\Actions\Channel\BatchDistributor;
+use App\Admin\Actions\Channel\BatchReplicate;
+use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
+use App\Admin\Actions\Channel\Replicate;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Channel;
+use App\Tools\ChannelGenerator;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -24,11 +30,11 @@ class XkvController extends AdminController
      *
      * @var string
      */
-    protected $title = "【 V China 】节目单";
+    protected $title = "【 V China 】编单";
     private $group = 'xkv';
 
     protected $description = [
-                'index'  => "查看和编辑每日节目单数据",
+                'index'  => "查看和编辑每日编单数据",
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
@@ -40,9 +46,11 @@ class XkvController extends AdminController
 
         $data = $model->programs()->get();
         $color = 'info';
+
+        $miss = ChannelGenerator::checkMaterials($data);
           
         return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color')));
+        ->body(view('admin.epg.'.$this->group, compact('data', 'model', 'color', 'miss')));
     }
 
     /**
@@ -67,8 +75,10 @@ class XkvController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
+        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['default','warning']);
         $grid->column('audit_date', __('Audit date'))->hide();
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'))->hide();
         
@@ -77,16 +87,17 @@ class XkvController extends AdminController
         $grid->actions(function ($actions) {
             $actions->add(new Generator);
             $actions->add(new Clean);
+            $actions->add(new Replicate);
         });
 
         $grid->batchActions(function ($actions) {
             //$actions->add(new BatchGenerator());
             $actions->add(new BatchClean);
+            $actions->add(new BatchReplicate);
         });
 
         $grid->filter(function($filter){
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->equal('uuid', __('Uuid'));
                 $filter->date('air_date', __('Air date'));
             });
             
@@ -95,7 +106,8 @@ class XkvController extends AdminController
         $grid->disableCreateButton();
 
         $grid->tools(function (Grid\Tools $tools) {
-            //$tools->append(new ToolCreator('xkv'));
+            $tools->append(new BatchDistributor());
+            $tools->append(new BatchLock());
             $tools->append(new BatchAudit());
             $tools->append(new ToolExporter('xkv'));
             $tools->append(new ToolGenerator('xkv'));
@@ -122,7 +134,7 @@ class XkvController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Audit status'))->using(Channel::AUDIT);
+        $show->field('audit_status', __('Lock status'))->using(Channel::LOCKS);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -148,7 +160,7 @@ class XkvController extends AdminController
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
+        $form->radio('audit_status', __('Lock status'))->options(Channel::LOCKS)->required();
         $form->date('audit_date', __('Audit date'));
         $form->textarea('comment', __('Comment'));
 
@@ -158,8 +170,8 @@ class XkvController extends AdminController
 
             if($form->isCreating()) {
                 $error = new MessageBag([
-                    'title'   => '创建节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                    'title'   => '创建编单失败',
+                    'message' => '该日期 '. $form->air_date.' 编单已存在。',
                 ]);
 
                 $form->uuid = (string) Str::uuid();
@@ -173,14 +185,14 @@ class XkvController extends AdminController
 
             if($form->isEditing()) {
                 $error = new MessageBag([
-                    'title'   => '修改节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
+                    'title'   => '修改编单失败',
+                    'message' => '该日期 '. $form->air_date.' 编单已存在。',
                 ]);
     
-                if($form->model()->audit_status == Channel::AUDIT_PASS) {
+                if($form->model()->audit_status == Channel::LOCK_ENABLE) {
                     $error = new MessageBag([
-                        'title'   => '修改节目单失败',
-                        'message' => '该日期 '. $form->air_date.' 节目单已锁定，无法修改。请先取消审核通过状态。',
+                        'title'   => '修改编单失败',
+                        'message' => '该日期 '. $form->air_date.' 编单已锁定，无法修改。请先取消“锁"状态。',
                     ]);
                     return back()->with(compact('error'));
                 }

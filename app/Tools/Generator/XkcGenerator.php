@@ -75,6 +75,7 @@ class XkcGenerator
     public function generate($channels)
     {
         ChannelGenerator::makeCopyTemplate($this->group);
+        Record::cleanCache();
         Record::loadBumpers();
 
         $days = (int)config('SIMULATOR_DAYS', 14);
@@ -82,7 +83,7 @@ class XkcGenerator
         if(!$channels) return false;
         
         $simulator = new XkcSimulator($this->group, $days, $channels);
-        $simulator->saveTemplateState();
+        $simulator->setSaveTemplateState(true);
         $data = $simulator->handle();
 
         $error = $simulator->getErrorMark();

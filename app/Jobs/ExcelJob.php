@@ -51,7 +51,8 @@ class ExcelJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $export = ExportList::findOrFail($this->id);
+        $export = ExportList::find($this->id);
+        if(!$export) return;
 
         $this->info('导出Excel串联单任务: '.$export->name.' 日期: '.$export->start_at .' '.$export->end_at);
 

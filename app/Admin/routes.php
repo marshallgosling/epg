@@ -17,10 +17,13 @@ Route::group([
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
     
     $router->get('/media/help', 'HelpController@material')->name('media.help');
+    $router->get('/media/recognize', 'Media\\ProcessMaterialController@index')->name('media.recognize');
+    $router->post('/media/recognize', 'Media\\ProcessMaterialController@process')->name('media.recognize.process');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
-    
+    $router->resource('/media/large-files', 'Media\\LargeFileController')->names('media.largefile');
+
     $router->post('/media/xkc/unique', 'Media\\XkcProgramController@unique')->name('media.xkc.unique');
     $router->post('/media/xkv/unique', 'Media\\XkvProgramController@unique')->name('media.xkv.unique');
     $router->post('/media/xki/unique', 'Media\\XkiProgramController@unique')->name('media.xki.unique');
@@ -107,8 +110,7 @@ Route::group([
     $router->delete('/channel/test/data/{id}/remove/{idx}', 'Channel\\TestProgramController@remove')->name('channel.test.programs.delete');
     $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
-    $router->get('/audit/preview/{id}', 'AuditController@preview')->name('audit.preview');
-    $router->resource('/audit/list', 'AuditController')->names('audit.list');
+    $router->resource('/channel/audit', 'AuditController')->names('audit.list');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');

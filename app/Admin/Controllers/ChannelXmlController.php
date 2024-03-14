@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\ToolEpgList;
 use App\Models\Channel;
 use App\Models\ExportList;
@@ -39,31 +40,30 @@ class ChannelXmlController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->orderBy('air_date', 'desc');
+        $grid->model()->where('audit_status', Channel::AUDIT_PASS)->where('status', Channel::STATUS_READY)
+            ->orderBy('air_date', 'desc');
 
         $grid->column('id', __('ID'));
         $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="#">'.$uuid.'</a>';
-        })->hide();
         $grid->column('air_date', __('Air date'))->sortable();
-        //$grid->column('name', __('Name'));
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['warning','danger','success','danger']);
-        //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'));
-        $grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
+        
+        $grid->column('distribution_date', __('Distribution date'));
+        //$grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
         /*$grid->column('audit_date', __('Audit date'));
         $grid->column('distribution_date', __('Distribution date'));
         $grid->column('created_at', __('Created at'));
         */
+        $grid->column('status', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+
         $grid->column('download', __('Download'))->display(function() {
             $filename = $this->name.'_'.$this->air_date.'.xml';
             return Storage::disk('xml')->exists($filename) ? 
                 '<a href="'.Storage::disk('xml')->url($filename).'" target="_blank">'.
                 $filename. ' ('.BvtExporter::filesize(Storage::disk('xml')->size($filename)) . ')</a>':'';
         });
-
+        $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
@@ -77,7 +77,7 @@ class ChannelXmlController extends AdminController
                 $filter->date('air_date', __('Air date'));
             });
             $filter->column(6, function (Grid\Filter $filter) {
-                $filter->equal('uuid', __('Uuid'));
+                //$filter->equal('uuid', __('Uuid'));
             });
             
         });

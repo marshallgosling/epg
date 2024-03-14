@@ -46,14 +46,17 @@ class dailyJob extends Command
 
     private function xml($args)
     {
-        $now = time() + 7 * 86400;
-        $list = DB::table('channel')
-                ->where('status', Channel::STATUS_READY)
+        $now = $args ? strtotime($args) : (time() + 7 * 86400);
+
+        $is_today = $args == date('Y-m-d');
+
+        $list = Channel::where('status', Channel::STATUS_READY)
                 ->where('audit_status', Channel::AUDIT_PASS)
                 ->where('distribution_date', null)
                 ->where('air_date', date('Y-m-d', $now))
-                ->orderBy('air_date')
+                //->orderBy('air_date')
                 ->get();
+
         if(!$list) return;
         foreach($list as $ch)
         {
@@ -66,7 +69,8 @@ class dailyJob extends Command
 
             if($items)
             {
-                $fail = DB::table('material')->whereIn('unique_no', array_unique($items))
+                
+                $fail = config('IGNORE_MATERIAL_CHECK', 'false') == 'true' ? false : DB::table('material')->whereIn('unique_no', array_unique($items))
                         ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
                         ->pluck('name', 'unique_no')->toArray();
                 if($fail)
@@ -81,10 +85,12 @@ class dailyJob extends Command
                     $ch->distribution_date = date('Y-m-d H:i:s');
                     $ch->save();
                     $this->info("save distribution date {$ch->name} {$air}");
-                    if(config('BVT_XML_PATH', false))
-                        file_put_contents(
-                            config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml', 
-                            $file);
+
+                    if($is_today) $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$ch->name].'\\'.BvtExporter::NAMES[$ch->name].'.xml' : false;
+                    else $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$ch->name].'_'.$air.'.xml': false; 
+                    
+                    if($path)
+                        file_put_contents($path, $file);
                 }
             }
             else {

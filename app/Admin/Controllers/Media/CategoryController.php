@@ -93,7 +93,7 @@ class CategoryController extends AdminController
         $form->text('no', __('CategoryNo'))->rules('required|max:10');
         $form->select('type', __('CategoryType'))->options(Category::TYPES)->rules('required');
         
-        $form->radio('duration', __('Duration'))->options(TemplatePrograms::TYPES)->default('0');
+        $form->radio('duration', __('Group'))->options(TemplatePrograms::TYPES)->default('0');
 
         $form->saving(function(Form $form) {
 

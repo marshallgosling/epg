@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\LargeFile;
 use App\Models\Material;
 use App\Tools\ChannelGenerator;
 use App\Tools\Material\MediaInfo;
@@ -37,7 +38,7 @@ class fileTool extends Command
         $action = $this->argument('action') ?? "xml";
         
 
-        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo', 'scan']))
+        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo', 'scan', 'process']))
             $this->$action();
         
 
@@ -45,6 +46,75 @@ class fileTool extends Command
         //Material::insert($items);
         
         return 0;
+    }
+
+    private function process()
+    {
+        $id = $this->argument('path') ?? "";
+        $largefile = LargeFile::findOrFail($id);
+        $folders = explode(PHP_EOL, config('MEDIA_SOURCE_FOLDER', ''));
+        $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
+        $targetpath = $folders[$largefile->target_path].$largefile->name;
+        $this->info("filepath: ".$filepath);
+        $this->info("targetpath: ".$targetpath);
+        if(file_exists($filepath))
+        {
+            copy($filepath, $targetpath);
+
+            if(!file_exists($targetpath))
+            {
+                $largefile->status = LargeFile::STATUS_ERROR;
+                $largefile->save();
+                return;
+            }
+                @unlink($filepath);
+
+                $largefile->status = LargeFile::STATUS_READY;
+                $largefile->save();
+
+                $names = explode('.', $largefile->name);
+
+                if(count($names) != 3) {
+                    return;
+                }
+                
+                $unique_no = $names[1];
+
+                $material = Material::where('unique_no', $unique_no)->first();
+
+                if(!$material) {
+                    $material = new Material();
+                    $material->unique_no = $unique_no;
+                    $material->name = $names[0];
+                    $material->filepath = $targetpath;
+                    $material->status = Material::STATUS_EMPTY;
+                    $group = preg_replace('/(\d+)$/', "", $names[0]);
+                    $material->group = trim(trim($group), '_-');
+                    $material->channel = 'xkc';
+                }
+                    try{
+                        $info = MediaInfo::getInfo($material);
+                    }catch(\Exception $e)
+                    {
+                        $info = false;
+                    }
+                    
+                    if($info) {
+                        $status = Material::STATUS_READY;
+                        $material->frames = $info['frames'];
+                        $material->size = $info['size'];
+                        $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+                    }
+                    else {
+                        $status = Material::STATUS_ERROR;
+                    }
+                    
+                    $material->status = $status;
+                    $material->save();
+                
+            
+            
+        }
     }
 
     private function scan()

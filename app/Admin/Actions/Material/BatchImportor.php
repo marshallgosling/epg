@@ -38,14 +38,12 @@ class BatchImportor extends BatchAction
             
             $program = new $class();
             
-            if(in_array($model->category, ['CanXin', 'drama', 'movie','Entertainm','cartoon']))
+            if($channel != 'xkv')
             {
 
                 $program->episodes = $model->group;
-                if(preg_match('/(\d+)$/', $model->name, $matches))
-                {
-                    $program->ep = (int) $matches[1];
-                }
+                $program->ep = (int) $model->ep;
+                
             }
             
             $program->name = $model->name;
@@ -72,14 +70,14 @@ class BatchImportor extends BatchAction
 
     public function form()
     {
-        $this->radio('channel', __('Channel'))->options(Channel::GROUPS);
+        $this->select('channel', __('Channel'))->options(Channel::GROUPS);
 
         $this->textarea("help", "注意说明")->default('选择需要导入的频道')->disable();
     }
 
     public function html()
     {
-        return "<a class='batch-import btn btn-sm btn-danger'><i class='fa fa-info-circle'></i>{$this->name}</a>";
+        return "<a class='batch-import btn btn-sm btn-danger'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

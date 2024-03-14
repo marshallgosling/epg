@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Channel;
 
+use App\Jobs\AuditEpgJob;
 use App\Jobs\EpgJob;
 use App\Jobs\StatisticJob;
 use App\Models\Channel;
@@ -17,41 +18,28 @@ class BatchAudit extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
-        $audit = (int)$request->get('audit');
-        $comment = $request->get('comment');
+        
         foreach ($collection as $model) 
         {
             
-            if($audit == Channel::AUDIT_PASS && $model->status != Channel::STATUS_READY) {
-                // 空编单和停止使用的编单不能通过审核
-                continue;
-            }
-            $model->audit_status = $audit;
-            $model->comment = $comment;
-            $model->reviewer = Admin::user()->name;
-            $model->audit_date = now();
-            $model->save();
-            // Channel::where('id', $model->id)->update(['audit_status', $request->get('audit'), 'comment'=>$request->get('comment')]);
-
-            if($audit == Channel::AUDIT_PASS) {
-                StatisticJob::dispatch($model->id);
-                EpgJob::dispatch($model->id);
+            if($model->status == Channel::STATUS_READY) {
+                AuditEpgJob::dispatch($model->id, Admin::user()->name);
             }
         }
         
-        return $this->response()->success(__('Clean success message.'))->refresh();
+        return $this->response()->success('批量审核任务已提交。')->refresh();
     }
 
     public function form()
     {
-        $this->radio('audit', '状态')->options(Channel::AUDIT)->rules('required');
-        $this->textarea('comment', '审核意见')->rules('required');
-        $this->text("help", "注意说明")->default('空编单和停止使用的编单不能通过审核')->disable();
+        //$this->select('lock', '状态')->options(Channel::LOCKS)->rules('required');
+        //$this->textarea('comment', '意见');
+        $this->text("help", "注意说明")->default('空编单和停止使用的编单不能进行审核')->disable();
     }
 
     public function html()
     {
-        return "<a class='audit-channel btn btn-sm btn-warning'><i class='fa fa-info-circle'></i> 批量审核</a>";
+        return "<a class='audit-channel btn btn-sm btn-primary'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }
