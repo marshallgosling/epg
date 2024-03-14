@@ -98,6 +98,15 @@ class AuditController extends AdminController
             
         });
 
+        $grid->filter(function(Grid\Filter $filter) {
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->in('name', __('Group'))->checkbox(Channel::GROUPS);
+            });
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('channel_id', __('Channel ID'));
+            });
+        });
+
         return $grid;
     }
 
