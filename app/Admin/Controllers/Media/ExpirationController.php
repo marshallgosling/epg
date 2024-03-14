@@ -89,7 +89,7 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        DB::table('agreement')->selectRaw("id,concat(name, ' ', start_at, ' ~ ', end_at) as name")->pluck('name', 'id')->toArray();
+        DB::table('agreement')->selectRaw("id,concat(name, ' ', start_at, ' ~ ', end_at) as name")->get()->pluck('name', 'id')->toArray();
         $form->select('agreement_id', __('Agreement'))->options()->required();
 
         $form->select('name', __('Episodes'))->options(function ($id) {
