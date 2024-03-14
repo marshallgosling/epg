@@ -20,7 +20,7 @@ class Replicate extends RowAction
         if(!$air) $air = time();
         $channel_id = $model->id;
         $new = $model->replicate();
-        $new->audit_status = Channel::AUDIT_EMPTY;
+        $new->lock_status = Channel::LOCK_EMPTY;
         $new->air_date = date('Y-m-d', $air);
         $new->version = 1;
         $new->distribution_date = null;

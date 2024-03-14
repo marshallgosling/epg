@@ -27,7 +27,7 @@ class XkcProgramsController extends AdminController
      *
      * @var string
      */
-    protected $title = '普通模版编排 【 星空中国 】';
+    protected $title = '【 星空中国 】编排规则';
 
     private $group = 'xkc';
 

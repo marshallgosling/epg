@@ -16,7 +16,7 @@ class ToolEpgList extends BatchAction
     {
         foreach ($collection as $model) 
         {
-            if($model->audit_status != Channel::AUDIT_PASS || $model->status != Channel::STATUS_READY) {
+            if($model->lock_status != Channel::LOCK_ENABLE || $model->status != Channel::STATUS_READY) {
                 // 空编单和停止使用的编单不能通过审核
                 continue;
             }

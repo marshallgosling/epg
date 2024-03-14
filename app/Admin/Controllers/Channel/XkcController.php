@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers\Channel;
 
-use App\Admin\Actions\Channel\BatchAudit;
+use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\CheckXml;
@@ -74,13 +74,16 @@ class XkcController extends AdminController
         //$grid->column('comment', __('Comment'));
         $grid->column('version', __('Version'))->label('default');
         $grid->column('reviewer', __('Reviewer'))->hide();
-        $grid->column('audit_status', __('Lock status'))->filter(Channel::LOCKS)->using(Channel::LOCKS)->label(['default','warning']);;
+        $grid->column('lock_status', __('Lock status'))->display(function($lock) {
+            return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-warning"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
+        });
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('distribution_date', __('Distribution date'));
+        
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('distribution_date', __('Distribution date'))->sortable();
 
         $grid->column('created_at', __('Created at'))->hide();
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->actions(function ($actions) {
             //$actions->add(new Generator);
@@ -105,7 +108,7 @@ class XkcController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchDistributor());
-            $tools->append(new BatchAudit);
+            $tools->append(new BatchLock);
             $tools->append(new ToolExporter('xkc'));
             $tools->append(new ToolGenerator('xkc'));
         });
@@ -131,7 +134,7 @@ class XkcController extends AdminController
         $show->field('comment', __('Comment'));
         $show->field('version', __('Version'));
         $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Lock status'))->using(Channel::LOCKS);
+        $show->field('lock_status', __('Lock status'))->using(Channel::LOCKS);
         $show->field('audit_date', __('Audit date'));
         $show->field('distribution_date', __('Distribution date'));
         $show->field('created_at', __('Created at'));
@@ -157,7 +160,7 @@ class XkcController extends AdminController
 
         $form->divider(__('AuditInfo'));
         $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Lock status'))->options(Channel::LOCKS)->required();
+        $form->radio('lock_status', __('Lock status'))->options(Channel::LOCKS)->required();
         $form->date('audit_date', __('Audit date'));
         $form->textarea('comment', __('Comment'));
 
@@ -179,7 +182,7 @@ class XkcController extends AdminController
                     'message' => '该日期 '. $form->air_date.' 编单已存在。',
                 ]);
 
-                if($form->model()->audit_status == Channel::LOCK_ENABLE) {
+                if($form->model()->lock_status == Channel::LOCK_ENABLE) {
                     $error = new MessageBag([
                         'title'   => '修改编单失败',
                         'message' => '该日期 '. $form->air_date.' 编单已锁定，无法修改。请先取消“锁"状态。',

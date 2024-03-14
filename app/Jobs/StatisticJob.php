@@ -45,9 +45,9 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
 
         $channel = Channel::find($this->id);
         if(!$channel) return;
-        
-        if($channel->audit_status != Channel::AUDIT_PASS) {
-            $this->info("频道 {$channel->name} 日期 {$channel->air_date} 还没有通过审核");
+
+        if($channel->lock_status != Channel::LOCK_ENABLE) {
+            $this->info("频道 {$channel->name} 日期 {$channel->air_date} 还没有锁定");
             return;
         }
 
