@@ -47,12 +47,10 @@ class BatchCreator extends Action
             if(preg_match('/(\d+)$/', $name, $matches))
             {
                 $ep = (int) $matches[1];
-            }
-
-            //if($group == "") {
                 $group = preg_replace('/(\d+)$/', "", $name);
                 $group = trim(trim($group), '_-');
-            //}
+            }
+
             $model = Material::where('unique_no', $unique_no)->first();
             if(!$model)
                 $model = Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status','filepath','ep'));
