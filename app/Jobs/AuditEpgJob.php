@@ -75,8 +75,17 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $logs = []; 
         $result = true;
-        foreach($cache as $m)
+        foreach($cache as $k=>$m)
         {
+            if(!$m) {
+                $m = new Material();
+                $m->unique_no = $k;
+                $m->name = '';
+                $m->status = 0;
+                $m->duration = '';
+                $logs[] = $m;
+                $result = false;
+            }
             if($m->status != Material::STATUS_READY)
             {
                 $logs[] = $m;
@@ -110,19 +119,23 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                     $m = $this->cache[$unique_no];
                 }
 
+                if(!$m) {
+                    continue;
+                }
+
                 if(substr($duration, 0, 8) != substr($m->duration, 0, 8)) {
                     $log = json_decode(json_encode($item), true);
                     $item['duration'] = $m->duration;
                     $log['duration2'] = $m->duration;
                     $log['pro'] = $pro->id;
                     $logs[] = $log;
+                    $result = false;
                 }
             }
 
             $pro->data = json_encode($data);
             if($pro->isDirty()) {
                 $pro->save();
-                $result = false;
             }
         }
 
