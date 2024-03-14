@@ -153,6 +153,11 @@ class Record2 extends Model
         {
             // 有配置过首播日记录信息，且不是首播日，则会进入这段代码逻辑
             $item = self::findUnique($template->data['unique_no']);
+            if(!$item) 
+            {
+                $data['result'] = '未找到';
+                $item = 'empty';
+            }
             $items[] = $item;
         }
         else
