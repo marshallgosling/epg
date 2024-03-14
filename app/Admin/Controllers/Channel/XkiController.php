@@ -87,7 +87,7 @@ class XkiController extends AdminController
                     return Audit::STATUS[$item->status];
                 }
             }
-            return "无记录"; 
+            return Audit::STATUS[0];
         })->expand(function ($model) {
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";

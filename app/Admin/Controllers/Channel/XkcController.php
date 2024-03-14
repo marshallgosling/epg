@@ -87,7 +87,7 @@ class XkcController extends AdminController
                     return Audit::STATUS[$item->status];
                 }
             }
-            return "无记录"; 
+            return Audit::STATUS[0];
         })->expand(function ($model) {
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";
@@ -106,7 +106,7 @@ class XkcController extends AdminController
         
         $grid->column('audit_date', __('Audit date'))->hide();
         
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(100);
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->hide();
