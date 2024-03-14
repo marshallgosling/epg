@@ -44,6 +44,7 @@ class BatchCreator extends Action
             $name = $names[0];
             $unique_no = $names[1];
             $ep = 1;
+            $group = "";
             if(preg_match('/(\d+)$/', $name, $matches))
             {
                 $ep = (int) $matches[1];
