@@ -12,7 +12,7 @@ use Encore\Admin\Facades\Admin;
 
 class BatchLock extends BatchAction
 {
-    public $name = '批量锁定';
+    public $name = '批量调整状态锁';
     protected $selector = '.lock-channel';
 
     public function handle(Collection $collection, Request $request)
