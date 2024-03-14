@@ -99,7 +99,7 @@ class XkcController extends AdminController
             return '<a href="xkc/programs?template_id='.$this->id.'">'.$name.'</a>'; 
         });
         $grid->column('ex', __(" "))->display(function() {
-            return "编排";
+            return "编排规则";
         })->expand(function ($model) {
             $programs = $model->records()->take(10)->get();
             $items = [];

@@ -46,7 +46,7 @@ class AuditController extends AdminController
  
         $grid->column('status', __('Status'))->using(Audit::STATUS)->label(['warning','success','danger']);
 
-        $grid->column('reason', __('Reason'))->display(function () {
+        $grid->column('reason', __('Details'))->display(function () {
             return "展开";
         })->expand(function($model) {
             $data = json_decode($model->reason, true);
