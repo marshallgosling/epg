@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Channel;
 
+use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\BatchLock;
@@ -9,6 +10,7 @@ use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
+use App\Models\Audit;
 use App\Models\Channel;
 use App\Tools\Exporter\TableGenerator;
 use Encore\Admin\Controllers\AdminController;
@@ -20,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use App\Tools\ChannelGenerator;
+use Encore\Admin\Widgets\Table;
 
 class XkiController extends AdminController
 {
@@ -59,7 +62,7 @@ class XkiController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('name', $this->group)->orderBy('air_date', 'desc');
+        $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
 
         $grid->column('version', __('Version'))->label('default')->width(50);
         $grid->column('lock_status', __('Lock'))->display(function($lock) {
@@ -77,7 +80,19 @@ class XkiController extends AdminController
         $grid->column('start_end', __('StartEnd'))->width(160);
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(80)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
-        //$grid->column('comment', __('Comment'));
+        $grid->column('audit', __('Audit status'))->display(function () { return "查看记录"; })->expand(function ($model) {
+            $labels = ['warning', 'success', 'danger'];
+            if(!$model->audit) return "<p>无审核记录</p>";
+            $rows = [];
+            foreach($model->audit()->orderBy('id','desc')->get() as $item) {
+                $rows[] = [
+                    $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
+                    $item->created_at, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
+                ];
+            }
+            $head = ['ID','审核结果','日期',''];
+            return new Table($head, $rows);
+        });
         
         $grid->column('reviewer', __('Reviewer'))->hide();
         
@@ -85,6 +100,7 @@ class XkiController extends AdminController
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
+        $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->sortable();
 
@@ -112,6 +128,7 @@ class XkiController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new ToolGenerator('xki'));
             $tools->append(new BatchLock);
+            $tools->append(new BatchAudit);
             $tools->append(new BatchDistributor());
             
             $tools->append(new ToolExporter('xki'));
