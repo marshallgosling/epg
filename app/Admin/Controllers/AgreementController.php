@@ -30,7 +30,7 @@ class AgreementController extends AdminController
         $grid->column('name', __('Name'));
         $grid->column('start_at', __('Start at'));
         $grid->column('end_at', __('End at'));
-        $grid->column('status', __('Status'));
+        $grid->column('status', __('Status'))->using(Agreement::STATUS);
         $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
@@ -52,7 +52,7 @@ class AgreementController extends AdminController
         $show->field('name', __('Name'));
         $show->field('start_at', __('Start at'));
         $show->field('end_at', __('End at'));
-        $show->field('status', __('Status'));
+        $show->field('status', __('Status'))->using(Agreement::STATUS);
         $show->field('comment', __('Comment'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
