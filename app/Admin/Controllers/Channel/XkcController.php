@@ -78,11 +78,12 @@ class XkcController extends AdminController
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-warning"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
         });
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('distribution_date', __('Distribution date'));
+        
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('distribution_date', __('Distribution date'))->sortable();
 
         $grid->column('created_at', __('Created at'))->hide();
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->actions(function ($actions) {
             //$actions->add(new Generator);
