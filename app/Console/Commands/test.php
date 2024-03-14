@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Agreement;
 use App\Models\Channel;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
@@ -43,8 +44,10 @@ class test extends Command
         $day = $this->argument('d') ?? "2024-02-06";
 
 
-        $item = Expiration::where('end_at', '<', $day)->pluck('name')->toArray();
-        print_r($item);
+        $ids = Agreement::where('end_at', '<', $day)->pluck('id')->toArray();
+        $expiration = Expiration::whereIn('channel_id', $ids)->pluck('name')->toArray();
+        
+        print_r($expiration);
         
         return 0;
 
