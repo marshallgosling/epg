@@ -28,7 +28,7 @@ class Channel extends Model
 
     public const STATUS = ['未编单', '运行中', '正常', '错误', '下线', '等待中', '分发播出'];
     public const AUDIT = ['未审核', '通过', '不通过'];
-    public const LOCKS = ['无', '已锁'];
+    public const LOCKS = ['无锁', '已锁'];
 
     public const GROUPS = ['xkv'=>'V China', 'xkc'=>'星空中国', 'xki'=>'星空国际'];
     public const DOTS = ['xkv'=>'info','xkc'=>'warning','xki' =>'success'];
