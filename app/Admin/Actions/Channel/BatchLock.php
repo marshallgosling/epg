@@ -18,7 +18,7 @@ class BatchLock extends BatchAction
     public function handle(Collection $collection, Request $request)
     {
         $lock = (int)$request->get('lock');
-        $comment = $request->get('comment');
+        //$comment = $request->get('comment');
         foreach ($collection as $model) 
         {
             if($lock == Channel::LOCK_ENABLE && $model->status != Channel::STATUS_READY) {
@@ -26,7 +26,7 @@ class BatchLock extends BatchAction
                 continue;
             }
             $model->audit_status = $lock;
-            $model->comment = $comment;
+            //$model->comment = $comment;
             $model->reviewer = Admin::user()->name;
             //$model->audit_date = now();
             $model->save();
@@ -44,7 +44,7 @@ class BatchLock extends BatchAction
     public function form()
     {
         $this->select('lock', '状态')->options(Channel::LOCKS)->rules('required');
-        $this->textarea('comment', '意见');
+        //$this->textarea('comment', '意见');
         $this->text("help", "注意说明")->default('空编单和停止使用的编单不能锁定')->disable();
     }
 
