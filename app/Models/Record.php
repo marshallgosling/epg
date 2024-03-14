@@ -75,7 +75,7 @@ class Record extends Model
     public static function loadExpiration($air)
     {
         $ids = Agreement::where('end_at', '<', $air)->pluck('id')->toArray();
-        self::$expiration = Expiration::whereIn('channel_id', $ids)->pluck('name')->toArray();
+        self::$expiration = Expiration::whereIn('agreement_id', $ids)->pluck('name')->toArray();
         self::$air = $air;
     }
 

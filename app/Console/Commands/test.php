@@ -45,7 +45,7 @@ class test extends Command
 
 
         $ids = Agreement::where('end_at', '<', $day)->pluck('id')->toArray();
-        $expiration = Expiration::whereIn('channel_id', $ids)->pluck('name')->toArray();
+        $expiration = Expiration::whereIn('agreement_id', $ids)->pluck('name')->toArray();
         
         print_r($expiration);
         
