@@ -88,12 +88,12 @@ class ExpirationController extends AdminController
     {
         $form = new Form(new Expiration());
 
-        $form->select('agreement_id', __('Agreement'))->options(Agreement::all()->pluck('name', 'id')->toArray());
+        $form->select('agreement_id', __('Agreement'))->options(Agreement::all()->pluck('name', 'id')->toArray())->required();
+
         $form->select('name', __('Episodes'))->options(function ($id) {
-            return [$id => $id];
-        })->ajax('/admin/api/episode')->required();
-        // $form->date('start_at', __('Start at'))->default(date('Y-m-d'))->required();
-        // $form->date('end_at', __('End at'))->default(date('Y-m-d'))->required();
+                    return [$id => $id];
+                })->ajax('/admin/api/episode')->required();
+    
         $form->switch('status', __('Status'))->options(Expiration::STATUS);
         $form->textarea('comment', __('Comment'));
         $form->hidden('group_id', 'group');
