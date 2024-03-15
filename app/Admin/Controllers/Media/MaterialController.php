@@ -58,7 +58,7 @@ class MaterialController extends AdminController
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
         });
-        $grid->column('group', __('Group'));  
+        $grid->column('group', __('Episodes'));  
         $grid->column('ep', __('Ep'))->sortable();
         
         $grid->column('duration', __('Duration'));
@@ -123,7 +123,7 @@ class MaterialController extends AdminController
         $grid->column('category', __('Category'))->display(function ($category) {
             return Category::findCategory($category). '&nbsp;('.$category.')';
         });
-        $grid->column('group', __('Group'));  
+        $grid->column('group', __('Episodes'));  
         $grid->column('ep', __('Ep'))->sortable();
         
         $grid->column('duration', __('Duration'));
