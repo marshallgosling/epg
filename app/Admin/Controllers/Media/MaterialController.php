@@ -8,7 +8,6 @@ use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
 use App\Admin\Actions\Material\BatchSync;
 use App\Admin\Actions\Material\CheckMediaInfo;
-use App\Admin\Actions\Material\Importor;
 use App\Admin\Actions\Material\Replicate;
 use App\Models\Category;
 use App\Models\Channel;
@@ -18,10 +17,10 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-use Encore\Admin\Widgets\Tab;
-use Encore\Admin\Widgets\Table;
+use App\Admin\Extensions\MyTable;
+use Encore\Admin\Widgets\Box;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 
 class MaterialController extends AdminController
@@ -32,6 +31,81 @@ class MaterialController extends AdminController
      * @var string
      */
     protected $title = '物料管理';
+
+    public function compare(Content $content)
+    {
+        $title = '物料库与节目库比对';
+        $description = '';
+        
+        return $content
+            ->title($title)
+            ->description($description ?? trans('admin.list'))
+            ->body($this->xkv());
+    }
+
+    private function xkv()
+    {
+        //$list = DB::table('material')->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `program`)',['xkv'])->get();
+        
+        $grid = new Grid(new Material());
+        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `program`)',['xkv'])->orderBy('id', 'desc');
+
+        $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);
+        $grid->column('status', __('Status'))->display(function($status) {
+            return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
+        });
+        $grid->column('name', __('Name'))->display(function ($name) {
+            if($this->comment) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->comment).'" data-toggle="tooltip" data-placement="top">Eng</small>';
+            else $name2 = '';
+            return $name . $name2;
+        });
+        $grid->column('category', __('Category'))->display(function ($category) {
+            return Category::findCategory($category). '&nbsp;('.$category.')';
+        });
+        $grid->column('group', __('Group'));  
+        $grid->column('ep', __('Ep'))->sortable();
+        
+        $grid->column('duration', __('Duration'));
+        $grid->column('size', __('Size'))->hide();
+        $grid->column('md5', __('MD5'))->hide();
+        $grid->column('frames', __('Frames'))->sortable();
+        $grid->column('created_at', __('Created at'))->sortable()->hide();
+        $grid->column('updated_at', __('Updated at'))->sortable();
+
+        //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
+        $grid->actions(function ($actions) {
+            $actions->disableView();
+            //$actions->add(new Replicate);
+        });
+
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchDelete);
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchImportor);
+        });
+
+        $grid->filter(function(Grid\Filter $filter){
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
+                $filter->equal("status", __('Status'))->select(Material::STATUS);
+                
+                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
+                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
+                $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
+                
+            });
+        });
+
+        $grid->disableCreateButton();
+        
+        return $grid;
+    }
 
     /**
      * Make a grid builder.

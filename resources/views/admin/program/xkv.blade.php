@@ -285,9 +285,7 @@
 
         $("#keyword").on('keyup', function(e) {
             if(e.keyCode==13) {
-                
                 searchKeywords($('#keyword').val());
-
             }
         });
 

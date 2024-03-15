@@ -205,7 +205,6 @@ class XkvGenerator implements IGenerator
                     $this->air += $seconds;
 
                     $line['end_at'] = date('H:i:s', $this->air);
-
                     $data[] = $line;
                         
                     $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");

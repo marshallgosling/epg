@@ -113,6 +113,7 @@ Route::group([
     $router->resource('/channel/audit', 'AuditController')->names('audit.list');
 
     $router->resource('/media/agreement', 'AgreementController')->names('media.agreement');
+    $router->get('/media/compare/xkv', 'Media\\MaterialController@compare')->name('media.compare');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');
