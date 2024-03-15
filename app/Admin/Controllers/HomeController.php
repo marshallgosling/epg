@@ -54,9 +54,9 @@ class HomeController extends Controller
     public static function charts()
     {
       $material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'总物料库');
-      $program = Statistic::generatePieChart('programChart', Program::STATUS, Statistic::countPrograms(),'V China 节目库');
-      $records = Statistic::generatePieChart('recordsChart', Program::STATUS, Statistic::countRecords(),'星空中国 节目库');
-      $record2 = Statistic::generatePieChart('record2Chart', Program::STATUS, Statistic::countRecord2(),'星空国际 节目库');
+      $program = Statistic::generateBarChart('programChart', Program::STATUS, Statistic::countPrograms(),'V China 节目库');
+      $records = Statistic::generateBarChart('recordsChart', Program::STATUS, Statistic::countRecords(),'星空中国 节目库');
+      $record2 = Statistic::generateBarChart('record2Chart', Program::STATUS, Statistic::countRecord2(),'星空国际 节目库');
 
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
@@ -65,11 +65,13 @@ class HomeController extends Controller
   <div class="col-md-4"><canvas id="materialChart"></canvas></div>
   <div class="col-md-8" style="border:0px solid #eee; border-left-width:1px;">
     <div class="row">
-      <div class="col-md-6" style="height:190px"><canvas id="recordsChart"></canvas></div>
-      <div class="col-md-6" style="height:190px"><canvas id="record2Chart"></canvas></div>
+      <div class="col-md-12" style="height:120px"><canvas id="recordsChart"></canvas></div>
     </div>
     <div class="row">
-      <div class="col-md-6" style="height:190px"><canvas id="programChart"></canvas></div>
+      <div class="col-md-12" style="height:120px"><canvas id="record2Chart"></canvas></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" style="height:120px"><canvas id="programChart"></canvas></div>
     </div>
   </div>
 </div>

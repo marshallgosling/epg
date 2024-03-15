@@ -81,4 +81,20 @@ class Statistic
         
         return "new Chart(document.getElementById('$id'), {type:'pie',options:{plugins:{legend:{position:'$pos'},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{data:[$data],backgroundColor:colors}]}});";
     }
+
+    public static function generateBarChart($id, $labels, $data, $title='',$pos='top')
+    {
+        $label = [];
+        $value = [];
+        foreach($labels as $idx=>$v)
+        {
+            $label[] = "'{$v}'";
+            $value[] = $data[(string)$idx];
+        }
+
+        $label = implode(',', $label);
+        $data = implode(',', $value);
+        
+        return "new Chart(document.getElementById('$id'), {type:'bar',options:{indexAxis:'y',plugins:{legend:{display:false},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{axis:'y',fill:false,borderWidth:1,data:[$data],backgroundColor:colors}]}});";
+    }
 }
