@@ -83,7 +83,8 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         $data = json_decode($model->data);
 
-        $hasdata = array_key_exists('xkv', $data) && array_key_exists('program', $data);
+        if(!$data) $hasdata = false;
+        else $hasdata = array_key_exists('xkv', $data) && array_key_exists('program', $data);
        
         if(!$hasdata) {
             $model->status = BlackList::STATUS_READY;
@@ -162,12 +163,13 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
             foreach($programs as $pro)
             {
                 $items = json_decode($pro->data, true);
+                if(array_key_exists('replicate', $items)) continue;
 
                 $_program = ["id"=>$pro->id,"name"=>$pro->name,"start_at"=>$pro->start_at, 'items'=>[]];
                 
                 foreach($items as $idx=>$item) {
                
-                    if(!array_key_exists($property, $item) ) continue;
+                    if(!array_key_exists($property, $item)) continue;
 
                         if(Str::contains($item[$property], $model->keyword))
                         {
