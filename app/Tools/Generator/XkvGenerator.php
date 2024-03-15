@@ -200,9 +200,8 @@ class XkvGenerator implements IGenerator
                 if($seconds > 0) {
                     
                     $this->duration += $seconds;
-                    
                     $line = ChannelGenerator::createItem($item, $p->category, date('H:i:s', $this->air));
-                    
+                    if($line['artist'] == 'null') $line['artist'] = '';
                     $this->air += $seconds;
 
                     $line['end_at'] = date('H:i:s', $this->air);
