@@ -17,10 +17,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-use App\Admin\Extensions\MyTable;
-use Encore\Admin\Widgets\Box;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 
 class MaterialController extends AdminController
@@ -45,7 +42,6 @@ class MaterialController extends AdminController
 
     private function xkv()
     {
-        
         $grid = new Grid(new Material());
         $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `program`)',['xkv'])->orderBy('id', 'desc');
 
