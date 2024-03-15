@@ -91,7 +91,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
             $model->save();
 
             Notify::fireNotify(
-                'all',
+                'xkv',
                 Notification::TYPE_BLACKLIST, 
                 "应用 {$model->keyword} 完成. ", 
                 "数据为空，直接退出。",
@@ -141,7 +141,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         $model->save();
 
         Notify::fireNotify(
-            'all',
+            'xkv',
             Notification::TYPE_BLACKLIST, 
             "应用黑名单 {$model->keyword} 完成. "
         );
@@ -218,11 +218,11 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         $model->status = BlackList::STATUS_READY;
         $model->data = json_encode($data);
-        $model->scaned_at = date('Y/m/d H:i:s');
+        $model->scaned_at = date('Y-m-d H:i:s');
         $model->save();
 
         Notify::fireNotify(
-            'all',
+            'xkv',
             Notification::TYPE_BLACKLIST, 
             "扫描黑名单 {$model->keyword} 完成. "
         );
