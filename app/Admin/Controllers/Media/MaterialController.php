@@ -45,7 +45,6 @@ class MaterialController extends AdminController
 
     private function xkv()
     {
-        //$list = DB::table('material')->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `program`)',['xkv'])->get();
         
         $grid = new Grid(new Material());
         $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `program`)',['xkv'])->orderBy('id', 'desc');
@@ -91,14 +90,12 @@ class MaterialController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
                 $filter->equal("status", __('Status'))->select(Material::STATUS);
-                
                 $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
             });
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
                 $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
-                $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
-                
+                //$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             });
         });
 
