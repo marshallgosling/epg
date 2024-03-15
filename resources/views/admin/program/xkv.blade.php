@@ -1,5 +1,5 @@
 <div class="row">
-<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+<form id="widget-form-655477f1c8f59" method="POST" action="/admin/channel/xkv/data/{{$model->id}}/save" class="form-horizontal" accept-charset="UTF-8" pjax-container="1" onkeydown="if(event.keyCode==13){return false;}">
     <div class="box-body fields-group">
     
                     <input type="hidden" name="data" value='' id="data">
@@ -65,7 +65,7 @@
         
         <div class="row">
         <div class="col-md-12">
-            <form class="form-inline">
+            <form id="modal-form" class="form-inline" onkeydown="if(event.keyCode==13){return false;}">
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">栏目</span>
@@ -79,24 +79,24 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                    <span class="input-group-addon">关键字</span>
-                    <input type="text" class="form-control" style="width:240px" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                        <span class="input-group-addon">关键字</span>
+                        <input type="text" class="form-control" style="width:240px" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
                     </div>
                 </div> 
                 <div class="form-group">
                     <div class="input-group">
-                    <span class="input-group-addon">
-                        节目库
-                    </span>
-                    <select class="form-control library" id="library" data-value="program">
-                        <option value="records">星空中国</option><option value="record2">星空国际</option><option value="program" selected>V China</option>
-                    </select>
-                    <span class="input-group-btn">
-                        <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
-                    </span>
+                        <span class="input-group-addon">
+                            节目库
+                        </span>
+                        <select class="form-control library" id="library" data-value="program">
+                            <option value="records">星空中国</option><option value="record2">星空国际</option><option value="program" selected>V China</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
+                        </span>
                     </div>
-                </div></form>
-            </div>
+                </div>
+            </form>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -269,7 +269,7 @@
                     {
                         item = items[i];
                         tr = '';
-                        if(item.black) tr = ' danger';
+                        if(item.black && item.black>0) tr = ' danger';
                         if(item.artist==null) item.artist='';
                         html += '<tr class="search-item'+tr+'" onclick="selectProgram('+idx+')"><td>'+(idx+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
                         idx ++;
@@ -283,8 +283,12 @@
             })
         });
 
-        $("#keyword").on('change', function(e) {
-            //searchKeywords(e.currentTarget.value);
+        $("#keyword").on('keyup', function(e) {
+            if(e.keyCode==13) {
+                
+                searchKeywords($('#keyword').val());
+
+            }
         });
 
         $('#btnSearch').on('click', function(e) {

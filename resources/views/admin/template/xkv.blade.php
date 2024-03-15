@@ -116,7 +116,7 @@
         
         <div class="row">
         <div class="col-md-12">
-            <form class="form-inline">
+            <form class="form-inline" onkeydown="if(event.keyCode==13){return false;}">
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">栏目</span>
@@ -356,8 +356,10 @@
             })
         });
         
-        $("#keyword").on('change', function(e) {
-            searchKeywords(e.currentTarget.value);
+        $("#keyword").on('keyup', function(e) {
+            if(e.keyCode==13) {               
+                searchKeywords($('#keyword').val());
+            }
         });
 
         $('#btnSearch').on('click', function(e) {
@@ -441,7 +443,7 @@
                     {
                         item = items[i];
                         tr = '';
-                        if(item.black) tr = ' danger';
+                        if(item.black && item.black>0) tr = ' danger';
                         if(item.artist==null) item.artist='';
                         html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</'+'td><td>'+item.unique_no+'</'+'td><td>'+item.name+'</'+'td><td>'+item.artist+'</'+'td><td>'+item.duration+'</'+''+'td><td>'+item.category+'</'+'td></'+'tr>';
                     }

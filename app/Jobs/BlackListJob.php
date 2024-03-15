@@ -100,34 +100,6 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
             return;
         }
 
-        foreach($data->xkv as $item)
-        {
-            $channel = Channel::find($item->id);
-            if($channel->lock_status == Channel::LOCK_ENABLE) continue;
-            $reCalculate = false;
-            foreach($item->programs as $pro)
-            {
-                $program = ChannelPrograms::find($pro->id);
-
-                $json = json_decode($program->data, true);
-
-                foreach($pro->items as $line)
-                {
-                    $old = $json[$line['offset']];
-
-                    $new = Program::findRandom($old['category'], 3600);
-                    $l = ChannelGenerator::createItem($new, $old['category'], $old['start_at']);
-                    $json[$line['offset']] = $l;
-                }
-
-                $program->data = json_encode($json);
-                $program->save();
-
-            }
-
-            CalculationEvent::dispatch($item->id, 0);
-        }
-
         $ids = [];
         foreach($data->program as $program)
         {
@@ -136,6 +108,35 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         if(count($ids)) {
             Program::whereIn('id', $ids)->update(['black' => $model->id]);
+        }
+
+        foreach($data->xkv as $item)
+        {
+            $channel = Channel::find($item->id);
+            if(!$channel) continue;
+            if($channel->lock_status == Channel::LOCK_ENABLE) continue;
+
+            foreach($item->programs as $pro)
+            {
+                $program = ChannelPrograms::find($pro->id);
+
+                $json = json_decode($program->data, true);
+
+                foreach($pro->items as $line)
+                {
+                    $old = $json[$line->offset];
+
+                    $new = Program::findRandom($old['category'], 3600);
+                    $l = ChannelGenerator::createItem($new, $old['category'], $old['start_at']);
+                    $json[$line->offset] = $l;
+                }
+
+                $program->data = json_encode($json);
+                $program->save();
+
+            }
+
+            CalculationEvent::dispatch($item->id, 0);
         }
 
         $data->applied = date('Y/m/d H:i:s');
