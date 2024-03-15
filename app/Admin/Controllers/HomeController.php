@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Program;
 use App\Models\Record;
@@ -54,9 +55,11 @@ class HomeController extends Controller
     public static function charts()
     {
       $material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'总物料库');
-      $program = Statistic::generateBarChart('programChart', Program::STATUS, Statistic::countPrograms(),'V China 节目库');
-      $records = Statistic::generateBarChart('recordsChart', Program::STATUS, Statistic::countRecords(),'星空中国 节目库');
-      $record2 = Statistic::generateBarChart('record2Chart', Program::STATUS, Statistic::countRecord2(),'星空国际 节目库');
+      $program = Statistic::countPrograms();
+      $records = Statistic::countRecords();
+      $record2 = Statistic::countRecord2();
+
+      $channels = Statistic::generateBarChart('programChart', Channel::GROUPS, [$program['1'], $records['1'], $record2['1']], "节目库（可用数）");
 
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
@@ -65,39 +68,27 @@ class HomeController extends Controller
   <div class="col-md-4"><canvas id="materialChart"></canvas></div>
   <div class="col-md-8" style="border:0px solid #eee; border-left-width:1px;">
     <div class="row">
-      <div class="col-md-12" style="height:120px"><canvas id="recordsChart"></canvas></div>
+      <div class="col-md-12"><canvas id="programChart"></canvas></div>
     </div>
-    <div class="row">
-      <div class="col-md-12" style="height:120px"><canvas id="record2Chart"></canvas></div>
-    </div>
-    <div class="row">
-      <div class="col-md-12" style="height:120px"><canvas id="programChart"></canvas></div>
-    </div>
+    
   </div>
 </div>
 
 
 <script>
   const colors=[
-    'rgb(255, 99, 132)',
     'rgb(54, 162, 235)',
-    'rgb(255, 205, 86)',
-    'rgb(255, 159, 64)',
-    'rgb(153, 102, 255)',
-    'rgb(201, 203, 207)'
+    'rgb(255, 99, 132)',
+    'rgb(75, 192, 192)'
   ];
   const bcolors=[
-    'rgb(255, 99, 132, 0.2)',
-    'rgb(54, 162, 235, 0.2)',
-    'rgb(255, 205, 86, 0.2)',
-    'rgb(255, 159, 64, 0.2)',
-    'rgb(153, 102, 255, 0.2)',
-    'rgb(201, 203, 207, 0.2)'
+    'rgba(54, 162, 235, 0.3)',
+    'rgba(255, 99, 132, 0.3)',
+
+    'rgba(75, 192, 192, 0.3)'
   ];
   {$material}
-  {$program}
-  {$records}
-  {$record2}
+  {$channels}
 
 </script>
 HTML;

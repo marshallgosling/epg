@@ -76,8 +76,8 @@ class Statistic
             $value[] = $data[(string)$idx];
         }
 
-        $label = implode(',', $label);
-        $data = implode(',', $value);
+        $label = implode(',', array_reverse($label));
+        $data = implode(',', array_reverse($value));
         
         return "new Chart(document.getElementById('$id'), {type:'pie',options:{plugins:{legend:{position:'$pos'},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{data:[$data],borderWidth:1,backgroundColor:bcolors,borderColor:colors}]}});";
     }
@@ -89,11 +89,11 @@ class Statistic
         foreach($labels as $idx=>$v)
         {
             $label[] = "'{$v}'";
-            $value[] = $data[(string)$idx];
+            
         }
 
         $label = implode(',', $label);
-        $data = implode(',', $value);
+        $data = implode(',', $data);
         
         return "new Chart(document.getElementById('$id'), {type:'bar',options:{indexAxis:'y',plugins:{legend:{display:false},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{axis:'y',fill:false,borderWidth:1,data:[$data],backgroundColor:bcolors,borderColor:colors}]}});";
     }
