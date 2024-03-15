@@ -81,10 +81,19 @@ class channelTool extends Command
 
     private function fixer($id, $e)
     {
-        $job = new AuditEpgJob($id);
-        $job->handle();
-
-
+        
+        $channels = Channel::where('status', Channel::STATUS_READY)->lazy();
+        foreach($channels as $channel)
+        {
+            $span = explode('-', $channel->start_end);
+            if(count($span)<2) continue;
+            $sec = $span[1];
+            if(!preg_match('/\d{2}:\d{2}:\d{2}/', $sec, $m)) continue;
+            $this->info("span ".$sec);
+            $start = strtotime('2024-03-01'.$sec);
+            $channel->comment = ChannelGenerator::checkAbnormalTimespan($start);
+            $channel->save();
+        }
         
         // $programs = ChannelPrograms::where('channel_id', $id)->get();
 

@@ -236,4 +236,17 @@ class ChannelGenerator
         return false;
     }
 
+    /**
+     * check time span perfect span is 17:00 - 17:00
+     * 
+     * @param int $timestr
+     * @return string
+     */
+    public static function checkAbnormalTimespan($timestr)
+    {
+        $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
+        if(abs($perfect - $timestr) >= 300) return "编单时间异常，请手动干预处理！";
+        return "";
+    }
+
 }
