@@ -68,8 +68,17 @@ class Statistic
 
     public static function generatePieChart($id, $labels, $data, $title='',$pos='top')
     {
-        $label = implode('\',\'', $labels);
-        $data = $data['0'].','.$data['1'];
-        return "new Chart(document.getElementById('$id'), {type:'pie',options:{plugins:{legend:{position:'$pos'},title:{display:true,text:'$title'}}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
+        $label = [];
+        $value = [];
+        foreach($labels as $idx=>$v)
+        {
+            $label[] = "'{$v}({$data[(string)$idx]})'";
+            $value[] = $data[(string)$idx];
+        }
+
+        $label = implode(',', $label);
+        $data = implode(',', $value);
+        
+        return "new Chart(document.getElementById('$id'), {type:'pie',options:{plugins:{legend:{position:'$pos'},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{data:[$data],backgroundColor:colors}]}});";
     }
 }
