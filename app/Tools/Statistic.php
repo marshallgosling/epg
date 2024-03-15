@@ -46,7 +46,7 @@ class Statistic
         return Cache::remember("record_status", 300, function() {
             $data = DB::table('records')->selectRaw('count(*) as count_num, `status`')
                     ->groupBy('status')->orderBy('status')->pluck('count_num', 'status')->toArray();
-            if(!array_key_exists(Record::STATUS_EMPTY, $data)) $data[Record::STATUS_EMPTY] = 0;
+            if(!array_key_exists((string)Record::STATUS_EMPTY, $data)) $data[(string)Record::STATUS_EMPTY] = 0;
             return $data;
         });
     }
@@ -56,7 +56,7 @@ class Statistic
         return Cache()->remember("record2_status", 300, function() {
             $data = DB::table('record2')->selectRaw('count(*) as count_num, `status`')
                     ->groupBy('status')->orderBy('status')->pluck('count_num', 'status')->toArray();
-            if(!array_key_exists(Record::STATUS_EMPTY, $data)) $data[Record::STATUS_EMPTY] = 0;
+            if(!array_key_exists((string)Record::STATUS_EMPTY, $data)) $data[(string)Record::STATUS_EMPTY] = 0;
             return $data;
         });
     }
@@ -69,7 +69,7 @@ class Statistic
     public static function generatePieChart($id, $labels, $data, $title='',$pos='top')
     {
         $label = implode('\',\'', $labels);
-        $data = implode(',', $data);
+        $data = $data['0'].','.$data['1'];
         return "new Chart(document.getElementById('$id'), {type:'pie',options:{plugins:{legend:{position:'$pos'},title:{display:true,text:'$title'}}},data: {labels: ['$label'], datasets:[{data:[$data],backgroundColor:colors}]}});";
     }
 }
