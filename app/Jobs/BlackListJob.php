@@ -156,7 +156,7 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         if($xkvs)foreach($xkvs as $xkv)
         {
-            $programs = $xkv->programs();
+            $programs = $xkv->programs()->get();
 
             $_channel = ["id"=>$xkv->id, "date"=>$xkv->air_date, "group"=>$xkv->name, 'programs'=>[]];
 
@@ -186,7 +186,8 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         }
 
  
-        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')->select('id', $property)->get();
+        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')
+            ->where('black', 0)->select('id', $property)->get();
         
         if($programs)foreach($programs as $pro)
         {
