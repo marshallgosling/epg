@@ -102,6 +102,9 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         foreach($data->xkv as $item)
         {
+            $channel = Channel::find($item->id);
+            if($channel->lock_status == Channel::LOCK_ENABLE) continue;
+            $reCalculate = false;
             foreach($item->programs as $pro)
             {
                 $program = ChannelPrograms::find($pro->id);
