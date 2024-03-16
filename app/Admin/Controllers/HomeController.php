@@ -170,7 +170,7 @@ HTML;
         ];
         $data = '';
         foreach($envs as $env) {
-            $data .= '<tr><td width="120px">'.$env['name'].'</td><td>'.$env['value'].'</td></tr>';
+            $data .= '<tr><td width="120px">'.$env['name'].'</td><td>'.explode(' ', $env['value'])[0].'</td></tr>';
         }
             
         $html = <<<HTML
