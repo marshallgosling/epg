@@ -31,8 +31,8 @@ class ProcessMaterialController extends Controller
         $list = json_decode($folder->data);
         $rows = [];
         if($list)foreach($list as $idx=>$item) {
-            if($item['m']){
-                $m = $item['m'];
+            if($item->m){
+                $m = $item->m;
                 $result = '<i class="fa fa-check text-green"></i>';
                 $s = $m->status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>' : '<i class="fa fa-close text-red"></i>';
                 $material = 
@@ -44,12 +44,12 @@ class ProcessMaterialController extends Controller
                 $result = '<i class="fa fa-close text-red" title="不匹配"></i>';
                 $material =  '无';
 
-                if($item['name'] == '' || $item['unique_no'] == '') {
-                    if($item['name']) {
+                if($item->name == '' || $item->unique_no == '') {
+                    if($item->name) {
                         $material .= '，可新建物料（自动生成播出编号）';
                         $result = '<i class="fa fa-check text-green"></i>';
                     }
-                    if($item['unique_no']) {
+                    if($item->unique_no) {
                         $material .= '，不可新建物料（缺少节目标题）';
                     }
                 }
@@ -61,7 +61,7 @@ class ProcessMaterialController extends Controller
             }
             $rows[] = ['style'=>'','item'=>[
                 '<input type="checkbox" class="grid-row-checkbox" data-id="'.$idx.'" autocomplete="off">', 
-                $item['filename'], $result, $material, ''
+                $item->filename, $result, $material, ''
             ]];
         }
 

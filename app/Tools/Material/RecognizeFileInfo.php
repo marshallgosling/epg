@@ -25,10 +25,10 @@ class RecognizeFileInfo
         if(count($names)<=1) return compact('filename', 'unique_no', 'name', 'm');
         if(array_pop($names) != 'mxf') return compact('filename', 'unique_no', 'name', 'm');
 
-        if(count($names) == 2)
+        if(count($names) >= 2)
         {
             $unique_no = array_pop($names);
-            $name = array_pop($names);
+            $name = implode('.', $names);
             
             $m = Material::where('unique_no', $unique_no)->first();
 
