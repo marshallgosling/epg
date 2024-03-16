@@ -69,6 +69,7 @@ class CalculationListener
         if($channel->isDirty())
         {
             $channel->version = $channel->version + 1;
+            $channel->status = Channel::STATUS_READY;
             $channel->save();
         }
     }
