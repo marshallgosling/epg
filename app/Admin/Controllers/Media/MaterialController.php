@@ -37,15 +37,15 @@ class MaterialController extends AdminController
         return $content
             ->title($title)
             ->description($description ?? trans('admin.list'))
-            ->body($this->xkv());
+            ->body($this->grid2('xkv', 'program'));
     }
 
-    private function xkv()
+    private function grid2($channel, $table='program')
     {
         $grid = new Grid(new Material());
-        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `program`)',['xkv'])->orderBy('id', 'desc');
+        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',[$channel])->orderBy('id', 'desc');
 
-        $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
@@ -84,13 +84,14 @@ class MaterialController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
                 $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-                $filter->equal("status", __('Status'))->select(Material::STATUS);
-                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
+                $filter->equal("status", __('Status'))->radio(Material::STATUS);
+                
             });
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
-                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
+                //$filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
+                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
                 //$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             });
         });
