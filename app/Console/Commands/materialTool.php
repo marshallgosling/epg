@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Material\ScanFolderJob;
 use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Notification;
@@ -52,7 +53,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move', 'seconds','mediainfo','export','ep'];
+        $actions = ['import','move', 'seconds','mediainfo','export','ep','folder'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -62,6 +63,12 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function folder($id, $action='')
+    {
+        $scan = new ScanFolderJob($id, $action);
+        $scan->handle();
     }
 
     private function ep()

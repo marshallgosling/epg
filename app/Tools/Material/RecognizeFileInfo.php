@@ -62,6 +62,8 @@ class RecognizeFileInfo
 
         }
 
+        if($m && $m->status == Material::STATUS_READY) return false;
+
         return compact('filename', 'unique_no', 'name', 'm');
     }
 }
