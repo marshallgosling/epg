@@ -86,12 +86,13 @@ class MaterialController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
                 $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-                $filter->equal("status", __('Status'))->radio(Material::STATUS);
+                
                 
             });
             $filter->column(6, function(Grid\Filter $filter) { 
                 //$filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
                 $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
+                $filter->equal("status", __('Status'))->radio(Material::STATUS);
                 //$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             });
         });
@@ -153,16 +154,16 @@ class MaterialController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
                 $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-                $filter->equal("status", __('Status'))->select(Material::STATUS);
+                $filter->equal("status", __('Status'))->radio(Material::STATUS);
                 
-                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
+                
             });
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
-                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
                 $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
-                
+                $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
+                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
             });
         });
         
