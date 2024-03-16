@@ -29,6 +29,6 @@ class Folder extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'scaned_at'  => 'datetime:Y-m-d H:i:s',
-        'data'  => 'json'
+        //'data'  => 'json'
     ];
 }
