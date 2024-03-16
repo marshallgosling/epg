@@ -94,6 +94,7 @@
     "ChannelProgramIndexDesc" : "每日节目编单具体编排数据，可以编辑及排序",
     "BatchModify success message." : "批量修改记录成功",
     "BatchSync Success message": "批量同步任务发起成功",
+    "BatchScan Success message": "批量扫描任务发起成功",
     "Replicate Success message" : "复制记录成功。",
     "Replicate Failed message" : "复制记录成功。",
     "BatchReplicate Success message" : "批量复制记录成功。",
