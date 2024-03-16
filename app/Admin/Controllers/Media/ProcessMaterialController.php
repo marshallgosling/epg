@@ -15,8 +15,8 @@ class ProcessMaterialController extends Controller
 {
     public function index($id, Content $content)
     {
-        $title = '手动批处理物料入库';
-        $description = '';
+        $title = '播出池物料对比结果';
+        $description = '这里列出的是存在物料文件，但是没有对应的物料记录的文件对比数据';
         
         return $content
             ->title($title)
