@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\BatchScan;
 use App\Models\Folder;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -15,7 +16,7 @@ class FolderController extends AdminController
      *
      * @var string
      */
-    protected $title = '目标文件夹文件扫描管理';
+    protected $title = '播出池扫描文件列表管理';
 
     /**
      * Make a grid builder.
@@ -37,6 +38,18 @@ class FolderController extends AdminController
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchScan);
+        });
+
+        $grid->disableCreateButton();
+        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
+            $actions->disableDelete();
+        });
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableDelete();
+        });
 
         return $grid;
     }
