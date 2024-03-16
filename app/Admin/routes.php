@@ -17,10 +17,11 @@ Route::group([
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
     
     $router->get('/media/help', 'HelpController@material')->name('media.help');
-    $router->get('/media/recognize', 'Media\\ProcessMaterialController@index')->name('media.recognize');
+    $router->get('/media/recognize', 'Media\\ProcessMaterialController@local')->name('media.recognize');
     $router->post('/media/recognize', 'Media\\ProcessMaterialController@process')->name('media.recognize.process');
     $router->resource('/media/agreement', 'AgreementController')->names('media.agreement');
     $router->get('/media/compare/xkv', 'Media\\MaterialController@compare')->name('media.compare');
+    $router->get('/media/folder/{id}', 'Media\\ProcessMaterialController@index')->name('media.folder');
     $router->resource('/media/folders', 'Media\\FolderController')->names('media.folders');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');

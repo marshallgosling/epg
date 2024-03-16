@@ -31,6 +31,9 @@ class FolderController extends AdminController
         $grid->column('status', __('Status'))->using(Folder::STATUS)->label(['default','success','warning','danger']);
         $grid->column('comment', __('Comment'));
         $grid->column('scaned_at', __('Scaned at'));
+        $grid->column('link', '')->display(function () {
+            return '<a href="./folder/'.$this->id.'">查看详细数据</a>';
+        });
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
