@@ -32,7 +32,7 @@ class MaterialController extends AdminController
     public function compare(Content $content)
     {
         $title = '物料库与节目库比对';
-        $description = '';
+        $description = '此处对比的是“物料库内存在，V China节目库里不存在”的记录';
         
         return $content
             ->title($title)
