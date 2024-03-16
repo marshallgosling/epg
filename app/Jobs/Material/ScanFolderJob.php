@@ -78,12 +78,13 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
         $list = [];
         while (($file = $d->read()) !== false){
             if($file != '.' && $file != '..') {
+                echo "$file\n";
                 $m = RecognizeFileInfo::recognize($file);
                 if($m) $list[] = $m;
             }
         }
         $d->close();
-        $folder->data = $m;
+        $folder->data = $list;
         $folder->status = Folder::STATUS_READY;
         $folder->scaned_at = date('Y-m-d H:i:s');
         $folder->save();
