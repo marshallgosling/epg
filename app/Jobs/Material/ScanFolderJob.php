@@ -66,7 +66,7 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
 
     public function scan($folder)
     {
-        $d = $folder->path;
+        $d = dir($folder->path);
         if(!$d) {
             //$folder->data = [];
             $folder->status = Folder::STATUS_ERROR;
