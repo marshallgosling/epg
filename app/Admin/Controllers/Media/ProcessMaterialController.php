@@ -42,20 +42,20 @@ class ProcessMaterialController extends Controller
             }
             else {
                 $result = '<i class="fa fa-close text-red" title="不匹配"></i>';
-                $material =  '无';
+                $material = '';
 
                 if($item->name == '' || $item->unique_no == '') {
                     if($item->name) {
-                        $material .= '，可新建物料（自动生成播出编号）';
+                        $material = "可新建物料（自动生成<span class=\"label label-warning\">播出编号</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
                         $result = '<i class="fa fa-check text-green"></i>';
                     }
                     if($item->unique_no) {
-                        $material .= '，不可新建物料（缺少节目标题）';
+                        $material = "不可新建物料（播出编号:<span class=\"label label-default\">{$item->unique_no}</span> <span class=\"label label-danger\">缺少节目标题</span>)";
                     }
                 }
                 else {
                     $result = '<i class="fa fa-check text-green"></i>';
-                    $material .= '，可新建物料';
+                    $material = "可新建物料 (播出编号:<span class=\"label label-default\">{$item->unique_no}</span> 节目名:<span class=\"label label-default\">{$item->name}</span>";
                 }
                 
             }
