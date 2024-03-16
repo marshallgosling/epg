@@ -22,8 +22,8 @@ class RecognizeFileInfo
         $name = '';
         $m = false;
 
-        if(count($names)<=1) return compact('filename', 'unique_no', 'name', 'm');
-        if(array_pop($names) != 'mxf') return compact('filename', 'unique_no', 'name', 'm');
+        if(count($names)<=1) return false;
+        if(array_pop($names) != 'mxf') return false;
 
         if(count($names) >= 2)
         {
@@ -55,7 +55,7 @@ class RecognizeFileInfo
             {
                 $unique_no = $unknow;
             }
-            else if(preg_match('/(\d+)$/', $unknow, $matches))
+            else
             {
                 $name = $unknow;
             }
