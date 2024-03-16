@@ -68,7 +68,7 @@ class ProcessMaterialController extends Controller
         $html = (new MyTable($head, $rows, ['table-hover', 'grid-table']))->render();
         //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
-        return new Box('目标路径文件夹 '.$folder->path. ' 扫描结果', $html);
+        return new Box('目标路径文件夹 '.$folder->path. ' 扫描结果，总共 '.count($rows).' 个可用文件', $html);
 
     }
 
@@ -131,7 +131,7 @@ class ProcessMaterialController extends Controller
         $html = (new MyTable($head, $rows, ['table-hover', 'grid-table']))->render();
         $html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
-        return new Box('目标路径文件夹 '.config('CUSTOMER_MATERIAL_FOLDER'), $html);
+        return new Box('目标路径文件夹 '.config('CUSTOMER_MATERIAL_FOLDER').'，总共 '.count($rows).' 个文件', $html);
 
     }
 
