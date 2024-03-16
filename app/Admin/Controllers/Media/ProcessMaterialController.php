@@ -30,6 +30,7 @@ class ProcessMaterialController extends Controller
         $head = ["", "文件名", "扫描结果", "分析结果", "操作"];
         $list = json_decode($folder->data);
         $rows = [];
+        $available = 0;
         if($list)foreach($list as $idx=>$item) {
             if($item->m){
                 $m = $item->m;
@@ -41,13 +42,14 @@ class ProcessMaterialController extends Controller
                     ' <span class="label label-default">时长</span> <small>'.$m->duration.'</small>';
             }
             else {
-                $result = '<i class="fa fa-close text-red" title="不匹配"></i>';
+                $result = '<i class="fa fa-close text-red"></i>';
                 $material = '';
 
                 if($item->name == '' || $item->unique_no == '') {
                     if($item->name) {
                         $material = "可新建物料 (播出编号:<span class=\"label label-warning\">自动生成</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
                         $result = '<i class="fa fa-check text-green"></i>';
+                        $available ++;
                     }
                     if($item->unique_no) {
                         $material = "不可新建物料（播出编号:<span class=\"label label-default\">{$item->unique_no}</span> <span class=\"label label-danger\">缺少节目标题</span>)";
@@ -56,6 +58,7 @@ class ProcessMaterialController extends Controller
                 else {
                     $result = '<i class="fa fa-check text-green"></i>';
                     $material = "可新建物料 (播出编号:<span class=\"label label-default\">{$item->unique_no}</span> 节目名:<span class=\"label label-default\">{$item->name}</span>";
+                    $available ++;
                 }
                 
             }
@@ -68,7 +71,7 @@ class ProcessMaterialController extends Controller
         $html = (new MyTable($head, $rows, ['table-hover', 'grid-table']))->render();
         //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
-        return new Box('目标路径文件夹 '.$folder->path. ' 扫描结果，总共 '.count($rows).' 个可用文件', $html);
+        return new Box('目标路径文件夹 '.$folder->path. ' 扫描结果，总共 '.$available.' 个可用文件, '.(count($rows)-$available).' 个不可用文件', $html);
 
     }
 
