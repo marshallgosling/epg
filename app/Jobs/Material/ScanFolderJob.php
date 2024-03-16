@@ -78,7 +78,6 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
         $list = [];
         while (($file = $d->read()) !== false){
             if($file != '.' && $file != '..') {
-                echo "$file\n";
                 $m = RecognizeFileInfo::recognize($file);
                 if($m) $list[] = $m;
             }
