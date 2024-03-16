@@ -31,7 +31,7 @@ class ProcessMaterialController extends Controller
         $list = json_decode($folder->data);
         $rows = [];
         $available = 0;
-        if($list)foreach($list as $idx=>$item) {
+        if(is_array($list))foreach($list as $idx=>$item) {
             if($item->m){
                 $m = $item->m;
                 $result = '<i class="fa fa-check text-green"></i>';
