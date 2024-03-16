@@ -42,7 +42,6 @@ class FolderController extends AdminController
             $tools->append(new BatchScan);
         });
 
-        $grid->disableCreateButton();
         $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
             $actions->disableDelete();
         });
