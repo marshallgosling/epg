@@ -42,17 +42,19 @@ class BlackListController extends AdminController
             $list = json_decode($black->data);
             
             $available = 0;
-            if($list && is_array($list->xkv))foreach($list->xkv as $item) {
-                $programs = $item->programs;
-                if(is_array($programs->items))foreach($programs->items as $pro)
+            if($list && is_array($list->xkv))foreach($list->xkv as $xkv) {
+                $programs = $xkv->programs;
+                if(is_array($programs))foreach($programs as $pro)
                 {
-                    $idx = $item->id.'-'.$pro->offset;
-                    $rows[] = [
-                        '<input type="checkbox" class="grid-row-checkbox" data-id="'.$idx.'" autocomplete="off">', 
-                        date('Y-m-d H:i:s', strtotime($pro->start_at)), $pro->name.'( '.$pro->unique_no.' ) '.$pro->artist,
-                        $pro->duration, $item->name, '<a class="btn btn-sm btn-primary" href="javascript:showSearchModel(\''.$idx.'\');">选择</a>', $pro->category
-                    ];
-                    $available ++;
+                    if(is_array($pro->items)) foreach($pro->items as $line) {
+                        $idx = $pro->id.'-'.$line->offset;
+                        $rows[] = [
+                            '<input type="checkbox" class="grid-row-checkbox" data-id="'.$idx.'" autocomplete="off">', 
+                            date('Y-m-d H:i:s', strtotime($line->start_at)), $line->name.'( '.$line->unique_no.' ) '.$line->artist,
+                            $line->duration, $pro->name, '<a class="btn btn-sm btn-primary" href="javascript:showSearchModel(\''.$idx.'\');">选择</a>', $line->category
+                        ];
+                        $available ++;
+                    }
                 }
             }
         }
