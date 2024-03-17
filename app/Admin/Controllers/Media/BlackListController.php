@@ -42,7 +42,7 @@ class BlackListController extends AdminController
             $list = json_decode($black->data);
             
             $available = 0;
-            if(is_array($list))foreach($list as $item) {
+            if($list && is_array($list->xkv))foreach($list->xkv as $item) {
                 $programs = $item->programs;
                 if(is_array($programs))foreach($programs as $pro)
                 {
