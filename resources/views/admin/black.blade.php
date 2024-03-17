@@ -1,4 +1,22 @@
-{!! $content !!}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="btn-group"><b>{{__('具体节目编排')}}</b></div>
+                <span id="total" class="pull-right"></span>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+                
+                <div class="dd" id="tree-programs">
+                    
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="searchModal" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -34,7 +52,7 @@
                             节目库
                         </span>
                         <select class="form-control library" id="library" data-value="program">
-                        <option value="program" selected>V China</option><option value="records">星空中国</option><option value="record2">星空国际</option>
+                            <option value="records">星空中国</option><option value="record2">星空国际</option><option value="program" selected>V China</option>
                         </select>
                         <span class="input-group-btn">
                             <button id="btnSearch" class="btn btn-info" type="button">搜索</button>
@@ -72,7 +90,8 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<script>
+<div id="template" style="display: none">{!!$template!!}</div>
+<script type="text/javascript">
     var selectedIndex = -1;
     var selectedItems = [];
     var loadingMore = false;
@@ -80,7 +99,27 @@
     var uniqueAjax = null;
     var cachedPrograms = null;
     var keyword = '';
-    var dataList = [];
+    var dataList = JSON.parse('{!!$json!!}');
+    var category = JSON.parse('{!!@json_encode($category)!!}');
+    function reloadTree()
+    {
+        var html = '<ol class="dd-list">';
+        var total = 0;
+        for(i=0;i<dataList.length;i++)
+        {
+            var style = '';
+            //if(in_array(dataList[i].unique_no, replaceItem)) style = 'bg-danger';
+            html += createItem(i, dataList[i], style);
+        }
+        html += '</'+'ol>';
+
+        $('#tree-programs').html(html);
+        $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
+
+        $chkboxes = $('.grid-row-checkbox');
+        //setupMouseEvents();
+    }
+
     function showSearchModal(idx) {
         
         selectedIndex = idx;
@@ -150,8 +189,11 @@
                 toastr.error("该艺人以上黑名单，不能使用");
                 return;
             }
-            dataList[selectedIndex] = selectedItem;
-            //modifiedItem.push(selectedItem.unique_no.toString());
+            dataList[selectedIndex].unique_no = selectedItem.unique_no;
+            dataList[selectedIndex].name = selectedItem.name;
+            dataList[selectedIndex].artist = selectedItem.artist;
+            dataList[selectedIndex].category = selectedItem.category;
+            dataList[selectedIndex].duration = selectedItem.duration;
 
             //$('#btnSort').html("保存");
             //$('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
@@ -159,7 +201,10 @@
             selectedItems = [];
             $('.search-item').removeClass('info');
             $('#selectedSpan').html('');
+            reloadTree();
         });
+
+        reloadTree();
     });
 
     function selectProgram (idx) {
@@ -234,4 +279,56 @@
             });
     }
 
+    function formatTime($time) {
+        var d = new Date($time);
+        var a = [];
+        a[0] = d.getHours() > 9 ? d.getHours().toString() : '0'+d.getHours().toString();
+        a[1] = d.getMinutes() > 9 ? d.getMinutes().toString() : '0'+d.getMinutes().toString();
+        a[2] = d.getSeconds() > 9 ? d.getSeconds().toString() : '0'+d.getSeconds().toString();
+        return a.join(':');
+    }
+
+    function formatDuration(seconds)
+    {
+        var h = Math.floor(seconds / 3600);
+        var m = Math.floor((seconds % 3600) / 60);
+        var s = seconds % 60;
+        var a = [];
+        a[0] = h > 9 ? h : '0'+h;
+        a[1] = m > 9 ? m : '0'+m;
+        a[2] = s > 9 ? s : '0'+s;
+        return a.join(':');
+    }
+
+    function createItem(idx, item, style) {
+        var html = $('#template').html();
+        var textstyle = "";
+        if(style == '') style = parseBg(item.category, item.unique_no);
+        if(style == 'bg-danger') textstyle = 'text-danger';
+        return html.replace(/idx/g, idx).replace(/textstyle/g, textstyle).replace('start_at', item.start_at).replace('end_at', item.end_at)
+                    .replace('name', item.name).replace('duration', item.duration).replace('artist', item.artist).replace('program', item.program)
+                    .replace('category', item.category).replace('unique_no', item.unique_no).replace('bgstyle', style).replace('air_date', item.air_date);
+    }
+
+    function parseBg($no, $code)
+    {
+        if($no == 'm1') return 'bg-warning';
+        if($no == 'v1') return 'bg-default';
+        if($code.match(/VCNM(\w+)/)) return 'bg-info';
+        return '';
+    }
+    function parseDuration($dur)
+    {
+        $d = $dur.toString().split(':');
+        return parseInt($d[0])*3600+parseInt($d[1])*60+parseInt($d[2]);
+    }
+
+    function in_array(search,array){
+        for(var i in array){
+            if(array[i]==search){
+                return true;
+            }
+        }
+        return false;
+    }
 </script>
