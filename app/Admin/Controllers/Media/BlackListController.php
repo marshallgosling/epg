@@ -108,7 +108,7 @@ TMP;
         $grid->column('status', __('Status'))->using(BlackList::STATUS)->label(['warning','danger','success','default']);
         $grid->column('scaned_at', __('Scaned at'))->sortable();
         $grid->column('list', __(' '))->display(function () {
-            return $this->status == BlackList::STATUS_READY ? '<a href="./blacklist/result/'.$this->id.'">处理扫描</a>':'';
+            return $this->status == BlackList::STATUS_SCANNED ? '<a href="./blacklist/result/'.$this->id.'">处理扫描</a>':'';
         });
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'))->hide();
