@@ -26,8 +26,7 @@ class BlackListController extends AdminController
     {
         $title = '黑名单扫描结果';
         $description = '';
-        $view = ;
-        
+       
         return $content
             ->title($title)
             ->description($description ?? trans('admin.list'))
