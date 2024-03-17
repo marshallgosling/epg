@@ -60,18 +60,6 @@ class BlackListController extends AdminController
         $html = (new Table($head, $rows, ['table-hover', 'grid-table']))->render();
         //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
-        $js = <<<JS
-        function showSearchModal(idx) {
-        if(sortEnabled) {
-            toastr.error("请先保存排序结果。");
-            return;
-        }
-        selectedIndex = idx;
-
-        $('#searchModal').modal('show');
-        $('#confirmBtn').removeAttr('disabled');
-    }
-JS;
         return new Box('扫描结果，总共 '.$available.' 个匹配项', $html);
 
     }
