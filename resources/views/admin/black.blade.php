@@ -80,6 +80,7 @@
     var uniqueAjax = null;
     var cachedPrograms = null;
     var keyword = '';
+    var dataList = [];
     function showSearchModal(idx) {
         
         selectedIndex = idx;
