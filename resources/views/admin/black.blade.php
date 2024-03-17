@@ -61,6 +61,7 @@
                 </div>
             </form>
         </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive" style="margin-top:10px;height:500px; overflow-y:scroll">
