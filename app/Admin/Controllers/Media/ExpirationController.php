@@ -4,8 +4,6 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\AgreementLink;
 use App\Admin\Actions\Material\CreateAgreement;
-use App\Models\Agreement;
-use App\Models\Channel;
 use App\Models\Expiration;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
