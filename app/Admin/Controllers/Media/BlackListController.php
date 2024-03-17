@@ -143,7 +143,7 @@ TMP;
         $show->field('group', __('Group'))->using(BlackList::GROUPS);
         $show->field('status', __('Status'))->using(BlackList::STATUS);
         $show->field('scaned_at', __('Scaned at'));
-        $show->field('data', __('Data'));
+        $show->field('data', __('Data'))->json();
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -161,7 +161,7 @@ TMP;
 
         $form->text('keyword', __('Keyword'));
         $form->radio('group', __('Group'))->options(BlackList::GROUPS);
-
+        $form->json('data', __('Data'));
         return $form;
     }
 }
