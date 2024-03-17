@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Media;
 use App\Admin\Actions\BlackList\Apply;
 use App\Admin\Actions\BlackList\Scanner;
 use App\Models\BlackList;
+use App\Models\Category;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -26,11 +27,11 @@ class BlackListController extends AdminController
     {
         $title = '黑名单扫描结果';
         $description = '';
-       
+        $categories = Category::getFormattedCategories();
         return $content
             ->title($title)
             ->description($description ?? trans('admin.list'))
-            ->body(view('admin.black', ['content'=>$this->table($id)]));
+            ->body(view('admin.black', ['categories'=>$categories, 'content'=>$this->table($id)]));
     }
 
     private function table($id)
