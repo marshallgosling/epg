@@ -120,7 +120,9 @@ class fileTool extends Command
     private function scan()
     {
         $file = $this->argument('path') ?? "";
-        $list = Material::where('channel', 'xkv')->where('category',$file)->get();
+        $query = Material::where('channel', 'xkv');
+        if($file) $query = $query->where('category',$file);
+        $list = $query->get();
         foreach($list as $m)
         {
             $file = explode('\\', $m->filepath);
