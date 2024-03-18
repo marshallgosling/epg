@@ -32,7 +32,7 @@ class BlackListController extends AdminController
 <li class="dd-item" data-id="idx">
     <div class="dd-handle bgstyle">
         <span style="display:inline-block;width:120px;">air_date</span>
-        <span style="display:inline-block;width:140px;">program</span>
+        <span style="display:inline-block;width:200px;">program</span>
         <span class="textstyle" style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at</span>
         <span style="display:inline-block;width:120px;"><a class="dd-nodrag textstyle" href="javascript:showSearchModal(idx);">unique_no</a></span>
         <span class="textstyle" style="display:inline-block;width:140px;text-overflow:ellipsis"><strong>name</strong></span>
@@ -55,25 +55,17 @@ TMP;
 
     private function table($black)
     {
-        
-        $rows = [];
         $data = [];
         if($black) {
             $list = json_decode($black->data);
             
-            $available = 0;
             if($list && is_array($list->xkv))foreach($list->xkv as $xkv) {
                 $programs = $xkv->programs;
                 if(is_array($programs))foreach($programs as $pro)
                 {
                     if(is_array($pro->items)) foreach($pro->items as $line) {
                         $idx = $pro->id.'-'.$line->offset;
-                        $rows[] = [
-                            '<input type="checkbox" class="grid-row-checkbox" data-id="'.$idx.'" autocomplete="off">', 
-                            date('Y-m-d H:i:s', strtotime($line->start_at)), $line->name.'( '.$line->unique_no.' ) '.$line->artist,
-                            $line->duration, $pro->name, '<a class="btn btn-sm btn-primary" href="javascript:showSearchModel(\''.$idx.'\');">选择</a>', $line->category
-                        ];
-                        $available ++;
+                        
                         $line->id = $idx;
                         $line->air_date = date('Y-m-d H:i:s', strtotime($pro->start_at));
                         $line->program = $pro->name;
@@ -82,12 +74,7 @@ TMP;
                 }
             }
         }
-
-        $head = ["", "日期时间", "编单内容", "时长", "节目名", "替换操作", "栏目"];
-        //$html = (new Table($head, $rows, ['table-hover', 'grid-table']))->render();
-        //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
-
-        //return new Box('扫描结果，总共 '.$available.' 个匹配项', $html);
+        
         return str_replace("'","\\'", json_encode($data));
     }
 
