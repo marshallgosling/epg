@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Material;
 
 use App\Jobs\Material\MediaInfoJob;
+use App\Models\LargeFile;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class BatchProcessLargeFile extends BatchAction
     public function handle(Collection $collection, Request $request)
     {
         foreach ($collection as $model) {
-            MediaInfoJob::dispatch($model->id, 'process')->onQueue('media');
+            if($model->status == LargeFile::STATUS_EMPTY)
+                MediaInfoJob::dispatch($model->id, 'process')->onQueue('media');
         }
 
         return $this->response()->success(__('BatchSync Success message'))->refresh();

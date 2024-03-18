@@ -25,6 +25,7 @@ class ApiController extends Controller
         $p = (int)$request->get('p', 1);
         $t = $request->get('t', 'program');
         $c = $request->get('c');
+        $s = $request->get('s');
         $q = substr($q, 0, 20);
         $size = 20;$start = ($p-1)*$size;
 
@@ -34,6 +35,9 @@ class ApiController extends Controller
             $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
         if($c) {
             $model = $model->where('category', 'like', "%$c,%");
+        }
+        if($s) {
+            $model = $model->where('seconds', '<=', $s);
         }
 
         if($t == 'program')

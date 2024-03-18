@@ -16,9 +16,14 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
     
+    $router->get('/media/scan/result', 'Media\\MaterialController@compare')->name('media.result.d');
     $router->get('/media/help', 'HelpController@material')->name('media.help');
-    $router->get('/media/recognize', 'Media\\ProcessMaterialController@index')->name('media.recognize');
+    $router->get('/media/recognize', 'Media\\ProcessMaterialController@local')->name('media.recognize');
     $router->post('/media/recognize', 'Media\\ProcessMaterialController@process')->name('media.recognize.process');
+    $router->resource('/media/agreement', 'AgreementController')->names('media.agreement');
+    $router->resource('/media/compare/xkv', 'Media\\MaterialCompareController')->names('media.compare');
+    $router->get('/media/folder/{id}', 'Media\\ProcessMaterialController@index')->name('media.folder');
+    $router->resource('/media/folders', 'Media\\FolderController')->names('media.folders');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
@@ -35,6 +40,8 @@ Route::group([
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
     $router->resource('/media/blacklist', 'Media\\BlackListController')->names('media.blacklist');
+    $router->get('/media/blacklist/result/{id}', 'Media\\BlackListController@results')->name('media.blacklist.result');
+    $router->post('/media/blacklist/result/{id}/save', 'Media\\BlackListController@saveReplace')->name('media.blacklist.result.save');
 
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');
     $router->get('/channel/xkc/preview/{id}', 'Channel\\XkcController@preview')->name('channel.xkc.preview');

@@ -10,10 +10,10 @@ class BlackList extends Model
     use HasFactory;
     public const STATUS_INIT = 0;
     public const STATUS_RUNNING = 1;
-    public const STATUS_READY = 2;
-    public const STATUS_CLOSE = 3;
+    public const STATUS_READY = 3;
+    public const STATUS_SCANNED = 2;
 
-    public const STATUS = ['未扫描', '扫描中', '生效中'];
+    public const STATUS = ['未扫描', '扫描中', '扫描完成', '生效中'];
     public const GROUPS = ['artist'=>'艺人','name'=>"标题",'unique_no'=>'播出编号'];
 
     protected $table = 'blacklist';

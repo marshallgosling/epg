@@ -30,8 +30,7 @@ class BatchLock extends BatchAction
             $model->reviewer = Admin::user()->name;
             //$model->audit_date = now();
             $model->save();
-            // Channel::where('id', $model->id)->update(['audit_status', $request->get('audit'), 'comment'=>$request->get('comment')]);
-
+            
             if($lock == Channel::LOCK_ENABLE) {
                 StatisticJob::dispatch($model->id);
                 EpgJob::dispatch($model->id);
@@ -50,7 +49,7 @@ class BatchLock extends BatchAction
 
     public function html()
     {
-        return "<a class='lock-channel btn btn-sm btn-warning'><i class='fa fa-lock'></i> {$this->name}</a>";
+        return "<a class='lock-channel btn btn-sm btn-primary'><i class='fa fa-lock'></i> {$this->name}</a>";
     }
 
 }

@@ -119,22 +119,29 @@ class fileTool extends Command
 
     private function scan()
     {
-        $filename = $this->argument('path') ?? "";
-        $list = config('MEDIA_SOURCE_FOLDER');
-        if($list) {
-            $list = explode(PHP_EOL, $list);
+        $file = $this->argument('path') ?? "";
+        $query = Material::where('channel', 'xkv');
+        $data = [];
+        if($file) $query = $query->where('category',$file);
+        $list = $query->get();
+        foreach($list as $m)
+        {
+            if(!$m->filepath) continue;
+            $file = explode('\\', $m->filepath);
+            $filename = array_pop($file);
+            $names = explode('.', $filename);
+            array_pop($names); array_pop($names);
+            $name = implode('.', $names);
 
-            foreach($list as $item)
-            {
-                $path = $item.$filename;
-                $this->info($path);
-
-                if(file_exists($path))
-                {
-                    $this->info("found:".$path);
-                }
+            if($name != $m->name) {
+                $this->info("{$m->unique_no}: {$m->name} | {$name} 不一致");
+                $m->name = $name;
+                $m->save();
+                $data[] = $m;
             }
+            
         }
+        Storage::put('scan.txt', json_encode($data));
     }
 
     private function mediainfo()

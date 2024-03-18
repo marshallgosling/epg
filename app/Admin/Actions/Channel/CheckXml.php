@@ -21,24 +21,39 @@ class CheckXml implements Renderable
                 $file = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
                 
                 $items = XmlReader::parseXml($file);
-    
-                $list = DB::table('material')->whereIn('unique_no', array_unique($items))
-                            ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no','duration'])
-                            ->get();
+                $error = false;
+                // $list = DB::table('material')->whereIn('unique_no', array_unique($items))
+                //             ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no','duration'])
+                //             ->get();
                 $data = '<tr><th>'.__('Name').'</th><th>'.__('Unique no').'</th><th>'.__('Duration').'</th><th></th></tr>';
-                if(count($list)) {
-                    foreach($list as $m)
+                if(count($items)) {
+                    
+                    foreach(array_unique($items) as $item)
                     {
-                        $data .= '<tr><td>'.$m->name.'</td><td>'.$m->unique_no.'</td><td>'.$m->duration.'</td><td>物料缺失</td></tr>';
+                        $m = Material::where('unique_no', $item)->select(['name','unique_no','duration','status'])->first();
+                        if(!$m) {
+                            $data .= '<tr><td> </td><td>'.$item.'</td><td> </td><td>物料不存在</td></tr>';
+                            $error = true;
+                        }
+                        else {
+                            if($m->status != Material::STATUS_READY) {
+                                $error = true;
+                                $data .= '<tr><td>'.$m->name.'</td><td>'.$m->unique_no.'</td><td>'.$m->duration.'</td><td>物料缺失</td></tr>';
+                            }
+                        }
                     }
-                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-danger">不通过</span></p>';
                 }
                 else {
-                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 检查结果：<span class="label label-success">通过</span></p>';
+                    $error = true;
+                    
                 }
+
+                if($error) $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-danger">不通过</span></p>';
+                else $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-success">通过</span></p>';
             }
             else {
                 $label = '<p>播出编单:'.$ch->name.'_'.$ch->air_date.'.xml 文件不存在</p>';
+                $data = '';
             }
         }
         

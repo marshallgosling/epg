@@ -67,4 +67,27 @@ class Material extends Model
         return self::where('unique_no', $no)
             ->select("unique_no", "name","duration","frames")->first();
     }
+
+    public static function getFileName($no)
+    {
+        $filepath = self::where('unique_no', $no)->value('filepath');
+        if($filepath)
+        {
+            $filename = explode('\\', $filepath);
+            $filename = array_pop($filename);
+        
+            return str_replace('.mxf', '', $filename);
+        }
+        return false;
+    }
+
+    public static function getName($no)
+    {
+        $name = self::where('unique_no', $no)->value('name');
+        if($name)
+        {
+            return $name.$no;
+        }
+        return false;
+    }
 }

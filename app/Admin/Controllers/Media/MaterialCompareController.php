@@ -17,65 +17,30 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-use Encore\Admin\Widgets\Box;
-use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 
-class MaterialController extends AdminController
+class MaterialCompareController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = '物料管理';
+    protected $title = '物料库与节目库比对';
+    protected $description = [
+        'index'  => '此处对比的是“物料库内存在，V China节目库里不存在”的记录',
+        //        'show'   => 'Show',
+        //        'edit'   => 'Edit',
+        //        'create' => 'Create',
+    ];
 
-    public function compare(Content $content)
-    {
-        $title = '物料库扫描结果';
-        $description = '';
-        
-        return $content
-            ->title($title)
-            ->description($description ?? trans('admin.list'))
-            ->body($this->grid2('xkv', 'program'));
-    }
-
-    private function grid2($channel, $table='program')
-    {
-        $data = json_decode(Storage::get('scan.txt'));
-        $head = ["", "文件名", "扫描结果", "分析结果", "操作"];
-        
-        $rows = [];
-        $available = 0;
-        foreach($data as $item)
-        {
-            if($item->status == Material::STATUS_READY) {
-                $rows[] = [$item->unique_no, $item->filepath, "名称:".$item->name, "不一致" , ""];
-                $available ++;
-            }
-        }
-
-        $html = (new Table($head, $rows, ['table-hover', 'grid-table']))->render();
-        //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
-
-        return new Box('目标路径文件夹扫描结果，总共 '.$available.' 个可用文件', $html);
-
-    }
-
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
+    protected function grid($channel='xkv', $table='program')
     {
         $grid = new Grid(new Material());
+        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',[$channel])->orderBy('id', 'desc');
 
-        $grid->model()->orderBy('id', 'desc');
-        $grid->column('channel', __('Channel'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
@@ -101,7 +66,7 @@ class MaterialController extends AdminController
         //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
         $grid->actions(function ($actions) {
             $actions->disableView();
-            $actions->add(new Replicate);
+            //$actions->add(new Replicate);
         });
 
         $grid->batchActions(function ($actions) {
@@ -109,26 +74,25 @@ class MaterialController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchModify);
             $tools->append(new BatchImportor);
-            $tools->append(new BatchSync);
-            $tools->append(new BatchCreator);
         });
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
                 $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-                $filter->equal("status", __('Status'))->radio(Material::STATUS);
                 
                 
             });
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
-                $filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
+                //$filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
                 $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
+                $filter->equal("status", __('Status'))->radio(Material::STATUS);
+                //$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
             });
         });
+
+        $grid->disableCreateButton();
         
         return $grid;
     }

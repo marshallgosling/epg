@@ -31,10 +31,11 @@
     "Genre"         : "风格",
     "Author"        : "作曲",
     "Lyrics"        : "作词",
-    "Version"       : "版本号",
+    "Version"       : "版本",
     "Reviewer"      : "审核人",
     "Audit status"  : "审核状态",
     "Lock status"   : "状态锁",
+    "Lock"          : "锁",
     "Uuid"          : "UUID",
     "Status"        : "状态",
     "Type"          : "类型",
@@ -60,6 +61,7 @@
     "Viewed"        : "是否已读",
     "BlackList"     : "黑名单",
     "Details"       : "详细数据",
+    "Agreement"     : "合同",
     "Distribution date":"发单时间",
     "Audit date"    : "审核时间",
     "Expired date"  : "过期时间",
@@ -92,6 +94,7 @@
     "ChannelProgramIndexDesc" : "每日节目编单具体编排数据，可以编辑及排序",
     "BatchModify success message." : "批量修改记录成功",
     "BatchSync Success message": "批量同步任务发起成功",
+    "BatchScan Success message": "批量扫描任务发起成功",
     "Replicate Success message" : "复制记录成功。",
     "Replicate Failed message" : "复制记录成功。",
     "BatchReplicate Success message" : "批量复制记录成功。",
@@ -136,6 +139,7 @@
     "Restore Mode": "模版回退模式",
     "Preview Restore Template Content": "上次运行成功的模版结果",
     "具体节目编排": "具体节目编排",
-    "返回普通模式": "返回普通模式"
+    "返回普通模式": "返回普通模式",
+    "From Agreement": "来自合同"
 
 }

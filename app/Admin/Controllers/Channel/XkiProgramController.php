@@ -218,7 +218,7 @@ TMP;
         $view = 'admin.program.xki';
         $channel = Channel::find($model->channel_id);
 
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
         }

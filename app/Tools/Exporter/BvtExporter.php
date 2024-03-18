@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
+use App\Models\Material;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
@@ -163,7 +164,7 @@ class BvtExporter
         $channels = DB::table('channel')->whereBetween('air_date', [$start_at, $end_at])
                                         ->where('name', $group_id)
                                         ->where('status', Channel::STATUS_READY)
-                                        // ->where('audit_status', Channel::AUDIT_PASS)
+                                        // ->where('lock_status', Channel::LOCK_ENABLE)
                                         ->select('id','air_date','uuid')
                                         ->orderBy('air_date')->get();
 
@@ -223,8 +224,8 @@ class BvtExporter
         $start_at = strtotime($air_date.' 00:00:00');
 
         $list = Epg::where('group_id', $group)
-                    ->where('start_at','>',date('Y-m-d H:i:s', $start_at))
-                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+24800))
+                    ->where('start_at','=',date('Y-m-d H:i:s', $start_at))
+                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+1800))
                     ->orderBy('start_at', 'asc')->get();
 
         $pos_start = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
@@ -242,6 +243,19 @@ class BvtExporter
             if($idx < $begin || $idx>=$end) {
                 continue;
             }
+            if($callback)
+                $data[] = call_user_func($callback, $item);
+            else
+                $data[] = $item->toArray();
+        }
+
+        return $data;
+    }
+
+    public static function collectEPG($channel, \Closure $callback=null)
+    {
+        $list = Epg::where('channel_id', $channel->id)->orderBy('start_at', 'asc')->get();
+        foreach($list as $item) {
             if($callback)
                 $data[] = call_user_func($callback, $item);
             else
@@ -349,6 +363,9 @@ class BvtExporter
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
                 $clip->Name = '<![CDATA['.$program['name'].']]>';
                 $clip->Id = $program['unique_no'];
+                $filename = Material::getName($program['unique_no']); 
+                if($filename) $clip->FileName = $filename;
+
                 $seconds = ChannelPrograms::caculateSeconds($program['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
                 $clip->LimitDuration = $frames;
@@ -435,4 +452,6 @@ class BvtExporter
     {
         return floor($bytes / 1024) .'KB';
     }
+
+    
 }

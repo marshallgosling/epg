@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Expiration extends Model
+class Agreement extends Model
 {
     use HasFactory;
 
-    protected $table = 'expiration';
+    protected $table = 'agreement';
 
     public const STATUS_EMPTY = 0;
     public const STATUS_READY = 1;
@@ -19,7 +19,6 @@ class Expiration extends Model
     protected $fillable = [
         'id',
         'name',
-        'agreement_id',
         'start_at',
         'end_at',
         'status',
@@ -33,8 +32,8 @@ class Expiration extends Model
         'end_at' => 'datetime:Y-m-d'
     ];
 
-    public function agreement()
+    public function expiration()
     {
-        return $this->belongsTo(Agreement::class, 'agreement_id', 'id');
+        return $this->hasMany(Expiration::class, 'agreement_id', 'id');
     }
 }

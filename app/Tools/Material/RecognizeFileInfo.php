@@ -22,13 +22,13 @@ class RecognizeFileInfo
         $name = '';
         $m = false;
 
-        if(count($names)<=1) return compact('filename', 'unique_no', 'name', 'm');
+        if(count($names)<=1) return false;
         if(array_pop($names) != 'mxf') return compact('filename', 'unique_no', 'name', 'm');
 
-        if(count($names) == 2)
+        if(count($names) >= 2)
         {
             $unique_no = array_pop($names);
-            $name = array_pop($names);
+            $name = implode('.', $names);
             
             $m = Material::where('unique_no', $unique_no)->first();
 
@@ -55,12 +55,14 @@ class RecognizeFileInfo
             {
                 $unique_no = $unknow;
             }
-            else if(preg_match('/(\d+)$/', $unknow, $matches))
+            else
             {
                 $name = $unknow;
             }
 
         }
+
+        if($m && $m->status == Material::STATUS_READY) return false;
 
         return compact('filename', 'unique_no', 'name', 'm');
     }

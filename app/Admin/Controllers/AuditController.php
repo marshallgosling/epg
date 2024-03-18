@@ -49,11 +49,22 @@ class AuditController extends AdminController
         $grid->column('reason', __('Details'))->display(function () {
             return "展开";
         })->expand(function($model) {
-            $data = json_decode($model->reason, true);
-            $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
+            $data = json_decode($model->reason, true);    
+            if(!$data) return "<p>没有数据</p>";
             $rows = [];
             if($data['duration']['result']) {
-                return "<p>没有错误</p>";
+                if($data['material']['result']) {
+                    return "<p>没有错误</p>";
+                }
+                else {
+                    foreach($data['material']['logs'] as $item) {
+                        $rows[] = [
+                            $item['name'], $item['unique_no'], $item['duration'], '缺失物料'
+                        ];
+                    }
+                    $head = ['名称','播出编号','时长',''];
+                    return new Table($head, $rows);
+                }
             }
             else
             {
@@ -62,11 +73,11 @@ class AuditController extends AdminController
                         $item['start_at'], $item['end_at'], $item['name'], $item['unique_no'], $item['duration'], $item['duration2'], ''
                     ];
                 }
+                $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
                 return new Table($head, $rows);
             }
         });
         
-        //$grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
         $grid->column('created_at', __('Created at'))->sortable()->hide();
         $grid->column('updated_at', __('Updated at'))->sortable();
 
@@ -84,6 +95,15 @@ class AuditController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             //$tools->disableBatchActions();
             
+        });
+
+        $grid->filter(function(Grid\Filter $filter) {
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->in('name', __('Group'))->checkbox(Channel::GROUPS);
+            });
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('channel_id', __('Channel ID'));
+            });
         });
 
         return $grid;

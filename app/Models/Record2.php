@@ -74,7 +74,8 @@ class Record2 extends Model
 
     public static function loadExpiration($air)
     {
-        self::$expiration = Expiration::where('end_at', '<', $air)->pluck('name')->toArray();
+        $ids = Agreement::where('end_at', '<', $air)->pluck('id')->toArray();
+        self::$expiration = Expiration::whereIn('agreement_id', $ids)->pluck('name')->toArray();
         self::$air = $air;
     }
 
@@ -152,6 +153,11 @@ class Record2 extends Model
         {
             // 有配置过首播日记录信息，且不是首播日，则会进入这段代码逻辑
             $item = self::findUnique($template->data['unique_no']);
+            if(!$item) 
+            {
+                $data['result'] = '未找到';
+                $item = 'empty2';
+            }
             $items[] = $item;
         }
         else

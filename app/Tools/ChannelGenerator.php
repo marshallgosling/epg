@@ -14,7 +14,6 @@ use App\Tools\Generator\XkiGenerator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-
 class ChannelGenerator
 {
  
@@ -191,9 +190,9 @@ class ChannelGenerator
     {
         try {
             
-            // $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
-            // $d2 = strtotime($date);
-            //if($d2 > $d)
+            $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
+            $d2 = strtotime($date);
+            if($d2 > $d)
                 Storage::put($group.'.txt', $date);
         }
         catch(\Exception $e)
@@ -235,6 +234,19 @@ class ChannelGenerator
         }
 
         return false;
+    }
+
+    /**
+     * check time span perfect span is 17:00 - 17:00
+     * 
+     * @param int $timestr
+     * @return string
+     */
+    public static function checkAbnormalTimespan($timestr)
+    {
+        $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
+        if($perfect > $timestr) return "编单结束时间异常，请手动干预处理！";
+        return "";
     }
 
 }

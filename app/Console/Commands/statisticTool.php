@@ -33,7 +33,6 @@ class statisticTool extends Command
         $model = $this->argument('model') ?? "";
         $statistic = new StatisticProgram();
 
-        //$channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
         $channel = Channel::find($id);
         
         // foreach($channels as $channel)
