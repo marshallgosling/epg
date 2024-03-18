@@ -17,6 +17,19 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="btn-group"><b>{{__('替换规则')}}</b></div>
+            </div>
+            <!-- /.box-header -->
+            <div id="replace-programs" class="box-body table-responsive no-padding">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="searchModal" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -32,7 +45,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">栏目</span>
-                        <select class="form-control category" id="category" style="width:200px" >
+                        <select class="form-control category" id="category" style="width:140px" >
                         <option value=""></option>
                         @foreach($categories as $key=>$value)
                         <option value="{{$key}}">{{$value}}</option>
@@ -43,9 +56,15 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">关键字</span>
-                        <input type="text" class="form-control" style="width:240px" id="keyword" placeholder="请输入关键字, 输入%作为通配符">
+                        <input type="text" class="form-control" style="width:200px" id="keyword" placeholder="输入%作为通配符">
                     </div>
-                </div> 
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">时长</span>
+                        <input type="text" class="form-control" style="width:100px" id="duration" placeholder="秒为单位">
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -101,7 +120,7 @@
     var cachedPrograms = null;
     var keyword = '';
     var dataList = JSON.parse('{!!$json!!}');
-    var category = JSON.parse('{!!@json_encode($category)!!}');
+    var replaceList = [];
     function reloadTree()
     {
         var html = '<ol class="dd-list">';
@@ -119,6 +138,21 @@
 
         $chkboxes = $('.grid-row-checkbox');
         //setupMouseEvents();
+    }
+
+    function reloadReplace()
+    {
+        var html = '<table class="table table-hover grid-table">';
+        html += '<thead><tr><th>节目名</th><th>播出编号</th><th>时长</th><th>替换节目名</th><th>替换编号</th><th>替换时长</th><th>建议</th></tr></thead>';
+        var total = 0;
+        for(i=0;i<replaceList.length;i++)
+        {
+            html += createReplace(i, replaceList[i]);
+        }
+        html += '</'+'table>';
+
+        $('#replace-programs').html(html);
+       
     }
 
     function showSearchModal(idx) {
@@ -140,6 +174,7 @@
                     q: keyword,
                     c: $('#category').val(),
                     t: $('#library').val(),
+                    s: $('#duration').val(),
                     p: curPage
                 },
                 success: function (data) {
@@ -190,23 +225,32 @@
                 toastr.error("该艺人以上黑名单，不能使用");
                 return;
             }
-            dataList[selectedIndex].unique_no = selectedItem.unique_no;
-            dataList[selectedIndex].name = selectedItem.name;
-            dataList[selectedIndex].artist = selectedItem.artist;
-            dataList[selectedIndex].category = selectedItem.category;
-            dataList[selectedIndex].duration = selectedItem.duration;
+            item = dataList[selectedIndex];
+            setReplaceProgram(item, selectedItem);
 
-            //$('#btnSort').html("保存");
-            //$('#treeinfo').html('<strong class="text-danger">请别忘记保存修改！</'+'strong>');
             selectedItem = false;
             selectedItems = [];
             $('.search-item').removeClass('info');
             $('#selectedSpan').html('');
-            reloadTree();
+            reloadReplace();
         });
 
         reloadTree();
     });
+
+    function setReplaceProgram(item, replace) {
+        for(var i=0;i<replaceList.length;i++)
+        {
+            if(replaceList[i].unique_no == item.unique_no) {
+                replaceList[i].replace = replace;
+                return true;
+            }
+        }
+        item.replace = replace;
+        replaceList.push(item);
+        return;
+
+    }
 
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
@@ -240,6 +284,7 @@
                     q: keyword,
                     c: $('#category').val(),
                     t: $('#library').val(),
+                    s: $('#duration').val(),
                     p: curPage
             },
                 success: function (data) {
@@ -309,6 +354,19 @@
         return html.replace(/idx/g, idx).replace(/textstyle/g, textstyle).replace('start_at', item.start_at).replace('end_at', item.end_at)
                     .replace('name', item.name).replace('duration', item.duration).replace('artist', item.artist).replace('program', item.program)
                     .replace('category', item.category).replace('unique_no', item.unique_no).replace('bgstyle', style).replace('air_date', item.air_date);
+    }
+
+    function createReplace(idx, item) {
+        var td = [];
+        td.push(item.name);td.push(item.unique_no);td.push(item.duration);
+        td.push(item.replace.name);td.push(item.replace.unique_no);td.push(item.replace.duration);
+
+        var d1 = parseDuration(item.duration);
+        var d2 = parseDuration(item.replace.duration);
+        if(Math.abs(d1-d2) > 180) td.push('时长不匹配');
+        else td.push('');
+
+        return "<tr><td>"+td.join('</'+'td><td>')+"</"+"td></"+"tr>";
     }
 
     function parseBg($no, $code)
