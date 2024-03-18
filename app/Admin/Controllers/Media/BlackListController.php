@@ -36,8 +36,8 @@ class BlackListController extends AdminController
         <span class="textstyle" style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at</span>
         <span style="display:inline-block;width:120px;"><a class="dd-nodrag textstyle" href="javascript:showSearchModal(idx);">unique_no</a></span>
         <span class="textstyle" style="display:inline-block;width:140px;text-overflow:ellipsis"><strong>name</strong></span>
-        <span class="textstyle" style="display:inline-block;width:80px;"><small>duration</small></span>
-        <span class="textstyle" style="display:inline-block;width:60px;">【category】</span>
+        <span class="textstyle" style="display:inline-block;width:100px;"><small>duration</small></span>
+        <span class="textstyle" style="display:inline-block;width:80px;">【category】</span>
         <span class="textstyle" style="display:inline-block;width:200px;text-overflow:ellipsis">artist</span>
         <span class="pull-right dd-nodrag">
             <a href="javascript:showSearchModal(idx);" title="替换"><i class="fa fa-edit"></i> 替换</a>&nbsp;
