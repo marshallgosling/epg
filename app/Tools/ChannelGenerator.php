@@ -245,7 +245,7 @@ class ChannelGenerator
     public static function checkAbnormalTimespan($timestr)
     {
         $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
-        if(abs($perfect - $timestr) >= 300) return "编单时间异常，请手动干预处理！";
+        if($perfect > $timestr) return "编单结束时间异常，请手动干预处理！";
         return "";
     }
 

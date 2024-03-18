@@ -186,6 +186,7 @@ class XkiGenerator
             //CalculationEvent::dispatch($channel->id);
             $channel->start_end = $start_end .' - '. date('H:i:s', $air);
             $channel->status = Channel::STATUS_READY;
+            $channel->comment = ChannelGenerator::checkAbnormalTimespan($air);
             $channel->save();
 
 
