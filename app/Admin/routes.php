@@ -16,6 +16,7 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
     
+    $router->get('/media/scan/result', 'Media\\ProcessMaterialController@compare')->name('media.result.d');
     $router->get('/media/help', 'HelpController@material')->name('media.help');
     $router->get('/media/recognize', 'Media\\ProcessMaterialController@local')->name('media.recognize');
     $router->post('/media/recognize', 'Media\\ProcessMaterialController@process')->name('media.recognize.process');

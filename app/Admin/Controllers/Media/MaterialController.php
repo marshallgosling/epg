@@ -17,7 +17,10 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Box;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 
 class MaterialController extends AdminController
@@ -31,8 +34,8 @@ class MaterialController extends AdminController
 
     public function compare(Content $content)
     {
-        $title = '物料库与节目库比对';
-        $description = '此处对比的是“物料库内存在，V China节目库里不存在”的记录';
+        $title = '物料库扫描结果';
+        $description = '';
         
         return $content
             ->title($title)
@@ -42,64 +45,24 @@ class MaterialController extends AdminController
 
     private function grid2($channel, $table='program')
     {
-        $grid = new Grid(new Material());
-        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',[$channel])->orderBy('id', 'desc');
-
-        $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);
-        $grid->column('status', __('Status'))->display(function($status) {
-            return $status == Material::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red" title="'.Material::STATUS[$status].'"></i> ';
-        });
-        $grid->column('name', __('Name'))->display(function ($name) {
-            if($this->comment) $name2 = '&nbsp; <small class="text-info" title="'.str_replace('"', '\\"', $this->comment).'" data-toggle="tooltip" data-placement="top">Eng</small>';
-            else $name2 = '';
-            return $name . $name2;
-        });
-        $grid->column('category', __('Category'))->display(function ($category) {
-            return Category::findCategory($category). '&nbsp;('.$category.')';
-        });
-        $grid->column('group', __('Episodes'));  
-        $grid->column('ep', __('Ep'))->sortable();
+        $data = json_decode(Storage::get('scan.txt'));
+        $head = ["", "文件名", "扫描结果", "分析结果", "操作"];
         
-        $grid->column('duration', __('Duration'));
-        $grid->column('size', __('Size'))->hide();
-        $grid->column('md5', __('MD5'))->hide();
-        $grid->column('frames', __('Frames'))->sortable();
-        $grid->column('created_at', __('Created at'))->sortable()->hide();
-        $grid->column('updated_at', __('Updated at'))->sortable();
+        $rows = [];
+        $available = 0;
+        foreach($data as $item)
+        {
+            if($item->status == Material::STATUS_READY) {
+                $row[] = [$item->unique_no, $item->filepath, "名称:".$item->name, "不一致" , ""];
+                $available ++;
+            }
+        }
 
-        //$grid->setActionClass(\Encore\Admin\Grid\Displayers\Actions::class);
-        $grid->actions(function ($actions) {
-            $actions->disableView();
-            //$actions->add(new Replicate);
-        });
+        $html = (new Table($head, $rows, ['table-hover', 'grid-table']))->render();
+        //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
-        $grid->batchActions(function ($actions) {
-            $actions->add(new BatchDelete);
-        });
+        return new Box('目标路径文件夹扫描结果，总共 '.$available.' 个可用文件, '.(count($rows)-$available).' 个不可用文件', $html);
 
-        $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new BatchImportor);
-        });
-
-        $grid->filter(function(Grid\Filter $filter){
-            $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->mlike('name', __('Name'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
-                $filter->equal('category', __('Category'))->select(Category::getFormattedCategories());
-                
-                
-            });
-            $filter->column(6, function(Grid\Filter $filter) { 
-                //$filter->in('channel', __('Channel'))->checkbox(Channel::GROUPS);
-                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
-                $filter->equal("status", __('Status'))->radio(Material::STATUS);
-                //$filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配');
-            });
-        });
-
-        $grid->disableCreateButton();
-        
-        return $grid;
     }
 
     /**
