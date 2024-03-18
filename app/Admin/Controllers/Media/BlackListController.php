@@ -49,7 +49,7 @@ TMP;
         $model = BlackList::find($id);
         $json = $this->table($model);
         $data = json_decode($model->data);
-        $replace = json_encode(is_array($data->replace)?$data->replace:[]);
+        $replace = json_encode(key_exists('replace', $data)?$data->replace:[]);
         return $content
             ->title($title)
             ->description($description ?? trans('admin.list'))
