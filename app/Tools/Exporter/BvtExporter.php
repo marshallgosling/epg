@@ -350,8 +350,8 @@ class BvtExporter
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
                 $clip->Name = '<![CDATA['.$program['name'].']]>';
                 $clip->Id = $program['unique_no'];
-                $filename = Material::getFileName($program['unique_no']); 
-                if($filename) $clip->FileName = $filename;
+                //$filename = Material::getFileName($program['unique_no']); 
+                //if($filename) $clip->FileName = $filename;
 
                 $seconds = ChannelPrograms::caculateSeconds($program['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
