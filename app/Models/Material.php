@@ -80,4 +80,14 @@ class Material extends Model
         }
         return false;
     }
+
+    public static function getName($no)
+    {
+        $name = self::where('unique_no', $no)->value('name');
+        if($name)
+        {
+            return $name.$no;
+        }
+        return false;
+    }
 }
