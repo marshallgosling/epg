@@ -135,6 +135,8 @@ class fileTool extends Command
 
             if($name != $m->name) {
                 $this->info("{$m->unique_no}: {$m->name} | {$name} 不一致");
+                $m->name = $name;
+                $m->save();
                 $data[] = $m;
             }
             
