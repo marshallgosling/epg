@@ -43,6 +43,9 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
 
+        $file = Material::getFileName('VCNM12000019');
+        echo $file;
+        return 0;
 
         $ids = Agreement::where('end_at', '<', $day)->pluck('id')->toArray();
         $expiration = Expiration::whereIn('agreement_id', $ids)->pluck('name')->toArray();

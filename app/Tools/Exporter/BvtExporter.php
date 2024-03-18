@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
+use App\Models\Material;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
@@ -349,6 +350,9 @@ class BvtExporter
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
                 $clip->Name = '<![CDATA['.$program['name'].']]>';
                 $clip->Id = $program['unique_no'];
+                $filename = Material::getFileName($program['unique_no']); 
+                if($filename) $clip->FileName = $filename;
+
                 $seconds = ChannelPrograms::caculateSeconds($program['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
                 $clip->LimitDuration = $frames;
@@ -435,4 +439,6 @@ class BvtExporter
     {
         return floor($bytes / 1024) .'KB';
     }
+
+    
 }
