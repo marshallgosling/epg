@@ -121,10 +121,12 @@ class fileTool extends Command
     {
         $file = $this->argument('path') ?? "";
         $query = Material::where('channel', 'xkv');
+        $data = [];
         if($file) $query = $query->where('category',$file);
         $list = $query->get();
         foreach($list as $m)
         {
+            if(!$m->filepath) continue;
             $file = explode('\\', $m->filepath);
             $filename = array_pop($file);
             $names = explode('.', $filename);
@@ -133,8 +135,11 @@ class fileTool extends Command
 
             if($name != $m->name) {
                 $this->info("{$m->unique_no}: {$m->name} | {$name} 不一致");
+                $data[] = $m;
             }
+            
         }
+        Storage::put('scan.txt', json_encode($data));
     }
 
     private function mediainfo()
