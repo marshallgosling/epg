@@ -224,8 +224,8 @@ class BvtExporter
         $start_at = strtotime($air_date.' 00:00:00');
 
         $list = Epg::where('group_id', $group)
-                    ->where('start_at','>',date('Y-m-d H:i:s', $start_at))
-                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+24800))
+                    ->where('start_at','=',date('Y-m-d H:i:s', $start_at))
+                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+1800))
                     ->orderBy('start_at', 'asc')->get();
 
         $pos_start = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
@@ -243,6 +243,19 @@ class BvtExporter
             if($idx < $begin || $idx>=$end) {
                 continue;
             }
+            if($callback)
+                $data[] = call_user_func($callback, $item);
+            else
+                $data[] = $item->toArray();
+        }
+
+        return $data;
+    }
+
+    public static function collectEPG($channel, \Closure $callback=null)
+    {
+        $list = Epg::where('channel_id', $channel->id)->orderBy('start_at', 'asc')->get();
+        foreach($list as $item) {
             if($callback)
                 $data[] = call_user_func($callback, $item);
             else

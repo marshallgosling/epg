@@ -54,7 +54,8 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
         $channel = Channel::find($this->id);
         if(!$channel) return;
 
-        $data = BvtExporter::collectData($channel->air_date, $channel->name);
+        //$data = BvtExporter::collectData($channel->air_date, $channel->name);
+        $data = BvtExporter::collectEPG($channel);
 
         if(count($data) <= 10) {
             Notify::fireNotify(
