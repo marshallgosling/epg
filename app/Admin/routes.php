@@ -40,6 +40,7 @@ Route::group([
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
     $router->resource('/media/blacklist', 'Media\\BlackListController')->names('media.blacklist');
     $router->get('/media/blacklist/result/{id}', 'Media\\BlackListController@results')->name('media.blacklist.result');
+    $router->post('/media/blacklist/result/{id}/save', 'Media\\BlackListController@saveReplace')->name('media.blacklist.result.save');
 
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');
     $router->get('/channel/xkc/preview/{id}', 'Channel\\XkcController@preview')->name('channel.xkc.preview');

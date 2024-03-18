@@ -22,6 +22,8 @@
         <div class="box">
             <div class="box-header">
                 <div class="btn-group"><b>{{__('替换规则')}}</b></div>
+                <a id="btnSave" class="btn btn-info btn-sm"><i class="fa fa-info-circle"></i> 保存规则</a>
+                <span id="treeinfo"></span>
             </div>
             <!-- /.box-header -->
             <div id="replace-programs" class="box-body table-responsive no-padding">
@@ -120,7 +122,7 @@
     var cachedPrograms = null;
     var keyword = '';
     var dataList = JSON.parse('{!!$json!!}');
-    var replaceList = [];
+    var replaceList = JSON.parse('{!!$replace!!}');
     function reloadTree()
     {
         var html = '<ol class="dd-list">';
@@ -234,8 +236,23 @@
             $('#selectedSpan').html('');
             reloadReplace();
         });
+        $('#btnSave').on('click', function(e) {
+            $.ajax({
+                method: 'post',
+                url: '/admin/media/blacklist/result/{!! $model->id !!}/save',
+                data: {
+                    data: JSON.stringify(replaceList),
+                    _token:LA.token,
+                },
+                success: function (data) {
+                    //$.pjax.reload('#pjax-container');
+                    toastr.success('保存成功 !');
+                }
+            });
+        });
 
         reloadTree();
+        reloadReplace();
     });
 
     function setReplaceProgram(item, replace) {
@@ -364,7 +381,7 @@
         var d1 = parseDuration(item.duration);
         var d2 = parseDuration(item.replace.duration);
         if(Math.abs(d1-d2) > 180) td.push('时长不匹配');
-        else td.push('');
+        else td.push('可替换');
 
         return "<tr><td>"+td.join('</'+'td><td>')+"</"+"td></"+"tr>";
     }

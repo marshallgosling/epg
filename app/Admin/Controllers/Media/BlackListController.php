@@ -13,6 +13,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
+use Illuminate\Http\Request;
 
 class BlackListController extends AdminController
 {
@@ -45,12 +46,29 @@ class BlackListController extends AdminController
     </div>
 </li>
 TMP;
-        $model = BlackList::find($id);        
+        $model = BlackList::find($id);
         $json = $this->table($model);
+        $data = json_decode($model->data);
+        $replace = json_encode(is_array($data->replace)?$data->replace:[]);
         return $content
             ->title($title)
             ->description($description ?? trans('admin.list'))
-            ->body(view('admin.black', compact('model', 'json', 'template', 'categories')));
+            ->body(view('admin.black', compact('model', 'json', 'template', 'categories', 'replace')));
+    }
+
+    public function saveReplace($id, Request $request)
+    {
+        $replace = $request->post('data');
+        $model = BlackList::find($id);
+        $data = json_decode($model->data);
+        $data->replace = json_decode($replace);
+        $model->data = json_encode($data);
+        $model->save();
+        $response = [
+            'status'  => true,
+            'message' => trans('admin.save_succeeded'),
+        ];
+        return response()->json($response);
     }
 
     private function table($black)
