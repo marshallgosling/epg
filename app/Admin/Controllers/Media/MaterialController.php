@@ -53,7 +53,7 @@ class MaterialController extends AdminController
         foreach($data as $item)
         {
             if($item->status == Material::STATUS_READY) {
-                $row[] = [$item->unique_no, $item->filepath, "名称:".$item->name, "不一致" , ""];
+                $rows[] = [$item->unique_no, $item->filepath, "名称:".$item->name, "不一致" , ""];
                 $available ++;
             }
         }
@@ -61,7 +61,7 @@ class MaterialController extends AdminController
         $html = (new Table($head, $rows, ['table-hover', 'grid-table']))->render();
         //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
-        return new Box('目标路径文件夹扫描结果，总共 '.$available.' 个可用文件, '.(count($rows)-$available).' 个不可用文件', $html);
+        return new Box('目标路径文件夹扫描结果，总共 '.$available.' 个可用文件', $html);
 
     }
 
