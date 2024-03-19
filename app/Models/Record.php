@@ -255,15 +255,19 @@ class Record extends Model
     }
 
     public static function checkBumperAndPr() {
+        $bum = config('XKC_BUMPERS_TAG', 'XK FILLER');
         $c = 0;
+        self::loadBumpers($bum);
+        
         if(self::$bumper)foreach(self::$bumper as $b)
             $c += count($b);
 
-        $pr = Record::where('records.category', 'XK RP,')->join('material', 'records.unique_no', '=', 'material.unique_no')->select('records.unique_no')->pluck('unique_no')->toArray();
+        $p = config('XKC_PR_TAG', 'XK PR');
+        $pr = Record::where('records.category', $p.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->select('records.unique_no')->pluck('unique_no')->toArray();
 
         $c2 = count($pr);
 
-        return [$c, $c2];
+        return [$bum=>$c, $p=>$c2];
     }
 
     public static function findBumper($key) {
