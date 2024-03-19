@@ -135,9 +135,9 @@ class XkvProgramController extends AdminController
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'));
-        $form->text('end_at', __('End at'));
-        $form->text('duration', __('Duration'));
+        $form->text('start_at', __('Start at'))->disable();
+        $form->text('end_at', __('End at'))->disable();
+        $form->text('duration', __('Duration'))->disable();
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
         $form->json('data', '编单数据');
