@@ -79,11 +79,11 @@ class XkvController extends AdminController
             return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
         })->width(100);
 
-        $grid->column('start_end', __('StartEnd'))->width(160);
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(120)
+        $grid->column('start_end', __('StartEnd'))->width(130);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(60)
             ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         
-        $grid->column('audit', __('Audit status'))->display(function () { 
+        $grid->column('audit', __('Audit status'))->width(100)->display(function () { 
             if($this->audit) {
                 foreach($this->audit()->orderBy('id','desc')->get() as $item) {
                     return Audit::STATUS[$item->status];
@@ -105,7 +105,7 @@ class XkvController extends AdminController
         });
         
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->width(80)->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));

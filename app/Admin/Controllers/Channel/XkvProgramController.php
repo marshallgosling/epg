@@ -43,10 +43,13 @@ class XkvProgramController extends AdminController
     {
         $grid = new Grid(new ChannelPrograms());
 
-        //$grid->column('id', __('Id'));
+        $grid->column('id', __('Id'));
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return "<a href=\"tree/{$this->id}\">{$this->name}</a>"; 
+            $data = json_decode($this->data, true);
+            if(array_key_exists('replicate', $data)) $replicate = $data['replicate']; 
+            else $replicate = '';
+            return "<a href=\"tree/{$this->id}\">{$name} {$replicate}</a>"; 
         });
         
         $grid->column('start_at', __('Start at'));

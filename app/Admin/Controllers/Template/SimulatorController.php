@@ -30,7 +30,7 @@ class SimulatorController extends Controller
 
         $error = $simulator->getErrorMark();
 
-        Record::loadBumpers(config('XKC_BUMPERS_TAG', 'XK FILLER'));
+        
         $r = Record::checkBumperAndPr();
 
 

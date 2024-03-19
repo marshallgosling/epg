@@ -77,8 +77,8 @@ class XkiController extends AdminController
             return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
         })->width(100);
 
-        $grid->column('start_end', __('StartEnd'))->width(160);
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(120)
+        $grid->column('start_end', __('StartEnd'))->width(150);
+        $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(60)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         $grid->column('audit', __('Audit status'))->display(function () { 
             
