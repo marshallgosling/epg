@@ -173,8 +173,8 @@ ol.breadcrumb {
                   <li><b class="text-success">通过</b></li>
                   @endif
                   @foreach($r as $pr=>$c)
-                  <li><b>$pr</b></li>
-                  <li><b>$c</b></li>
+                  <li><b>{{$pr}}</b></li>
+                  <li><b>{{$c}}</b></li>
                   @endforeach
                 </ol>
                 
