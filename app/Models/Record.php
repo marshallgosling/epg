@@ -254,6 +254,18 @@ class Record extends Model
         self::$bumper[] = Record::where('records.category', $category.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('records.unique_no')->pluck('unique_no')->toArray();
     }
 
+    public static function checkBumperAndPr() {
+        $c = 0;
+        if(self::$bumper)foreach(self::$bumper as $b)
+            $c += count($b);
+
+        $pr = Record::where('records.category', 'XK RP,')->join('material', 'records.unique_no', '=', 'material.unique_no')->select('records.unique_no')->pluck('unique_no')->toArray();
+
+        $c2 = count($pr);
+
+        return [$c, $c2];
+    }
+
     public static function findBumper($key) {
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
         $id = Arr::random(self::$bumper[$key]);

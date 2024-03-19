@@ -76,7 +76,7 @@ class XkcGenerator
     {
         ChannelGenerator::makeCopyTemplate($this->group);
         Record::cleanCache();
-        Record::loadBumpers();
+        Record::loadBumpers(config('XKC_BUMPERS_TAG', 'XK FILLER'));
 
         $days = (int)config('SIMULATOR_DAYS', 14);
         //$channels = $this->channels;
@@ -131,7 +131,7 @@ class XkcGenerator
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {
                     if($duration > $scheduledDuration) break;
-                    $pr = $this->addPRItem($air);
+                    $pr = $this->addPRItem($air, config('XKC_PR_TAG', 'XK PR'));
                     if(is_array($pr)) {
                         $data[] = $pr['line'];
                         $duration += $pr['seconds'];
