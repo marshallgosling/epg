@@ -28,7 +28,7 @@ class Generator extends RowAction
         $model->status = Channel::STATUS_WAITING;
         $model->save();
 
-        XkvGeneratorJob::dispatch('xkv')->onQueue('xkv');
+        XkvGeneratorJob::dispatch($model->id)->onQueue('xkv');
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

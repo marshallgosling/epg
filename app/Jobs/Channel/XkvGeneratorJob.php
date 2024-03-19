@@ -49,11 +49,11 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        if($this->range == $this->group) {
-            $channels = Channel::where(['name'=>$this->group, 'status'=>Channel::STATUS_WAITING])->get();
+        if(is_array($this->range)) {
+            $channels = Channel::generate($this->group, $this->range['s'], $this->range['e']);
         }
         else {
-            $channels = Channel::generate($this->group, $this->range['s'], $this->range['e']);
+            $channels = [Channel::find($this->range)];
         }
         if(!$channels) {
             $this->error("频道 {$this->range} 是空数组");
