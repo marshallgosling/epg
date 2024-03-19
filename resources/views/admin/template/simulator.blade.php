@@ -172,6 +172,10 @@ ol.breadcrumb {
                   <li><b>运行结果</b></li>
                   <li><b class="text-success">通过</b></li>
                   @endif
+                  @foreach($r as $pr=>$c)
+                  <li><b>$pr</b></li>
+                  <li><b>$c</b></li>
+                  @endforeach
                 </ol>
                 
             </div>
