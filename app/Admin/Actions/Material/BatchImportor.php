@@ -43,11 +43,11 @@ class BatchImportor extends BatchAction
 
                 $program->episodes = $model->group;
                 $program->ep = (int) $model->ep;
-                
+                if($model->comment) $program->name2 = $model->comment;
             }
             
             $program->name = $model->name;
-            if($model->comment) $program->name2 = $model->comment;
+            
             $program->unique_no = $model->unique_no;
             $program->duration = $model->duration;
             $program->category = [$model->category];
