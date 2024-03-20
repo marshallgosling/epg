@@ -169,7 +169,7 @@ class channelTool extends Command
     {
         $channel = Channel::findOrFail($id);
 
-        $data = BvtExporter::collectEPG($channel->air_date, $channel->name);
+        $data = BvtExporter::collectEPG($channel);
 
         BvtExporter::generateData($channel, $data);
         
