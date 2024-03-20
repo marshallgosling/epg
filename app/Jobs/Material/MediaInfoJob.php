@@ -130,10 +130,41 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         if(!$largefile) return;
         $folders = explode(PHP_EOL, config('MEDIA_SOURCE_FOLDER', ''));
         $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
+
         $targetpath = $folders[$largefile->target_path].$largefile->name;
 
         if(file_exists($filepath))
         {
+            
+            $names = explode('.', $largefile->name);
+
+            if(count($names) != 3) {
+                    
+                return;
+            }
+                
+            $unique_no = $names[1];
+
+            $material = Material::where('unique_no', $unique_no)->first();
+            
+            if($folders[$largefile->target_path] == 'Y:\\MV2\\')
+            {
+                $targetpath = $folders[$largefile->target_path].$unique_no.'.mxf';
+            }
+
+            if(!$material) {
+                $material = new Material();
+                $material->unique_no = $unique_no;
+                $material->name = $names[0];
+                $material->filepath = $targetpath;
+                $material->status = Material::STATUS_EMPTY;
+                $group = preg_replace('/(\d+)$/', "", $names[0]);
+                $material->group = trim(trim($group), '_-');
+                $material->channel = 'xkc';
+                $material->save();
+            }
+
+            
             @copy($filepath, $targetpath);
 
             if(!file_exists($targetpath))
@@ -145,33 +176,9 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
             $largefile->status = LargeFile::STATUS_READY;
             $largefile->save();
+
+            MediaInfoJob::dispatch($material->id, 'sync')->onQueue('media');
             @unlink($filepath);
-
-            $names = explode('.', $largefile->name);
-
-                if(count($names) != 3) {
-                    
-                    return;
-                }
-                
-                $unique_no = $names[1];
-
-                $material = Material::where('unique_no', $unique_no)->first();
-
-                if(!$material) {
-                    $material = new Material();
-                    $material->unique_no = $unique_no;
-                    $material->name = $names[0];
-                    $material->filepath = $targetpath;
-                    $material->status = Material::STATUS_EMPTY;
-                    $group = preg_replace('/(\d+)$/', "", $names[0]);
-                    $material->group = trim(trim($group), '_-');
-                    $material->channel = 'xkc';
-                    $material->save();
-                }
-
-                MediaInfoJob::dispatch($material->id, 'sync')->onQueue('media');
-                
         }
     }
 
