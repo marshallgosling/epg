@@ -103,7 +103,7 @@ class CategoryController extends AdminController
                     'message' => __('CategoryNo').' '. $form->no.' 已存在。',
                 ]);
     
-                if(Category::where('CategoryNo', $form->no)->exists())
+                if(Category::where('no', $form->no)->exists())
                 {
                     return back()->with(compact('error'));
                 }
