@@ -47,6 +47,35 @@ class test extends Command
         $list = Material::where('channel', 'xkv')->where('status', Material::STATUS_READY)->lazy();
         foreach($list as $m)
         {
+            if(!file_exists($m->filepath))
+            {
+                $this->info("not exists: ".$m->filepath);
+                
+                $path = "Y:\\其他\\".$m->name.'.'.$m->unique_no.'.mxf';
+                if(file_exists($path))
+                {
+                    $this->info("found: ".$path);
+                    $m->filepath = "Y:\\MV2\\".$m->unique_no.'.mxf';
+                    $m->save();
+                }
+            }
+            else {
+                $path = "Y:\\MV2\\".$m->unique_no.'.mxf';
+                if(file_exists($path))
+                {
+                    $m->filepath = $path;
+                    $m->save();
+                }
+                else {
+                    $this->error("error: {$m->filepath} {$m->name} {$m->unique_no}");
+                }
+            }
+        }
+        
+        return;
+        
+        foreach($list as $m)
+        {
             $lines[] = "copy \"{$m->filepath}\" \"Y:\\MV2\\{$m->unique_no}.mxf\"";
         }
 
