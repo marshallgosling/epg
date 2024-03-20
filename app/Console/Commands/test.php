@@ -50,25 +50,27 @@ class test extends Command
             if(!file_exists($m->filepath))
             {
                 $this->info("not exists: ".$m->filepath);
-                
                 $path = "Y:\\其他\\".$m->name.'.'.$m->unique_no.'.mxf';
+                
                 if(file_exists($path))
                 {
                     $this->info("found: ".$path);
-                    $m->filepath = "Y:\\MV2\\".$m->unique_no.'.mxf';
-                    $m->save();
+                    @copy($path, $m->filepath);
+                }
+                else {
+                    $this->error("error: {$m->filepath} {$m->name} ");
                 }
             }
             else {
-                $path = "Y:\\MV2\\".$m->unique_no.'.mxf';
-                if(file_exists($path))
-                {
-                    $m->filepath = $path;
-                    $m->save();
-                }
-                else {
-                    $this->error("error: {$m->filepath} {$m->name} {$m->unique_no}");
-                }
+                // $path = "Y:\\其他\\".$m->name.'.'.$m->unique_no.'.mxf';
+                // if(file_exists($path))
+                // {
+                //     $m->filepath = $path;
+                //     $m->save();
+                // }
+                // else {
+                //     $this->error("error: {$m->filepath} {$m->name} {$m->unique_no}");
+                // }
             }
         }
         
