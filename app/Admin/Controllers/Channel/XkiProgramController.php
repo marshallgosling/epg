@@ -198,7 +198,7 @@ class XkiProgramController extends AdminController
         <input type="checkbox" class="grid-row-checkbox" data-id="idx" autocomplete="off">
         <span class="textstyle" style="display:inline-block;width:120px;margin-left:10px;">start_at -- end_at</span>
         <span style="display:inline-block;width:140px;"><a class="dd-nodrag textstyle" href="javascript:showSearchModal(idx);">unique_no</a></span>
-        <span class="textstyle" style="display:inline-block;"><strong>name</strong></span>
+        <span class="textstyle" style="display:inline-block;width:400px;"><strong>name</strong></span>
         <span class="textstyle" style="display:inline-block;width:60px;"><small>duration</small></span>
         <span class="textstyle" style="display:inline-block;width:120px;">【category】</span>
         <span class="textstyle" style="display:inline-block;width:300px;text-overflow:ellipsis">artist</span>
