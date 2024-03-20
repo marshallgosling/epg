@@ -225,13 +225,13 @@ class XkiGenerator
         return compact('line', 'seconds');
     }
 
-    public function addBumperItem($schedule_end, $break_level, $air, $category='m1')
+    public function addBumperItem($schedule_end, $break_level, $air)
     {
         $item = Record::findBumper($break_level);
         if(!$item) return false;
         //$this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
-
+        $category = $item->category;
         $temp_air = $air + $seconds;
 
         //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));

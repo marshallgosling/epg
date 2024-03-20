@@ -222,7 +222,7 @@ class XkcGenerator
         return compact('line', 'seconds');
     }
 
-    public function addBumperItem($schedule_end, $break_level, $air, $category='m1')
+    public function addBumperItem($schedule_end, $break_level, $air)
     {
         $item = Record::findBumper($break_level);
 
@@ -231,6 +231,7 @@ class XkcGenerator
         $seconds = ChannelGenerator::parseDuration($item->duration);
 
         $temp_air = $air + $seconds;
+        $category = $item->category;
 
         //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
         if($temp_air > ($schedule_end + (int)config('GENERATE_GAP', 300))) return false;
