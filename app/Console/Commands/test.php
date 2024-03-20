@@ -47,7 +47,7 @@ class test extends Command
         $list = Material::where('channel', 'xkv')->where('status', Material::STATUS_READY)->lazy();
         foreach($list as $m)
         {
-            $lines[] = "copy '{$m->filepath}' 'Y:\\MV2\\{$m->unique_no}.mxf'";
+            $lines[] = "copy \"{$m->filepath}\" \"Y:\\MV2\\{$m->unique_no}.mxf\"";
         }
 
         Storage::put('mv.bat', implode(PHP_EOL, $lines));
