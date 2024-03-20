@@ -172,7 +172,7 @@ class XkiSimulator
                 
 
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
-
+                Record::$islast = false;
                 $maxDuration = ChannelGenerator::parseDuration($template->duration) + (int)config('MAX_DURATION_GAP', 600);
                 $items = $this->findAvailableRecords($template_item, $maxDuration, $air);
 
