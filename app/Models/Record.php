@@ -84,6 +84,7 @@ class Record extends Model
         self::$bumper = [];
         self::$pr = null;
         self::$cache = [];
+        self::$last_bumper = false;
     }
 
     public static function findRandom($key, $maxduration)
@@ -275,7 +276,11 @@ class Record extends Model
         $id = Arr::random(self::$bumper[$key]);
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
 
-        if(self::$last_bumper == $id) return self::findBumper($key);
+        
+        if(self::$last_bumper == $id) {
+            if(count(self::$bumper[$key])<2) return false;
+            return self::findBumper($key);
+        }
         self::$last_bumper = $id;
 
         $program = Record::where('records.unique_no', $id)

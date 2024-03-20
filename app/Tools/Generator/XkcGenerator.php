@@ -226,6 +226,7 @@ class XkcGenerator
     {
         $item = Record::findBumper($break_level);
 
+        if(!$item) return false;
         //$this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
 

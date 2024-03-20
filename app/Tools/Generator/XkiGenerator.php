@@ -228,7 +228,7 @@ class XkiGenerator
     public function addBumperItem($schedule_end, $break_level, $air, $category='m1')
     {
         $item = Record::findBumper($break_level);
-
+        if(!$item) return false;
         //$this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
 

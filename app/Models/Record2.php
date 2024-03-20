@@ -84,6 +84,7 @@ class Record2 extends Model
         self::$bumper = [];
         self::$pr = null;
         self::$cache = [];
+        self::$last_bumper = false;
     }
 
     public static function findRandom($key, $maxduration)
