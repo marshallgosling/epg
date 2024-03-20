@@ -94,8 +94,11 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                     $channel->save();
                     //$this->info("save distribution date {$ch->name} {$air}");
 
-                    if($is_today) $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
-                    else $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$air.'.xml': false; 
+                    if($is_today) {
+                        $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
+                        if($path) file_put_contents($path, $file);
+                    }
+                    $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$air.'.xml': false; 
                     
                     if($path)
                         file_put_contents($path, $file);
