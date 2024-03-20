@@ -43,33 +43,16 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        
-        //$channel = Channel::where('name', $group)->where('air_date', $day)->first();
-        $air = strtotime($day);
-        $dayofweek = date('N', $air);
-        $this->info("{$group} {$day}");
-        
-        $template = Template::find(43);
-        $templateItems = $template->records()->get();
-        
-        foreach($templateItems as $p)
+        $lines = [];
+        $list = Material::where('channel', 'xkv')->where('status', Material::STATUS_READY)->lazy();
+        foreach($list as $m)
         {
-            if(!in_array($dayofweek, $p->data['dayofweek'])) continue;
-            $begin = $p->data['date_from'] ? strtotime($p->data['date_from']) : 0;
-            $end = $p->data['date_to'] ? strtotime($p->data['date_to']) : 9999999999;
-            if($air < $begin || $air > $end) {
-                //$lasterror = "{$p->id} {$p->category} 编排设定时间 {$p->data['date_from']}/{$p->data['date_to']} 已过期";
-                continue;
-            }
-
-            if($p->data['result'] == '编排完') continue;
-
-            $this->info("find ".$p->name);
-            return 1;
+            $lines[] = "copy '{$m->filepath}' 'Y:\\MV2\\{$m->unique_no}.mxf'";
         }
 
-        $this->info("empty");
-        return false;
+        Storage::put('mv.bat', implode(PHP_EOL, $lines));
+
+        return;
         
         
         $channel = Channel::where('name', $group)->where('air_date', $day)->first();
