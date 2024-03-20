@@ -24,7 +24,7 @@ class ProcessMaterialController extends Controller
             ->body($this->folder($id));
     }
 
-    protected function folder($id)
+    protected function folder($id, $process=false)
     {
         $folder = Folder::find($id);
         $head = ["", "文件名", "扫描结果", "分析结果", "操作"];
@@ -69,7 +69,7 @@ class ProcessMaterialController extends Controller
         }
 
         $html = (new MyTable($head, $rows, ['table-hover', 'grid-table']))->render();
-        //$html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
+        if($process) $html .= '<p><form action="/admin/media/recognize" method="post" class="form-horizontal" accept-charset="UTF-8" pjax-container=""><p><button type="submit" class="btn btn-primary">提 交</button></p></form>';
 
         return new Box('目标路径文件夹 '.$folder->path. ' 扫描结果，总共 '.$available.' 个可用文件, '.(count($rows)-$available).' 个不可用文件', $html);
 
@@ -83,7 +83,7 @@ class ProcessMaterialController extends Controller
         return $content
             ->title($title)
             ->description($description ?? trans('admin.list'))
-            ->body($this->grid());
+            ->body($this->folder(8, true));
     }
 
     /**
@@ -157,6 +157,28 @@ class ProcessMaterialController extends Controller
 
     public function process()
     {
+        $id = 8;
+        $folder = Folder::find($id);
+        $list = json_decode($folder->data);
+        if(is_array($list))foreach($list as $idx=>$item) {
+
+            $result = '<i class="fa fa-close text-red"></i>';
+            $material = '';
+
+            if($item->name == '' || $item->unique_no == '') {
+                if($item->name) {
+                    $material = "可新建物料 (播出编号:<span class=\"label label-warning\">自动生成</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
+                    $result = '<i class="fa fa-check text-green"></i>';
+                }
+                if($item->unique_no) {
+                    //$material = "不可新建物料（播出编号:<span class=\"label label-default\">{$item->unique_no}</span> <span class=\"label label-danger\">缺少节目标题</span>)";
+                }
+            }
+            else {
+                $result = '<i class="fa fa-check text-green"></i>';
+                $material = "可新建物料 (播出编号:<span class=\"label label-default\">{$item->unique_no}</span> 节目名:<span class=\"label label-default\">{$item->name}</span>";
+            }
+        }
         return response()->json();
     } 
 }

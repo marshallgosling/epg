@@ -348,7 +348,7 @@ class BvtExporter
                        
                 $itemList->StartTime = $start;
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                $itemList->Name = '<![CDATA['.$program['name'].']]>';
+                $itemList->Name = str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = 0;
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
@@ -361,10 +361,15 @@ class BvtExporter
             { 
                 $clip = clone $template->ClipsItem;
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
-                $clip->Name = '<![CDATA['.$program['name'].']]>';
+                $clip->Name = str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $clip->Id = $program['unique_no'];
-                $filename = Material::getName($program['unique_no']); 
-                if($filename) $clip->FileName = $filename;
+                if($channel->name == 'xkv') {
+                    $clip->FileName = $program['unique_no'];
+                }
+                else {
+                    $filename = Material::getName($program['unique_no']); 
+                    if($filename) $clip->FileName = '<![CDATA['.$filename.']]>';
+                }
 
                 $seconds = ChannelPrograms::caculateSeconds($program['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
