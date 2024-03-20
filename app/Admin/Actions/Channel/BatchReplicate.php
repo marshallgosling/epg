@@ -48,7 +48,7 @@ class BatchReplicate extends BatchAction
                 }
             }
 
-            //CalculationEvent::dispatch($newid);
+            CalculationEvent::dispatch($newid);
 
         }
 

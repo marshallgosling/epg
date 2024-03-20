@@ -34,6 +34,7 @@ class Replicate extends RowAction
         {
             $pro = $old->replicate();
             $pro->channel_id = $newid;
+            
             $data = json_decode($old->data);
             if(key_exists('replicate', $data)) {
                 $pro->data = '{"replicate":'.$relations[$data->replicate].'}';
@@ -45,7 +46,7 @@ class Replicate extends RowAction
             }
         }
 
-        //CalculationEvent::dispatch($newid);
+        CalculationEvent::dispatch($newid);
 
         return $this->response()->success(__('Replicate Success message'))->refresh();
     }
