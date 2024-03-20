@@ -101,8 +101,8 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
 
             if($item->name == '' || $item->unique_no == '') {
                 if($item->name) {
-                    $material = "可新建物料 (播出编号:<span class=\"label label-warning\">自动生成</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
-                    $result = '<i class="fa fa-check text-green"></i>';
+                    // $material = "可新建物料 (播出编号:<span class=\"label label-warning\">自动生成</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
+                    // $result = '<i class="fa fa-check text-green"></i>';
                     $m = new Material();
                     $m->name = $item->name;
                     if(preg_match('/(\d+)$/', $m->name, $match)){

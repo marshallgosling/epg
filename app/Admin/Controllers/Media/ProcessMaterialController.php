@@ -4,9 +4,10 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Extensions\MyTable;
 use App\Http\Controllers\Controller;
+use App\Jobs\Material\ScanFolderJob;
 use App\Models\Folder;
 use Encore\Admin\Layout\Content;
-
+use Illuminate\Support\MessageBag;
 use App\Models\Material;
 use App\Tools\Material\RecognizeFileInfo;
 use Encore\Admin\Widgets\Box;
@@ -158,27 +159,11 @@ class ProcessMaterialController extends Controller
     public function process()
     {
         $id = 8;
-        $folder = Folder::find($id);
-        $list = json_decode($folder->data);
-        if(is_array($list))foreach($list as $idx=>$item) {
-
-            $result = '<i class="fa fa-close text-red"></i>';
-            $material = '';
-
-            if($item->name == '' || $item->unique_no == '') {
-                if($item->name) {
-                    $material = "可新建物料 (播出编号:<span class=\"label label-warning\">自动生成</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
-                    $result = '<i class="fa fa-check text-green"></i>';
-                }
-                if($item->unique_no) {
-                    //$material = "不可新建物料（播出编号:<span class=\"label label-default\">{$item->unique_no}</span> <span class=\"label label-danger\">缺少节目标题</span>)";
-                }
-            }
-            else {
-                $result = '<i class="fa fa-check text-green"></i>';
-                $material = "可新建物料 (播出编号:<span class=\"label label-default\">{$item->unique_no}</span> 节目名:<span class=\"label label-default\">{$item->name}</span>";
-            }
-        }
-        return response()->json();
+        ScanFolderJob::dispatch($id, 'apply')->queue('media');
+        $error = new MessageBag([
+            'title'   => '处理任务发起成功',
+            'message' => '请耐心等待处理结果'
+        ]);
+        return back()->with(compact('error'));
     } 
 }
