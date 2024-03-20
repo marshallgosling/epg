@@ -44,7 +44,7 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         $lines = [];
-        $list = Material::where('channel', 'xkv')->where('status', Material::STATUS_READY)->lazy();
+        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\'%\'')->lazy();
         foreach($list as $m)
         {
             if(!file_exists($m->filepath))
@@ -60,8 +60,8 @@ class test extends Command
                 // else {
                 //     $this->error("error: {$m->filepath} {$m->name} ");
                 // }
-                $m->status = Material::STATUS_ERROR;
-                $m->save();
+                // $m->status = Material::STATUS_ERROR;
+                // $m->save();
             }
             else {
                 // $path = "Y:\\其他\\".$m->name.'.'.$m->unique_no.'.mxf';
