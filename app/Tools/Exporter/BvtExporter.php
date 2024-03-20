@@ -265,6 +265,9 @@ class BvtExporter
         return $data;
     }
 
+    /**
+     * @deprecated
+     */
     public static function collectDataGroupWithProgram($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
@@ -365,6 +368,9 @@ class BvtExporter
                 $clip->Id = $program['unique_no'];
                 if($channel->name == 'xkv') {
                     $clip->FileName = $program['unique_no'];
+                    if(!file_exists('Y:\\MV2\\'.$program['unique_no'].'.mxf')) {
+                        echo "Not exists: ".'Y:\\MV2\\'.$program['unique_no'].'.mxf'.PHP_EOL;
+                    }
                 }
                 else {
                     $filename = Material::getName($program['unique_no']); 
@@ -392,6 +398,9 @@ class BvtExporter
     
     }
 
+    /**
+     * @deprecated
+     */
     public static function generateData2($channel, $data, $fixDate = false)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
