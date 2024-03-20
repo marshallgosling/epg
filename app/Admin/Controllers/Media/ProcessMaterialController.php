@@ -148,7 +148,7 @@ class ProcessMaterialController extends Controller
             if($file != '.' && $file != '..')
             {
                 $f = RecognizeFileInfo::recognize($file);
-                if(!$f) $list[] = $f;
+                if($f) $list[] = $f;
             }
         }
         $d->close();
