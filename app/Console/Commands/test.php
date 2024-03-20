@@ -44,7 +44,7 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         $lines = [];
-        $list = Material::where('channel', 'xkv')->where('name', 'like', '%\'%')->lazy();
+        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\'\'%')->lazy();
         foreach($list as $m)
         {
             if(!file_exists($m->filepath))
