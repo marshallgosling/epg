@@ -351,7 +351,7 @@ class BvtExporter
                        
                 $itemList->StartTime = $start;
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                $itemList->Name = str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
+                $itemList->Name = $program['unique_no'].str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = 0;
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
@@ -364,13 +364,10 @@ class BvtExporter
             { 
                 $clip = clone $template->ClipsItem;
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
-                $clip->Name = str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
+                $clip->Name = $program['unique_no'].str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $clip->Id = $program['unique_no'];
                 if($channel->name == 'xkv') {
                     $clip->FileName = $program['unique_no'];
-                    if(!file_exists('Y:\\MV2\\'.$program['unique_no'].'.mxf')) {
-                        echo "Not exists: ".'Y:\\MV2\\'.$program['unique_no'].'.mxf'.PHP_EOL;
-                    }
                 }
                 else {
                     $filename = Material::getName($program['unique_no']); 
