@@ -21,7 +21,9 @@ Route::group([
     $router->get('/media/recognize', 'Media\\ProcessMaterialController@local')->name('media.recognize');
     $router->post('/media/recognize', 'Media\\ProcessMaterialController@process')->name('media.recognize.process');
     $router->resource('/media/agreement', 'AgreementController')->names('media.agreement');
-    $router->resource('/media/compare/xkv', 'Media\\MaterialCompareController')->names('media.compare');
+    $router->resource('/media/compare/xkv', 'Media\\XkvCompareController')->names('media.compare.xkv');
+    $router->resource('/media/compare/xkc', 'Media\\XkcCompareController')->names('media.compare.xkc');
+    $router->resource('/media/compare/xki', 'Media\\XkiCompareController')->names('media.compare.xki');
     $router->get('/media/folder/{id}', 'Media\\ProcessMaterialController@index')->name('media.folder');
     $router->resource('/media/folders', 'Media\\FolderController')->names('media.folders');
 
