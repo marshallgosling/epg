@@ -104,7 +104,7 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
                     // $material = "可新建物料 (播出编号:<span class=\"label label-warning\">自动生成</span>, 节目名:<span class=\"label label-default\">{$item->name}</span>)";
                     // $result = '<i class="fa fa-check text-green"></i>';
                     $m = new Material();
-                    $m->name = $item->name;
+                    $m->name = str_replace('.mxf','',$item->name);
                     if(preg_match('/(\d+)$/', $m->name, $match)){
                         $group = preg_replace('/(\d+)$/', "", $m->name);
                         $m->group = trim(trim($group), '_-');
@@ -114,11 +114,14 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
                     $m->duration = '00:00:00:00';
                     $m->frames = 0;
                     $m->category = '';
-                    $m->filepath = 'Y:\\卡通\\';
                     $m->unique_no = 'XK'.Str::random(12);
+                    $m->filepath = 'Y:\\卡通\\'.$m->name.'.'.$m->unique_no.'.mxf';
+                    
                     $m->status = Material::STATUS_EMPTY;
                     $m->channel = 'xkc';
                     $m->save();
+                    @copy($folder->path.'\\'.$item->name, $m->filepath);
+                    @unlink($folder->path.'\\'.$item->name);
                     MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
             
                 }
