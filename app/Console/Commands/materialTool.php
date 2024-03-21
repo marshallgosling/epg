@@ -189,7 +189,7 @@ class materialTool extends Command
             $program->unique_no = $model->unique_no;
             $program->duration = $model->duration;
             $program->category = [$model->category];
-            $program->seconds = ChannelGenerator::caculateDuration($model->duration);
+            $program->seconds = ChannelGenerator::parseDuration($model->duration);
             
             // if($class::where('unique_no', $model->unique_no)->exists())
             // {
