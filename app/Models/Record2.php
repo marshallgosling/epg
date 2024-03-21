@@ -250,7 +250,11 @@ class Record2 extends Model
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
         $id = Arr::random(self::$bumper[$key]);
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
-        if(self::$last_bumper == $id) return self::findBumper($key);
+        
+        if(self::$last_bumper == $id) {
+            if(count(self::$bumper[$key])<2) return false;
+            return self::findBumper($key);
+        }
         self::$last_bumper = $id;
 
         $program = Record2::where('record2.unique_no', $id)
