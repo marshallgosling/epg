@@ -190,7 +190,8 @@ class materialTool extends Command
             $program->duration = $model->duration;
             $program->category = [$model->category];
             $program->seconds = ChannelGenerator::parseDuration($model->duration);
-            
+        
+            $this->info("import: {$program->name} {$program->unique_no}");
             // if($class::where('unique_no', $model->unique_no)->exists())
             // {
             //     continue;
