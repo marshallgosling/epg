@@ -199,7 +199,7 @@ class materialTool extends Command
             // else {
                 $program->save();
             //}
-            break;
+            //break;
         }
     }
 
