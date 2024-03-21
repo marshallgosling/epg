@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
+use App\Jobs\Material\ScanFolderJob;
 use App\Models\Agreement;
 use App\Models\Channel;
 use App\Models\TemplateRecords;
@@ -43,38 +44,8 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        $lines = [];
-        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\'\'%')->lazy();
-        foreach($list as $m)
-        {
-            if(!file_exists($m->filepath))
-            {
-                $this->info("not exists: ".$m->filepath);
-                // $path = "Y:\\其他\\".$m->name.'.'.$m->unique_no.'.mxf';
-                
-                // if(file_exists($path))
-                // {
-                //     $this->info("found: ".$path);
-                //     @copy($path, $m->filepath);
-                // }
-                // else {
-                //     $this->error("error: {$m->filepath} {$m->name} ");
-                // }
-                // $m->status = Material::STATUS_ERROR;
-                // $m->save();
-            }
-            else {
-                // $path = "Y:\\其他\\".$m->name.'.'.$m->unique_no.'.mxf';
-                // if(file_exists($path))
-                // {
-                //     $m->filepath = $path;
-                //     $m->save();
-                // }
-                // else {
-                //     $this->error("error: {$m->filepath} {$m->name} {$m->unique_no}");
-                // }
-            }
-        }
+        $job = new ScanFolderJob(8, 'apply');
+        $job->handle();
         
         return;
         
