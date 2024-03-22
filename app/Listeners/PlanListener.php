@@ -42,7 +42,7 @@ class PlanListener
         for(;$begin<=$end;$begin+=86400)
         {
             $dayofweek = date('N', $begin);
-            if(!in_array($dayofweek, $plan->dayofweek)) continue;
+            if(!in_array($dayofweek, $plan->daysofweek)) continue;
 
             if($plan->type == TemplateRecords::TYPE_STATIC) {
                 $episode = $plan->episodes;
