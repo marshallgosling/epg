@@ -41,7 +41,7 @@ class PlanController extends AdminController
         })->expand(function ($model) {
             $programs = json_decode($model->data);
             $items = [];
-            if($programs)foreach($programs as $p)
+            if($programs && is_array($programs))foreach($programs as $p)
             {            
                 $items[] = [ $p->start_at, $p->end_at, $p->artist, $p->name, $p->unique_no, $p->duration];
             }
