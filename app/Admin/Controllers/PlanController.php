@@ -121,9 +121,16 @@ class PlanController extends AdminController
         $form->text('name', __('Name'))->required();
 
         $form->divider('播出节目信息');
-        $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->required();
+        $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->when(0, function (Form $form) { 
+  
+            $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
+    
+        })->when(2, function (Form $form) { 
+    
+            $form->text('unique_no', __('Unique no'));
+    
+        })->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories());
-        $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
 
         $form->divider('播出时间及周期');
         $form->text('start_at', __('Start at'))->inputmask(['mask'=>'99:99:99'])->required();
@@ -140,6 +147,16 @@ class PlanController extends AdminController
         ];
         $form->switch('is_repeat', '是否循环')->options($states);
         //$form->json('data', __('Data'));
+
+        $form->saving(function (Form $form) {
+
+            if($form->type != 2) {
+                $form->episodes = $form->unique_no;
+                
+            }
+            $form->ignore(['unique_no']);
+        
+        });
 
         $form->saved(function (Form $form) {
             PlanEvent::dispatch($form->model()->id);

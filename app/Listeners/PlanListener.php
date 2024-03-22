@@ -69,6 +69,14 @@ class PlanListener
                 $line['end_at'] = date('Y-m-d H:i:s', $air);
                 $items[] = $line;
             }
+
+            if($plan->type == TemplateRecords::TYPE_ADVERTISE) {
+
+                // $line = ChannelGenerator::createItem($item, $plan->category, date('Y-m-d ', $begin).$plan->start_at);
+                // $air = strtotime(date('Y-m-d ', $begin).$plan->start_at) + ChannelGenerator::parseDuration($item->duration);
+                // $line['end_at'] = date('Y-m-d H:i:s', $air);
+                // $items[] = $line;
+            }
         }
 
         $plan->data = json_encode($items);
