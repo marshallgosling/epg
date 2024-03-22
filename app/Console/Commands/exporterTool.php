@@ -70,19 +70,11 @@ class exporterTool extends Command
     {
         $channel = Channel::findOrFail($id);
 
-        $data = BvtExporter::collectData($channel->air_date, $channel->name);
+        $data = BvtExporter::collectEPG($channel);
 
         BvtExporter::generateData($channel, $data, $date);
         BvtExporter::exportXml();
 
-        $fake = $date ? " -> $date":"";
-        Notify::fireNotify(
-            $channel->name,
-            Notification::TYPE_XML, 
-            "生成 XML {$channel->air_date} {$fake} 成功. ", 
-            "",
-            Notification::LEVEL_INFO
-        );
     }
 
     private function testxml($id, $date)

@@ -52,4 +52,27 @@ class Plan extends Model
     {
         $this->attributes['daysofweek'] = implode(',', $value);
     }
+
+    public static function loadPlan($channel)
+    {
+        $plans = Plan::where('status', Plan::STATUS_RUNNING)->where('group_id', $channel->name)->get();
+        $begin = strtotime($channel->air_date.' '.explode(' - ',$channel->start_end)[0]);
+        $end = strtotime($channel->air_date.' '.explode(' - ',$channel->start_end)[1]) + 86400;
+        $items = [];
+        foreach($plans as $plan)
+        {
+            $planlist = json_decode($plan->data, true);
+            if(!$planlist) continue;
+            if(!is_array($planlist)) continue;
+
+            foreach($planlist as $line) {
+                $start = strtotime($line['start_at']);
+                if($start > $begin && $start < $end) {
+                    return $line;
+                }
+            }
+        }
+
+        return false;
+    }
 }
