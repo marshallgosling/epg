@@ -11,6 +11,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class PlanController extends AdminController
 {
@@ -35,7 +36,19 @@ class PlanController extends AdminController
         $grid->column('id', __('Id'))->hide();
         $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('name', __('Name'));
+        $grid->column('ex', __(" "))->display(function() {
+            return "计划列表";
+        })->expand(function ($model) {
+            $programs = json_decode($model->data);
+            $items = [];
+            if($programs)foreach($programs as $p)
+            {            
+                $item = [ $p->start_at, $p->end_at, $p->artist, $p->unique_no, $p->duration];            
+                $items[] = $item;
+            }
 
+            return new Table([ '开始时间', '结束时间', '剧集', '播出编号', '时长'], $items, ['table-hover']);
+        });
         $grid->column('date_from', __('Date from'));
         $grid->column('date_to', __('Date to'));
 
