@@ -43,11 +43,10 @@ class PlanController extends AdminController
             $items = [];
             if($programs)foreach($programs as $p)
             {            
-                $item = [ $p->start_at, $p->end_at, $p->artist, $p->unique_no, $p->duration];            
-                $items[] = $item;
+                $items[] = [ $p->start_at, $p->end_at, $p->artist, $p->name, $p->unique_no, $p->duration];
             }
 
-            return new Table([ '开始时间', '结束时间', '剧集', '播出编号', '时长'], $items, ['table-hover']);
+            return new Table([ '开始时间', '结束时间', '剧集', '选集', '播出编号', '时长'], $items, ['table-hover']);
         });
         $grid->column('date_from', __('Date from'));
         $grid->column('date_to', __('Date to'));
