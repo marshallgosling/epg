@@ -49,9 +49,18 @@ class PlanListener
 
                 $item = Record::findNextEpisode($episode, $lastEpisode);
 
-                if(in_array($item, ['finished', 'empty'])) break;
+                if(in_array($item, ['empty'])) break;
 
-                $lastEpisode = $item->unique_no;
+                if($item == 'finished') {
+                    if($plan->is_repeat) {
+                        $lastEpisode = '';
+                        $item = Record::findNextEpisode($episode, $lastEpisode);
+                    }
+                }
+                else {
+                    $lastEpisode = $item->unique_no;
+                }
+                
                 $line = ChannelGenerator::createItem($item, $plan->category, date('Y-m-d ', $begin).$plan->start_at);
                 $air = strtotime(date('Y-m-d ', $begin).$plan->start_at) + ChannelGenerator::parseDuration($item->duration);
                 $line['end_at'] = date('Y-m-d H:i:s', $air);

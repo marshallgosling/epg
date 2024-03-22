@@ -33,6 +33,7 @@ class Plan extends Model
         'type',
         'daysofweek',
         'episodes',
+        'is_repeat',
         'data'
     ];
 

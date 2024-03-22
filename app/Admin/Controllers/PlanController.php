@@ -63,7 +63,7 @@ class PlanController extends AdminController
         $grid->column('status', __('Status'))->filter(Plan::STATUS)->using(Plan::STATUS)->label(['default','success','warning','danger']);
         
         $grid->column('type', __('Type'))->filter(TemplateRecords::TYPES)->using(TemplateRecords::TYPES);
-        
+        $grid->column('is_repeat', '是否循环')->bool();
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
@@ -122,8 +122,8 @@ class PlanController extends AdminController
 
         $form->divider('播出节目信息');
         $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->required();
-        $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
-        $form->select('episodes', __('Episodes'))->options('/admin/api/episodes')->required();
+        $form->select('category', __('Category'))->options(Category::getFormattedCategories());
+        $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
 
         $form->divider('播出时间及周期');
         $form->text('start_at', __('Start at'))->inputmask(['mask'=>'99:99:99'])->required();
@@ -134,6 +134,11 @@ class PlanController extends AdminController
         
         $form->divider('状态及数据');
         $form->radio('status', __('Status'))->options(Plan::STATUS)->required();
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'primary'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'success'],
+        ];
+        $form->switch('is_repeat', '是否循环')->options($states);
         //$form->json('data', __('Data'));
 
         $form->saved(function (Form $form) {
