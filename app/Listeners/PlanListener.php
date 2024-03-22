@@ -51,7 +51,10 @@ class PlanListener
 
                 if(in_array($item, ['finished', 'empty'])) break;
 
-                $items[] = ChannelGenerator::createItem($item, $plan->category, date('Y-m-d ', $begin).$plan->start_at);
+                $line = ChannelGenerator::createItem($item, $plan->category, date('Y-m-d ', $begin).$plan->start_at);
+                $air = $begin + ChannelGenerator::parseDuration($item->duration);
+                $line['end_at'] = date('H:i:s', $air);
+                $items[] = $line;
             }
         }
 
