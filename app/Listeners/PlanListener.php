@@ -56,6 +56,9 @@ class PlanListener
                         $lastEpisode = '';
                         $item = Record::findNextEpisode($episode, $lastEpisode);
                     }
+                    else {
+                        break;
+                    }
                 }
                 else {
                     $lastEpisode = $item->unique_no;
