@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Plan;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,20 +15,20 @@ class PlanEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private $plan;
+    private $id;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($plan)
+    public function __construct($id)
     {
-        $this->plan = $plan;
+        $this->id = $id;
     }
 
     public function getPlan()
     {
-        return $this->plan;
+        return Plan::find($this->id);
     }
 
     /**

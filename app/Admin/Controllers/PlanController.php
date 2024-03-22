@@ -125,7 +125,7 @@ class PlanController extends AdminController
         //$form->json('data', __('Data'));
 
         $form->saved(function (Form $form) {
-            PlanEvent::dispatch($form->model());
+            PlanEvent::dispatch($form->model()->id);
         });
 
         return $form;
