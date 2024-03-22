@@ -36,7 +36,7 @@ class ProgramPlan
     public $errors = [];
     public $lasterror = '';
 
-    public function __construct($group)
+    public function __construct($group='xkv')
     {
         $this->log_channel = 'plan';
         $this->group = $group;

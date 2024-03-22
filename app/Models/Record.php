@@ -193,7 +193,7 @@ class Record extends Model
         return $items;
     }
 
-    public static function findNextEpisode($episodes, $unique_no='', $category='')
+    public static function findNextEpisode($episodes, $unique_no='')
     {
         //if($episodes == null) return self::findRandomEpisode($category);
         $list = Record::where('episodes', $episodes)->orderBy('ep')

@@ -19,6 +19,7 @@ class BatchImportor extends BatchAction
     public function handle(Collection $models, Request $request)
     {
         $channel = $request->get('channel');
+        $episode = (int)$request->get('episode');
         if($channel == 'xkv') {
             $class = '\App\Models\Program';
             $relation = 'program';
@@ -60,8 +61,8 @@ class BatchImportor extends BatchAction
             }
             else {
                 $program->save();
-                $cid = Category::where('no', $model->category)->value('id');
-                DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
+                //$cid = Category::where('no', $model->category)->value('id');
+                //DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
             }
         }
         
@@ -71,6 +72,7 @@ class BatchImportor extends BatchAction
     public function form()
     {
         $this->select('channel', __('Channel'))->options(Channel::GROUPS);
+        //$this->radio('episode', '整剧导入')->options(['单集', '整部剧'])->default(0);
 
         $this->textarea("help", "注意说明")->default('选择需要导入的频道')->disable();
     }

@@ -144,9 +144,8 @@ class XkcGenerator
                         break;
                     }
                 }
-
-                
                 $break_level = 3;
+                
                 $schedule_end = strtotime($program->start_at) + $scheduledDuration;
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {

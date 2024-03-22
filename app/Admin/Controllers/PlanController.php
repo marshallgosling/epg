@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Events\PlanEvent;
 use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Plan;
@@ -110,7 +111,7 @@ class PlanController extends AdminController
         $form->divider('播出节目信息');
         $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories())->required();
-        $form->text('episodes', __('Episodes'))->required();
+        $form->select('episodes', __('Episodes'))->options('/admin/api/episodes')->required();
 
         $form->divider('播出时间及周期');
         $form->text('start_at', __('Start at'))->inputmask(['mask'=>'99:99:99'])->required();
@@ -121,7 +122,11 @@ class PlanController extends AdminController
         
         $form->divider('状态及数据');
         $form->radio('status', __('Status'))->options(Plan::STATUS)->required();
-        $form->textarea('data', __('Data'));
+        //$form->json('data', __('Data'));
+
+        $form->saved(function (Form $form) {
+            PlanEvent::dispatch($form->model());
+        });
 
         return $form;
     }
