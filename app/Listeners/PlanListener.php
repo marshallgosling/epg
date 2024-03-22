@@ -53,7 +53,7 @@ class PlanListener
 
                 $line = ChannelGenerator::createItem($item, $plan->category, date('Y-m-d ', $begin).$plan->start_at);
                 $air = $begin + ChannelGenerator::parseDuration($item->duration);
-                $line['end_at'] = date('H:i:s', $air);
+                $line['end_at'] = date('Y-m-d H:i:s', $air);
                 $items[] = $line;
             }
         }
