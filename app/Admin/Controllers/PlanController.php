@@ -121,7 +121,7 @@ class PlanController extends AdminController
         $form->text('name', __('Name'))->required();
 
         $form->divider('播出节目信息');
-        $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->when(0, function (Form $form) { 
+        $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->default(0)->when(0, function (Form $form) { 
   
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
     
