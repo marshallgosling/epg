@@ -272,7 +272,7 @@ class fileTool extends Command
     private function daily()
     {
         
-        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\\\\MV\\\\%')->dd();
+        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\\\\MV\\\\%')->get();
         foreach($list as $m)
         {
             $newpath = "Y:\\MV2\\".$m->unique_no.".mxf";
