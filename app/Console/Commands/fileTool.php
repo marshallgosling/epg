@@ -282,6 +282,9 @@ class fileTool extends Command
                 $m->save();
                 $this->info("move file: {$newpath}");
             }
+            else {
+                $this->info("fail: {$newpath} {$m->filepath}");
+            }
             
         }
         
