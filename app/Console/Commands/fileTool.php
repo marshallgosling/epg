@@ -272,28 +272,18 @@ class fileTool extends Command
     private function daily()
     {
         
-        $json = json_decode(Storage::get('result3.json'), true);
-
-        //$keys = array_keys($json['succ']);
-        $move = [];
-
-        foreach($json['succ'] as $k=>$v)
+        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\\MV\\%')->get();
+        foreach($list as $m)
         {
-            $m = Material::where('unique_no', $k)->first();
-            if($m) {
-                if($m->status == Material::STATUS_READY) {
-                    $this->info("重复 ".$k);
-                    continue;
-                }
-                $m->filepath = "Y:\\MV\\".$m->name.'.'.$k.".mxf";
-                $m->status = Material::STATUS_READY;
+            $newpath = "Y:\\MV2\\".$m->unique_no.".mxf";
+            if(copy($m->filepath, $newpath))
+            {
+                $m->filepath = $newpath;
                 $m->save();
-                //$succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
-                $move[] = $v;
-                
+                $this->info("move file: {$newpath}");
             }
+            
         }
-        Storage::put("scripts.txt", implode(PHP_EOL, $move));
         
     }
 
