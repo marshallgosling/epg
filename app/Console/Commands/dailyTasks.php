@@ -33,7 +33,7 @@ class dailyTasks extends Command
     public function handle()
     {
         $action = $this->argument('action') ?? "xml";
-        $args = $this->argument('args') ?? "";
+        $args = $this->argument('args') ?? false;
 
         if(in_array($action, ['xml', 'backup', 'scan']))
             $this->$action($args);
