@@ -52,12 +52,21 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         $action = $this->action;
-        if(in_array($action, ['sync', 'view', 'process', 'distribute']))
+        if(in_array($action, ['sync', 'view', 'process', 'distribute', 'backup']))
         {
             $this->$action();
         }
         
     }
+
+    /**
+     * Backup xml files
+     */
+    public function backup()
+    {
+        
+    }
+
 
     /**
      * Distribute EPG xml files
