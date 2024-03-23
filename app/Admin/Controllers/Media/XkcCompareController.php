@@ -20,7 +20,7 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
-class MaterialCompareController extends AdminController
+class XkcCompareController extends AdminController
 {
     /**
      * Title for current resource.
@@ -29,16 +29,17 @@ class MaterialCompareController extends AdminController
      */
     protected $title = '物料库与节目库比对';
     protected $description = [
-        'index'  => '此处对比的是“物料库内存在，V China节目库里不存在”的记录',
+        'index'  => '此处对比的是“物料库内存在，星空中国节目库里不存在”的记录',
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
     ];
 
-    protected function grid($channel='xkv', $table='program')
+    protected function grid()
     {
         $grid = new Grid(new Material());
-        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',[$channel])->orderBy('id', 'desc');
+        $table= 'records';
+        $grid->model()->whereRaw('`channel`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',['xkc'])->orderBy('id', 'desc');
 
         $grid->column('channel', __('Channel'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('unique_no', __('Unique_no'))->width(200)->modal("查看媒体文件信息", CheckMediaInfo::class);

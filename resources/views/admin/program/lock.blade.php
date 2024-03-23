@@ -28,7 +28,7 @@
             <div class="box-body table-responsive no-padding">
                 <div class="dd">
                     
-                    <span class="text-danger"><b>该频道节目编单功能已锁定。如需更改，需要取消 <span class="label label-success">审核通过</span> 状态。</b></span>
+                    <span class="text-danger"><b>该频道节目编单功能已锁定。如需更改，需要取消 <i class="fa fa-lock text-danger"></i> 状态。</b></span>
                     
                     <span id="total" class="pull-right"></span>
                 </div>

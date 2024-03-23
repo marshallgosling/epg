@@ -43,10 +43,13 @@ class XkvProgramController extends AdminController
     {
         $grid = new Grid(new ChannelPrograms());
 
-        //$grid->column('id', __('Id'));
+        $grid->column('id', __('Id'));
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return "<a href=\"tree/{$this->id}\">{$this->name}</a>"; 
+            $data = json_decode($this->data, true);
+            if(array_key_exists('replicate', $data)) $replicate = $data['replicate']; 
+            else $replicate = '';
+            return "<a href=\"tree/{$this->id}\">{$name} {$replicate}</a>"; 
         });
         
         $grid->column('start_at', __('Start at'));
@@ -132,9 +135,9 @@ class XkvProgramController extends AdminController
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'));
-        $form->text('end_at', __('End at'));
-        $form->text('duration', __('Duration'))->inputmask(['mask'=>'99:99:99:99']);
+        $form->text('start_at', __('Start at'))->disable();
+        $form->text('end_at', __('End at'))->disable();
+        $form->text('duration', __('Duration'))->disable();
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
         $form->json('data', '编单数据');

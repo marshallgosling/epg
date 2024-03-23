@@ -169,72 +169,12 @@ class channelTool extends Command
     {
         $channel = Channel::findOrFail($id);
 
-        $data = BvtExporter::collectData($channel->air_date, $channel->name);
+        $data = BvtExporter::collectEPG($channel);
 
         BvtExporter::generateData($channel, $data);
-        print_r($data);
-        BvtExporter::exportXml($channel->name);
+        
+        //BvtExporter::exportXml($channel->name);
     }
 
-    private function generate($id, $group='default')
-    {
     
-        $channel = Channel::where('id', $id)->first();
-
-        if(!$channel) {
-            $this->error("Channel is null.");
-            return 0;
-        }
-
-        if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-            $this->error("Programs exist.");
-            return 0;
-        }
-
-        // $generator = new ChannelGenerator($channel->name);
-        // $generator->makeCopyTemplate();
-        // $generator->loadTemplate();
-
-        if($channel->name == 'xkv') $generator = new XkvGenerator($channel->name);
-        else $generator = new XkcGenerator($channel->name);
-
-        $generator->loadTemplate();
-        
-        try {
-            $start_end = $generator->generate($channel);
-
-        }catch(GenerationException $e)
-        {
-            $this->error($e->getMessage());
-            Notify::fireNotify(
-                $channel->name,
-                Notification::TYPE_GENERATE, 
-                "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
-                "详细错误:".$e->getMessage(), 'error'
-            );
-            $channel->start_end = '';
-            $channel->status = Channel::STATUS_ERROR;
-            $channel->save();
-            return;
-        }
-        
-        //$generator->saveTemplateState();
-
-            $channel->start_end = $start_end;
-            $channel->status = Channel::STATUS_READY;
-            $channel->save();
-
-        $this->info("Generate programs date: {$channel->air_date} succeed. ");
-        
-        Notify::fireNotify(
-            $channel->name,
-            Notification::TYPE_GENERATE, 
-            "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
-            "频道节目时间 $start_end"
-        );
-
-        //$generator->cleanTempData();
-
-    }
-
 }

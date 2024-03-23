@@ -86,7 +86,7 @@ class Material extends Model
         $name = self::where('unique_no', $no)->value('name');
         if($name)
         {
-            return $name.$no;
+            return $name.'.'.$no;
         }
         return false;
     }

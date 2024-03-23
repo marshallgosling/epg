@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Events\Channel\CalculationEvent;
+use App\Jobs\Material\ScanFolderJob;
 use App\Models\Agreement;
 use App\Models\Channel;
 use App\Models\TemplateRecords;
@@ -42,16 +44,41 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-
-        $file = Material::getFileName('VCNM12000019');
-        echo $file;
-        return 0;
-
-        $ids = Agreement::where('end_at', '<', $day)->pluck('id')->toArray();
-        $expiration = Expiration::whereIn('agreement_id', $ids)->pluck('name')->toArray();
+        $job = new ScanFolderJob(8, 'apply');
+        $job->handle();
         
-        print_r($expiration);
+        return;
         
+        foreach($list as $m)
+        {
+            $lines[] = "copy \"{$m->filepath}\" \"Y:\\MV2\\{$m->unique_no}.mxf\"";
+        }
+
+        Storage::put('mv.bat', implode(PHP_EOL, $lines));
+
+        return;
+        
+        
+        $channel = Channel::where('name', $group)->where('air_date', $day)->first();
+        
+        $programs = $channel->programs()->get();
+        $relations = [];
+        foreach($programs as $pro)
+        {
+            if(strpos($pro->name, '(副本)')) {
+                $name = str_replace(' (副本)','',$pro->name);
+                $pro->data = '{"replicate":'.$relations[$name].'}';
+                $this->info("get relation: {$pro->name} => {$relations[$name]}");
+                $pro->save();
+            }
+            else {
+                $relations[$pro->name] = $pro->id;
+                $this->info("setup relation: {$pro->name} => {$pro->id}");
+            }
+        }
+
+        CalculationEvent::dispatch($channel->id);
+
         return 0;
 
 

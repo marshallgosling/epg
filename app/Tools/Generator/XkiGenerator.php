@@ -79,7 +79,7 @@ class XkiGenerator
     {
         ChannelGenerator::makeCopyTemplate($this->group);
         Record::cleanCache();
-        Record::loadBumpers();
+        Record::loadBumpers(config('XKI_BUMPERS_TAG', 'XK FILLER'));
 
         $days = (int)config('SIMULATOR_DAYS', 14);
         //$channels = $this->channels;
@@ -134,7 +134,7 @@ class XkiGenerator
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {
                     if($duration > $scheduledDuration) break;
-                    $pr = $this->addPRItem($air);
+                    $pr = $this->addPRItem($air, config('XKI_PR_TAG', 'XK PR'));
                     if(is_array($pr)) {
                         $data[] = $pr['line'];
                         $duration += $pr['seconds'];
@@ -225,13 +225,13 @@ class XkiGenerator
         return compact('line', 'seconds');
     }
 
-    public function addBumperItem($schedule_end, $break_level, $air, $category='m1')
+    public function addBumperItem($schedule_end, $break_level, $air)
     {
         $item = Record::findBumper($break_level);
-
+        if(!$item) return false;
         //$this->info("find bumper: {$item->name} {$item->duration}");
         $seconds = ChannelGenerator::parseDuration($item->duration);
-
+        $category = $item->category;
         $temp_air = $air + $seconds;
 
         //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));

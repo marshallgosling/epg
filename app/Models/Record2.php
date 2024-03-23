@@ -84,6 +84,7 @@ class Record2 extends Model
         self::$bumper = [];
         self::$pr = null;
         self::$cache = [];
+        self::$last_bumper = false;
     }
 
     public static function findRandom($key, $maxduration)
@@ -239,17 +240,21 @@ class Record2 extends Model
         if(self::$bumper) return;
 
         self::$bumper = [];
-        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('record2.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('record2.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('record2.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record2::where('record2.category', $category.',')->join('material', 'record2.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('record2.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('records.unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function findBumper($key) {
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
         $id = Arr::random(self::$bumper[$key]);
         self::$bumper[$key] = Arr::shuffle(self::$bumper[$key]);
-        if(self::$last_bumper == $id) return self::findBumper($key);
+        
+        if(self::$last_bumper == $id) {
+            if(count(self::$bumper[$key])<2) return false;
+            return self::findBumper($key);
+        }
         self::$last_bumper = $id;
 
         $program = Record2::where('record2.unique_no', $id)
@@ -258,6 +263,22 @@ class Record2 extends Model
 
         if($program && $program->black) return self::findBumper($key);
         else return $program;
+    }
+
+    public static function checkBumperAndPr() {
+        $bum = config('XKC_BUMPERS_TAG', 'XK FILLER');
+        $c = 0;
+        self::loadBumpers($bum);
+        
+        if(self::$bumper)foreach(self::$bumper as $b)
+            $c += count($b);
+
+        $p = config('XKC_PR_TAG', 'XK PR');
+        $pr = Record::where('records.category', $p.',')->join('material', 'records.unique_no', '=', 'material.unique_no')->select('records.unique_no')->pluck('unique_no')->toArray();
+
+        $c2 = count($pr);
+
+        return [$bum=>$c, $p=>$c2];
     }
 
     public static function findPR($category) {

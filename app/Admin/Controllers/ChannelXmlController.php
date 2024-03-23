@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\ToolEpgList;
 use App\Models\Channel;
@@ -79,7 +80,7 @@ class ChannelXmlController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            //$tools->disableBatchActions();
+            $tools->append(new BatchDistributor);
             
         });
 

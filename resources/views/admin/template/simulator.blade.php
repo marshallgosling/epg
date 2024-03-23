@@ -164,7 +164,11 @@ ol.breadcrumb {
                   <li class="active"> {{$begin}} </li>
                   <li><b>{{ @__('Simulate days')}}</b></li>
                   <li>{{ $days }} </li>
-                  <li>&nbsp; </li>
+                  <li><b>垫片数</b></li>
+                  @foreach($r as $pr=>$c)
+                  <li><b>{{$pr}}</b></li>
+                  <li><b>{{$c}}</b></li>
+                  @endforeach
                   @if($error)
                   <li><b>运行结果</b></li>
                   <li><b class="text-danger">出错</b></li>
@@ -172,6 +176,7 @@ ol.breadcrumb {
                   <li><b>运行结果</b></li>
                   <li><b class="text-success">通过</b></li>
                   @endif
+                  
                 </ol>
                 
             </div>

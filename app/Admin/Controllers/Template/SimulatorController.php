@@ -4,6 +4,8 @@ namespace App\Admin\Controllers\Template;
 
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
+use App\Models\Record;
+use App\Models\Record2;
 use App\Tools\Simulator\XkcSimulator;
 use App\Tools\Simulator\XkiSimulator;
 use Encore\Admin\Layout\Content;
@@ -29,8 +31,12 @@ class SimulatorController extends Controller
 
         $error = $simulator->getErrorMark();
 
+        
+        $r = Record::checkBumperAndPr();
+
+
         return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
-        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error')));
+        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error','r')));
     }
 
     public function xki(Request $request, Content $content)
@@ -50,8 +56,10 @@ class SimulatorController extends Controller
 
         $error = $simulator->getErrorMark();
 
+        $r = Record2::checkBumperAndPr();
+
         return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
-        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error')));
+        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error','r')));
     }
 
 }

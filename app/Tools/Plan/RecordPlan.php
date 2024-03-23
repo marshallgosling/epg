@@ -10,6 +10,7 @@ use App\Models\Material;
 use App\Models\Notification;
 use App\Models\TemplateRecords;
 use App\Models\Record;
+use App\Tools\ChannelGenerator;
 use App\Tools\LoggerTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class RecordPlan
     public $errors = [];
     public $lasterror = '';
 
-    public function __construct($group)
+    public function __construct($group='xkc')
     {
         $this->log_channel = 'plan';
         $this->group = $group;
@@ -57,7 +58,13 @@ class RecordPlan
             if(!in_array($dayofweek, $plan->dayofweek)) continue;
 
             $begin = $plan->date_from ? strtotime($plan->date_from) : 0;
-            $end = $plan->date_to ? strtotime($plan->date_to) : 999999999999;
+            $end = $plan->date_to ? strtotime($plan->date_to) : 99999999999;
+
+            if($end != 99999999999 && $end < time()) {
+                $plan->status = Plan::STATUS_EXPIRED;
+                $plan->save();
+                continue;
+            }
 
             if($air < $begin || $air > $end) {
                 $this->lasterror = "{$plan->id} {$plan->category} 编排设定时间 {$plan->date_from}/{$plan->date_to} 已过期";
@@ -81,6 +88,7 @@ class RecordPlan
 
         foreach($programs as $pro)
         {
+            
             $items = json_decode($pro->data, true);
 
             $_program = ["id"=>$pro->id,"name"=>$pro->name,"start_at"=>$pro->start_at, 'items'=>[]];
@@ -115,5 +123,35 @@ class RecordPlan
         foreach($plans as $plan) {
             $data = $this->scan($plan);
         }
+    }
+
+    public static function init($plan)
+    {
+        $begin = $plan->date_from ? strtotime($plan->date_from) : 0;
+        $end = $plan->date_to ? strtotime($plan->date_to) : 0;
+
+        if($begin == 0 || $end == 0) return;
+        $lastEpisode = '';
+        $items = [];
+
+        for(;$begin<=$end;$begin+=86400)
+        {
+            $dayofweek = date('N', $begin);
+            if(!in_array($dayofweek, $plan->dayofweek)) continue;
+
+            if($plan->type == TemplateRecords::TYPE_STATIC) {
+                $episode = $plan->episodes;
+
+                $item = Record::findNextEpisode($episode, $lastEpisode);
+
+                if(in_array($item, ['finished', 'empty'])) break;
+
+                $items[] = ChannelGenerator::createItem($item, $plan->category, date('Y-m-d ', $begin).$plan->start_at);
+            }
+        }
+
+        $plan->data = json_encode($items);
+
+        return $plan;
     }
 }

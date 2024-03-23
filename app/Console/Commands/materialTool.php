@@ -167,37 +167,39 @@ class materialTool extends Command
         }
     }
 
-    private function import($id)
+    private function import($table='record')
     {
-        $models = Material::where('id', '>', $id)->get();
+        $models = Material::whereRaw('`channel`=? and `status`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',['xkc', Material::STATUS_READY])->orderBy('id', 'asc')->lazy();
+
         foreach($models as $model)
         {
-            $class = '\App\Models\Program';
+            $class = '\App\Models\Record';
             $program = new $class();
             
-            if(in_array($model->category, ['Entertainm', 'drama', 'movie','CanXin','cartoon']))
+            //if(in_array($model->category, ['Entertainm', 'drama', 'movie','CanXin','cartoon']))
             {
-                $class = '\App\Models\Record';
-                $program = new $class();
+                // $class = '\App\Models\Record';
+                // $program = new $class();
                 $program->episodes = $model->group;
-                if(preg_match('/(\d+)$/', $model->name, $matches))
-                {
-                    $program->ep = (int) $matches[1];
-                }
+                $program->ep = $model->ep;
+                
             }
-            
+            $program->status = Record::STATUS_READY;
             $program->name = $model->name;
             $program->unique_no = $model->unique_no;
             $program->duration = $model->duration;
             $program->category = [$model->category];
-            
-            if($class::where('unique_no', $model->unique_no)->exists())
-            {
-                continue;
-            }
-            else {
+            $program->seconds = ChannelGenerator::parseDuration($model->duration);
+        
+            $this->info("import: {$program->name} {$program->unique_no}");
+            // if($class::where('unique_no', $model->unique_no)->exists())
+            // {
+            //     continue;
+            // }
+            // else {
                 $program->save();
-            }
+            //}
+            //break;
         }
     }
 

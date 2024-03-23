@@ -31,12 +31,21 @@ class BatchReplicate extends BatchAction
         
             $newid = $new->id;
             $programs = ChannelPrograms::where('channel_id', $channel_id)->get();
+            $relations = [];
 
-            foreach($programs as $pro)
+            foreach($programs as $old)
             {
-                $pro = $pro->replicate();
+                $pro = $old->replicate();
                 $pro->channel_id = $newid;
-                $pro->save();
+                $data = json_decode($old->data);
+                if(key_exists('replicate', $data)) {
+                    $pro->data = '{"replicate":'.$relations[$data->replicate].'}';
+                    $pro->save();
+                }
+                else {
+                    $pro->save();
+                    $relations[$old->id] = $pro->id;
+                }
             }
 
             CalculationEvent::dispatch($newid);

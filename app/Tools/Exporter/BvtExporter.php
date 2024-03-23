@@ -9,6 +9,7 @@ use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
 use App\Models\Material;
+use App\Models\Plan;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
@@ -255,16 +256,33 @@ class BvtExporter
     public static function collectEPG($channel, \Closure $callback=null)
     {
         $list = Epg::where('channel_id', $channel->id)->orderBy('start_at', 'asc')->get();
+        $plan = Plan::loadPlan($channel);
+
         foreach($list as $item) {
+            $begin = strtotime($item->start_at);
+            $end = strtotime($item->end_at);
+            
             if($callback)
                 $data[] = call_user_func($callback, $item);
             else
                 $data[] = $item->toArray();
+
+            if($plan)
+            {
+                $start = strtotime($plan['start_at']);
+                if($start > $begin && $start < $end) {
+                    $plan['reset'] = 1;
+                    $data[] = $plan;
+                }
+            }
         }
 
         return $data;
     }
 
+    /**
+     * @deprecated
+     */
     public static function collectDataGroupWithProgram($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
@@ -348,12 +366,13 @@ class BvtExporter
                        
                 $itemList->StartTime = $start;
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                $itemList->Name = '<![CDATA['.$program['name'].']]>';
+                $itemList->Name = $program['unique_no'].str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = 0;
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                 $itemList->PlayType = $idx == 0 ? 1 : 0;
 
+            if(array_key_exists('reset', $program)) $itemList->PlayType = 1;
             //$clips = ;
             //$items = $program['items'];
             $duration = 0;
@@ -361,10 +380,15 @@ class BvtExporter
             { 
                 $clip = clone $template->ClipsItem;
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
-                $clip->Name = '<![CDATA['.$program['name'].']]>';
+                $clip->Name = $program['unique_no'].str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $clip->Id = $program['unique_no'];
-                $filename = Material::getName($program['unique_no']); 
-                if($filename) $clip->FileName = $filename;
+                if($channel->name == 'xkv') {
+                    $clip->FileName = $program['unique_no'];
+                }
+                else {
+                    $filename = Material::getName($program['unique_no']); 
+                    if($filename) $clip->FileName = '<![CDATA['.$filename.']]>';
+                }
 
                 $seconds = ChannelPrograms::caculateSeconds($program['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
@@ -387,6 +411,9 @@ class BvtExporter
     
     }
 
+    /**
+     * @deprecated
+     */
     public static function generateData2($channel, $data, $fixDate = false)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
