@@ -10,8 +10,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-use function PHPSTORM_META\elementType;
-
 class fileTool extends Command
 {
     /**

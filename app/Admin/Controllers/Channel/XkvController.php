@@ -128,6 +128,7 @@ class XkvController extends AdminController
         $grid->filter(function($filter){
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->date('air_date', __('Air date'));
+                $filter->equal('lock_status', __('Lock'))->radio(Channel::LOCKS);
             });
             
         });
@@ -140,7 +141,6 @@ class XkvController extends AdminController
             $tools->append(new BatchLock());
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xkv'));
-            
         });
 
         return $grid;

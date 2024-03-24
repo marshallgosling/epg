@@ -125,8 +125,8 @@ class XkiController extends AdminController
         $grid->filter(function(Grid\Filter $filter){
 
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->equal('uuid', __('Uuid'));
                 $filter->date('air_date', __('Air date'));
+                $filter->equal('lock_status', __('Lock'))->radio(Channel::LOCKS);
             });
             
         });
@@ -138,9 +138,7 @@ class XkiController extends AdminController
             $tools->append(new BatchLock);
             $tools->append(new BatchAudit);
             $tools->append(new BatchDistributor());
-            
             $tools->append(new ToolExporter('xki'));
-            
         });
 
         return $grid;

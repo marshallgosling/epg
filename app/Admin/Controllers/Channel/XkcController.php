@@ -113,20 +113,18 @@ class XkcController extends AdminController
         $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->actions(function ($actions) {
-            //$actions->add(new Generator);
             $actions->add(new Clean);
         });
 
-        $grid->batchActions(function ($actions) {
-            //$actions->add(new BatchGenerator());
+        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
             $actions->add(new BatchClean);
         });
 
         $grid->filter(function(Grid\Filter $filter){
 
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->equal('uuid', __('Uuid'));
                 $filter->date('air_date', __('Air date'));
+                $filter->equal('lock_status', __('Lock'))->radio(Channel::LOCKS);
             });
             
         });
@@ -138,9 +136,7 @@ class XkcController extends AdminController
             $tools->append(new BatchAudit);
             $tools->append(new BatchLock);
             $tools->append(new BatchDistributor());
-            
-            $tools->append(new ToolExporter('xkc'));
-            
+            $tools->append(new ToolExporter('xkc')); 
         });
 
         return $grid;
