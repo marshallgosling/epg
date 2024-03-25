@@ -6,11 +6,13 @@ use App\Events\Channel\CalculationEvent;
 use App\Jobs\Material\ScanFolderJob;
 use App\Models\Agreement;
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
 use App\Models\Expiration;
 use App\Models\Material;
 use App\Models\Record;
+use App\Models\Record2;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
 use App\Tools\Exporter\ExcelWriter;
@@ -44,17 +46,24 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        $job = new ScanFolderJob(8, 'apply');
-        $job->handle();
         
-        return;
-        
-        foreach($list as $m)
+        $list = ChannelPrograms::where('channel_id', $group)->get();
+        foreach($list as $p)
         {
-            $lines[] = "copy \"{$m->filepath}\" \"Y:\\MV2\\{$m->unique_no}.mxf\"";
+            $data = json_decode($p->data);
+            if(key_exists('replicate', $data)) continue;
+            
+            foreach($data as &$item)
+            {
+                if(is_array($item->category))
+                {
+                    $category = Record2::where('unique_no', $item->unique_no)->value('category');
+                    $item->category = is_array($category) ? $category[0] : $category;
+                }
+            }
+            $p->data = json_encode($data);
+            $p->save();
         }
-
-        Storage::put('mv.bat', implode(PHP_EOL, $lines));
 
         return;
         
