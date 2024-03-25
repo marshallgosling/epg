@@ -18,7 +18,7 @@ class BatchModify extends BatchAction
     public function handle(Collection $collection, Request $request)
     {
         $category = $request->get('category');
-        //$group = $request->get('group');
+        $episodes = $request->get('episodes');
         foreach ($collection as $model) 
         {
             $categories = $model->category;
@@ -29,18 +29,22 @@ class BatchModify extends BatchAction
                     $categories[] = $category;
                 $model->category = $categories;
             }
+
+            if($episodes) {
+
+            }
             
 
             if($model->isDirty()) {
                 $model->save();
 
-                if($model instanceof Program) {
-                    $table = 'program';
-                }
-                else
-                    $table = 'record';
+                // if($model instanceof Program) {
+                //     $table = 'program';
+                // }
+                // else
+                //     $table = 'record';
                 
-                CategoryRelationEvent::dispatch($model->id, $categories, $table);
+                //CategoryRelationEvent::dispatch($model->id, $categories, $table);
                 
             }
                 
@@ -53,7 +57,7 @@ class BatchModify extends BatchAction
     public function form()
     {
         $this->select('category', __('Category'))->options(Category::getFormattedCategories());
-        //$this->text('group', __('Group'));
+        //$this->text('episodes', __('Episodes'));
 
         $this->textarea("help", "注意说明")->default('批量添加或删除栏目标签'.PHP_EOL.'默认为增加标签，如果已存在相同的标签，则会进行移除操作')->disable();
     }

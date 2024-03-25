@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Media;
 use App\Admin\Actions\Material\CompareLink;
 use App\Admin\Actions\Program\RecordMaterial;
 use App\Admin\Actions\Program\BatchModify;
+use App\Admin\Actions\Program\BatchModifyEpisodes;
 use App\Events\CategoryRelationEvent;
 use App\Models\Record;
 use App\Models\Category;
@@ -93,6 +94,7 @@ class XkcProgramController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
+            $tools->append(new BatchModifyEpisodes);
             $tools->append(new CompareLink('xkc'));
         });
 
