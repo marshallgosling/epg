@@ -89,7 +89,7 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
                     $name = $m['name'];
                     $unique_no = $m['unique_no'];
                     $status = $name || $unique_no;
-                    $created_at = filectime($folder->path.$filename);
+                    $created_at = date("Y-m-d H:i:s", filectime($folder->path.$filename));
                     $list[] = compact('filename', 'name', 'unique_no','status', 'folder_id','created_at');
                 }
             }
