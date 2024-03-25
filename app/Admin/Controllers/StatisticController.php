@@ -43,7 +43,8 @@ class StatisticController extends AdminController
 
         $grid->filter(function(Grid\Filter $filter){
             $filter->column(6, function (Grid\Filter $filter) {
-                $filter->equal('column', __('Column'));
+                //$filter->('column', __('Column'));
+                $filter->mlike('comment', __('Comment'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%');
                 $filter->equal('date', __('Air date'))->date('Y-m-d');
                 $filter->in('category', __('Category'))->multipleSelect(Category::getFormattedCategories());
             });
