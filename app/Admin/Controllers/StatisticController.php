@@ -33,7 +33,7 @@ class StatisticController extends AdminController
         $grid->column('type', __('Type'))->using(Statistic::TYPES)->label();
         $grid->column('date', __('Air date'))->display(function ($date) {
             return "<small>$date</small>";
-        });
+        })->sortable();
         $grid->column('value', __('Value'))->sortable();
         $grid->column('category', __('Category'))->label('info');
         $grid->column('comment', __('Comment'));
