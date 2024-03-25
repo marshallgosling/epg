@@ -88,7 +88,7 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
                     $filename = $m['filename'];
                     $name = $m['name'];
                     $unique_no = $m['unique_no'];
-                    $status = $filename || $unique_no;
+                    $status = $name || $unique_no;
                     $list[] = compact('filename', 'name', 'unique_no','status', 'folder_id');
                 }
             }

@@ -29,7 +29,7 @@ class RawFilesController extends AdminController
 
         $grid->column('filename', __('Filename'));
         $grid->column('status', __('Status'))->bool();
-        $grid->column('name', __('Name'))->hide();
+        $grid->column('name', __('Name'));
         $grid->column('unique_no', __('Unique no'))->sortable();
         $grid->column('created_at', __('Created at'))->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
