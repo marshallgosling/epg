@@ -233,7 +233,7 @@ class XkiGenerator
         $seconds = ChannelGenerator::parseDuration($item->duration);
         $category = $item->category;
         $temp_air = $air + $seconds;
-
+        
         //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
         if($temp_air > ($schedule_end + (int)config('GENERATE_GAP', 300))) return false;
 

@@ -259,7 +259,7 @@ class Record2 extends Model
 
         $program = Record2::where('record2.unique_no', $id)
             ->join('material', 'record2.unique_no', '=', 'material.unique_no')
-            ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.black", "material.duration", "material.frames")->first();
+            ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.category", "record2.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findBumper($key);
         else return $program;

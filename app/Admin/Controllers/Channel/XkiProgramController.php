@@ -61,6 +61,7 @@ class XkiProgramController extends AdminController
             {
                 $item = $data[$i];
                 if($i==10)break;
+                if(is_array($item->category)) $item->category = $item->category[0];
                 $items[] = [$item->start_at, $item->end_at, $item->unique_no, $item->name, $item->duration, $item->category, $item->artist];
             }
             
