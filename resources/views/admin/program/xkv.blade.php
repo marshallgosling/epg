@@ -22,7 +22,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top">{{@substr($item->start_at, 11)}} -- {{@substr($item->end_at, 11)}} {{$item->name}}</a></li>
+                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top">{{@substr($item->start_at, 11)}} -- {{@substr($item->end_at, 11)}} {{$item->name}} {!!abs($item->duration - 3600)>300?'<span class="label label-danger">需处理</span>':''!!}</a></li>
                             @endforeach
                         </ul>
                     </div>
