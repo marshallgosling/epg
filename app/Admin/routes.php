@@ -26,6 +26,7 @@ Route::group([
     $router->resource('/media/compare/xki', 'Media\\XkiCompareController')->names('media.compare.xki');
     $router->get('/media/folder/{id}', 'Media\\ProcessMaterialController@index')->name('media.folder');
     $router->resource('/media/folders', 'Media\\FolderController')->names('media.folders');
+    $router->resource('/media/folders/files', 'Media\\RawFilesController')->names('media.folders.files');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');

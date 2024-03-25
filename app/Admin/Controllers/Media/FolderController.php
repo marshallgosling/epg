@@ -33,7 +33,7 @@ class FolderController extends AdminController
         $grid->column('comment', __('Comment'));
         $grid->column('scaned_at', __('Scaned at'));
         $grid->column('link', '')->display(function () {
-            return '<a href="./folder/'.$this->id.'">查看详细数据</a>';
+            return '<a href="./folders/files?folder_id='.$this->id.'">查看详细数据</a>';
         });
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();

@@ -37,8 +37,7 @@ class RecognizeFileInfo
             }
 
         }
-
-        if(count($names) == 1)
+        else if(count($names) == 1)
         {
             $unknow = array_pop($names);
             $m = Material::where('unique_no', $unknow)->first();

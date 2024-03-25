@@ -4,6 +4,7 @@ namespace App\Jobs\Material;
 
 use App\Models\Folder;
 use App\Models\Material;
+use App\Models\RawFiles;
 use App\Tools\Material\RecognizeFileInfo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -76,16 +77,26 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
             $folder->save();
             return;
         }
-
+        $folder_id = $folder->id;
+        RawFiles::where('folder_id', $folder_id)->delete();
+        
         $list = [];
         while (($file = $d->read()) !== false){
             if($file != '.' && $file != '..') {
                 $m = RecognizeFileInfo::recognize($file);
-                if($m) $list[] = $m;
+                if($m) {
+                    $filename = $m['filename'];
+                    $name = $m['name'];
+                    $unique_no = $m['unique_no'];
+                    $status = $filename || $unique_no;
+                    $list[] = compact('filename', 'name', 'unique_no','status', 'folder_id');
+                }
             }
         }
         $d->close();
-        $folder->data = $list;
+
+        RawFiles::insert($list);
+        //$folder->data = $list;
         $folder->status = Folder::STATUS_READY;
         $folder->scaned_at = date('Y-m-d H:i:s');
         $folder->save();
