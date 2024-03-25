@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
+use App\Jobs\ExcelJob;
 use App\Jobs\Material\ScanFolderJob;
 use App\Models\Agreement;
 use App\Models\Channel;
@@ -47,24 +48,8 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         
-        $list = ChannelPrograms::where('channel_id', $group)->get();
-        foreach($list as $p)
-        {
-            $data = json_decode($p->data);
-            if(key_exists('replicate', $data)) continue;
-            
-            foreach($data as &$item)
-            {
-                if(is_array($item->category))
-                {
-                    $category = Record2::where('unique_no', $item->unique_no)->value('category');
-                    $item->category = is_array($category) ? $category[0] : $category;
-                }
-            }
-            $p->data = json_encode($data);
-            $p->save();
-        }
-
+        $job = new ExcelJob(11);
+        $job->handle();
         return;
         
         
