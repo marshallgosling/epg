@@ -109,19 +109,26 @@ class materialTool extends Command
 
     private function mediainfo($id, $group=0)
     {
-        
-        $material = Material::findOrFail($id);
+        $cache = [];
+        $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','md5')->lazy();
 
-        if(file_exists($material->filepath)) {
-            try{
-                $info = MediaInfo::getRawInfo($material);
-            }catch(\Exception $e)
-            {
-                $info = false;
+        foreach($list as $m)
+        {
+            if(file_exists($m->filepath)) {
+                try{
+                    $info = MediaInfo::getInfo($m);
+                    $m->md5 = $info['afd'];
+                    $cache[$m->unique_no] = $info['afd'];
+                    $m->save();
+                }catch(\Exception $e)
+                {
+                    $info = false;
+                }
             }
-
-            echo $info;
         }
+
+        Storage::put('afd.json', json_encode($cache));
+        
     }
 
     private function seconds() {
