@@ -42,8 +42,11 @@ class RawFilesController extends AdminController
         });
 
         $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
-            $actions->add(new BatchCreator);
             $actions->disableDelete();
+        });
+
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new BatchCreator);
         });
 
         $grid->disableCreateButton();
