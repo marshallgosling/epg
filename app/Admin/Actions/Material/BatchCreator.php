@@ -40,7 +40,7 @@ class BatchCreator extends BatchAction
             $filepath = $folder . $model->filename;
             $comment = '';
             if(empty($model->unique_no)) {
-                $filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
+                //$filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
                 //rename($folder . $model->filename, $filepath);
                 $comment = 'rename';
             }
