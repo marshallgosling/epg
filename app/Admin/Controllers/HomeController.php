@@ -65,7 +65,7 @@ HTML;
         $box = new Box('最新添加物料记录', $html);
 
         $box->style('default');
-        $box->scrollable();
+        
         $box->solid();
 
         return $box->render();
@@ -81,19 +81,22 @@ HTML;
 
     public static function charts()
     {
-      $material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'总物料库');
+      //$material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'总物料库');
+      $material = Statistic::countMaterial();
       $program = Statistic::countPrograms();
       $records = Statistic::countRecords();
       $record2 = Statistic::countRecord2();
 
-      $channels = Statistic::generateBarChart('programChart', Channel::GROUPS, [$program['1'], $records['1'], $record2['1']], "节目库（可用数）");
+      $channels = Statistic::generateBarChart('programChart', 
+        array_merge(['all'=>'总物料库'], Channel::GROUPS), 
+        [$material['1'], $program['1'], $records['1'], $record2['1']], "物料库及节目库（可用数）");
 
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
 <div class="row" style="height:390px">
-  <div class="col-md-4"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-8" style="border:0px solid #eee; border-left-width:1px;">
+  
+  <div class="col-md-12" style="border:0px solid #eee; border-left-width:1px;">
     <div class="row">
       <div class="col-md-12"><canvas id="programChart"></canvas></div>
     </div>
@@ -104,17 +107,18 @@ HTML;
 
 <script>
   const colors=[
+    'rgb(75, 192, 192)',
     'rgb(54, 162, 235)',
-    'rgb(255, 99, 132)',
-    'rgb(75, 192, 192)'
+    'rgb(54, 162, 235)',
+    'rgb(54, 162, 235)'
   ];
   const bcolors=[
+    'rgba(75, 192, 192, 0.3)',
     'rgba(54, 162, 235, 0.3)',
-    'rgba(255, 99, 132, 0.3)',
-
-    'rgba(75, 192, 192, 0.3)'
+    'rgba(54, 162, 235, 0.3)',
+    'rgba(54, 162, 235, 0.3)'
   ];
-  {$material}
+
   {$channels}
 
 </script>

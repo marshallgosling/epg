@@ -97,4 +97,21 @@ class Statistic
         
         return "new Chart(document.getElementById('$id'), {type:'bar',options:{indexAxis:'y',plugins:{legend:{display:false},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{axis:'y',fill:false,borderWidth:1,data:[$data],backgroundColor:bcolors,borderColor:colors}]}});";
     }
+
+    public static function  generateBarLineChart($id, $labels, $data, $title='',$pos='top')
+    {
+        $label = [];
+        $value = [];
+        foreach($labels as $idx=>$v)
+        {
+            $label[] = "'{$v}'";
+            
+        }
+
+        $label = implode(',', $label);
+        $data = implode(',', $data);
+        
+        return "new Chart(document.getElementById('$id'), {type:'bar',options:{indexAxis:'y',plugins:{legend:{display:false},title:{display:true,text:'$title'}}},data:{labels:[$label],datasets:[{axis:'y',fill:false,borderWidth:1,data:[$data],backgroundColor:bcolors,borderColor:colors}]}});";
+    }
+
 }
