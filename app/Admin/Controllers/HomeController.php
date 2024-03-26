@@ -36,13 +36,40 @@ class HomeController extends Controller
                 });
 
                 $row->column(4, function (Column $column) {
-                    $column->append(HomeController::environment());
+                    $column->append(HomeController::daily());
                 });
 
                 
             });
     }
 
+    private static function daily()
+    {
+        $list = Material::where('created_at','<', date('Y-m-d H:i:s'))->orderBy('created_at', 'desc')->limit(20)->get();
+        
+        $data = '';
+        foreach($list as $m) {
+            $data .= '<tr><td>'.$m->name.'</td><td>'.substr($m->created_at, 5, 11).'</td></tr>';
+        }
+            
+        $html = <<<HTML
+        <div class="row" style="height:390px; overflow-y:scroll">
+        <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                {$data}
+            </table>
+        </div></div>
+      </div>
+HTML;
+        $box = new Box('最新添加物料记录', $html);
+
+        $box->style('default');
+        $box->scrollable();
+        $box->solid();
+
+        return $box->render();
+    }
    
     public function supervisord(Content $content)
     {
