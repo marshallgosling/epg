@@ -27,8 +27,10 @@ class CalculationListener
 
         $channel = Channel::find($event->getChannelId());
         if($channel->lock_status == Channel::LOCK_ENABLE) {
-            $this->warn("Channel {$event->getChannelId()} is locked.");
-            return;
+            // $this->warn("Channel {$event->getChannelId()} is locked.");
+            // return;
+            $channel->lock_status = Channel::LOCK_EMPTY;
+            //$channel->save();
         }
         $programs = $channel->programs()->get();
 
