@@ -35,7 +35,7 @@ class BatchCreator extends BatchAction
         {
             if($model->status != RawFiles::STATUS_READY) continue;
             if(!$folder) $folder = Folder::where('id', $model->folder_id)->value('path');
-            $unique_no = empty($model->unique_no) ?? 'XK'.Str::upper(Str::random(12));
+            $unique_no = empty($model->unique_no) ? 'XK'.Str::upper(Str::random(12)) : $model->unique_no;
             $name = $model->name;
             $filepath = $folder . $model->filename;
             $comment = '';

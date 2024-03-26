@@ -207,7 +207,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
             }
             
             $material->comment = '';
-            $filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
+            $filepath = str_replace('.mxf', '.'.$unique_no.'.mxf', $filepath);
         }
 
         if(empty($filepath))
