@@ -56,7 +56,7 @@ class BatchCreator extends BatchAction
             }
             $m = Material::where('unique_no', $unique_no)->first();
             if(!$m) {
-                $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status','commnet'));
+                $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status','comment'));
                 $m->save();
             }
             MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
