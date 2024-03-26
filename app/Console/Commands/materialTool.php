@@ -110,7 +110,7 @@ class materialTool extends Command
     private function mediainfo($id, $group=0)
     {
         $cache = [];
-        $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','md5','duration','frames','size')->lazy();
+        $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','md5')->lazy();
 
         foreach($list as $m)
         {
@@ -127,7 +127,11 @@ class materialTool extends Command
                 }catch(\Exception $e)
                 {
                     $info = false;
+                    $this->error('file error:'.$m->filepath.' '.$m->id);
                 }
+            }
+            else {
+                $this->info('missing file:'.$m->filepath.' '.$m->id);
             }
         }
 
