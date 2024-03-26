@@ -38,6 +38,10 @@ class BatchCreator extends BatchAction
             $unique_no = $model->unique_no ?? 'XK'.Str::upper(Str::random(12));
             $name = $model->name;
             $filepath = $folder . $model->filename;
+            if(!$model->unique_no) {
+                $filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
+                rename($folder . $model->filename, $filepath);
+            }
             $ep = 1;
             if(preg_match('/(\d+)$/', $name, $matches))
             {
