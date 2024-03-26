@@ -92,7 +92,7 @@ class MaterialController extends AdminController
         $grid->column('ep', __('Ep'))->sortable();
         
         $grid->column('duration', __('Duration'));
-        $grid->column('size', __('Size'))->hide();
+        $grid->column('filename', __('Filename'))->hide();
         $grid->column('md5', __('MD5'))->hide();
         $grid->column('frames', __('Frames'))->sortable();
         $grid->column('created_at', __('Created at'))->sortable()->hide();
