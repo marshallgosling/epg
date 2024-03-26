@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\BatchCreator;
+use App\Admin\Actions\Material\ToolScan;
 use App\Models\Folder;
 use App\Models\RawFiles;
 use Encore\Admin\Controllers\AdminController;
@@ -47,6 +48,8 @@ class RawFilesController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchCreator);
+            if(array_key_exists('folder_id', $_REQUEST))
+                $tools->append(new ToolScan($_REQUEST['folder_id']));
         });
 
         $grid->disableCreateButton();
