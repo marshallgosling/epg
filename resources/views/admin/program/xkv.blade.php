@@ -150,6 +150,7 @@
     var curPage = 1;
     var keyword = '';
     var loadingMore = false;
+    var end_at = {{$end_at}};
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
@@ -490,7 +491,8 @@
 
         $('#tree-programs').html(html);
         var d = Date.parse('2000/1/1 00:00:00');
-        $('#total').html('<small>总时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
+        var end = end_at + total;
+        $('#total').html('<small>预计编单结束时间 '+ formatTime(end*1000)+', 当前栏目时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
         $chkboxes = $('.grid-row-checkbox');
         setupMouseEvents();
     }
