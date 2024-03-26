@@ -28,6 +28,7 @@ class RawFilesController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new RawFiles());
+        $grid->model()->orderBy('created_at', 'desc');
 
         $grid->column('filename', __('Filename'));
         $grid->column('status', __('Status'))->bool();
@@ -39,6 +40,7 @@ class RawFilesController extends AdminController
         $grid->filter(function(Grid\Filter $filter) {
             $filter->column(6, function (Grid\Filter $filter) {
                 $filter->equal('folder_id', __('播出池'))->select(Folder::pluck('path', 'id'));
+                $filter->like('filename', __('Filename'))->placeholder('输入关键字搜索');
             });
         });
 

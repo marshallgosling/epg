@@ -201,7 +201,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         $comment = $material->comment;
         if($comment == 'rename')
         {
-            $r = rename($filepath, str_replace('.mxf', $unique_no.'.mxf', $filepath));
+            $r = rename($filepath, str_replace('.mxf', '.'.$unique_no.'.mxf', $filepath));
             if(!$r) {
                 return;
             }
