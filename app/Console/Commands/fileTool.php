@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Folder;
 use App\Models\LargeFile;
 use App\Models\Material;
+use App\Models\RawFiles;
 use App\Tools\ChannelGenerator;
 use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
@@ -290,7 +292,18 @@ class fileTool extends Command
 
     private function clean()
     {
-        // Clean xml files 
+        // Clean files 
+        $id = $this->argument('path') ?? "";
+        $folder = Folder::find($id);
+        $files = $folder->rawfiles()->get();
+        foreach($files as $f)
+        {
+            $path = $folder->path . $f->filename;
+            if(file_exists($path))
+            {
+                if(unlink($path)) $this->info('unlink '.$path);
+            }
+        }
     }
 
     private function loadEml($xml)
