@@ -165,7 +165,7 @@ ol.breadcrumb {
                   <li><b>{{ @__('Simulate days')}}</b></li>
                   <li> <div class="btn-group">
   <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    {{ $days }} <span class="caret"></span>
+    {{ $days }}&nbsp;&nbsp;&nbsp;&nbsp; <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
     <li><a href="./{{$group}}?days=3">3</a></li>
