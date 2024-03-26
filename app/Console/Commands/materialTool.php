@@ -118,10 +118,10 @@ class materialTool extends Command
                 try{
                     $info = MediaInfo::getInfo($m);
                     $m->md5 = $info['afd'];
-                    $cache[$m->unique_no] = $info['afd'];
-                    $m->frames = $info['frames'];
-                    $m->size = $info['size'];
-                    $m->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+                    $cache[$m->unique_no] = $info;
+                    //$m->frames = $info['frames'];
+                    //$m->size = $info['size'];
+                    //$m->duration = ChannelGenerator::parseFrames((int)$info['frames']);
 
                     $m->save();
                 }catch(\Exception $e)
