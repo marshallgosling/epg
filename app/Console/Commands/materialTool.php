@@ -110,7 +110,7 @@ class materialTool extends Command
     private function mediainfo($id, $group=0)
     {
         $cache = [];
-        $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','md5')->lazy();
+        $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','md5','duration','frames','size')->lazy();
 
         foreach($list as $m)
         {
@@ -119,6 +119,10 @@ class materialTool extends Command
                     $info = MediaInfo::getInfo($m);
                     $m->md5 = $info['afd'];
                     $cache[$m->unique_no] = $info['afd'];
+                    $m->frames = $info['frames'];
+                    $m->size = $info['size'];
+                    $m->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+
                     $m->save();
                 }catch(\Exception $e)
                 {
