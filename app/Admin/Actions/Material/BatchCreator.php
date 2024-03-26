@@ -59,6 +59,7 @@ class BatchCreator extends BatchAction
                 $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status','comment','ep'));
                 $m->save();
             }
+            $model->delete();
             MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
         }
         
