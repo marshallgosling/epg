@@ -233,19 +233,15 @@ class XkiGenerator
         $seconds = ChannelGenerator::parseDuration($item->duration);
         $category = $item->category;
         $temp_air = $air + $seconds;
-        
+        if(is_array($category)) $category = array_pop($category);
         //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
         if($temp_air > ($schedule_end + (int)config('GENERATE_GAP', 300))) return false;
-
-        //$duration += $seconds;
                     
         $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
                     
         $air += $seconds;
 
         $line['end_at'] = date('H:i:s', $air);
-
-        //$this->info("添加Bumper 节目: {$category} {$item->name} {$item->duration}");
 
         return compact('line', 'seconds');
     }
