@@ -48,8 +48,24 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         
-        $job = new ExcelJob(11);
-        $job->handle();
+        $list = ChannelPrograms::where('channel_id', $group)->get();
+        foreach($list as $p)
+        {
+            $data = json_decode($p->data);
+            if(key_exists('replicate', $data)) continue;
+            
+            foreach($data as &$item)
+            {
+                if(is_array($item->category))
+                {
+                    //$category = Record2::where('unique_no', $item->unique_no)->value('category');
+                    $item->category = $item->category[0];
+                }
+            }
+            $p->data = json_encode($data);
+            $p->save();
+        }
+
         return;
         
         
