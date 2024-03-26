@@ -198,6 +198,18 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         if(!$material) return;
         $unique_no = $material->unique_no;
         $filepath = $material->filepath;
+        $comment = $material->comment;
+        if($comment == 'rename')
+        {
+            $r = rename($filepath, str_replace('.mxf', $unique_no.'.mxf', $filepath));
+            if(!$r) {
+                return;
+            }
+            
+            $material->comment = '';
+            $filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
+        }
+
         if(empty($filepath))
         {
             $filepath = MediaInfo::scanPath($material->name.'.'.$unique_no.'.mxf');

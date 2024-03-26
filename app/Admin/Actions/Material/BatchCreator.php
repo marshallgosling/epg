@@ -38,10 +38,13 @@ class BatchCreator extends BatchAction
             $unique_no = $model->unique_no ?? 'XK'.Str::upper(Str::random(12));
             $name = $model->name;
             $filepath = $folder . $model->filename;
+            $comment = '';
             if(!$model->unique_no) {
                 $filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
-                rename($folder . $model->filename, $filepath);
+                //rename($folder . $model->filename, $filepath);
+                $comment = 'rename';
             }
+            
             $ep = 1;
             if(preg_match('/(\d+)$/', $name, $matches))
             {
@@ -53,7 +56,7 @@ class BatchCreator extends BatchAction
             }
             $m = Material::where('unique_no', $unique_no)->first();
             if(!$m) {
-                $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status'));
+                $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status','commnet'));
                 $m->save();
             }
             MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
