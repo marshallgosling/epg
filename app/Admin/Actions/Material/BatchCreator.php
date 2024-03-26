@@ -47,16 +47,15 @@ class BatchCreator extends BatchAction
                     $group = trim(trim($group), '_-');
                 }
             }
-            $e = Material::where('unique_no', $unique_no)->first();
-            if(!$e) {
+            $m = Material::where('unique_no', $unique_no)->first();
+            if(!$m) {
                 $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status'));
                 $m->save();
-                MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
             }
-                
+            MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
         }
         
-        return $this->response()->success(__('BatchCreator success message.'))->refresh();
+        return $this->response()->success($this->name.'成功')->refresh();
     }
 
     public function form()
