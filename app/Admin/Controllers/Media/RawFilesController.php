@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\BatchCreator;
 use App\Models\Folder;
 use App\Models\RawFiles;
 use Encore\Admin\Controllers\AdminController;
@@ -34,11 +35,19 @@ class RawFilesController extends AdminController
         $grid->column('created_at', __('Created at'))->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
 
-        $grid->filter(function($filter) {
+        $grid->filter(function(Grid\Filter $filter) {
             $filter->column(6, function (Grid\Filter $filter) {
                 $filter->equal('folder_id', __('播出池'))->select(Folder::pluck('path', 'id'));
             });
         });
+
+        $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
+            $actions->add(new BatchCreator);
+            $actions->disableDelete();
+        });
+
+        $grid->disableCreateButton();
+        $grid->disableActions();
 
         return $grid;
     }
