@@ -43,45 +43,28 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $jobs = EpgJob::where('group_id', $this->group)->orderBy('id', 'desc')->get()->toArray();
+        // $jobs = EpgJob::where('group_id', $this->group)->orderBy('id', 'desc')->get()->toArray();
 
-        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
-        $data = json_encode($templates->toArray());
-        Storage::disk('data')->put($this->group.'_reset_template_'.date('YmdHis').'.json', $data);
-
-        $job = $jobs[0];
-        if(count($jobs) == 1) {
-
-            foreach($templates as $t)
+        // $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
+        // $data = json_encode($templates->toArray());
+        // Storage::disk('data')->put($this->group.'_reset_template_'.date('YmdHis').'.json', $data);
+        $json = $this->group."_saved_template.json";
+        if(Storage::exists($json))
+        {
+            $data = json_decode(Storage::get($json), true);
+            foreach($data['records'] as $records)
             {
-                $records = $t->records;
-
-                foreach($records as $model)
+                foreach($records as $record)
                 {
-                    $data = $model->data;
-                    if(key_exists('unique_no', $data)) $data['unique_no'] = '';
-                    if(key_exists('result', $data)) $data['result'] = '';
-                    if(key_exists('name', $data)) $data['name'] = '';
-
-                    if($model->type == TemplateRecords::TYPE_RANDOM) $data['episodes'] = '';
-
-                    $model->data = $data;
-                    if($model->isDirty()) $model->save();
+                    $record['data'] = json_encode($record['data']);
+                    TemplateRecords::where('id', $record['id'])->update($record);
                 }
             }
+            Storage::delete($json);
+            //if($this->action == 'clear') $this->clearChannel($json);
         }
-        else {
-            // $json = Storage::get($job->file);
-            // $ret = $this->reverseTemplate($json);
-            // if(!$ret) {
-                    
-                $reverse = $job[1];
-                $json = Storage::get($reverse->file);
-                $this->reverseTemplate2($json);
-            // }
-        }
-
-        if($this->action == 'clear') $this->clearChannel($json);
+        
+        return 0;
 
         
     }

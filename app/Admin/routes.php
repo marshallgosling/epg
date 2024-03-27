@@ -101,6 +101,7 @@ Route::group([
     
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
     $router->get('/template/temp/programs/{program}', 'Template\\TempProgramsController@show')->name('template.temp.show');
+    $router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
     $router->get('/template/help', 'HelpController@template')->name('template.help');
 
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');

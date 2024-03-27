@@ -7,6 +7,7 @@ use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Models\Record;
 use App\Models\TemplateRecords;
+use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\DB;
@@ -114,6 +115,12 @@ class XkcSimulator
         Storage::put($this->group.'_saved_template.json', json_encode($temp));
     }
 
+    public function saveTemplateHistory($template, $channel)
+    {
+        if(!$this->saveState) return;
+        ChannelGenerator::saveHistory($template, $channel);
+    }
+
     public function handle(\Closure $callback=null)
     {
         //$day = strtotime($start);
@@ -123,12 +130,12 @@ class XkcSimulator
         
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->saveTemplate($templates);
-
+        
         foreach($this->channels as &$channel)
         {
             // setup $air value, for record items expiration check 
             Record::loadExpiration($channel->air_date);
-
+            
             $result = $channel->toArray();
             $result['data'] = [];
             $result['error'] = false;
@@ -138,6 +145,8 @@ class XkcSimulator
             
             foreach($templates as &$template)
             {
+                $this->saveTemplateHistory($template, $channel);
+
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
                 $duration = 0;

@@ -42,6 +42,25 @@ class ChannelGenerator
         return $templates;
     }
 
+    public static function saveHistory($template, $channel)
+    {
+        $template = $template->replicate()->toArray();
+        unset($template['id']);
+        $template['group_id'] = $channel->id;
+        $template['created_at'] = $channel->air_date;
+        $template['updated_at'] = date('Y-m-d H:i:s');
+        $t = Template::create($template);
+        $records = $template->records;
+
+        foreach($records as $record)
+        {
+            $r = $record->replicate()->toArray();
+            unset($r['id']);
+            $r['template_id'] = $t->id;
+            TemplateRecords::create($r);
+        }
+    }
+
     public static function saveTemplateState($templates) 
     {
         $list = TemplateRecords::whereIn('template_id', $templates)->select('id','data')->pluck('data', 'id')->toArray();
