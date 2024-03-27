@@ -10,8 +10,7 @@ use App\Tools\ChannelGenerator;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Jobs\Material\MediaInfoJob;
-use App\Models\Record;
+
 
 class ToolCreator extends Action
 {
@@ -27,7 +26,7 @@ class ToolCreator extends Action
 
     public function handle(Request $request)
     {
-        $category = $request->get('category').',';
+        $category = [$request->get('category')];
         $channel = $request->get('channel');
         //$unique = $request->get('unique_no');
         $group = $request->get('name');
