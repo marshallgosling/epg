@@ -109,8 +109,8 @@ class XkcController extends AdminController
         $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(100);
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
-        $grid->column('created_at', __('Created at'))->hide();
-        $grid->column('updated_at', __('Updated at'))->sortable();
+        $grid->column('created_at', __('Created at'))->sortable()->hide();
+        $grid->column('updated_at', __('Updated at'))->sortable()->hide();
 
         $grid->actions(function ($actions) {
             $actions->add(new Clean);
