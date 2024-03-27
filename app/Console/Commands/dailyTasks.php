@@ -98,7 +98,8 @@ class dailyTasks extends Command
 
     private function scan($args)
     {
-        for($i=2;$i<8;$i++)
+        $list = explode(',', $args);
+        foreach($list as $i)
         {
             ScanFolderJob::dispatch($i, 'scanandimport')->onQueue('media');
         }
