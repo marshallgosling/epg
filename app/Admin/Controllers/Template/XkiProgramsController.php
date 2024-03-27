@@ -152,7 +152,7 @@ class XkiProgramsController extends AdminController
             $form->dateRange('date_from', 'date_to', __('DateRange'));
             $form->checkbox('dayofweek', __('Daysofweek'))->options(TemplateRecords::DAYS)->canCheckAll();
             $form->checkbox('airday', __('AirDay'))->options(TemplateRecords::DAYS)->canCheckAll();
-            $form->number('ep', __('Ep no'))->min(1)->max(2)->default(1);
+            $form->number('ep', __('Ep no'))->min(1)->max(6)->default(1);
 
             $form->text("name", __('Name'));
             $form->text('unique_no', __('Unique no'));

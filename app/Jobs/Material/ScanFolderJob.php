@@ -55,7 +55,7 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
         
         $action = $this->action;
 
-        if(in_array($action, ['scan', 'apply']))
+        if(in_array($action, ['scan', 'apply', 'scanandimport']))
         {
             $this->$action($model);
         }   
