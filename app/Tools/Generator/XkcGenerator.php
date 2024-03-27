@@ -78,7 +78,7 @@ class XkcGenerator
         Record::cleanCache();
         Record::loadBumpers(config('XKC_BUMPERS_TAG', 'XK FILLER'));
 
-        $days = (int)config('SIMULATOR_DAYS', 14);
+        $days = count($channels);
         //$channels = $this->channels;
         if(!$channels) return false;
         
