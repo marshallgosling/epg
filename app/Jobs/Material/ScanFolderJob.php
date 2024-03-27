@@ -103,6 +103,81 @@ class ScanFolderJob implements ShouldQueue, ShouldBeUnique
         $folder->save();
     }
 
+    public function scanandimport($folder)
+    {
+        $d = dir($folder->path);
+        if(!$d) {
+            //$folder->data = [];
+            $folder->status = Folder::STATUS_ERROR;
+            $folder->scaned_at = date('Y-m-d H:i:s');
+            $folder->save();
+            return;
+        }
+        $folder_id = $folder->id;
+        RawFiles::where('folder_id', $folder_id)->delete();
+        
+        $list = [];
+        while (($file = $d->read()) !== false){
+            if($file != '.' && $file != '..') {
+                $m = RecognizeFileInfo::recognize($file);
+                if($m) {
+                    $filename = $m['filename'];
+                    $name = $m['name'];
+                    $unique_no = $m['unique_no'];
+                    $status = $name || $unique_no;
+                    $created_at = date("Y-m-d H:i:s", filectime($folder->path.$filename));
+
+                    if($status)
+                        $this->import($folder, $m);
+                    else
+                        $list[] = compact('filename', 'name', 'unique_no','status', 'folder_id','created_at');
+                }
+            }
+        }
+        $d->close();
+
+        RawFiles::insert($list);
+        //$folder->data = $list;
+        $folder->status = Folder::STATUS_READY;
+        $folder->scaned_at = date('Y-m-d H:i:s');
+        $folder->save();
+    }
+
+    private function import($folder, $m)
+    {
+        $category = '';
+        $channel = 'xkc';
+        $group = '';
+        $duration = '00:00:00:00';
+        $frames = 0;
+        $status = Material::STATUS_EMPTY;
+        $unique_no = empty($m['unique_no']) ? 'XK'.Str::upper(Str::random(12)) : $m['unique_no'];
+        $name = $m['name'];
+        $filepath = $folder->path . $m['filename'];
+        $comment = '';
+        if(empty($m['unique_no'])) {
+            $comment = 'rename';
+        }
+            
+        $ep = 1;
+        if(preg_match('/(\d+)$/', $name, $matches))
+        {
+            $ep = (int) $matches[1];
+            if(!$group) {
+                $group = preg_replace('/(\d+)$/', "", $name);
+                $group = trim(trim($group), '_-');
+            }
+        }
+        $material = Material::where('unique_no', $unique_no)->first();
+        if(!$material) {
+            $material = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status','comment','ep'));
+            $material->save();
+        }
+           
+        MediaInfoJob::dispatch($material->id, 'sync')->onQueue('media');
+        return false;
+    }
+
     public function apply($folder)
     {
         $list = json_decode($folder->data);

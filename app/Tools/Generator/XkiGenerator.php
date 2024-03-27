@@ -150,7 +150,7 @@ class XkiGenerator
 
                 
                 $break_level = 3;
-                $schedule_end = strtotime($program->start_at) + $scheduledDuration;
+                $schedule_end = strtotime($channel->air_date.' '.$program->schedule_start_at) + $scheduledDuration;
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {
                     if($duration > $scheduledDuration) break;
