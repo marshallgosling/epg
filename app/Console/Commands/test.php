@@ -50,6 +50,8 @@ class test extends Command
         
         $channel = Channel::find($day);
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+
+        
         foreach($templates as $template)
         {
             ChannelGenerator::saveHistory($template, $channel);

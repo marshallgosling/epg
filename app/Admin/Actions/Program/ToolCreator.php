@@ -28,13 +28,13 @@ class ToolCreator extends Action
     {
         $category = [$request->get('category')];
         $channel = $request->get('channel');
-        //$unique = $request->get('unique_no');
+        $unique = $request->get('code');
         $group = $request->get('name');
         $total = (int)$request->get('total');
         $st = (int)$request->get('st');
         $duration = '00:00:00:00';
         $seconds = 0;
-        $code = 'XK'.Str::upper(Str::random(4));
+        $code = empty($unique) ? 'XK'.Str::upper(Str::random(4)):$unique;
 
         if($channel == 'xkv') {
             $class = '\App\Models\Program';
@@ -56,7 +56,7 @@ class ToolCreator extends Action
         for($i=0;$i<$total;$i++)
         {
             $ep = $i+$st;
-            $unique_no = Str::upper($code.$this->ep($ep));
+            $unique_no = $code.$this->ep($ep);
             $name = $group.' '.$ep;
             $class::create(compact('name', 'unique_no', 'category', 'duration','seconds','ep','status','created_at','updated_at'));
         }
@@ -74,7 +74,7 @@ class ToolCreator extends Action
         //$this->select('channel', __('Channel'))->options(Channel::GROUPS)->default('xkc');
         $this->text('ttt', __('Channel'))->default(Channel::GROUPS[$this->group])->disable();
         $this->select('category', __('Category'))->options(Category::getXkcCategories())->required();
-        
+        $this->text('code', __('Unique no'))->placeholder('播出编号前缀(可选)');
         $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入')->required();
         $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号')->required();
         $this->text('total', __('集数'))->placeholder('连续创建的集数')->required();

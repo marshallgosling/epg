@@ -45,7 +45,7 @@ class ChannelGenerator
     public static function saveHistory($template, $channel)
     {
         $temp = $template->replicate()->toArray();
-        unset($temp['id']);
+
         $temp['group_id'] = $channel->id;
         $temp['created_at'] = $channel->air_date;
         $temp['updated_at'] = date('Y-m-d H:i:s');
@@ -56,7 +56,6 @@ class ChannelGenerator
         foreach($records as $record)
         {
             $r = $record->replicate()->toArray();
-            unset($r['id']);
             $r['template_id'] = $t->id;
             TemplateRecords::create($r);
         }

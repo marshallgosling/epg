@@ -28,7 +28,7 @@ class TemplateRecords extends Model
     ];
 
     protected $table = 'temp_template_programs';
-    public $incrementing = false;
+    //public $incrementing = false;
 
     protected $fillable = [
         'id',
