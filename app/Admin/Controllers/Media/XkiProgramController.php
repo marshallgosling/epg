@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Admin\Actions\Program\Record2Material;
 use App\Admin\Actions\Program\BatchRecord2Delete;
+use App\Admin\Actions\Program\ToolCreator;
 
 class XkiProgramController extends AdminController
 {
@@ -96,6 +97,7 @@ class XkiProgramController extends AdminController
             $tools->append(new BatchModify);
             $tools->append(new BatchModifyEpisodes);
             $tools->append(new CompareLink('xki'));
+            $tools->append(new ToolCreator('xki'));
         });
 
         return $grid;

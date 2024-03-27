@@ -48,6 +48,15 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         
+        $channel = Channel::find($day);
+        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        foreach($templates as $template)
+        {
+            ChannelGenerator::saveHistory($template, $channel);
+        }
+
+        return;
+        
         $list = ChannelPrograms::where('channel_id', $group)->get();
         foreach($list as $p)
         {

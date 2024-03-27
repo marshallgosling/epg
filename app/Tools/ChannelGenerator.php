@@ -44,12 +44,13 @@ class ChannelGenerator
 
     public static function saveHistory($template, $channel)
     {
-        $template = $template->replicate()->toArray();
-        unset($template['id']);
-        $template['group_id'] = $channel->id;
-        $template['created_at'] = $channel->air_date;
-        $template['updated_at'] = date('Y-m-d H:i:s');
-        $t = Template::create($template);
+        $temp = $template->replicate()->toArray();
+        unset($temp['id']);
+        $temp['group_id'] = $channel->id;
+        $temp['created_at'] = $channel->air_date;
+        $temp['updated_at'] = date('Y-m-d H:i:s');
+        $t = new Template($temp);
+        $t->save();
         $records = $template->records;
 
         foreach($records as $record)

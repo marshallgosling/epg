@@ -16,6 +16,7 @@ use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Admin\Actions\Program\BatchRecordDelete;
+use App\Admin\Actions\Program\ToolCreator;
 
 class XkcProgramController extends AdminController
 {
@@ -96,6 +97,7 @@ class XkcProgramController extends AdminController
             $tools->append(new BatchModify);
             $tools->append(new BatchModifyEpisodes);
             $tools->append(new CompareLink('xkc'));
+            $tools->append(new ToolCreator('xkc'));
         });
 
         return $grid;
