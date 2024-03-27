@@ -52,16 +52,16 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
         if(Storage::exists($json))
         {
             $data = json_decode(Storage::get($json), true);
-            foreach($data['records'] as $records)
+            foreach($data['templates'] as $template)
             {
-                foreach($records as $record)
+                foreach($template['records'] as $record)
                 {
                     $record['data'] = json_encode($record['data']);
                     TemplateRecords::where('id', $record['id'])->update($record);
                 }
             }
             Storage::delete($json);
-            //if($this->action == 'clear') $this->clearChannel($json);
+            if($this->action == 'clear') $this->clearChannel($data['channels']);
         }
         
         return 0;
@@ -114,18 +114,13 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
         }
     }
 
-    private function clearChannel($json)
+    private function clearChannel($channels)
     {
-        $job = json_decode($json, true);
-        if(key_exists('data', $job)) $data = $job['data'];
-        else $data = $job;
-        foreach($data as $day)
+        
+        foreach($channels as $day)
         {
-            $c = Channel::find($day['id']);
-            if(!$c) continue;
+            $c = Channel::where('id', $day['id'])->delete();
             ChannelPrograms::where('channel_id', $c->id)->delete();
-            $c->delete();
-
         }
     }
 

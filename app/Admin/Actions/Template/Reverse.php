@@ -18,9 +18,9 @@ class Reverse extends Action
     {
         $group = $request->get('channel', 'xkc');
         $action = $request->get('action', 'none');
-        if(Storage::exists($group.'_reverse_stall')) 
-            return $this->response()->error("不能进行回退操作！同一编单不可重复回退或多次回退。");
-        Storage::put($group."_reverse_stall", $action);
+        if(!Storage::exists($group.'_saved_template')) 
+            return $this->response()->error("不能进行回退操作！同一编单只能回退一次。");
+
         ReverseJob::dispatch($group, $action);
 
         return $this->response()->success(__('Replicate Success message'));

@@ -100,18 +100,17 @@ class XkiSimulator
             return false;
     }
 
-    public function saveTemplate($templates)
+    public function saveTemplate($templates, $channels)
     {
         if(!$this->saveState) return;
-        $temp = ['templates'=>[], 'records'=>[]];
-        foreach($templates as $template)
-        {
-            $t = $template->toArray();
-            $items = $template->records->toArray();
-            $temp['records'][] = $items;
-            $temp['templates'][] = $t;
-        }
+        $temp = compact('templates', 'channels');
         Storage::put($this->group.'_saved_template.json', json_encode($temp));
+    }
+
+    public function saveTemplateHistory($template, $channel)
+    {
+        if(!$this->saveState) return;
+        ChannelGenerator::saveHistory($template, $channel);
     }
 
     public function handle(\Closure $callback=null)
@@ -122,7 +121,7 @@ class XkiSimulator
         $data = [];
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
-        $this->saveTemplate($templates);
+        $this->saveTemplate($templates, $this->channels);
 
         foreach($this->channels as &$channel)
         {
@@ -137,6 +136,8 @@ class XkiSimulator
             
             foreach($templates as &$template)
             {
+                $this->saveTemplateHistory($template, $channel);
+                
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
                 $duration = 0;

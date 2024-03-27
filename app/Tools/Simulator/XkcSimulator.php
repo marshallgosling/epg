@@ -101,17 +101,10 @@ class XkcSimulator
             return false;
     }
 
-    public function saveTemplate($templates)
+    public function saveTemplate($templates, $channels)
     {
         if(!$this->saveState) return;
-        $temp = ['templates'=>[], 'records'=>[]];
-        foreach($templates as $template)
-        {
-            $t = $template->toArray();
-            $items = $template->records->toArray();
-            $temp['records'][] = $items;
-            $temp['templates'][] = $t;
-        }
+        $temp = compact('templates', 'channels');
         Storage::put($this->group.'_saved_template.json', json_encode($temp));
     }
 
@@ -129,7 +122,7 @@ class XkcSimulator
         $data = [];
         
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
-        $this->saveTemplate($templates);
+        $this->saveTemplate($templates, $this->channels);
         
         foreach($this->channels as &$channel)
         {
