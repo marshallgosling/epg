@@ -4,11 +4,8 @@ namespace App\Admin\Actions\Template;
 
 use App\Models\EpgJob;
 use App\Jobs\Template\ReverseJob;
-use App\Models\Channel;
 use Encore\Admin\Actions\Action;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class Reverse extends Action
 {

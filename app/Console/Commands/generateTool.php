@@ -50,6 +50,7 @@ class generateTool extends Command
 
         return 0;
     }
+    
     private function reverseTemplate($json)
     {
         $job = json_decode($json, true);
