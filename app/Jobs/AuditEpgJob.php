@@ -113,7 +113,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             
         }
 
-        if($overflow>-5)
+        if($overflow>=-5 && $overflow<0)
         {
             return ['result'=>false, 'reason'=>'异常：编单最后一档节目"'.$item->name.'"播出时间将小于5秒。'];
         }
