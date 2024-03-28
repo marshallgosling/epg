@@ -119,14 +119,17 @@ class materialTool extends Command
                     $info = MediaInfo::getInfo($m);
                     //$m->md5 = $info['afd'];
                     //$cache[$m->unique_no] = $info;
-                    $m->frames = $info['frames'];
-                    $m->size = $info['size'];
-                    $m->duration = ChannelGenerator::parseFrames((int)$info['frames']);
-                    if($m->isDirty())
-                    {
-                        $m->save();
-                        $this->info('update frames:'.$m->filepath.' '.$m->duration);
+                    if($m->frames != $info['frames']) {
+                        $this->info('update frames:'.$m->filepath.' '.$m->frames.' > '.$info['frames']);
+                        $m->frames = $info['frames'];
+                        $m->size = $info['size'];
+                        $m->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+                        if($m->isDirty())
+                        {
+                            $m->save();
+                        }
                     }
+                    
                     
                 }catch(\Exception $e)
                 {
