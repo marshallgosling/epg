@@ -129,7 +129,7 @@ class AuditController extends AdminController
         $show->field('admin', __('Reviewer'));
         $show->field('comment', __('Comment'));
         
-        $show->field('reason', __('Reason'));
+        $show->field('reason', __('Details'));
         
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -155,7 +155,7 @@ class AuditController extends AdminController
         $form->textarea('comment', __('Comment'));
         
         //$form->date('audit_date', __('Audit date'));
-        $form->json('reason', __('Comment'));
+        $form->json('reason', __('Details'));
 
 
         return $form;

@@ -97,10 +97,10 @@ class XkvController extends AdminController
             foreach($model->audit()->orderBy('id','desc')->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
-                    $item->created_at, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
+                    $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
                 ];
             }
-            $head = ['ID','审核结果','日期',''];
+            $head = ['ID','审核结果','日期','备注说明',''];
             return new Table($head, $rows);
         });
         
