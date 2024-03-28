@@ -57,9 +57,10 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         if(!$duration['result']) {
             CalculationEvent::dispatch($channel->id);
             $channel = Channel::find($this->id);
+            $programs = $channel->programs()->get();
         }
         $material = $this->checkMaterial($this->cache);
-        $check = $this->check5seconds($channel);
+        $check = $this->check5seconds($channel, $programs);
 
         $reason = compact('duration', 'material', 'check');
         $comment = '';
@@ -80,15 +81,15 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $channel->save();
     }
 
-    private function check5seconds($channel)
+    private function check5seconds($channel, $programs)
     {
         $start_end = explode(' - ', $channel->start_end);
         $start = strtotime($channel->air_date.' '.$start_end[0]);
         $end = strtotime($channel->air_date.' '.$start_end[1]);
         if($end < $start) return ['result'=>false, 'reason'=>'编单时间不足，请手动添加节目。'];
 
-        $programs = $channel->programs()->get()->toArray();
-        $program = array_pop($programs);
+        //$programs = $channel->programs()->get();
+        $program = $programs[count($programs) - 1];
         $data = json_decode($program->data);
         $id = $data->replicate;
         foreach($programs as $pro)
