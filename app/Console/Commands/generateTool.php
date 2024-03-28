@@ -50,6 +50,29 @@ class generateTool extends Command
 
         return 0;
     }
+    private function reverseTemplate($json)
+    {
+        $job = json_decode($json, true);
+        
+        if(!key_exists('template', $job)) return false;
+        
+        $template = $job['template'];
+        
+        foreach($template['records'] as $record)
+        {
+            $item = TemplateRecords::find($record['id']);
 
+            if($item) 
+            {
+                $item->data['unique_no'] = $record['data']['unique_no'];
+                $item->data['name'] = $record['data']['name'];
+                $item->data['result'] = $record['data']['result'];
+                $item->save();
+            }
+
+        }
+
+        return true;
+    }
     
 }

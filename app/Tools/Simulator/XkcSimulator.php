@@ -41,6 +41,8 @@ class XkcSimulator
      */
     private $duration;
 
+    public $filename;
+
     public function __construct($group, $days, $channels=false)
     {
         $this->log_channel = 'simulator';
@@ -49,6 +51,7 @@ class XkcSimulator
         $this->log_print = false;
         $this->channels = $channels ?? [];
         $this->programs = [];
+        $this->filename = false;
     }
 
     /**
@@ -105,7 +108,10 @@ class XkcSimulator
     {
         if(!$this->saveState) return;
         $temp = compact('templates', 'channels');
-        Storage::put($this->group.'_saved_template.json', json_encode($temp));
+        if(count($channels) == 0) return;
+        $filename = $this->group.'_'.$channels[0]->air_date.'_'.count($channels).'_template.json';
+        Storage::put($filename, json_encode($temp));
+        $this->filename = $filename;
     }
 
     public function saveTemplateHistory($template, $channel)

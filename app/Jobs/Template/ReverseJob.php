@@ -22,7 +22,7 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $group;
+    private $id;
     private $action;
 
     /**
@@ -30,9 +30,9 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct($group, $action='none')
+    public function __construct($id, $action='none')
     {
-        $this->group = $group;
+        $this->id = $id;
         $this->action = $action;
     }
 
@@ -43,12 +43,10 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        // $jobs = EpgJob::where('group_id', $this->group)->orderBy('id', 'desc')->get()->toArray();
+        $job = EpgJob::find($this->id);
+        if(!$job) return 0;
 
-        // $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
-        // $data = json_encode($templates->toArray());
-        // Storage::disk('data')->put($this->group.'_reset_template_'.date('YmdHis').'.json', $data);
-        $json = $this->group."_saved_template.json";
+        $json = $job->file;
         if(Storage::exists($json))
         {
             $data = json_decode(Storage::get($json), true);
@@ -61,57 +59,13 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
                 }
             }
             Storage::delete($json);
+            $job->delete();
             if($this->action == 'clear') $this->clearChannel($data['channels']);
         }
         
         return 0;
 
         
-    }
-
-    private function reverseTemplate($json)
-    {
-        $job = json_decode($json, true);
-        
-        if(!key_exists('template', $job)) return false;
-        
-        $template = $job['template'];
-        
-        foreach($template['records'] as $record)
-        {
-            $item = TemplateRecords::find($record['id']);
-
-            if($item) 
-            {
-                $item->data['unique_no'] = $record['data']['unique_no'];
-                $item->data['name'] = $record['data']['name'];
-                $item->data['result'] = $record['data']['result'];
-                $item->save();
-            }
-
-        }
-
-        return true;
-    }
-
-    private function reverseTemplate2($json)
-    {
-        $job = json_decode($json, true);
-        $data = $job[count($job)-1];
-        foreach($data['data'] as $template)
-        {
-            foreach($template['records'] as $record)
-            {
-                $item = ChannelPrograms::find($record['id']);
-                if($item)
-                {
-                    $item->data['unique_no'] = $record['data']['unique_no'];
-                    $item->data['name'] = $record['data']['name'];
-                    $item->data['result'] = $record['data']['result'];
-                    $item->save();
-                }
-            }
-        }
     }
 
     private function clearChannel($channels)
@@ -126,7 +80,7 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId()
     {
-        return $this->group;
+        return $this->id;
     }
 
     /**

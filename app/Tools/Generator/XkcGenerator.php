@@ -59,8 +59,9 @@ class XkcGenerator
         }
     }
 
-    private function saveJob($data, $file, $channels)
+    private function saveJob($file, $channels)
     {
+        if(!$file) return;
         if(count($channels)) $name = $channels[count($channels)-1]->air_date;
         else $name = 'unknow';
         $job = new EpgJob;
@@ -68,8 +69,7 @@ class XkcGenerator
         $job->file = $file;
         $job->group_id = 'xkc';
         $job->save();
-        Storage::put($file, json_encode($data));
-
+        
     }
 
     public function generate($channels)
@@ -84,7 +84,7 @@ class XkcGenerator
         
         $simulator = new XkcSimulator($this->group, $days, $channels);
         $simulator->setSaveTemplateState(true);
-        $data = $simulator->handle();
+        $simulator->handle();
 
         $error = $simulator->getErrorMark();
 
@@ -93,7 +93,7 @@ class XkcGenerator
             return false;
         }
 
-        $this->saveJob($data, "xkc_generator_{$days}_".date('YmdHis').'.json', $channels);
+        $this->saveJob($simulator->filename, $channels);
 
         $special = Template::where(['group_id'=>$this->group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         

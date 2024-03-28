@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Template;
 
+use App\Models\EpgJob;
 use App\Jobs\Template\ReverseJob;
 use App\Models\Channel;
 use Encore\Admin\Actions\Action;
@@ -18,12 +19,18 @@ class Reverse extends Action
     {
         $group = $request->get('channel', 'xkc');
         $action = $request->get('action', 'none');
-        if(!Storage::exists($group.'_saved_template')) 
-            return $this->response()->error("不能进行回退操作！同一编单只能回退一次。");
+        // if(!Storage::exists($group.'_saved_template')) 
+        //     return $this->response()->error("不能进行回退操作！同一频道编单只能回退一次。");
 
-        ReverseJob::dispatch($group, $action);
+        if($job = EpgJob::where('group_id', $group)->orderBy('id', 'desc')->first())
+        {
+            ReverseJob::dispatch($job->id, $action);
 
-        return $this->response()->success(__('Replicate Success message'));
+            return $this->response()->success(__('Replicate Success message'));
+        }
+        else {
+            return $this->response()->error('没有可用的回退数据');
+        }
     }
 
     public function form()
