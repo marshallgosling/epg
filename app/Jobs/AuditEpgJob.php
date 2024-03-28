@@ -65,7 +65,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $reason = compact('duration', 'material', 'check');
         $comment = '';
         if(!$duration['result']) $comment.='节目时长已调整，请重新加锁确认。';
-        if(count($material)) $comment.='存在缺失的物料记录。';
+        if(!$material['result']) $comment.='存在缺失的物料记录。';
         if(!$check['result']) $comment.=$check['reason'];
 
         $audit = new Audit();
