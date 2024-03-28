@@ -32,8 +32,8 @@ class ToolCreator extends Action
         $group = $request->get('name');
         $total = (int)$request->get('total');
         $st = (int)$request->get('st');
-        $duration = '00:00:00:00';
-        $seconds = 0;
+        $duration = $request->get('name', '00:15:00:00');
+        $seconds = ChannelGenerator::parseDuration($duration);
         $code = empty($unique) ? 'XK'.Str::upper(Str::random(4)):$unique;
 
         if($channel == 'xkv') {
@@ -79,7 +79,7 @@ class ToolCreator extends Action
         $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号')->required();
         $this->text('total', __('集数'))->placeholder('连续创建的集数')->required();
         $this->hidden('channel')->default($this->group);
-        //$this->text('duration', __('Duration'))->placeholder('时长')->required();
+        $this->text('duration', __('Duration'))->placeholder('时长: 00:15:00:00')->required();
         //$this->file('excel', __('Excel'))->placeholder('通过文件导入');
         //$this->textarea('filelist', __('Filepath'));
         
