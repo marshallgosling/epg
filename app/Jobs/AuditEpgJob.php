@@ -6,6 +6,7 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Audit;
 use App\Models\Channel;
 use App\Models\Material;
+use App\Tools\ChannelGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -53,22 +54,74 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $duration = $this->checkDuration($programs);
 
-        if(!$duration['result']) CalculationEvent::dispatch($channel->id);
-
+        if(!$duration['result']) {
+            CalculationEvent::dispatch($channel->id);
+            $channel = Channel::find($this->id);
+        }
         $material = $this->checkMaterial($this->cache);
+        $check = $this->check5seconds($channel);
 
-        $reason = compact('duration', 'material');
+        $reason = compact('duration', 'material', 'check');
+        $comment = '';
+        if(!$duration['result']) $comment.='节目时长已调整，请重新加锁确认。';
+        if(count($material)) $comment.='存在缺失的物料记录。';
+        if(!$check['result']) $comment.=$check['reason'];
 
         $audit = new Audit();
         $audit->name = $channel->name;
-        $audit->status = $duration['result'] && $material['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
+        $audit->status = $duration['result'] && $material['result'] && $check['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
         $audit->reason = json_encode($reason);
         $audit->admin = $this->name;
         $audit->channel_id = $channel->id;
+        $audit->comment = $comment;
         $audit->save();
 
         $channel->audit_date = now();
         $channel->save();
+    }
+
+    private function check5seconds($channel)
+    {
+        $start_end = explode(' - ', $channel->start_end);
+        $start = strtotime($channel->air_date.' '.$start_end[0]);
+        $end = strtotime($channel->air_date.' '.$start_end[1]);
+        if($end < $start) return ['result'=>false, 'reason'=>'编单时间不足，请手动添加节目。'];
+
+        $programs = $channel->programs()->get()->toArray();
+        $program = array_pop($programs);
+        $data = json_decode($program->data);
+        $id = $data->replicate;
+        foreach($programs as $pro)
+        {
+            if($pro->id == $id) {
+                $program = $pro;
+                $data = json_decode($program->data);
+                break;
+            }
+        }
+
+        $overflow = $end-$start;
+        while($overflow>0)
+        {
+            if(count($data) == 0) break;
+            $item = array_pop($data);
+            
+            $duration = ChannelGenerator::parseDuration($item->duration);
+            $overflow -= $duration;
+
+            
+        }
+
+        if($overflow>-5)
+        {
+            return ['result'=>false, 'reason'=>'异常：编单最后一档节目"'.$item->name.'"播出时间将小于5秒。'];
+        }
+
+        if($overflow > 0) {
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+        }
+
+        return ['result'=>true, 'reason'=>''];
     }
 
     private function checkMaterial($cache)

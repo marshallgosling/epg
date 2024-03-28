@@ -77,6 +77,8 @@ class AuditController extends AdminController
                 return new Table($head, $rows);
             }
         });
+
+        $grid->column('comment', __('Comment'));
         
         $grid->column('created_at', __('Created at'))->sortable()->hide();
         $grid->column('updated_at', __('Updated at'))->sortable();
