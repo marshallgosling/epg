@@ -213,7 +213,7 @@ ol.breadcrumb {
                           @endif
                         </li>
                         @if($program['error'])
-                        <li class="list-group-item text-danger">{{$program['error']}}</li>
+                        <li class="list-group-item text-danger">{!!$program['error']!!}</li>
                         @else
                         @foreach ($program['program']['data'] as $item)
                         <li class="list-group-item">{!!$item!!}</li>

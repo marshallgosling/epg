@@ -199,7 +199,7 @@ class XkcSimulator
                         }
                         else {
 
-                            $templateresult['error'] = "异常3，节目时长为0 {$item->name} {$item->duration} {$item->unique_no} \n";
+                            $templateresult['error'] = "异常3，节目时长为0 {$item->name} {$item->duration} {$item->unique_no} <br/>";
                             $result['error'] = true;
                             $errors[] = "异常3，节目时长为0  {$item->name} {$item->duration} {$item->unique_no} ";
                             
