@@ -196,7 +196,9 @@ class XkiSimulator
                         }
                         else {
 
-                            //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                            $templateresult['error'] = "异常3，节目时长为0  {$template_item->id} {$template_item->category}";
+                            $result['error'] = true;
+                            $errors[] = "异常3，节目时长为0  {$item->name} {$item->duration} {$item->unique_no} ";
                             
                         }
                     }

@@ -158,7 +158,7 @@ class XkcSimulator
 
                 $templateresult = $template->toArray();
 
-                $templateresult['error'] = false;
+                $templateresult['error'] = '';
                 
                 if(!$template_item) {
                     //$this->info("没有找到匹配的模版: {$template->id} {$template->category}");
@@ -199,13 +199,15 @@ class XkcSimulator
                         }
                         else {
 
-                            //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                            $templateresult['error'] = "异常3，节目时长为0 {$item->name} {$item->duration} {$item->unique_no} \n";
+                            $result['error'] = true;
+                            $errors[] = "异常3，节目时长为0  {$item->name} {$item->duration} {$item->unique_no} ";
                             
                         }
                     }
                     if(count($epglist) == 0) {
                         //$this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                        $templateresult['error'] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $templateresult['error'] .= "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                         $result['error'] = true;
                         $errors[] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     }
