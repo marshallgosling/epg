@@ -101,7 +101,7 @@ class TempController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->model()->with('records')->orderBy('id', 'desc');
+        $grid->model()->with('records')->orderBy('sort', 'asc');
         $grid->column('group_id', __('ID'));
         $grid->column('name', __('Name'))->display(function($name) {
             return '<a href="temp/programs?template_id='.$this->id.'">'.$name.'</a>'; 
