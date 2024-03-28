@@ -42,6 +42,8 @@ class EpgJobController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new Reverse);
         });
+        $grid->disableActions();
+        $grid->disableBatchActions();
 
         return $grid;
     }
