@@ -46,11 +46,10 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $channel = Channel::find($this->id);
         if(!$channel) return;
 
-        if($channel->status != Channel::STATUS_READY)
-        {
-            return;
-        }
-
+        if($channel->status != Channel::STATUS_READY) return;
+        if($channel->name == 'xkc') $class='\App\Models\Record';
+        if($channel->name == 'xki') $class='\App\Models\Record2';
+        if($channel->name == 'xkv') $class='\App\Models\Program';
         $this->cache = [];
         $programs = $channel->programs()->get();
 
@@ -62,7 +61,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             $programs = $channel->programs()->get();
         }
         $material = $this->checkMaterial($this->cache);
-        $total = $this->checkTotal($programs, $channel);
+        $total = $this->checkTotal($programs, $channel, $class);
 
         if(!$total['reason']) {
             $channel = Channel::find($this->id);
@@ -204,9 +203,9 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         return compact('result', 'logs');
     }
 
-    private function checkTotal($programs, $channel)
+    private function checkTotal($programs, $channel, $class=null)
     {
-        
+        if(!$class) return ['result'=>true, 'reason'=>''];
         $start_end = explode(' - ', $channel->start_end);
         $start = strtotime($channel->air_date.' '.$start_end[0]);
         $end = strtotime($channel->air_date.' '.$start_end[1]);
@@ -229,7 +228,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $program = $programs[count($programs) - 1];
 
-        Record::loadBumpers();
+        $class::loadBumpers();
 
         $break_level = 2;
 
@@ -242,7 +241,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             //if($duration > $scheduledDuration) break;
             // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
             // 凑时间，凑节目数
-            $res = $this->addBumperItem($break_level, $propose, $air);
+            $res = $this->addBumperItem($break_level, $propose, $air, $class);
             if(is_array($res)) {
                 $data[] = $res['line'];
                 $propose -= $res['seconds'];
@@ -268,9 +267,9 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         
     }
 
-    public function addBumperItem($break_level, $propose, $air)
+    public function addBumperItem($break_level, $propose, $air, $class)
     {
-        $item = Record::findBumper($break_level);
+        $item = $class::findBumper($break_level);
 
         if(!$item) return false;
         //$this->info("find bumper: {$item->name} {$item->duration}");
