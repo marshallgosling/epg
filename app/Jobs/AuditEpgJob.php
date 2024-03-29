@@ -229,6 +229,16 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         }
 
         $program = $programs[count($programs) - 1];
+        $data = json_decode($program->data);
+        $id = $data->replicate;
+        foreach($programs as $pro)
+        {
+            if($pro->id == $id) {
+                $program = $pro;
+                $data = json_decode($program->data);
+                break;
+            }
+        }
 
         $class::loadBumpers();
 
