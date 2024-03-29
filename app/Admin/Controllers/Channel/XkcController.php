@@ -71,17 +71,17 @@ class XkcController extends AdminController
 
         $grid->column('id', __('编单'))->display(function($id) {
             return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
-        })->width(100);
+        })->width(90);
         
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
             return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
-        })->width(100);
+        })->width(90);
 
-        $grid->column('start_end', __('StartEnd'))->width(150);
+        $grid->column('start_end', __('StartEnd'))->width(140);
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(60)
             ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
         
-        $grid->column('audit', __('Audit status'))->display(function () { 
+        $grid->column('audit', __('Audit status'))->width(90)->display(function () { 
             if($this->audit) {
                 foreach($this->audit()->orderBy('id','desc')->get() as $item) {
                     return Audit::STATUS[$item->status];
@@ -106,7 +106,7 @@ class XkcController extends AdminController
         
         $grid->column('audit_date', __('Audit date'))->hide();
         
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(100);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(80);
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->sortable()->hide();
