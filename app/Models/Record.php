@@ -245,7 +245,7 @@ class Record extends Model
 
     }
 
-    public static function loadBumpers($category='m1') {
+    public static function loadBumpers($category='FILLER') {
         if(self::$bumper) return;
 
         self::$bumper = [];

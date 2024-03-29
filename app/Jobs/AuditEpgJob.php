@@ -6,6 +6,8 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Audit;
 use App\Models\Channel;
 use App\Models\Material;
+use App\Models\Program;
+use App\Models\Record;
 use App\Tools\ChannelGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -60,17 +62,26 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             $programs = $channel->programs()->get();
         }
         $material = $this->checkMaterial($this->cache);
-        $check = $this->check5seconds($channel, $programs);
+        $total = $this->checkTotal($programs, $channel);
 
-        $reason = compact('duration', 'material', 'check');
+        if(!$total['reason']) {
+            $channel = Channel::find($this->id);
+            $programs = $channel->programs()->get();
+        }
+        $check5 = $this->check5seconds($channel, $programs);
+
+        $reason = compact('duration', 'material', 'check5', 'total');
         $comment = '';
-        if(!$duration['result']) $comment.='节目时长已调整，请重新加锁确认。';
+
         if(!$material['result']) $comment.='存在缺失的物料记录。';
-        if(!$check['result']) $comment.=$check['reason'];
+        if(!$duration['result']) $comment.='节目时长已调整，请重新加锁确认。';
+        
+        $comment .= $total['reason'];
+        $comment .= $check5['reason'];
 
         $audit = new Audit();
         $audit->name = $channel->name;
-        $audit->status = $duration['result'] && $material['result'] && $check['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
+        $audit->status = $duration['result'] && $material['result'] && $check5['result'] && $total['result'] ? Audit::STATUS_PASS : Audit::STATUS_FAIL;
         $audit->reason = json_encode($reason);
         $audit->admin = $this->name;
         $audit->channel_id = $channel->id;
@@ -109,8 +120,6 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             
             $duration = ChannelGenerator::parseDuration($item->duration);
             $overflow -= $duration;
-
-            
         }
 
         if($overflow>=-5 && $overflow<0)
@@ -185,16 +194,99 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 }
             }
 
-            $pro->data = json_encode($data);
-            if($pro->isDirty()) {
+            if($result == false) {
+                $pro->data = json_encode($data);
                 $pro->save();
             }
+            
         }
 
         return compact('result', 'logs');
     }
 
+    private function checkTotal($programs, $channel)
+    {
+        
+        $start_end = explode(' - ', $channel->start_end);
+        $start = strtotime($channel->air_date.' '.$start_end[0]);
+        $end = strtotime($channel->air_date.' '.$start_end[1]);
 
+        if($start < $end) return ['result'=>true, 'reason'=>''];
+        
+        $seconds = $start - $end;
+
+        if($seconds > 1800)
+        {
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+        }
+
+        $propose = floor($seconds / 3);
+
+        if($channel->name == 'xkv')
+        {
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+        }
+
+        $program = $programs[count($programs) - 1];
+
+        Record::loadBumpers();
+
+        $break_level = 2;
+
+        $air = strtotime($program->end_at);
+        $data = json_decode($program->data, true);
+                
+        //$schedule_end = strtotime($channel->air_date.' '.$program->schedule_start_at) + $scheduledDuration;
+        while($propose > 0)
+        {
+            //if($duration > $scheduledDuration) break;
+            // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
+            // 凑时间，凑节目数
+            $res = $this->addBumperItem($break_level, $propose, $air);
+            if(is_array($res)) {
+                $data[] = $res['line'];
+                $propose -= $res['seconds'];
+                $air += $res['seconds'];
+                        //$this->info("add Bumper: ".json_encode($res, JSON_UNESCAPED_UNICODE));
+            }
+            else {
+                // 4次循环后，还是没有找到匹配的节目，则跳出循环
+                $break_level --;
+            }
+
+            if($break_level < 0) {
+                break;
+            }
+        }
+        
+        $program->data = json_encode($data);
+        $program->save();
+
+        CalculationEvent::dispatch($channel->id);
+
+        return ['result'=>true, 'reason'=>'已自动调整节目编单时长。'];
+        
+    }
+
+    public function addBumperItem($break_level, $propose, $air)
+    {
+        $item = Record::findBumper($break_level);
+
+        if(!$item) return false;
+        //$this->info("find bumper: {$item->name} {$item->duration}");
+        $seconds = ChannelGenerator::parseDuration($item->duration);
+        if($seconds > (2*$propose)) return false;
+        
+        $category = $item->category;
+        if(is_array($category)) $category = array_pop($category);
+        //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
+                   
+        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
+        $air += $seconds;
+        $line['end_at'] = date('H:i:s', $air);
+
+        return compact('line', 'seconds');
+    }
 
     public function uniqueId()
     {
