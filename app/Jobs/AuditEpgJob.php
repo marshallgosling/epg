@@ -221,6 +221,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $propose = floor($seconds / 3);
 
+        if($propose < 60) $propose = 60;
+
         if($channel->name == 'xkv')
         {
             return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
@@ -242,6 +244,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             //if($duration > $scheduledDuration) break;
             // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
             // 凑时间，凑节目数
+            $logs[] = compact('propose', 'break_level');
             $res = $this->addBumperItem($break_level, $propose, $air, $class);
             if(is_array($res)) {
                 $data[] = $res['line'];
