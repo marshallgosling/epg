@@ -105,7 +105,7 @@ class XkiController extends AdminController
         $grid->column('reviewer', __('Reviewer'))->hide();
         
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(80);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
