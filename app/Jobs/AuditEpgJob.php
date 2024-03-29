@@ -88,6 +88,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $audit->save();
 
         $channel->audit_date = now();
+        $channel->comment = $comment;
         $channel->save();
     }
 

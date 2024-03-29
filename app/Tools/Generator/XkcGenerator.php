@@ -177,6 +177,8 @@ class XkcGenerator
                 $sort = $program->sort + 1;
             }
 
+            $this->checkDuration($channel, $program, $air);
+
             $this->addSpecialPrograms($special, $air, $programs, $sort);
 
             //CalculationEvent::dispatch($channel->id);
@@ -200,6 +202,59 @@ class XkcGenerator
             
         return true;
 
+    }
+
+    public function checkDuration($channel, &$program, &$air)
+    {
+        $start = strtotime($channel->air_date.' '.$program->schedule_end_at) + 86400;
+        $end = $air;
+
+        if($start <= $end) return $air;
+
+        $seconds = $start - $end;
+
+        if($seconds > 1800)
+        {
+            return $air;
+        }
+
+        $propose = $seconds;
+
+        if($propose < 60) $propose = 60;
+
+        $data = json_decode($program->data);
+
+        $break_level = 2;
+
+        $data = json_decode($program->data, true);
+
+        while($propose > 0)
+        {
+            // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
+            // 凑时间，凑节目数
+            $this->info("add propose: $propose, level: $break_level");
+            $res = $this->addBumperItem2($break_level, $propose, $air);
+            if(is_array($res)) {
+                $data[] = $res['line'];
+                $propose -= $res['seconds'];
+                $air += $res['seconds'];
+                $this->info("propose: $propose, ".json_encode($res, JSON_UNESCAPED_UNICODE));
+            }
+            else {
+                // 3次循环后，还是没有找到匹配的节目，则跳出循环
+                $break_level --;
+            }
+
+            if($break_level < 0) {
+                break;
+            }
+        }
+
+        $program->data = json_encode($data);
+        $program->save();
+
+        return compact('air', 'program');
+    
     }
 
 
@@ -243,6 +298,27 @@ class XkcGenerator
 
         return compact('line', 'seconds');
     }
+
+    public function addBumperItem2($break_level, $propose, $air)
+    {
+        $item = Record::findBumper($break_level);
+
+        if(!$item) return false;
+        //$this->info("find bumper: {$item->name} {$item->duration}");
+        $seconds = ChannelGenerator::parseDuration($item->duration);
+        if($seconds > (2*$propose)) return false;
+        
+        $category = $item->category;
+        if(is_array($category)) $category = array_pop($category);
+        //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
+                   
+        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
+        $air += $seconds;
+        $line['end_at'] = date('H:i:s', $air);
+
+        return compact('line', 'seconds');
+    }
+
 
     public function addSpecialPrograms($special, &$air, $programs, $sort)
     {

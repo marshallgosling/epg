@@ -263,13 +263,13 @@ class ChannelGenerator
      */
     public static function checkAbnormalTimespan($timestr)
     {
-        $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
-        if($perfect > $timestr) 
-        {
-            if(($perfect - $timestr) < 5)
-                return "编单结束时间异常，请手动干预处理！";
-        }
-        return "";
+        // $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
+        // if($perfect > $timestr) 
+        // {
+        //     if(($perfect - $timestr) < 5)
+        //         return "编单结束时间异常，请手动干预处理！";
+        // }
+        return "编单已完成，请加锁并审核！";
     }
 
 }
