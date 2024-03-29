@@ -211,7 +211,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $start = strtotime($channel->air_date.' '.$start_end[0]);
         $end = strtotime($channel->air_date.' '.$start_end[1]);
 
-        if($start < $end) return ['result'=>true, 'reason'=>''];
+        if($start <= $end) return ['result'=>true, 'reason'=>''];
         
         $seconds = $start - $end;
 
