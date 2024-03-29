@@ -112,6 +112,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             }
         }
 
+        $playsec = 0;
+        $duration = 0;
         $overflow = $end-$start;
         while($overflow>0)
         {
@@ -119,19 +121,21 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             $item = array_pop($data);
             
             $duration = ChannelGenerator::parseDuration($item->duration);
-            $overflow -= $duration;
+            $playsec = $duration-$overflow;
+            $overflow -= $duration;   
         }
 
         if($overflow>=-5 && $overflow<0)
         {
-            return ['result'=>false, 'reason'=>'异常：编单最后一档节目"'.$item->name.'"播出时间将小于5秒。'];
+            return ['result'=>false, 'reason'=>"异常：编单最后一档节目 {$item->name}({$duration}秒) 播出时间将小于5秒。"];
         }
 
         if($overflow > 0) {
             return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
         }
 
-        return ['result'=>true, 'reason'=>''];
+        
+        return ['result'=>true, 'reason'=>"最后一档播出节目为：{$item->name}({$duration}秒), 该节目将播出 $playsec 秒"];
     }
 
     private function checkMaterial($cache)
@@ -288,13 +292,12 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $item = $class::findBumper($break_level);
 
         if(!$item) return false;
-        //$this->info("find bumper: {$item->name} {$item->duration}");
+
         $seconds = ChannelGenerator::parseDuration($item->duration);
         if($seconds > (2*$propose)) return false;
         
         $category = $item->category;
         if(is_array($category)) $category = array_pop($category);
-        //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
                    
         $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
         $air += $seconds;
