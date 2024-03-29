@@ -234,6 +234,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $air = strtotime($program->end_at);
         $data = json_decode($program->data, true);
+        $logs = [];
                 
         //$schedule_end = strtotime($channel->air_date.' '.$program->schedule_start_at) + $scheduledDuration;
         while($propose > 0)
@@ -246,7 +247,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 $data[] = $res['line'];
                 $propose -= $res['seconds'];
                 $air += $res['seconds'];
-                        //$this->info("add Bumper: ".json_encode($res, JSON_UNESCAPED_UNICODE));
+                $logs[] = $res; 
+                //$this->info("add Bumper: ".json_encode($res, JSON_UNESCAPED_UNICODE));
             }
             else {
                 // 4次循环后，还是没有找到匹配的节目，则跳出循环
@@ -263,7 +265,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         CalculationEvent::dispatch($channel->id);
 
-        return ['result'=>true, 'reason'=>'已自动调整节目编单时长。'];
+        return ['result'=>true, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs];
         
     }
 
