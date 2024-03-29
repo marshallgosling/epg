@@ -63,7 +63,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $material = $this->checkMaterial($this->cache);
         $total = $this->checkTotal($programs, $channel, $class);
 
-        if(!$total['reason']) {
+        if($total['reason'] == '已自动调整节目编单时长。') {
             $channel = Channel::find($this->id);
             $programs = $channel->programs()->get();
         }
@@ -272,13 +272,13 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 break;
             }
         }
-        
+        $logs[] = compact('propose', 'break_level');
         $program->data = json_encode($data);
         $program->save();
 
         CalculationEvent::dispatch($channel->id);
 
-        return ['result'=>true, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs];
+        return ['result'=>false, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs];
         
     }
 
