@@ -247,7 +247,6 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             }
         }
         
-
         $class::loadBumpers();
 
         $break_level = 2;

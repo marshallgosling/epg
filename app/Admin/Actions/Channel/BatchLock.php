@@ -26,7 +26,7 @@ class BatchLock extends BatchAction
                 continue;
             }
             $model->lock_status = $lock;
-            //$model->comment = $comment;
+            if($model->comment == '编单已完成，请加锁并审核！') $model->comment = '';
             $model->reviewer = Admin::user()->name;
             //$model->audit_date = now();
             $model->save();
