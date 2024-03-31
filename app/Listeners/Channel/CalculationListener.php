@@ -67,7 +67,7 @@ class CalculationListener
         }
         
         $channel->start_end = $start_end . ' - '. date('H:i:s', $start);
-        $channel->comment = ChannelGenerator::checkAbnormalTimespan($start);
+        $channel->comment = '';//ChannelGenerator::checkAbnormalTimespan($start);
         if($channel->isDirty())
         {
             $channel->version = $channel->version + 1;

@@ -269,7 +269,7 @@ class ChannelGenerator
         //     if(($perfect - $timestr) < 5)
         //         return "编单结束时间异常，请手动干预处理！";
         // }
-        return "编单已完成，请加锁并审核！";
+        return "";//"编单已完成，请加锁并审核！";
     }
 
 }
