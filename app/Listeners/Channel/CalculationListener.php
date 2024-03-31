@@ -56,7 +56,7 @@ class CalculationListener
                     $item->start_at = date('H:i:s', $start);
                     $du = ChannelGenerator::parseDuration($item->duration);
                     $start += $du;
-                    $duration += $duration;
+                    $duration += $du;
                     $item->end_at = date('H:i:s', $start);
                 }
                 $pro->end_at = date('Y/m/d H:i:s', $start);
