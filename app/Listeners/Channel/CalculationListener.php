@@ -34,7 +34,7 @@ class CalculationListener
         }
         $programs = $channel->programs()->get();
 
-        $start = $channel->name == 'xkv' ? strtotime($channel->air_date . ' 17:00:00') : strtotime($channel->air_date . ' 17:00:00');
+        $start = strtotime($channel->air_date . ' 17:00:00');
         $this->info("process program re-calculation: ".$event->getChannelId().' '.$event->getChannelProgramId());
         $start_end = date('H:i:s', $start);
         foreach($programs as $pro)
@@ -42,21 +42,31 @@ class CalculationListener
             $items = json_decode($pro->data);
             if(array_key_exists('replicate', $items))
             {
+                $pro->start_at = date('Y/m/d H:i:s', $start);
                 $duration = (int) ChannelPrograms::where('id', $items->replicate)->value('duration');
+                $pro->duration = $duration;
+                $start += $duration;
+                $pro->end_at = date('Y/m/d H:i:s', $start);
                 $this->info( "replicate {$items->replicate} {$pro->name}, duration: $duration");
             }
             else {
                 $duration = 0;
-                
-                foreach($items as $item) {
+                $pro->start_at = date('Y/m/d H:i:s', $start);
+                foreach($items as &$item) {
+                    $item->start_at = date('H:i:s', $start);
                     $duration += ChannelGenerator::parseDuration($item->duration);
+                    $start += $duration;
+                    $item->end_at = date('H:i:s', $start);
                 }
+                $pro->end_at = date('Y/m/d H:i:s', $start);
+                $pro->duration = $duration;
+                $pro->data = json_encode($items);
             }
 
-            $pro->start_at = date('Y/m/d H:i:s', $start);
-            $start += $duration;
-            $pro->end_at = date('Y/m/d H:i:s', $start);
-            $pro->duration = $duration;
+            // $pro->start_at = date('Y/m/d H:i:s', $start);
+            // $start += $duration;
+            // $pro->end_at = date('Y/m/d H:i:s', $start);
+            // $pro->duration = $duration;
 
             if($pro->isDirty()) {
                 $pro->version = $pro->version + 1;
