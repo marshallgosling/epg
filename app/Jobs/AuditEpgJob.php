@@ -6,9 +6,11 @@ use App\Events\Channel\CalculationEvent;
 use App\Models\Audit;
 use App\Models\Channel;
 use App\Models\Material;
+use App\Models\Notification;
 use App\Models\Program;
 use App\Models\Record;
 use App\Tools\ChannelGenerator;
+use App\Tools\Notify;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -90,6 +92,11 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $channel->audit_date = now();
         $channel->comment = $comment;
         $channel->save();
+
+        if($audit->status)
+            Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核通过", "审核通过: {$channel->air_date}", Notification::LEVEL_INFO);
+        else
+            Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
     }
 
     private function check5seconds($channel, $programs)
