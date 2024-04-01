@@ -256,7 +256,7 @@ class XkiSimulator
         $items = [];
         if($template->type == TemplateRecords::TYPE_RANDOM) {
             $temps = Record::findNextAvaiable($template, $maxDuration, $air);
-            if(in_array($temps[0], ['finished', 'empty'])) {
+            if(in_array($temps[0], ['finished', 'empty', 'empty2'])) {
                 $d = $template->data;
                 $d['episodes'] = null;
                 $d['unique_no'] = '';
@@ -268,7 +268,7 @@ class XkiSimulator
             }
             $d = $template->data;
             foreach($temps as $item) {
-                if(!in_array($item, ['finished', 'empty'])) {
+                if(!in_array($item, ['finished', 'empty', 'empty2'])) {
                     $items[] = $item;
                     $d['episodes'] = $item->episodes;
                     $d['unique_no'] = $item->unique_no;
