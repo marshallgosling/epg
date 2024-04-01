@@ -30,6 +30,14 @@ class Notify
         Cache::add("notify_total", Notification::where('viewed', 0)->count());
     }
 
+    public static function getErrorNotifications()
+    {
+        return Cache::remember("notification_error", 300, function() {
+            $data = DB::table('notification')->where('level', Notification::LEVEL_ERROR)->orderBy('id', 'desc')->limit(20)->get();
+            return $data;
+        });
+    }
+
     public static function setViewed($id=0)
     {
         if($id) {

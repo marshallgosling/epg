@@ -9,6 +9,7 @@ use App\Models\Program;
 use App\Models\Record;
 use App\Models\Record2;
 use App\Tools\Exporter\TableGenerator;
+use App\Tools\Notify;
 use App\Tools\Statistic;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Column;
@@ -30,17 +31,48 @@ class HomeController extends Controller
             ->row(HomeController::links())
             ->row(HomeController::statistics())
             ->row(function (Row $row) {
-
                 $row->column(8, function (Column $column) {
-                    $column->append(HomeController::charts());
+                  $column->append(HomeController::notify());
                 });
-
                 $row->column(4, function (Column $column) {
                     $column->append(HomeController::daily());
                 });
-
-                
+            })
+            ->row(function (Row $row) {
+              $row->column(8, function (Column $column) {
+                $column->append(HomeController::charts());
+              });
             });
+    }
+
+    private static function notify()
+    {
+        $list = Notify::getErrorNotifications();
+        $data = '';
+        foreach($list as $m) {
+            $data .= '<tr><td>'.Channel::GROUPS[$m->group_id].'</td><td>'.
+            $m->name.'</td><td><div style="width:300px;height:60px;overflow-y:scroll">'. $m->message.'</div>'.
+            '</td><td>'.substr($m->created_at, 5, 11).'</td></tr>';
+        }
+            
+        $html = <<<HTML
+        <div class="row" style="height:390px; overflow-y:scroll">
+        <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr><th>频道</th><th>标题</th><th>描述内容</th><th>日期</th></tr>
+                {$data}
+            </table>
+        </div></div>
+      </div>
+HTML;
+        $box = new Box('错误通知记录', $html);
+
+        $box->style('default');
+        
+        $box->solid();
+
+        return $box->render();
     }
 
     private static function daily()
