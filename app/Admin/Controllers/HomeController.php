@@ -51,7 +51,7 @@ class HomeController extends Controller
         $data = '';
         foreach($list as $m) {
             $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
-            $m->name.'</td><td><div style="height:60px;overflow-y:scroll">'. $m->message.'</div>'.
+            $m->name.'</td><td><div style="height:40px;overflow:scroll">'. $m->message.'</div>'.
             '</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
         }
             
