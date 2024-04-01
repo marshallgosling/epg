@@ -26,7 +26,7 @@ class Channel extends Model
     public const LOCK_EMPTY = 0;
     public const LOCK_ENABLE = 1;
 
-    public const STATUS = ['未编单', '运行中', '正常', '错误', '下线', '等待中', '分发播出'];
+    public const STATUS = ['未编单', '运行中', '正常', '错误', '下线', '等待中', '已分发'];
     public const AUDIT = ['未审核', '通过', '不通过'];
     public const LOCKS = ['无锁', '加锁'];
 

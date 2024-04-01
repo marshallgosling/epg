@@ -79,7 +79,14 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
         $is_today = $channel->air_dat == date('Y-m-d');
 
-        if($channel->status == Channel::STATUS_READY && $channel->lock_status == Channel::LOCK_ENABLE)
+        if($channel->lock_status != Channel::LOCK_ENABLE)
+        {
+            Notify::fireNotify($channel->name, Notification::TYPE_XML, '分发格非串联单失败', 
+                '串联单'.$channel->air_date.'为“未锁定”状态', Notification::LEVEL_WARN);
+            return;
+        }
+
+        if($channel->status == Channel::STATUS_READY || $channel->status == Channel::STATUS_DISTRIBUTE)
         {
             $air = date('Y-m-d', strtotime($channel->air_date));
             if(!Storage::disk('xml')->exists($channel->name.'_'.$air.'.xml'))
@@ -95,22 +102,27 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                     Notify::fireNotify($channel->name, Notification::TYPE_XML, '分发格非串联单错误', 
                         '串联单'.$channel->air_date.'存在物料状态不可用的节目内容，'.implode(',', array_values($fail)),
                         Notification::LEVEL_ERROR);
-                    //$this->warn("error {$ch->name} {$air}");
+                    
                 }
                 else
                 {
-                    $channel->distribution_date = date('Y-m-d H:i:s');
-                    $channel->save();
-                    //$this->info("save distribution date {$ch->name} {$air}");
-
                     if($is_today) {
                         $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
                         if($path) file_put_contents($path, $file);
                     }
                     $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$air.'.xml': false; 
                     
-                    if($path)
-                        file_put_contents($path, $file);
+                    if($path && file_put_contents($path, $file)) {
+                        $channel->distribution_date = date('Y-m-d H:i:s');
+                        $channel->status = Channel::STATUS_DISTRIBUTE;
+                        $channel->comment = str_replace('分发串联单失败。','',$channel->comment);
+                        $channel->save();
+                    }
+                    else {
+                        $channel->comment = "分发串联单失败。".$channel->comment;
+                        $channel->save();
+                    }
+                        
                 }
         }
     }
