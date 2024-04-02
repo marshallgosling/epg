@@ -33,7 +33,7 @@ class TableGenerator
         foreach($template as $t)
         {
             $table .= '<tr><td>'.$t['label_start_at'].'<br>'.$t['label_end_at'].'</td>';
-            $category = "";
+            
             foreach($days as $day) {
                 if(!array_key_exists($day['day'], $data))
                 {
@@ -41,11 +41,11 @@ class TableGenerator
                     continue;
                 }
                 $items = $data[$day['day']];
-                
+                $category = "";
                 $table .= '<td>';
                 foreach($items as $item) {
                     if($category == '') {
-                        $table .= $categories[$item->category].'<br />';
+                        $table .= '<b>'.$categories[$item->category].'</b><br />';
                         $category = $item->category;
                     }
                     if($item->schedule_start_at == $t['start_at'])
