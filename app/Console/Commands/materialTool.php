@@ -109,6 +109,11 @@ class materialTool extends Command
 
     private function mediainfo($id, $group=0)
     {
+        $m = Material::find($id);
+        $info = MediaInfo::getInfo($m);
+
+        print_r($info);
+        return;
         $cache = [];
         $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','frames','size','duration')->lazy();
 
