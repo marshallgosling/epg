@@ -2,6 +2,7 @@
 
 namespace App\Tools\Exporter;
 
+use App\Models\Category;
 use App\Models\Epg;
 use App\Models\Record;
 use App\Models\Template;
@@ -27,6 +28,8 @@ class TableGenerator
         }
         $table .= '<th>HKT</th></tr>';
 
+        $categories = Category::getCategories();
+
         foreach($template as $t)
         {
             $table .= '<tr><td>'.$t['label_start_at'].'<br>'.$t['label_end_at'].'</td>';
@@ -38,7 +41,7 @@ class TableGenerator
                     continue;
                 }
                 $items = $data[$day['day']];
-                $table .= '<td>';
+                $table .= '<td>'.$categories[$t->category].'<br />';
                 foreach($items as $item) {
                     if($item->schedule_start_at == $t['start_at'])
                         $table .= $item->name.'<br>';
