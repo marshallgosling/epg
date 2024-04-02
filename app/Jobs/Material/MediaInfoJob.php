@@ -82,7 +82,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         if($channel->lock_status != Channel::LOCK_ENABLE)
         {
             Notify::fireNotify($channel->name, Notification::TYPE_XML, '分发格非串联单失败', 
-                '串联单'.$channel->air_date.'为“未锁定”状态', Notification::LEVEL_WARN);
+                '串联单'.$channel->air_date.'为“未锁定”状态', Notification::LEVEL_ERROR);
             return;
         }
 
@@ -119,8 +119,12 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                         $channel->save();
                     }
                     else {
-                        $channel->comment = "分发串联单失败。".$channel->comment;
-                        $channel->save();
+                        if(strpos($channel->comment, "分发串联单失败。") == FALSE)
+                        {
+                            $channel->comment = "分发串联单失败。".$channel->comment;
+                            $channel->save();
+                        }
+                        
                     }
                         
                 }
