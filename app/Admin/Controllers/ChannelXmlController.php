@@ -41,8 +41,7 @@ class ChannelXmlController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->model()->where('lock_status', Channel::LOCK_ENABLE)->where('status', Channel::STATUS_READY)
-            ->orderBy('air_date', 'desc');
+        $grid->model()->where('lock_status', Channel::LOCK_ENABLE)->orderBy('air_date', 'desc');
 
         $grid->column('id', __('ID'));
         $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
