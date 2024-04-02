@@ -41,15 +41,15 @@ class TableGenerator
                     continue;
                 }
                 $items = $data[$day['day']];
-                $category = "";
-                $table .= '<td>';
+                // $category = "";
+                $table .= '<td><b>'.$t->name.'</b><br />';
                 foreach($items as $item) {
                     
                     if($item->schedule_start_at == $t['start_at']){
-                        if($category == '') {
-                            $table .= '<b>'.$categories[$item->category].'</b><br />';
-                            $category = $item->category;
-                        }
+                        // if($category == '') {
+                        //     $table .= '<b>'.$categories[$item->category].'</b><br />';
+                        //     $category = $item->category;
+                        // }
                         $table .= $item->name.'<br>';
                     }
                         
