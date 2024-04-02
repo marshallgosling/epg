@@ -41,7 +41,7 @@ class TableGenerator
                     continue;
                 }
                 $items = $data[$day['day']];
-                $table .= '<td>'.$categories[$t->category].'<br />';
+                $table .= '<td>'.$categories[$t['category']].'<br />';
                 foreach($items as $item) {
                     if($item->schedule_start_at == $t['start_at'])
                         $table .= $item->name.'<br>';
@@ -70,7 +70,7 @@ class TableGenerator
                 $start_at = date('H:i:s', $st);
                 if($start_at == '00:00:00') $start_at = '24:00:00';
                 if($end_at == '00:00:00') $end_at = '24:00:00';
-                $templates[] = ['start_at'=>$start_at, 'end_at'=>$end_at,
+                $templates[] = ['start_at'=>$start_at, 'end_at'=>$end_at, 'category'=>$item->category,
                     'duration'=>$item->duration, 'label_start_at'=>date('G:i', $st), 'label_end_at'=>date('G:i', $ed)];
 
             }
