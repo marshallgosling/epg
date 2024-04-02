@@ -44,10 +44,10 @@ class TableGenerator
                 $category = "";
                 $table .= '<td>';
                 foreach($items as $item) {
-                    //if($category == '') {
+                    if($category == '') {
                         $table .= '<b>'.$categories[$item->category].'</b><br />';
-                       // $category = $item->category;
-                    //}
+                        $category = $item->category;
+                    }
                     if($item->schedule_start_at == $t['start_at'])
                         $table .= $item->name.'<br>';
                 }
