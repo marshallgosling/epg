@@ -111,6 +111,7 @@ class materialTool extends Command
     {
         $m = Material::find($id);
         $info = MediaInfo::getInfo($m);
+        $this->info('filepath: '.$m->filepath);
 
         print_r($info);
         return;
