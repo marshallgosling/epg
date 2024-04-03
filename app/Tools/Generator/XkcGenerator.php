@@ -74,7 +74,7 @@ class XkcGenerator
 
     public function generate($channels)
     {
-        ChannelGenerator::makeCopyTemplate($this->group);
+        //ChannelGenerator::makeCopyTemplate($this->group);
         Record::cleanCache();
         Record::loadBumpers(config('XKC_BUMPERS_TAG', 'XK FILLER'));
 
