@@ -180,6 +180,13 @@ class Record extends Model
                     //$item = '未找到';
                     $data['result'] = '未找到';
                 }
+                else if($item == 'empty2') {
+                    if($template->type == TemplateRecords::TYPE_STATIC) {
+                        //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
+                    }
+                    //$item = '未找到';
+                    $data['result'] = '未找到';
+                }
                 else {
                     $data['episodes'] = $item->episodes;
                     $data['unique_no'] = $item->unique_no;
