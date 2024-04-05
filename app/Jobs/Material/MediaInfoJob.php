@@ -81,7 +81,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
         if($channel->lock_status != Channel::LOCK_ENABLE)
         {
-            Notify::fireNotify($channel->name, Notification::TYPE_XML, '分发格非串联单失败', 
+            Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单失败', 
                 '串联单'.$channel->air_date.'为“未锁定”状态', Notification::LEVEL_ERROR);
             return;
         }
@@ -99,8 +99,8 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                         ->pluck('name', 'unique_no')->toArray();
                 if($fail)
                 {
-                    Notify::fireNotify($channel->name, Notification::TYPE_XML, '分发格非串联单错误', 
-                        '串联单'.$channel->air_date.'存在物料状态不可用的节目内容，'.implode(',', array_values($fail)),
+                    Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单错误', 
+                        '串联单'.$channel->air_date.'存在"不可用"的物料，'.implode(',', array_values($fail)),
                         Notification::LEVEL_ERROR);
                     
                 }
@@ -117,6 +117,10 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                         $channel->status = Channel::STATUS_DISTRIBUTE;
                         $channel->comment = str_replace('分发串联单失败。','',$channel->comment);
                         $channel->save();
+
+                        Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单成功', 
+                        '串联单'.$channel->air_date.'分发成功',
+                        Notification::LEVEL_ERROR);
                     }
                     else {
                         if(strpos($channel->comment, "分发串联单失败。") == FALSE)
@@ -124,7 +128,8 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                             $channel->comment = "分发串联单失败。".$channel->comment;
                             $channel->save();
                         }
-                        
+                        Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单失败', 
+                            '串联单'.$channel->air_date.'无法保存: '.$path, Notification::LEVEL_ERROR);
                     }
                         
                 }

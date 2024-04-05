@@ -33,8 +33,14 @@ class Notify
     public static function getErrorNotifications()
     {
         return Cache::remember("notification_error", 300, function() {
-            $data = DB::table('notification')->where('level', Notification::LEVEL_ERROR)->orderBy('id', 'desc')->limit(20)->get();
-            return $data;
+            return DB::table('notification')->where('level', Notification::LEVEL_ERROR)->orderBy('id', 'desc')->limit(20)->get();
+        });
+    }
+
+    public static function getDistributions()
+    {
+        return Cache::remember("notification_distribution", 300, function () {
+            return DB::table('notification')->where('type', Notification::TYPE_XML)->orderBy('id', 'desc')->limit(20)->get();
         });
     }
 

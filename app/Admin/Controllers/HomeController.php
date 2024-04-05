@@ -32,20 +32,52 @@ class HomeController extends Controller
             ->row(HomeController::statistics())
             ->row(function (Row $row) {
                 $row->column(8, function (Column $column) {
-                  $column->append(HomeController::notify());
+                  $column->append(HomeController::notifyError());
                 });
                 $row->column(4, function (Column $column) {
-                    $column->append(HomeController::daily());
+                  $column->append(HomeController::distribution());
                 });
             })
             ->row(function (Row $row) {
               $row->column(8, function (Column $column) {
                 $column->append(HomeController::charts());
               });
+              $row->column(4, function (Column $column) {
+                $column->append(HomeController::daily());
+              });
             });
     }
 
-    private static function notify()
+    private static function distribution()
+    {
+        $list = Notify::getDistributions();
+        $data = '';
+        foreach($list as $m) {
+            $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
+            $m->name.'</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
+        }
+            
+        $html = <<<HTML
+        <div class="row" style="height:390px; overflow-y:scroll">
+        <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr><th>频道</th><th>标题</th><th>日期</th></tr>
+                {$data}
+            </table>
+        </div></div>
+      </div>
+HTML;
+        $box = new Box('分发串联单通知记录', $html);
+
+        $box->style('aqua');
+        
+        $box->solid();
+
+        return $box->render();
+    }
+
+    private static function notifyError()
     {
         $list = Notify::getErrorNotifications();
         $data = '';
