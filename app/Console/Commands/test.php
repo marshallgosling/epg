@@ -16,6 +16,7 @@ use App\Models\Record;
 use App\Models\Record2;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\BvtExporter;
 use App\Tools\Exporter\ExcelWriter;
 use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
@@ -48,15 +49,16 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         
-        $channel = Channel::find($day);
-        $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $ch = Channel::find($day);
+        $data = BvtExporter::collectEPG($ch);
+                BvtExporter::generateData($ch, $data);
+                BvtExporter::$file = false;
+                $xml = BvtExporter::exportXml($ch->name);
+                $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
 
-        
-        foreach($templates as $template)
-        {
-            ChannelGenerator::saveHistory($template, $channel);
-        }
-
+        $this->info($xml);
+        $this->info($str);
+        $this->info($xml==$str?"相同":"不相同");
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();
