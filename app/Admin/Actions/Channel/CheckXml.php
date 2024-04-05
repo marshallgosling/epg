@@ -16,7 +16,7 @@ class CheckXml implements Renderable
     public function render($key = null)
     {
         $ch = Channel::find($key);
-
+        $data = '';
         $label = '';
         if(!$ch) $data = '<tr><td>播出编单不存在</td></tr>';
         else {
