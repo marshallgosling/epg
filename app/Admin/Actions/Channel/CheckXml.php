@@ -33,10 +33,10 @@ class CheckXml implements Renderable
                 $xml2 = XmlReader::parseSystemTime($xml);
 
                 if( $xml1 == $xml2 ) {
-                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-success">通过</span></p>';
+                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-success">通过</span> 数据一致</p>';
                 }
                 else {
-                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-danger">不通过</span></p>';
+                    $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-danger">不通过</span> 数据不一致</p>';
                     $data = '<tr><td>播放编单数据和格非串联单xml文件存在差异，请重新“加锁”';
                 }
             }
