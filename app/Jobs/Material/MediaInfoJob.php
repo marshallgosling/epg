@@ -272,7 +272,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                 foreach(['records', 'record2', 'program'] as $table)
                     DB::table($table)->where('unique_no', $unique_no)->update(['status'=>$status]);
 
-                Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件: {$material->filepath} 不可读。");
+                Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件: {$material->filepath} 不可读。", Notification::LEVEL_ERROR);
             
             }
             
@@ -280,7 +280,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         else {
             foreach(['records', 'record2', 'program','material'] as $table)
                 DB::table($table)->where('unique_no', $unique_no)->update(['status'=>Material::STATUS_EMPTY]);
-            Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件不存在。");
+            Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件不存在。", Notification::LEVEL_ERROR);
             
         }
         
