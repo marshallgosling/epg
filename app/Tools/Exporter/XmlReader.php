@@ -18,6 +18,6 @@ class XmlReader
         $ret = preg_match_all('/<SystemTime>(.*)<\/SystemTime>/', $str, $matches);
         if(!$ret) return false;
         
-        return implode(',', $matches);
+        return implode(',', $matches[1]);
     }
 }
