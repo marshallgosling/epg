@@ -42,7 +42,7 @@ class XkvProgramController extends AdminController
 
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->width(200)->modal(ProgramMaterial::class);
+        $grid->column('unique_no', __('Unique no'))->width(200)->modal('素材信息', ProgramMaterial::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Program::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i> ';
         });
