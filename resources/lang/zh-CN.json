@@ -131,6 +131,8 @@
     "epg": "串联单",
     "audit": "审核",
     "blacklist": "黑名单",
+    "material": "物料",
+    "distribution": "分发",
     "Error Mode": "错误排查模式",
     "Preview Mode": "预览模式",
     "Preview Template Content": "预览模版节目内容编排",
