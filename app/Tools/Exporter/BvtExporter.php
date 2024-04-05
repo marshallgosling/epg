@@ -142,6 +142,11 @@ class BvtExporter
         self::$json = $json;
     }
 
+    public static function loadXml($file)
+    {
+        
+    }
+
     public static function exportXml($name=false)
     {
         $exporter = new XmlWriter();

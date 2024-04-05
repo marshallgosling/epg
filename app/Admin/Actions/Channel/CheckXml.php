@@ -28,7 +28,11 @@ class CheckXml implements Renderable
                 $xml = BvtExporter::exportXml($ch->name);
 
                 $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
-                if( $str == $xml ) {
+
+                $xml1 = XmlReader::parseSystemTime($str);
+                $xml2 = XmlReader::parseSystemTime($xml);
+
+                if( $xml1 == $xml2 ) {
                     $label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-success">通过</span></p>';
                 }
                 else {
