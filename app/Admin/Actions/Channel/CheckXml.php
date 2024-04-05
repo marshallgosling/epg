@@ -22,8 +22,8 @@ class CheckXml implements Renderable
         else {
             if(Storage::disk('xml')->exists($ch->name.'_'.$ch->air_date.'.xml')) 
             {
-                $data = BvtExporter::collectEPG($ch);
-                BvtExporter::generateData($ch, $data);
+                $epg = BvtExporter::collectEPG($ch);
+                BvtExporter::generateData($ch, $epg);
                 BvtExporter::$file = false;
                 $xml = BvtExporter::exportXml($ch->name);
 
