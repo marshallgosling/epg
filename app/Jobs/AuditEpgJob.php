@@ -124,6 +124,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $playsec = 0;
         $duration = 0;
         $overflow = $end-$start;
+        $item = false;
         while($overflow>0)
         {
             if(count($data) == 0) break;
