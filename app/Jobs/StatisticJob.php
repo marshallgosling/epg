@@ -51,7 +51,7 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
             return;
         }
 
-        if($channel->status != Channel::STATUS_READY) {
+        if(! in_array($channel->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE]) ) {
             $this->info("频道 {$channel->name} 日期 {$channel->air_date} 节目单状态不为“正常”");
             return;
         }

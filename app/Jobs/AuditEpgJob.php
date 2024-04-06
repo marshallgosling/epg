@@ -48,7 +48,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $channel = Channel::find($this->id);
         if(!$channel) return;
 
-        if($channel->status != Channel::STATUS_READY) return;
+        if(! in_array($channel->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])) return;
         if($channel->name == 'xkc') $class='\App\Models\Record';
         if($channel->name == 'xki') $class='\App\Models\Record2';
         if($channel->name == 'xkv') $class='\App\Models\Program';

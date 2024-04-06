@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Jobs\Material\MediaInfoJob;
 use App\Models\Channel;
 use App\Models\ExportList;
 use App\Models\Notification;
@@ -72,13 +73,17 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
         BvtExporter::generateData($channel, $data);
         BvtExporter::exportXml($channel->name);
 
+        if($channel->status == Channel::STATUS_DISTRIBUTE) {
+            MediaInfoJob::dispatch($channel->id, 'distribute')->onQueue('media');
+        }
+
         Notify::fireNotify(
             $channel->name,
             Notification::TYPE_XML, 
             "生成 XML {$channel->air_date} 成功. ", 
             "",
             Notification::LEVEL_INFO
-        );             
+        );
     }
 
     /**
