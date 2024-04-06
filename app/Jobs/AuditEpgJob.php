@@ -144,7 +144,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         }
 
         
-        return ['result'=>true, 'reason'=>"最后一档播出节目为：{$item->name}({$duration}秒), 该节目将播出 $playsec 秒"];
+        return $item ? ['result'=>true, 'reason'=>"最后一档播出节目为：{$item->name}({$duration}秒), 该节目将播出 $playsec 秒"] 
+            : ['result'=>true, 'reason'=>"时长完全匹配"];
     }
 
     private function checkMaterial($cache)
