@@ -21,7 +21,7 @@ class BatchLock extends BatchAction
         //$comment = $request->get('comment');
         foreach ($collection as $model) 
         {
-            if($lock == Channel::LOCK_ENABLE && $model->status != Channel::STATUS_READY) {
+            if(in_array($model->status, [Channel::STATUS_ERROR, Channel::STATUS_CLOSE, Channel::STATUS_EMPTY, Channel::STATUS_RUNNING])) {
                 // 空编单和停止使用的编单不能通过锁定
                 continue;
             }
@@ -37,7 +37,7 @@ class BatchLock extends BatchAction
             }
         }
         
-        return $this->response()->success(__('Clean success message.'))->refresh();
+        return $this->response()->success($lock?"加锁成功":"解锁成功")->refresh();
     }
 
     public function form()
