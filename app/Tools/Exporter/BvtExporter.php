@@ -142,9 +142,42 @@ class BvtExporter
         self::$json = $json;
     }
 
-    public static function loadXml($file)
+    /**
+     * Check XML file data
+     * 
+     * @param Channel $ch
+     * 
+     * @return string
+     */
+    public static function checkXml($ch)
     {
-        
+        if(Storage::disk('xml')->exists($ch->name.'_'.$ch->air_date.'.xml')) 
+        {
+            $epg = BvtExporter::collectEPG($ch);
+            BvtExporter::generateData($ch, $epg);
+            BvtExporter::$file = false;
+            $xml = BvtExporter::exportXml($ch->name);
+
+            $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
+
+            $xml1 = XmlReader::parseSystemTime($str);
+            $xml2 = XmlReader::parseSystemTime($xml);
+
+            if( $xml1 == $xml2 ) {
+                return "equal";
+                //$label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-success">通过</span> 数据一致</p>';
+            }
+            else {
+                return "not";
+                //$label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-danger">不通过</span> 数据不一致</p>';
+                //$data = '<tr><td>播放编单数据和格非串联单xml文件存在差异，请重新“加锁”';
+            }
+        }
+        else {
+            return "none";
+            //$label = '<p>播出编单:'.$ch->name.'_'.$ch->air_date.'.xml 文件不存在</p>';
+            //$data = '';
+        }
     }
 
     public static function exportXml($name=false)

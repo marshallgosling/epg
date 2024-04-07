@@ -88,51 +88,49 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
         if($channel->status == Channel::STATUS_READY || $channel->status == Channel::STATUS_DISTRIBUTE)
         {
-            $air = date('Y-m-d', strtotime($channel->air_date));
-            if(!Storage::disk('xml')->exists($channel->name.'_'.$air.'.xml'))
-                return;
-            $file = Storage::disk('xml')->get($channel->name.'_'.$air.'.xml');
-            $items = XmlReader::parseXml($file);
+            $ignore = config('IGNORE_DISTRIBUTION_CHECK', 'false');
             
-            $fail = config('IGNORE_MATERIAL_CHECK', 'false') == 'true' ? false : DB::table('material')->whereIn('unique_no', array_unique($items))
-                        ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
-                        ->pluck('name', 'unique_no')->toArray();
-                if($fail)
+            $result = $ignore == 'false' ? BvtExporter::checkXml($channel) : 'equal';
+            if($result != 'equal')
+            {
+                if(strpos($channel->comment, "分发串联单失败。") == FALSE)
                 {
-                    Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单错误', 
-                        '串联单'.$channel->air_date.'存在"不可用"的物料，'.implode(',', array_values($fail)),
-                        Notification::LEVEL_ERROR);
-                    
+                    $channel->comment = "分发串联单失败。".$channel->comment;
+                    $channel->save();
                 }
-                else
-                {
-                    if($is_today) {
-                        $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
-                        if($path) file_put_contents($path, $file);
-                    }
-                    $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$air.'.xml': false; 
-                    
-                    if($path && file_put_contents($path, $file)) {
-                        $channel->distribution_date = date('Y-m-d H:i:s');
-                        $channel->status = Channel::STATUS_DISTRIBUTE;
-                        $channel->comment = str_replace('分发串联单失败。','',$channel->comment);
-                        $channel->save();
 
-                        Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单成功', 
-                        '串联单'.$channel->air_date.'分发成功',
-                        Notification::LEVEL_INFO);
-                    }
-                    else {
-                        if(strpos($channel->comment, "分发串联单失败。") == FALSE)
-                        {
-                            $channel->comment = "分发串联单失败。".$channel->comment;
-                            $channel->save();
-                        }
-                        Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单失败', 
-                            '串联单'.$channel->air_date.'无法保存: '.$path, Notification::LEVEL_ERROR);
-                    }
-                        
+                Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单错误', 
+                    "分发串联单失败。原因：校对失败，存在数据差异。可重新尝试加“锁”。", Notification::LEVEL_ERROR);
+            }
+            else
+            {
+                $file = Storage::disk('xml')->get($channel->name.'_'.$channel->air_date.'.xml');
+                if($is_today) {
+                    $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
+                    if($path) file_put_contents($path, $file);
                 }
+                $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$channel->air_date.'.xml': false; 
+                    
+                if($path && file_put_contents($path, $file)) {
+                    $channel->distribution_date = date('Y-m-d H:i:s');
+                    $channel->status = Channel::STATUS_DISTRIBUTE;
+                    $channel->comment = str_replace('分发串联单失败。','',$channel->comment);
+                    $channel->save();
+
+                    Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单成功', 
+                        '串联单'.$channel->air_date.'分发成功',  Notification::LEVEL_INFO);
+                }
+                else {
+                    if(strpos($channel->comment, "分发串联单失败。") == FALSE)
+                    {
+                        $channel->comment = "分发串联单失败。".$channel->comment;
+                        $channel->save();
+                    }
+                    Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单失败', 
+                        '串联单'.$channel->air_date.'无法保存: '.$path, Notification::LEVEL_ERROR);
+                }
+                        
+            }
         }
     }
 
