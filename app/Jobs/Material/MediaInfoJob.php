@@ -120,7 +120,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
                         Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单成功', 
                         '串联单'.$channel->air_date.'分发成功',
-                        Notification::LEVEL_ERROR);
+                        Notification::LEVEL_INFO);
                     }
                     else {
                         if(strpos($channel->comment, "分发串联单失败。") == FALSE)

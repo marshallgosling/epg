@@ -40,7 +40,7 @@ class Notify
     public static function getDistributions()
     {
         return Cache::remember("notification_distribution", 300, function () {
-            return DB::table('notification')->where('type', Notification::TYPE_XML)->orderBy('id', 'desc')->limit(20)->get();
+            return DB::table('notification')->where('type', Notification::TYPE_DISTRIBUTION)->orderBy('id', 'desc')->limit(20)->get();
         });
     }
 
