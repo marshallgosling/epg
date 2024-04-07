@@ -54,7 +54,7 @@ class HomeController extends Controller
         $data = '';
         foreach($list as $m) {
             $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
-            $m->name.'</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
+            $m->message.'</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
         }
             
         $html = <<<HTML
@@ -62,7 +62,7 @@ class HomeController extends Controller
         <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-striped">
-                <tr><th>频道</th><th>标题</th><th>日期</th></tr>
+                <tr><th>频道</th><th>消息</th><th>日期</th></tr>
                 {$data}
             </table>
         </div></div>
