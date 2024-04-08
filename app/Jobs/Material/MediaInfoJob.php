@@ -178,7 +178,9 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
             if($folders[$largefile->target_path] == 'Y:\\MV2\\')
             {
                 $targetpath = $folders[$largefile->target_path].$unique_no.'.mxf';
+                $channel = 'xkv';
             }
+            else $channel = 'xkc';
 
             if(!$material) {
                 $material = new Material();
@@ -188,7 +190,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                 $material->status = Material::STATUS_EMPTY;
                 $group = preg_replace('/(\d+)$/', "", $names[0]);
                 $material->group = trim(trim($group), '_-');
-                $material->channel = 'xkc';
+                $material->channel = $channel;
                 $material->save();
             }
 
