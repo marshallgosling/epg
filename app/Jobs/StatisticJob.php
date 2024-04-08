@@ -62,7 +62,7 @@ class StatisticJob implements ShouldQueue, ShouldBeUnique
 
         if($results['result']){
             $this->info("统计数据成功，保存数据库并将替换已有数据（如存在）。");
-            $statistic->store();
+            $statistic->store(true);
 
             Notify::fireNotify(
                 $channel->name,
