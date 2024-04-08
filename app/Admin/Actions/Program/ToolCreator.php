@@ -32,7 +32,7 @@ class ToolCreator extends Action
         $episodes = $request->get('name');
         $total = (int)$request->get('total');
         $st = (int)$request->get('st');
-        $duration = $request->get('name', '00:15:00:00');
+        $duration = $request->get('duration', '00:15:00:00');
         $seconds = ChannelGenerator::parseDuration($duration);
         $code = empty($unique) ? 'XK'.Str::upper(Str::random(4)):$unique;
 
