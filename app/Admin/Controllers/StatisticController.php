@@ -40,7 +40,6 @@ class StatisticController extends AdminController
         $grid->column('category', __('Category'))->label('info');
         $grid->column('comment', __('Comment'));
         
-        $grid->column('group', __('Group'))->hide();
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
