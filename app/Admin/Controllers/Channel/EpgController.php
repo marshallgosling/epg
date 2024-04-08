@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Channel;
 
+use App\Admin\Actions\Channel\ToolEPGExporter;
 use App\Models\Category;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
@@ -73,6 +74,10 @@ class EpgController extends AdminController
                 //$filter->equal('group_id', __('Group'))->radio(Channel::GROUPS);
                 $filter->between('start_at', __('TimeRange'))->datetime();
             });
+        });
+
+        $grid->tools(function ($tools) {
+            $tools->append(new ToolEPGExporter());
         });
 
         return $grid;

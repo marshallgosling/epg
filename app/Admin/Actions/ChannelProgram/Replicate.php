@@ -15,7 +15,7 @@ class Replicate extends RowAction
     public function handle(ChannelPrograms $model)
     {
         $channel = Channel::find($model->channel_id);
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             return $this->response()->success(__('Replicate Failed message'))->refresh();
         }
 

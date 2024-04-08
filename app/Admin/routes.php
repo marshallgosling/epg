@@ -16,11 +16,22 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/supervisord', 'HomeController@supervisord')->name('supervisord');
     
+    $router->get('/media/scan/result', 'Media\\MaterialController@compare')->name('media.result.d');
     $router->get('/media/help', 'HelpController@material')->name('media.help');
+    $router->get('/media/recognize', 'Media\\ProcessMaterialController@local')->name('media.recognize');
+    $router->post('/media/recognize', 'Media\\ProcessMaterialController@process')->name('media.recognize.process');
+    $router->resource('/media/agreement', 'AgreementController')->names('media.agreement');
+    $router->resource('/media/compare/xkv', 'Media\\XkvCompareController')->names('media.compare.xkv');
+    $router->resource('/media/compare/xkc', 'Media\\XkcCompareController')->names('media.compare.xkc');
+    $router->resource('/media/compare/xki', 'Media\\XkiCompareController')->names('media.compare.xki');
+    $router->get('/media/folder/{id}', 'Media\\ProcessMaterialController@index')->name('media.folder');
+    $router->resource('/media/folders/files', 'Media\\RawFilesController')->names('media.folders.files');
+    $router->resource('/media/folders', 'Media\\FolderController')->names('media.folders');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
     $router->resource('/media/category', 'Media\\CategoryController')->names('media.category');
-    
+    $router->resource('/media/large-files', 'Media\\LargeFileController')->names('media.largefile');
+
     $router->post('/media/xkc/unique', 'Media\\XkcProgramController@unique')->name('media.xkc.unique');
     $router->post('/media/xkv/unique', 'Media\\XkvProgramController@unique')->name('media.xkv.unique');
     $router->post('/media/xki/unique', 'Media\\XkiProgramController@unique')->name('media.xki.unique');
@@ -32,6 +43,8 @@ Route::group([
     $router->post('/media/material/unique', 'Media\\MaterialController@unique')->name('media.material.unique');
     $router->resource('/media/material', 'Media\\MaterialController')->names('media.material');
     $router->resource('/media/blacklist', 'Media\\BlackListController')->names('media.blacklist');
+    $router->get('/media/blacklist/result/{id}', 'Media\\BlackListController@results')->name('media.blacklist.result');
+    $router->post('/media/blacklist/result/{id}/save', 'Media\\BlackListController@saveReplace')->name('media.blacklist.result.save');
 
     $router->get('/channel/xkc/tree/{id}', 'Channel\\XkcProgramController@tree')->name('channel.xkc.programs.tree');
     $router->get('/channel/xkc/preview/{id}', 'Channel\\XkcController@preview')->name('channel.xkc.preview');
@@ -88,6 +101,7 @@ Route::group([
     
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
     $router->get('/template/temp/programs/{program}', 'Template\\TempProgramsController@show')->name('template.temp.show');
+    $router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
     $router->get('/template/help', 'HelpController@template')->name('template.help');
 
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');
@@ -107,8 +121,7 @@ Route::group([
     $router->delete('/channel/test/data/{id}/remove/{idx}', 'Channel\\TestProgramController@remove')->name('channel.test.programs.delete');
     $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
-    $router->get('/audit/preview/{id}', 'AuditController@preview')->name('audit.preview');
-    $router->resource('/audit/list', 'AuditController')->names('audit.list');
+    $router->resource('/channel/audit', 'AuditController')->names('audit.list');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');

@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use App\Models\Channel;
 use App\Models\ChannelPrograms;
 use App\Models\Epg;
+use App\Models\Material;
+use App\Models\Plan;
 use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\DB;
 
@@ -140,6 +142,44 @@ class BvtExporter
         self::$json = $json;
     }
 
+    /**
+     * Check XML file data
+     * 
+     * @param Channel $ch
+     * 
+     * @return string
+     */
+    public static function checkXml($ch)
+    {
+        if(Storage::disk('xml')->exists($ch->name.'_'.$ch->air_date.'.xml')) 
+        {
+            $epg = BvtExporter::collectEPG($ch);
+            BvtExporter::generateData($ch, $epg);
+            BvtExporter::$file = false;
+            $xml = BvtExporter::exportXml($ch->name);
+
+            $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
+
+            $xml1 = XmlReader::parseSystemTime($str);
+            $xml2 = XmlReader::parseSystemTime($xml);
+
+            if( $xml1 == $xml2 ) {
+                return "equal";
+                //$label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-success">通过</span> 数据一致</p>';
+            }
+            else {
+                return "not";
+                //$label = '<p>播出编单:'.Channel::GROUPS[$ch->name].' 日期:'.$ch->air_date.' 文件:'.$ch->name.'_'.$ch->air_date.'.xml 检查结果：<span class="label label-danger">不通过</span> 数据不一致</p>';
+                //$data = '<tr><td>播放编单数据和格非串联单xml文件存在差异，请重新“加锁”';
+            }
+        }
+        else {
+            return "none";
+            //$label = '<p>播出编单:'.$ch->name.'_'.$ch->air_date.'.xml 文件不存在</p>';
+            //$data = '';
+        }
+    }
+
     public static function exportXml($name=false)
     {
         $exporter = new XmlWriter();
@@ -163,7 +203,7 @@ class BvtExporter
         $channels = DB::table('channel')->whereBetween('air_date', [$start_at, $end_at])
                                         ->where('name', $group_id)
                                         ->where('status', Channel::STATUS_READY)
-                                        // ->where('audit_status', Channel::AUDIT_PASS)
+                                        // ->where('lock_status', Channel::LOCK_ENABLE)
                                         ->select('id','air_date','uuid')
                                         ->orderBy('air_date')->get();
 
@@ -223,8 +263,8 @@ class BvtExporter
         $start_at = strtotime($air_date.' 00:00:00');
 
         $list = Epg::where('group_id', $group)
-                    ->where('start_at','>',date('Y-m-d H:i:s', $start_at))
-                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+24800))
+                    ->where('start_at','=',date('Y-m-d H:i:s', $start_at))
+                    ->where('start_at','<',date('Y-m-d H:i:s', $start_at+86400+1800))
                     ->orderBy('start_at', 'asc')->get();
 
         $pos_start = strtotime($air_date.' '.config('EPG_START_AT', '06:00:00'));
@@ -251,6 +291,36 @@ class BvtExporter
         return $data;
     }
 
+    public static function collectEPG($channel, \Closure $callback=null)
+    {
+        $list = Epg::where('channel_id', $channel->id)->orderBy('start_at', 'asc')->get();
+        $plan = Plan::loadPlan($channel);
+
+        foreach($list as $item) {
+            $begin = strtotime($item->start_at);
+            $end = strtotime($item->end_at);
+            
+            if($callback)
+                $data[] = call_user_func($callback, $item);
+            else
+                $data[] = $item->toArray();
+
+            if($plan)
+            {
+                $start = strtotime($plan['start_at']);
+                if($start > $begin && $start < $end) {
+                    $plan['reset'] = 1;
+                    $data[] = $plan;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @deprecated
+     */
     public static function collectDataGroupWithProgram($air_date, $group, \Closure $callback=null) 
     {      
         $data = [];
@@ -334,12 +404,13 @@ class BvtExporter
                        
                 $itemList->StartTime = $start;
                 $itemList->SystemTime = $date->format('Y-m-d H:i:s');
-                $itemList->Name = '<![CDATA['.$program['name'].']]>';
+                $itemList->Name = $program['unique_no'].str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $itemList->BillType = $date->format('md').'新建';
                 $itemList->LimitLen = 0;
                 $itemList->PgmDate = $date->diffInDays(Carbon::parse('1899-12-30 00:00:00'));
                 $itemList->PlayType = $idx == 0 ? 1 : 0;
 
+            if(array_key_exists('reset', $program)) $itemList->PlayType = 1;
             //$clips = ;
             //$items = $program['items'];
             $duration = 0;
@@ -347,8 +418,16 @@ class BvtExporter
             { 
                 $clip = clone $template->ClipsItem;
                 $clip->FileName = '<![CDATA['.$program['name'].'.'.$program['unique_no'].']]>';
-                $clip->Name = '<![CDATA['.$program['name'].']]>';
+                $clip->Name = $program['unique_no'].str_replace(['\'','.','"','*','&',';','!','#','%'],'',$program['name']);
                 $clip->Id = $program['unique_no'];
+                if($channel->name == 'xkv') {
+                    $clip->FileName = $program['unique_no'];
+                }
+                else {
+                    $filename = Material::getName($program['unique_no']); 
+                    if($filename) $clip->FileName = '<![CDATA['.$filename.']]>';
+                }
+
                 $seconds = ChannelPrograms::caculateSeconds($program['duration']);
                 $frames = $seconds * (int)config('FRAMES', 25);
                 $clip->LimitDuration = $frames;
@@ -370,6 +449,9 @@ class BvtExporter
     
     }
 
+    /**
+     * @deprecated
+     */
     public static function generateData2($channel, $data, $fixDate = false)
     {
         $jsonstr = Storage::disk('data')->get('template.json');
@@ -435,4 +517,6 @@ class BvtExporter
     {
         return floor($bytes / 1024) .'KB';
     }
+
+    
 }

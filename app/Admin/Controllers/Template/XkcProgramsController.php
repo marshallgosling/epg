@@ -27,7 +27,7 @@ class XkcProgramsController extends AdminController
      *
      * @var string
      */
-    protected $title = '普通模版编排 【 星空中国 】';
+    protected $title = '【 星空中国 】编排规则';
 
     private $group = 'xkc';
 
@@ -151,7 +151,8 @@ class XkcProgramsController extends AdminController
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
             $form->dateRange('date_from', 'date_to', __('DateRange'));
             $form->checkbox('dayofweek', __('Daysofweek'))->options(TemplateRecords::DAYS)->canCheckAll();
-            $form->number('ep', __('Ep no'))->min(1)->max(4)->default(1);
+            $form->checkbox('airday', __('AirDay'))->options(TemplateRecords::DAYS)->canCheckAll();
+            $form->number('ep', __('Ep no'))->min(1)->max(6)->default(1);
 
             $form->text("name", __('Name'));
             $form->text('unique_no', __('Unique no'));

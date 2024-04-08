@@ -61,24 +61,21 @@ return [
         ],
 
         'daily' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'driver' => 'single',
+            'path' => storage_path('logs/daily.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 14,
         ],
 
         'channel' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/channel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 7,
         ],
 
         'program' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/program.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 7,
         ],
 
         'simulator' => [
@@ -88,31 +85,27 @@ return [
         ],
 
         'statistic' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/statistic.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 3,
         ],
 
         'black' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/black.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 7,
         ],
 
         'export' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/export.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 3,
         ],
 
         'excel' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/excel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 3,
         ],
 
         'slack' => [

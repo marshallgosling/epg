@@ -2,8 +2,10 @@
 
 namespace App\Admin\Controllers\Media;
 
+use App\Admin\Actions\Material\CompareLink;
 use App\Admin\Actions\Program\RecordMaterial;
 use App\Admin\Actions\Program\BatchModify;
+use App\Admin\Actions\Program\BatchModifyEpisodes;
 use App\Events\CategoryRelationEvent;
 use App\Models\Record;
 use App\Models\Category;
@@ -13,6 +15,8 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use App\Admin\Actions\Program\BatchRecordDelete;
+use App\Admin\Actions\Program\ToolCreator;
 
 class XkcProgramController extends AdminController
 {
@@ -80,12 +84,20 @@ class XkcProgramController extends AdminController
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->mlike('episodes', __('Episodes'))->placeholder('输入%作为通配符，如 灿星% 或 %灿星%'); 
                 $filter->startsWith('unique_no', __('Unique_no'))->placeholder('仅支持左匹配'); 
+                $filter->equal("ep", '只看剧头')->radio([1=>'剧头']);
             });
     
         });
 
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchRecordDelete);
+        });
+
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
+            $tools->append(new BatchModifyEpisodes);
+            $tools->append(new CompareLink('xkc'));
+            $tools->append(new ToolCreator('xkc'));
         });
 
         return $grid;

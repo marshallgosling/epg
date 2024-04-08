@@ -19,6 +19,7 @@ class BatchImportor extends BatchAction
     public function handle(Collection $models, Request $request)
     {
         $channel = $request->get('channel');
+        $episode = (int)$request->get('episode');
         if($channel == 'xkv') {
             $class = '\App\Models\Program';
             $relation = 'program';
@@ -38,18 +39,23 @@ class BatchImportor extends BatchAction
             
             $program = new $class();
             
-            if(in_array($model->category, ['CanXin', 'drama', 'movie','Entertainm','cartoon']))
+            if($channel != 'xkv')
             {
 
                 $program->episodes = $model->group;
+                $program->ep = (int) $model->ep;
+                if($model->comment) $program->name2 = $model->comment;
+
                 if(preg_match('/(\d+)$/', $model->name, $matches))
                 {
                     $program->ep = (int) $matches[1];
+                    //$group = preg_replace('/(\d+)$/', "", $model->name);
+                    //$group = trim(trim($group), '_-');
                 }
             }
             
             $program->name = $model->name;
-            if($model->comment) $program->name2 = $model->comment;
+            
             $program->unique_no = $model->unique_no;
             $program->duration = $model->duration;
             $program->category = [$model->category];
@@ -62,8 +68,8 @@ class BatchImportor extends BatchAction
             }
             else {
                 $program->save();
-                $cid = Category::where('no', $model->category)->value('id');
-                DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
+                //$cid = Category::where('no', $model->category)->value('id');
+                //DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
             }
         }
         
@@ -72,14 +78,15 @@ class BatchImportor extends BatchAction
 
     public function form()
     {
-        $this->radio('channel', __('Channel'))->options(Channel::GROUPS);
+        $this->select('channel', __('Channel'))->options(Channel::GROUPS);
+        //$this->radio('episode', '整剧导入')->options(['单集', '整部剧'])->default(0);
 
         $this->textarea("help", "注意说明")->default('选择需要导入的频道')->disable();
     }
 
     public function html()
     {
-        return "<a class='batch-import btn btn-sm btn-danger'><i class='fa fa-info-circle'></i>{$this->name}</a>";
+        return "<a class='batch-import btn btn-sm btn-danger'><i class='fa fa-info-circle'></i> {$this->name}</a>";
     }
 
 }

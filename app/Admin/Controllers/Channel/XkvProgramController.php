@@ -43,10 +43,13 @@ class XkvProgramController extends AdminController
     {
         $grid = new Grid(new ChannelPrograms());
 
-        //$grid->column('id', __('Id'));
+        $grid->column('id', __('Id'));
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
-            return "<a href=\"tree/{$this->id}\">{$this->name}</a>"; 
+            $data = json_decode($this->data, true);
+            if(array_key_exists('replicate', $data)) $replicate = $data['replicate']; 
+            else $replicate = '';
+            return "<a href=\"tree/{$this->id}\">{$name} {$replicate}</a>"; 
         });
         
         $grid->column('start_at', __('Start at'));
@@ -132,9 +135,9 @@ class XkvProgramController extends AdminController
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'));
-        $form->text('end_at', __('End at'));
-        $form->text('duration', __('Duration'))->inputmask(['mask'=>'99:99:99:99']);
+        $form->text('start_at', __('Start at'))->disable();
+        $form->text('end_at', __('End at'))->disable();
+        $form->text('duration', __('Duration'))->disable();
         $form->display('version', __('Version'));
         $form->number('sort', __('Sort'));
         $form->json('data', '编单数据');
@@ -144,7 +147,7 @@ class XkvProgramController extends AdminController
                 
                 $form->version = (int)$form->version + 1;
                 $channel = Channel::find($form->model()->channel_id);
-                if($channel && $channel->audit_status == Channel::AUDIT_PASS)
+                if($channel && $channel->lock_status == Channel::LOCK_ENABLE)
                 {
                     $error = new MessageBag([
                         'title'   => '修改节目单失败',
@@ -207,7 +210,10 @@ TMP;
         $view = 'admin.program.xkv';
         $channel = Channel::find($model->channel_id);
 
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        $end_at = strtotime($channel->air_date . explode('-', $channel->start_end)[1]) + 86400;
+        $end_at -= $model->duration;
+
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
         }
@@ -220,7 +226,7 @@ TMP;
            
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate', 'categories')));
+            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate', 'categories', 'end_at')));
     }
 
     public function open($id, Request $request) {
@@ -246,7 +252,7 @@ TMP;
 
         $channel = Channel::findOrFail($model->channel_id);
 
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $response = [
                 'status'  => false,
                 'message' => trans('admin.save_failed'),

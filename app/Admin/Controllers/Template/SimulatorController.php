@@ -4,6 +4,8 @@ namespace App\Admin\Controllers\Template;
 
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
+use App\Models\Record;
+use App\Models\Record2;
 use App\Tools\Simulator\XkcSimulator;
 use App\Tools\Simulator\XkiSimulator;
 use Encore\Admin\Layout\Content;
@@ -18,8 +20,8 @@ class SimulatorController extends Controller
         $days = (int)$request->get('days');
         $days = $days == 0 ? (int)config('SIMULATOR_DAYS', 14) : $days;
 
-        $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
-        $begin = $channel ? $channel->air_date : config('START_DATE','2024-01-01');
+        $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date','desc')->first();
+        $begin = $channel ? date('Y-m-d', (strtotime($channel->air_date)+86400)) : config('START_DATE','2024-01-01');
         $channels = XkcSimulator::generateFakeChannels($begin, $days);
         $simulator = new XkcSimulator($group, $days, $channels);
 
@@ -29,8 +31,12 @@ class SimulatorController extends Controller
 
         $error = $simulator->getErrorMark();
 
+        
+        $r = Record::checkBumperAndPr();
+
+
         return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
-        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error')));
+        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error','r')));
     }
 
     public function xki(Request $request, Content $content)
@@ -39,8 +45,8 @@ class SimulatorController extends Controller
         $days = (int)$request->get('days');
         $days = $days == 0 ? (int)config('SIMULATOR_DAYS', 14) : $days;
 
-        $channel = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])->orderBy('air_date')->first();
-        $begin = $channel ? $channel->air_date : config('START_DATE','2024-01-01');
+        $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date','desc')->first();
+        $begin = $channel ? date('Y-m-d', (strtotime($channel->air_date)+86400)) : config('START_DATE','2024-01-01');
         $channels = XkiSimulator::generateFakeChannels($begin, $days, 'xki');
         $simulator = new XkiSimulator($group, $days, $channels);
 
@@ -50,8 +56,10 @@ class SimulatorController extends Controller
 
         $error = $simulator->getErrorMark();
 
+        $r = Record2::checkBumperAndPr();
+
         return $content->title(__('Simulator Mode'))->description(__('Preview Simulator Content'))
-        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error')));
+        ->body(view('admin.template.simulator', compact('data', 'group', 'days', 'begin', 'error','r')));
     }
 
 }

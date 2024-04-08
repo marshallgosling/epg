@@ -18,7 +18,7 @@ class Generator extends RowAction
             return $this->response()->error(__('Generator start failed message.'))->refresh();
         }
 
-        if($model->audit_status == Channel::AUDIT_PASS) {
+        if($model->lock_status == Channel::LOCK_ENABLE) {
             return $this->response()->error(__('Generator start failed message.'))->refresh();
         }
 
@@ -28,7 +28,7 @@ class Generator extends RowAction
         $model->status = Channel::STATUS_WAITING;
         $model->save();
 
-        XkvGeneratorJob::dispatch($model->uuid)->onQueue('xkv');
+        XkvGeneratorJob::dispatch($model->id)->onQueue('xkv');
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

@@ -149,9 +149,10 @@ ol.breadcrumb {
                   {{ \App\Models\Channel::GROUPS[$model->name] }}</li>
                   <li><b>{{ @__('Air date')}}</b></li>
                   <li class="active"> {{$model->air_date}} </li>
+                  <li><b>{{ @__('Status')}}</b></li>
                   <li><span class="label label-success">{{ \App\Models\Channel::STATUS[$model->status] }} </span></li>
-                  <li><span class="label label-info">{{ \App\Models\Channel::AUDIT[$model->audit_status] }}</span></li>
-                  
+                  <li><b>{{ @__('Lock status')}}</b></li>
+                  <li><span class="label label-info">{{ \App\Models\Channel::LOCKS[$model->lock_status] }}</span></li>
                 </ol>
                 
             </div>
@@ -166,7 +167,7 @@ ol.breadcrumb {
                         <li class="list-group-item disabled"> 副本节目单 </li>
                       @else
                       @foreach (json_decode($program->data) as $t)
-                      <li class="list-group-item">{{$t->start_at}} - {{$t->end_at}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
+                      <li class="list-group-item {{@in_array($t->unique_no, $miss)?'list-group-item-danger':''}}">{{$t->start_at}} - {{$t->end_at}} <small class="pull-right text-warning">{{$t->unique_no}}</small> &nbsp;{{$t->name}} &nbsp; <small class="text-info">{{@substr($t->duration, 0, 8)}}</small></li>
                       @endforeach
                       @endif
                     </ul>   

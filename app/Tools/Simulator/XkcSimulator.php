@@ -7,6 +7,7 @@ use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Models\Record;
 use App\Models\TemplateRecords;
+use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,8 @@ class XkcSimulator
      */
     private $duration;
 
+    public $filename;
+
     public function __construct($group, $days, $channels=false)
     {
         $this->log_channel = 'simulator';
@@ -48,6 +51,7 @@ class XkcSimulator
         $this->log_print = false;
         $this->channels = $channels ?? [];
         $this->programs = [];
+        $this->filename = false;
     }
 
     /**
@@ -100,20 +104,37 @@ class XkcSimulator
             return false;
     }
 
+    public function saveTemplate($templates, $channels)
+    {
+        if(!$this->saveState) return;
+        $temp = compact('templates', 'channels');
+        if(count($channels) == 0) return;
+        $filename = $this->group.'_'.$channels[0]->air_date.'_'.count($channels).'_template.json';
+        Storage::put($filename, json_encode($temp));
+        $this->filename = $filename;
+    }
+
+    public function saveTemplateHistory($template, $channel)
+    {
+        if(!$this->saveState) return;
+        ChannelGenerator::saveHistory($template, $channel);
+    }
+
     public function handle(\Closure $callback=null)
     {
         //$day = strtotime($start);
         $group = $this->group;
         $errors = [];
         $data = [];
-
+        
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
+        $this->saveTemplate($templates, $this->channels);
         
         foreach($this->channels as &$channel)
         {
             // setup $air value, for record items expiration check 
             Record::loadExpiration($channel->air_date);
-
+            
             $result = $channel->toArray();
             $result['data'] = [];
             $result['error'] = false;
@@ -123,6 +144,8 @@ class XkcSimulator
             
             foreach($templates as &$template)
             {
+                $this->saveTemplateHistory($template, $channel);
+
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
                 $duration = 0;
@@ -141,7 +164,7 @@ class XkcSimulator
 
                 $templateresult = $template->toArray();
 
-                $templateresult['error'] = false;
+                $templateresult['error'] = '';
                 
                 if(!$template_item) {
                     //$this->info("没有找到匹配的模版: {$template->id} {$template->category}");
@@ -160,7 +183,8 @@ class XkcSimulator
                 //$this->info("template data: ".$template_item->data['episodes'].', '.$template_item->data['unique_no'].', '.$template_item->data['result'] );
 
                 $maxDuration = ChannelGenerator::parseDuration($template->duration) + (int)config('MAX_DURATION_GAP', 600);
-                $items = $this->findAvailableRecords($template_item, $maxDuration);
+                Record::$islast = false;
+                $items = $this->findAvailableRecords($template_item, $maxDuration, $air);
 
                 if(count($items)) {
                     foreach($items as $item) {
@@ -181,13 +205,15 @@ class XkcSimulator
                         }
                         else {
 
-                            //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                            $templateresult['error'] = "异常3，节目时长为0 {$item->name} {$item->duration} {$item->unique_no} <br/>";
+                            $result['error'] = true;
+                            $errors[] = "异常3，节目时长为0  {$item->name} {$item->duration} {$item->unique_no} ";
                             
                         }
                     }
                     if(count($epglist) == 0) {
                         //$this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                        $templateresult['error'] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $templateresult['error'] .= "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                         $result['error'] = true;
                         $errors[] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     }
@@ -224,17 +250,17 @@ class XkcSimulator
         return $data;
     }
 
-    public function saveTemplateState()
+    public function setSaveTemplateState(bool $state)
     {
-        $this->saveState = true;
+        $this->saveState = $state;
     }
 
-    private function findAvailableRecords(&$template, $maxDuration)
+    private function findAvailableRecords(&$template, $maxDuration, $air)
     {
         $items = [];
         if($template->type == TemplateRecords::TYPE_RANDOM) {
-            $temps = Record::findNextAvaiable($template, $maxDuration);
-            if(in_array($temps[0], ['finished', 'empty'])) {
+            $temps = Record::findNextAvaiable($template, $maxDuration, $air);
+            if(in_array($temps[0], ['finished', 'empty', 'empty2'])) {
                 $d = $template->data;
                 $d['episodes'] = null;
                 $d['unique_no'] = '';
@@ -242,11 +268,11 @@ class XkcSimulator
                 $d['result'] = '';
                 $template->data = $d;
 
-                $temps = Record::findNextAvaiable($template, $maxDuration);
+                $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             }
             $d = $template->data;
             foreach($temps as $item) {
-                if(!in_array($item, ['finished', 'empty'])) {
+                if(!in_array($item, ['finished', 'empty', 'empty2'])) {
                     $items[] = $item;
                     $d['episodes'] = $item->episodes;
                     $d['unique_no'] = $item->unique_no;
@@ -259,16 +285,19 @@ class XkcSimulator
         }
         else if($template->type == TemplateRecords::TYPE_STATIC) {
                 
-            $temps = Record::findNextAvaiable($template, $maxDuration);
+            $temps = Record::findNextAvaiable($template, $maxDuration, $air);
             $items = [];
 
             $d = $template->data;
             foreach($temps as $item) {
                 if($item == 'empty') {
-                    $d['result'] = '错误';
+                    $d['result'] = '错误:找不到匹配的节目';
                 }
                 else if($item == 'finished') {
-                    $d['result'] = '编排完';
+                    $d['result'] = '编排完:所有编排规则已完成';
+                }
+                else if($item == 'empty2') {
+                    $d['result'] = '错误:不是首播日，导致编排无法进行';
                 }
                 else {
                     $items[] = $item;

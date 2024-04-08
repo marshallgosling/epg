@@ -18,8 +18,8 @@ class Expiration extends Model
 
     protected $fillable = [
         'id',
-        'name',       
-        'group_id',
+        'name',
+        'agreement_id',
         'start_at',
         'end_at',
         'status',
@@ -32,4 +32,9 @@ class Expiration extends Model
         'start_at' => 'datetime:Y-m-d',
         'end_at' => 'datetime:Y-m-d'
     ];
+
+    public function agreement()
+    {
+        return $this->belongsTo(Agreement::class, 'agreement_id', 'id');
+    }
 }

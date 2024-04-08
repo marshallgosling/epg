@@ -13,10 +13,12 @@ class ToolExporter extends Action
     protected $selector = '.export-channels';
     public $name = '批量导出';
     public $group = '';
+    public $type = 0;
 
-    public function __construct($group='')
+    public function __construct($group='', $type=0)
     {
         $this->group = $group;
+        $this->type = $type;
         parent::__construct();
     }
 
@@ -53,7 +55,7 @@ class ToolExporter extends Action
         $this->date('export_start_at', '开始日期')->required();
         $this->date('export_end_at', '结束日期');
         $this->text('export_name', '别名');
-        $this->radio('export_type', '类型')->options(ExportList::TYPES)->default(0);
+        $this->radio('export_type', '类型')->options(ExportList::TYPES)->default($this->type);
         $this->hidden('export_group', '分组')->default($this->group);
         $this->textarea('comment', '说明及注意事项')->default('只会导出的状态为正常的节目单。')->disable();
     }

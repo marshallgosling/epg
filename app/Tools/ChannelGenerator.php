@@ -2,8 +2,9 @@
 
 namespace App\Tools;
 
-
+use App\Models\Channel;
 use App\Models\ChannelPrograms;
+use App\Models\Material;
 use App\Models\Program;
 use App\Models\Temp\Template;
 use App\Models\Temp\TemplateRecords;
@@ -12,7 +13,6 @@ use App\Tools\Generator\XkcGenerator;
 use App\Tools\Generator\XkiGenerator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
 
 class ChannelGenerator
 {
@@ -40,6 +40,25 @@ class ChannelGenerator
         )->whereIn('template_id', $templates));
 
         return $templates;
+    }
+
+    public static function saveHistory($template, $channel)
+    {
+        $temp = $template->replicate()->toArray();
+
+        $temp['group_id'] = $channel->id;
+        $temp['created_at'] = $channel->air_date;
+        $temp['updated_at'] = date('Y-m-d H:i:s');
+        $t = new Template($temp);
+        $t->save();
+        $records = $template->records;
+
+        foreach($records as $record)
+        {
+            $r = $record->replicate()->toArray();
+            $r['template_id'] = $t->id;
+            TemplateRecords::create($r);
+        }
     }
 
     public static function saveTemplateState($templates) 
@@ -190,15 +209,67 @@ class ChannelGenerator
     {
         try {
             
-            // $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
-            // $d2 = strtotime($date);
-            //if($d2 > $d)
+            $d = Storage::exists($group.'.txt') ? strtotime(Storage::get($group.'.txt')) : 0;
+            $d2 = strtotime($date);
+            if($d2 > $d)
                 Storage::put($group.'.txt', $date);
         }
         catch(\Exception $e)
         {
 
         }
+    }
+
+    public static function checkMaterials($programs)
+    {
+        $unique_no = [];
+        foreach($programs as $pro)
+        {
+            $items = json_decode($pro->data);
+            if(array_key_exists('replicate', $items))
+            {
+                continue;
+            }
+            else {
+                
+                foreach($items as $item) {
+                    if(!in_array($item->unique_no, $unique_no))
+                        $unique_no[] = $item->unique_no;
+                }
+            }
+        }
+
+        return DB::table('material')->whereIn('unique_no', $unique_no)
+                            ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
+                            ->pluck('unique_no')->toArray();
+    }
+
+    public static function getLatestAirDate($group)
+    {
+        $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date','desc')->first();
+        if($channel) {
+            $c = strtotime($channel->air_date) + 86400;
+            return $c;
+        }
+
+        return false;
+    }
+
+    /**
+     * check time span perfect span is 17:00 - 17:00
+     * 
+     * @param int $timestr
+     * @return string
+     */
+    public static function checkAbnormalTimespan($timestr)
+    {
+        // $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
+        // if($perfect > $timestr) 
+        // {
+        //     if(($perfect - $timestr) < 5)
+        //         return "编单结束时间异常，请手动干预处理！";
+        // }
+        return "";//"编单已完成，请加锁并审核！";
     }
 
 }

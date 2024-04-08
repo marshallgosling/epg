@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Material\ScanFolderJob;
 use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Notification;
@@ -52,7 +53,7 @@ class materialTool extends Command
         $id = $this->argument('id') ?? "";
         $action = $this->argument('action') ?? "";
 
-        $actions = ['import','move', 'seconds','mediainfo','export'];
+        $actions = ['import','move', 'seconds','mediainfo','export','ep','folder'];
 
         if(!in_array($action, $actions)) {
             $this->error("action param's value only supports ".implode(',', $actions));
@@ -62,6 +63,26 @@ class materialTool extends Command
         $this->$action($id, $group);
 
         return 0;
+    }
+
+    private function folder($id, $action='')
+    {
+        $scan = new ScanFolderJob($id, $action);
+        $scan->handle();
+    }
+
+    private function ep()
+    {
+        $list = Material::where('channel', 'xkc')->where('ep', 1)->get();
+        foreach($list as $m)
+        {
+            if(preg_match('/(\d+)$/', $m->name, $matches))
+            {
+                $m->ep = (int) $matches[1];
+                $m->save();
+            }
+            
+        }
     }
 
     private function export($status=Material::STATUS_EMPTY, $group=false)
@@ -88,19 +109,47 @@ class materialTool extends Command
 
     private function mediainfo($id, $group=0)
     {
-        
-        $material = Material::findOrFail($id);
+        $m = Material::find($id);
+        $info = MediaInfo::getInfo($m);
+        $this->info('filepath: '.$m->filepath);
 
-        if(file_exists($material->filepath)) {
-            try{
-                $info = MediaInfo::getRawInfo($material);
-            }catch(\Exception $e)
-            {
-                $info = false;
+        print_r($info);
+        return;
+        $cache = [];
+        $list = Material::where('status', Material::STATUS_READY)->select('id','filepath','frames','size','duration')->lazy();
+
+        foreach($list as $m)
+        {
+            if(file_exists($m->filepath)) {
+                try{
+                    $info = MediaInfo::getInfo($m);
+                    //$m->md5 = $info['afd'];
+                    //$cache[$m->unique_no] = $info;
+                    if($m->frames != $info['frames']) {
+                        $this->info('update frames:'.$m->filepath.' '.$m->frames.' > '.$info['frames']);
+                        $m->frames = $info['frames'];
+                        $m->size = $info['size'];
+                        $m->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+                        if($m->isDirty())
+                        {
+                            $m->save();
+                        }
+                    }
+                    
+                    
+                }catch(\Exception $e)
+                {
+                    $info = false;
+                    $this->error('file error:'.$m->filepath.' '.$m->id);
+                }
             }
-
-            echo $info;
+            else {
+                $this->info('missing file:'.$m->filepath.' '.$m->id);
+            }
         }
+
+        //Storage::put('afd.json', json_encode($cache));
+        
     }
 
     private function seconds() {
@@ -146,37 +195,39 @@ class materialTool extends Command
         }
     }
 
-    private function import($id)
+    private function import($table='record')
     {
-        $models = Material::where('id', '>', $id)->get();
+        $models = Material::whereRaw('`channel`=? and `status`=? and `unique_no` not in (select `unique_no` from `'.$table.'`)',['xkc', Material::STATUS_READY])->orderBy('id', 'asc')->lazy();
+
         foreach($models as $model)
         {
-            $class = '\App\Models\Program';
+            $class = '\App\Models\Record';
             $program = new $class();
             
-            if(in_array($model->category, ['Entertainm', 'drama', 'movie','CanXin','cartoon']))
+            //if(in_array($model->category, ['Entertainm', 'drama', 'movie','CanXin','cartoon']))
             {
-                $class = '\App\Models\Record';
-                $program = new $class();
+                // $class = '\App\Models\Record';
+                // $program = new $class();
                 $program->episodes = $model->group;
-                if(preg_match('/(\d+)$/', $model->name, $matches))
-                {
-                    $program->ep = (int) $matches[1];
-                }
+                $program->ep = $model->ep;
+                
             }
-            
+            $program->status = Record::STATUS_READY;
             $program->name = $model->name;
             $program->unique_no = $model->unique_no;
             $program->duration = $model->duration;
             $program->category = [$model->category];
-            
-            if($class::where('unique_no', $model->unique_no)->exists())
-            {
-                continue;
-            }
-            else {
+            $program->seconds = ChannelGenerator::parseDuration($model->duration);
+        
+            $this->info("import: {$program->name} {$program->unique_no}");
+            // if($class::where('unique_no', $model->unique_no)->exists())
+            // {
+            //     continue;
+            // }
+            // else {
                 $program->save();
-            }
+            //}
+            //break;
         }
     }
 

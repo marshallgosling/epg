@@ -2,14 +2,21 @@
 
 namespace App\Console\Commands;
 
+use App\Events\Channel\CalculationEvent;
+use App\Jobs\ExcelJob;
+use App\Jobs\Material\ScanFolderJob;
+use App\Models\Agreement;
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
 use App\Models\Expiration;
 use App\Models\Material;
 use App\Models\Record;
+use App\Models\Record2;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\BvtExporter;
 use App\Tools\Exporter\ExcelWriter;
 use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
@@ -41,11 +48,60 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-
-
-        $item = Expiration::where('end_at', '<', $day)->pluck('name')->toArray();
-        print_r($item);
         
+        $ch = Channel::find($day);
+        $data = BvtExporter::collectEPG($ch);
+                BvtExporter::generateData($ch, $data);
+                BvtExporter::$file = false;
+                $xml = BvtExporter::exportXml($ch->name);
+                $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
+
+        $this->info($xml);
+        $this->info($str);
+        $this->info($xml==$str?"相同":"不相同");
+        return;
+        
+        $list = ChannelPrograms::where('channel_id', $group)->get();
+        foreach($list as $p)
+        {
+            $data = json_decode($p->data);
+            if(key_exists('replicate', $data)) continue;
+            
+            foreach($data as &$item)
+            {
+                if(is_array($item->category))
+                {
+                    //$category = Record2::where('unique_no', $item->unique_no)->value('category');
+                    $item->category = $item->category[0];
+                }
+            }
+            $p->data = json_encode($data);
+            $p->save();
+        }
+
+        return;
+        
+        
+        $channel = Channel::where('name', $group)->where('air_date', $day)->first();
+        
+        $programs = $channel->programs()->get();
+        $relations = [];
+        foreach($programs as $pro)
+        {
+            if(strpos($pro->name, '(副本)')) {
+                $name = str_replace(' (副本)','',$pro->name);
+                $pro->data = '{"replicate":'.$relations[$name].'}';
+                $this->info("get relation: {$pro->name} => {$relations[$name]}");
+                $pro->save();
+            }
+            else {
+                $relations[$pro->name] = $pro->id;
+                $this->info("setup relation: {$pro->name} => {$pro->id}");
+            }
+        }
+
+        CalculationEvent::dispatch($channel->id);
+
         return 0;
 
 

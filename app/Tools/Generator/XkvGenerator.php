@@ -135,6 +135,7 @@ class XkvGenerator implements IGenerator
             $this->addSpecialPrograms($programs, $sort);
         }
 
+        Program::clearCache();
 
         if($start_end != '') {
             $start_end .= ' - '. date('H:i:s', $this->air);
@@ -199,22 +200,20 @@ class XkvGenerator implements IGenerator
                 if($seconds > 0) {
                     
                     $this->duration += $seconds;
-                    
                     $line = ChannelGenerator::createItem($item, $p->category, date('H:i:s', $this->air));
-                    
+                    if($line['artist'] == 'null') $line['artist'] = '';
                     $this->air += $seconds;
 
                     $line['end_at'] = date('H:i:s', $this->air);
-
                     $data[] = $line;
                         
                     $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
 
-                    if($this->duration > $scheculeSeconds) 
-                    {
-                        $this->warn(" 节目编排时长已大于计划时长，因此跳出编单.");
-                        break;
-                    }
+                    // if($this->duration > $scheculeSeconds) 
+                    // {
+                    //     $this->warn(" 节目编排时长已大于计划时长.");
+                    //     //break;
+                    // }
                 }
                 else {
 

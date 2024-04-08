@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Folder;
+use App\Models\LargeFile;
 use App\Models\Material;
+use App\Models\RawFiles;
 use App\Tools\ChannelGenerator;
 use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
-use function PHPSTORM_META\elementType;
 
 class fileTool extends Command
 {
@@ -37,7 +38,7 @@ class fileTool extends Command
         $action = $this->argument('action') ?? "xml";
         
 
-        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo', 'scan']))
+        if(in_array($action, ['import', 'clean', 'daily', 'compare', 'mediainfo', 'scan', 'process']))
             $this->$action();
         
 
@@ -47,24 +48,100 @@ class fileTool extends Command
         return 0;
     }
 
+    private function process()
+    {
+        $id = $this->argument('path') ?? "";
+        $largefile = LargeFile::findOrFail($id);
+        $folders = explode(PHP_EOL, config('MEDIA_SOURCE_FOLDER', ''));
+        $filepath = Storage::path(config("aetherupload.root_dir") .'\\'. str_replace('_', '\\', $largefile->path));
+        $targetpath = $folders[$largefile->target_path].$largefile->name;
+        $this->info("filepath: ".$filepath);
+        $this->info("targetpath: ".$targetpath);
+        if(file_exists($filepath))
+        {
+            copy($filepath, $targetpath);
+
+            if(!file_exists($targetpath))
+            {
+                $largefile->status = LargeFile::STATUS_ERROR;
+                $largefile->save();
+                return;
+            }
+                @unlink($filepath);
+
+                $largefile->status = LargeFile::STATUS_READY;
+                $largefile->save();
+
+                $names = explode('.', $largefile->name);
+
+                if(count($names) != 3) {
+                    return;
+                }
+                
+                $unique_no = $names[1];
+
+                $material = Material::where('unique_no', $unique_no)->first();
+
+                if(!$material) {
+                    $material = new Material();
+                    $material->unique_no = $unique_no;
+                    $material->name = $names[0];
+                    $material->filepath = $targetpath;
+                    $material->status = Material::STATUS_EMPTY;
+                    $group = preg_replace('/(\d+)$/', "", $names[0]);
+                    $material->group = trim(trim($group), '_-');
+                    $material->channel = 'xkc';
+                }
+                    try{
+                        $info = MediaInfo::getInfo($material);
+                    }catch(\Exception $e)
+                    {
+                        $info = false;
+                    }
+                    
+                    if($info) {
+                        $status = Material::STATUS_READY;
+                        $material->frames = $info['frames'];
+                        $material->size = $info['size'];
+                        $material->duration = ChannelGenerator::parseFrames((int)$info['frames']);
+                    }
+                    else {
+                        $status = Material::STATUS_ERROR;
+                    }
+                    
+                    $material->status = $status;
+                    $material->save();
+                
+            
+            
+        }
+    }
+
     private function scan()
     {
-        $filename = $this->argument('path') ?? "";
-        $list = config('MEDIA_SOURCE_FOLDER');
-        if($list) {
-            $list = explode(PHP_EOL, $list);
+        $file = $this->argument('path') ?? "";
+        $query = Material::where('channel', 'xkv');
+        $data = [];
+        if($file) $query = $query->where('category',$file);
+        $list = $query->get();
+        foreach($list as $m)
+        {
+            if(!$m->filepath) continue;
+            $file = explode('\\', $m->filepath);
+            $filename = array_pop($file);
+            $names = explode('.', $filename);
+            array_pop($names); array_pop($names);
+            $name = implode('.', $names);
 
-            foreach($list as $item)
-            {
-                $path = $item.$filename;
-                $this->info($path);
-
-                if(file_exists($path))
-                {
-                    $this->info("found:".$path);
-                }
+            if($name != $m->name) {
+                $this->info("{$m->unique_no}: {$m->name} | {$name} 不一致");
+                $m->name = $name;
+                $m->save();
+                $data[] = $m;
             }
+            
         }
+        Storage::put('scan.txt', json_encode($data));
     }
 
     private function mediainfo()
@@ -195,34 +272,38 @@ class fileTool extends Command
     private function daily()
     {
         
-        $json = json_decode(Storage::get('result3.json'), true);
-
-        //$keys = array_keys($json['succ']);
-        $move = [];
-
-        foreach($json['succ'] as $k=>$v)
+        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\\\\MV\\\\%')->get();
+        foreach($list as $m)
         {
-            $m = Material::where('unique_no', $k)->first();
-            if($m) {
-                if($m->status == Material::STATUS_READY) {
-                    $this->info("重复 ".$k);
-                    continue;
-                }
-                $m->filepath = "Y:\\MV\\".$m->name.'.'.$k.".mxf";
-                $m->status = Material::STATUS_READY;
+            $newpath = "Y:\\MV2\\".$m->unique_no.".mxf";
+            if(copy($m->filepath, $newpath))
+            {
+                $m->filepath = $newpath;
                 $m->save();
-                //$succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
-                $move[] = $v;
-                
+                $this->info("move file: {$newpath}");
             }
+            else {
+                $this->info("fail: {$newpath} {$m->filepath}");
+            }
+            
         }
-        Storage::put("scripts.txt", implode(PHP_EOL, $move));
         
     }
 
     private function clean()
     {
-        // Clean xml files 
+        // Clean files 
+        $id = $this->argument('path') ?? "";
+        $folder = Folder::find($id);
+        $files = $folder->rawfiles()->get();
+        foreach($files as $f)
+        {
+            $path = $folder->path . $f->filename;
+            if(file_exists($path))
+            {
+                if(unlink($path)) $this->info('unlink '.$path);
+            }
+        }
     }
 
     private function loadEml($xml)

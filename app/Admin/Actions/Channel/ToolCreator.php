@@ -48,7 +48,7 @@ class ToolCreator extends Action
             $ch->uuid = (string) Str::uuid();
             $ch->version = 1;
             $ch->status = Channel::STATUS_EMPTY;
-            $ch->audit_status = Channel::AUDIT_EMPTY;
+            $ch->lock_status = Channel::LOCK_EMPTY;
             $ch->save();
             
 

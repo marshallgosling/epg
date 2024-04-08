@@ -22,8 +22,6 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, LoggerTrait;
 
-    // Channel UUID;
-    private $uuid;
     private $group = 'xkv';
     private $range;
 
@@ -51,14 +49,14 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        if($this->range == $this->group) {
-            $channels = Channel::where(['name'=>$this->group, 'status'=>Channel::STATUS_WAITING])->get();
-        }
-        else {
+        if(is_array($this->range)) {
             $channels = Channel::generate($this->group, $this->range['s'], $this->range['e']);
         }
+        else {
+            $channels = [Channel::find($this->range)];
+        }
         if(!$channels) {
-            $this->error("频道 {$this->uuid} 是空数组");
+            $this->error("频道 {$this->range} 是空数组");
             return 0;
         }
 
@@ -73,12 +71,12 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
         foreach($channels as $channel)
         {
             if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-                $this->error("频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。");
+                $this->error("频道 {$channel->name} {$channel->air_date} 编单已存在，退出自动生成，请先清空该编单数据。");
                 Notify::fireNotify(
                     $channel->name,
                     Notification::TYPE_GENERATE, 
                     "生成节目编单 {$channel->name}_{$channel->air_date} 失败. ", 
-                    "频道 {$this->uuid} 节目编单已存在，退出自动生成，请先清空该编单数据。",
+                    "频道 {$channel->name} {$channel->air_date} 编单已存在，退出自动生成，请先清空该编单数据。",
                     Notification::LEVEL_WARN
                 );
                 $error = true;
@@ -124,7 +122,7 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
             }
         }
         if($error)
-            Channel::where(['name'=>$this->uuid, 'status'=>Channel::STATUS_WAITING])->update(['status'=>Channel::STATUS_EMPTY]);
+            Channel::where(['name'=>'xkv', 'status'=>Channel::STATUS_WAITING])->update(['status'=>Channel::STATUS_EMPTY]);
     }
 
     /**

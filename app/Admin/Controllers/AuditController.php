@@ -2,17 +2,13 @@
 
 namespace App\Admin\Controllers;
 
-
+use App\Models\Audit;
 use App\Models\Channel;
-use App\Models\Material;
-use Encore\Admin\Layout\Content;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Illuminate\Support\MessageBag;
+use Encore\Admin\Widgets\Table;
 
 class AuditController extends AdminController
 {
@@ -21,41 +17,14 @@ class AuditController extends AdminController
      *
      * @var string
      */
-    protected $title = "节目单审核列表";
+    protected $title = "编单审核记录";
 
     protected $description = [
-                'index'  => "查看待审核节目单 EPG",
+                'index'  => "查看审核记录及详细结果",
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
         //        'create' => 'Create',
     ];
-
-    public function preview($id, Content $content)
-    {
-        $model = Channel::find($id);
-
-        $data = $model->programs()->get();
-        $color = 'primary';
-
-        $unique = [];
-        foreach($data as $program)
-        {
-            $json = json_decode($program->data);
-
-            if(key_exists('replicate', $json)) continue;
-
-            foreach($json as $item) {
-                if(!in_array($item->unique_no, $unique)) $unique[] = $item->unique_no;
-            }
-            
-        }
-
-        $materials = Material::whereIn('unique_no', $unique)->select('unique_no', 'status')->pluck('status', 'unique_no')->toArray();
-          
-        return $content->title(__('Preview EPG Content'))->description(__(' '))
-        ->body(view('admin.epg.audit', compact('data', 'model', 'color', 'materials')));
-    }
-
 
     /**
      * Make a grid builder.
@@ -64,27 +33,64 @@ class AuditController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Channel());
+        $grid = new Grid(new Audit());
 
-        $grid->model()->where('audit_status', Channel::AUDIT_EMPTY)->orderBy('air_date', 'asc');
+        $grid->model()->with('channel')->orderBy('audit.id', 'desc');
 
         $grid->column('id', __('ID'));
-        $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
-        $grid->column('uuid', __('Uuid'))->display(function($uuid) {
-            return '<a href="#">'.$uuid.'</a>';
-        })->hide();
-        $grid->column('air_date', __('Air date'))->sortable();
- 
-        $grid->column('status', __('Status'))->filter(Channel::STATUS)->using(Channel::STATUS)->label(['warning','danger','success','danger']);
+        $grid->column('name', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');;
 
-        $grid->column('version', __('Version'))->label('default');
+        $grid->column('air_date', __('Air date'))->display(function () {
+            return $this->channel->air_date;
+        });
+ 
+        $grid->column('status', __('Status'))->using(Audit::STATUS)->label(['warning','success','danger']);
+
+        $grid->column('reason', __('Details'))->display(function () {
+            return "展开";
+        })->expand(function($model) {
+            $data = json_decode($model->reason, true);    
+            if(!$data) return "<p>没有数据</p>";
+            $rows = [];
+            if($data['duration']['result']) {
+                if($data['material']['result']) {
+                    return "<p>没有错误</p>";
+                }
+                else {
+                    foreach($data['material']['logs'] as $item) {
+                        $rows[] = [
+                            $item['name'], $item['unique_no'], $item['duration'], '缺失物料'
+                        ];
+                    }
+                    $head = ['名称','播出编号','时长',''];
+                    return new Table($head, $rows);
+                }
+            }
+            else
+            {
+                foreach($data['duration']['logs'] as $item) {
+                    $rows[] = [
+                        $item['start_at'], $item['end_at'], $item['name'], $item['unique_no'], $item['duration'], $item['duration2'], ''
+                    ];
+                }
+                $head = ['开始时间','结束时间','名称','播出编号','原时长','调整时长',''];
+                return new Table($head, $rows);
+            }
+        });
+
+        $grid->column('comment', __('Comment'));
         
-        //$grid->column('audit_status', __('Audit status'))->filter(Channel::AUDIT)->using(Channel::AUDIT)->label(['info','success','danger']);;
-        
-        $grid->column('updated_at', __('Updated at'))->hide();
+        $grid->column('created_at', __('Created at'))->sortable()->hide();
+        $grid->column('updated_at', __('Updated at'))->sortable();
+
+        $grid->disableCreateButton();
 
         $grid->batchActions(function (Grid\Tools\BatchActions $actions) {
             
+            $actions->disableDelete();
+        });
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
         });
 
@@ -93,10 +99,14 @@ class AuditController extends AdminController
             
         });
 
-        $grid->disableCreateButton();
-        //$grid->disableBatchActions();
-    
-        $grid->disableActions();
+        $grid->filter(function(Grid\Filter $filter) {
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->in('name', __('Group'))->checkbox(Channel::GROUPS);
+            });
+            $filter->column(6, function (Grid\Filter $filter) {
+                $filter->equal('channel_id', __('Channel ID'));
+            });
+        });
 
         return $grid;
     }
@@ -109,19 +119,18 @@ class AuditController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Channel::findOrFail($id));
+        $show = new Show(Audit::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('uuid', __('Uuid'));
-        $show->field('air_date', __('Air date'));
-        $show->field('name', __('Name'));
+        
+        $show->field('name', __('Group'))->using(Channel::GROUPS);
+        $show->field('channel_id', __('Channel'));
         $show->field('status', __('Status'))->using(Channel::STATUS);
+        $show->field('admin', __('Reviewer'));
         $show->field('comment', __('Comment'));
-        $show->field('version', __('Version'));
-        $show->field('reviewer', __('Reviewer'));
-        $show->field('audit_status', __('Audit status'))->using(Channel::AUDIT);
-        $show->field('audit_date', __('Audit date'));
-        $show->field('distribution_date', __('Distribution date'));
+        
+        $show->field('reason', __('Details'));
+        
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -135,53 +144,19 @@ class AuditController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Channel());
+        $form = new Form(new Audit());
 
-        $form->hidden('name', __('Name'))->default('channelv');
-        $form->text('uuid', __('Uuid'))->default((string) Str::uuid())->required();
-        $form->date('air_date', __('Air date'))->required();      
-        $form->radio('status', __('Status'))->options(Channel::STATUS)->required();
-        $form->text('version', __('Version'))->default('1')->required();
-
+        $form->radio('name', __('Group'))->options(Channel::GROUPS);
+        $form->text('channel_id', __('Channel'));
+        $form->radio('status', __('Status'))->options(Audit::STATUS)->required();
+        
         $form->divider(__('AuditInfo'));
-        $form->text('reviewer', __('Reviewer'));
-        $form->radio('audit_status', __('Audit status'))->options(Channel::AUDIT)->required();
-        $form->date('audit_date', __('Audit date'));
-        $form->text('comment', __('Comment'));
+        $form->text('admin', __('Reviewer'));
+        $form->textarea('comment', __('Comment'));
+        
+        //$form->date('audit_date', __('Audit date'));
+        $form->json('reason', __('Details'));
 
-        $form->date('distribution_date', __('Distribution date'));
-
-        $form->saving(function(Form $form) {
-
-            if($form->isCreating()) {
-                $error = new MessageBag([
-                    'title'   => '创建节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
-                ]);
-
-                //$form->name = 'channelv';
-    
-                if(Channel::where('air_date', $form->air_date)->exists())
-                {
-                    return back()->with(compact('error'));
-                }
-            }
-
-            if($form->isEditing()) {
-                $error = new MessageBag([
-                    'title'   => '修改节目单失败',
-                    'message' => '该日期 '. $form->air_date.' 节目单已存在。',
-                ]);
-    
-                if(Channel::where('air_date', $form->air_date)->where('id','<>',$form->model()->id)->exists())
-                {
-                    return back()->with(compact('error'));
-                }
-            }
-
-            //return $form;
-            
-        });
 
         return $form;
     }

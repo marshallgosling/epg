@@ -60,7 +60,8 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
         //                                 ->orderBy('air_date')->get();
         //$blacklist = BlackList::get()->pluck('keyword');
         $model = BlackList::find($this->id);
-
+        if(!$model) return;
+        
         $action = $this->action;
 
         if(in_array($action, ['scan', 'apply']))
@@ -82,45 +83,21 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         $data = json_decode($model->data);
 
-        $hasdata = array_key_exists('xkv', $data) && array_key_exists('program', $data);
+        if(!$data) $hasdata = false;
+        else $hasdata = array_key_exists('xkv', $data) && array_key_exists('program', $data);
        
         if(!$hasdata) {
             $model->status = BlackList::STATUS_READY;
             $model->save();
 
             Notify::fireNotify(
-                'all',
+                'xkv',
                 Notification::TYPE_BLACKLIST, 
                 "应用 {$model->keyword} 完成. ", 
                 "数据为空，直接退出。",
                 Notification::LEVEL_WARN
             );
             return;
-        }
-
-        foreach($data->xkv as $item)
-        {
-            foreach($item->programs as $pro)
-            {
-                $program = ChannelPrograms::find($pro->id);
-
-                $json = json_decode($program->data, true);
-
-                foreach($pro->items as $line)
-                {
-                    $old = $json[$line['offset']];
-
-                    $new = Program::findRandom($old['category'], 3600);
-                    $l = ChannelGenerator::createItem($new, $old['category'], $old['start_at']);
-                    $json[$line['offset']] = $l;
-                }
-
-                $program->data = json_encode($json);
-                $program->save();
-
-            }
-
-            CalculationEvent::dispatch($item->id, 0);
         }
 
         $ids = [];
@@ -133,13 +110,42 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
             Program::whereIn('id', $ids)->update(['black' => $model->id]);
         }
 
+        foreach($data->xkv as $item)
+        {
+            $channel = Channel::find($item->id);
+            if(!$channel) continue;
+            if($channel->lock_status == Channel::LOCK_ENABLE) continue;
+
+            foreach($item->programs as $pro)
+            {
+                $program = ChannelPrograms::find($pro->id);
+
+                $json = json_decode($program->data, true);
+
+                foreach($pro->items as $line)
+                {
+                    $old = $json[$line->offset];
+
+                    $new = Program::findRandom($old['category'], 3600);
+                    $l = ChannelGenerator::createItem($new, $old['category'], $old['start_at']);
+                    $json[$line->offset] = $l;
+                }
+
+                $program->data = json_encode($json);
+                $program->save();
+
+            }
+
+            CalculationEvent::dispatch($item->id, 0);
+        }
+
         $data->applied = date('Y/m/d H:i:s');
         $model->status = BlackList::STATUS_READY;
         $model->data = json_encode($data);
         $model->save();
 
         Notify::fireNotify(
-            'all',
+            'xkv',
             Notification::TYPE_BLACKLIST, 
             "应用黑名单 {$model->keyword} 完成. "
         );
@@ -148,25 +154,26 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
     private function scan($model)
     {
-        $xkvs = Channel::where('air_date', '>', date('Y/m/d'))->with('programs')->select('id','air_date','name')->get();
+        $xkvs = Channel::where('air_date', '>', date('Y/m/d'))->where('name','xkv')->with('programs')->select('id','air_date','name')->get();
         $data = ['xkv'=>[],'program'=>[],'applied'=>''];
         $property = $model->group;
 
         if($xkvs)foreach($xkvs as $xkv)
         {
-            $programs = $xkv->programs();
+            $programs = $xkv->programs()->get();
 
             $_channel = ["id"=>$xkv->id, "date"=>$xkv->air_date, "group"=>$xkv->name, 'programs'=>[]];
 
             foreach($programs as $pro)
             {
                 $items = json_decode($pro->data, true);
+                if(array_key_exists('replicate', $items)) continue;
 
                 $_program = ["id"=>$pro->id,"name"=>$pro->name,"start_at"=>$pro->start_at, 'items'=>[]];
                 
                 foreach($items as $idx=>$item) {
                
-                    if(!array_key_exists($property, $item) ) continue;
+                    if(!array_key_exists($property, $item)) continue;
 
                         if(Str::contains($item[$property], $model->keyword))
                         {
@@ -175,15 +182,15 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
                         }
                     
                 }
-
-                $_channel['programs'] = $_program;
+                if(count($_program['items'])) $_channel['programs'][] = $_program;
             }
 
             $data[$xkv->name][] = $_channel;
         }
 
  
-        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')->select('id', $property)->get();
+        $programs = Program::where($property, 'like', '%'.$model->keyword.'%')
+            ->where('black', 0)->select('id', $property)->get();
         
         if($programs)foreach($programs as $pro)
         {
@@ -215,11 +222,11 @@ class BlackListJob implements ShouldQueue, ShouldBeUnique
 
         $model->status = BlackList::STATUS_READY;
         $model->data = json_encode($data);
-        $model->scaned_at = date('Y/m/d H:i:s');
+        $model->scaned_at = date('Y-m-d H:i:s');
         $model->save();
 
         Notify::fireNotify(
-            'all',
+            'xkv',
             Notification::TYPE_BLACKLIST, 
             "扫描黑名单 {$model->keyword} 完成. "
         );

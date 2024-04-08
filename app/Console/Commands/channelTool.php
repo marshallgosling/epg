@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
+use App\Jobs\AuditEpgJob;
 use App\Models\Category;
 use App\Models\ChannelPrograms;
 use App\Models\Channel;
@@ -78,29 +79,43 @@ class channelTool extends Command
         
     }
 
-    private function fixer($id)
+    private function fixer($id, $e)
     {
-        $programs = ChannelPrograms::where('channel_id', $id)->get();
-
-        foreach($programs as $p) {
-
-            $data = json_decode($p->data, true);
-            $list = [];
-            for($i=0;$i<100;$i++)
-            {
-                if(array_key_exists($i, $data))
-                {
-                    $list[] = $data[$i];
-                }
-                else {
-                    break;
-                }
-            }
-
-            if(array_key_exists('replicate', $data)) continue;
-            $p->data = json_encode($list);
-            $p->save();
+        
+        $channels = Channel::where('status', Channel::STATUS_READY)->lazy();
+        foreach($channels as $channel)
+        {
+            $span = explode('-', $channel->start_end);
+            if(count($span)<2) continue;
+            $sec = $span[1];
+            if(!preg_match('/\d{2}:\d{2}:\d{2}/', $sec, $m)) continue;
+            $this->info("span ".$sec);
+            $start = strtotime('2024-03-01'.$sec);
+            $channel->comment = ChannelGenerator::checkAbnormalTimespan($start);
+            $channel->save();
         }
+        
+        // $programs = ChannelPrograms::where('channel_id', $id)->get();
+
+        // foreach($programs as $p) {
+
+        //     $data = json_decode($p->data, true);
+        //     $list = [];
+        //     for($i=0;$i<100;$i++)
+        //     {
+        //         if(array_key_exists($i, $data))
+        //         {
+        //             $list[] = $data[$i];
+        //         }
+        //         else {
+        //             break;
+        //         }
+        //     }
+
+        //     if(array_key_exists('replicate', $data)) continue;
+        //     $p->data = json_encode($list);
+        //     $p->save();
+        // }
         
         
         // $channels = Channel::where('status', Channel::STATUS_READY)->where('name', $id)->get();
@@ -152,69 +167,14 @@ class channelTool extends Command
 
     private function export($id, $pid)
     {
-        BvtExporter::generate($id);
-        BvtExporter::exportXml(true);
+        $channel = Channel::findOrFail($id);
+
+        $data = BvtExporter::collectEPG($channel);
+
+        BvtExporter::generateData($channel, $data);
+        
+        //BvtExporter::exportXml($channel->name);
     }
 
-    private function generate($id, $group='default')
-    {
     
-        $channel = Channel::where('id', $id)->first();
-
-        if(!$channel) {
-            $this->error("Channel is null.");
-            return 0;
-        }
-
-        if(ChannelPrograms::where('channel_id', $channel->id)->exists()) {
-            $this->error("Programs exist.");
-            return 0;
-        }
-
-        // $generator = new ChannelGenerator($channel->name);
-        // $generator->makeCopyTemplate();
-        // $generator->loadTemplate();
-
-        if($channel->name == 'xkv') $generator = new XkvGenerator($channel->name);
-        else $generator = new XkcGenerator($channel->name);
-
-        $generator->loadTemplate();
-        
-        try {
-            $start_end = $generator->generate($channel);
-
-        }catch(GenerationException $e)
-        {
-            $this->error($e->getMessage());
-            Notify::fireNotify(
-                $channel->name,
-                Notification::TYPE_GENERATE, 
-                "生成节目编单 {$channel->name}_{$channel->air_date} 数据失败. ", 
-                "详细错误:".$e->getMessage(), 'error'
-            );
-            $channel->start_end = '';
-            $channel->status = Channel::STATUS_ERROR;
-            $channel->save();
-            return;
-        }
-        
-        //$generator->saveTemplateState();
-
-            $channel->start_end = $start_end;
-            $channel->status = Channel::STATUS_READY;
-            $channel->save();
-
-        $this->info("Generate programs date: {$channel->air_date} succeed. ");
-        
-        Notify::fireNotify(
-            $channel->name,
-            Notification::TYPE_GENERATE, 
-            "生成节目编单 {$channel->name}_{$channel->air_date} 数据成功. ", 
-            "频道节目时间 $start_end"
-        );
-
-        //$generator->cleanTempData();
-
-    }
-
 }

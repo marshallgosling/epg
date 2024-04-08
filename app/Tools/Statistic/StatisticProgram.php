@@ -25,7 +25,6 @@ class StatisticProgram implements IStatistic
     ];
 
     public function load($channel) {
-        //$this->channels = Channel::where('audit_status', Channel::AUDIT_PASS)->with('programs')->get();
         $this->channel = $channel;
     }
 
@@ -94,9 +93,11 @@ class StatisticProgram implements IStatistic
     public function store($force=false)
     {
         if($force) {
-            Statistic::where('date', $this->channel->air_date)->delete();
+            Statistic::where('date', $this->channel->air_date)->where('group', $this->channel->name)->delete();
+            Statistic::insert($this->data);
         }
-        Statistic::upsert($this->data, ['date', 'column', 'group', 'model', 'type'], ['value', 'comment', 'category']);
+        else
+            Statistic::upsert($this->data, ['date', 'column', 'group', 'model', 'type'], ['value', 'comment', 'category']);
     }
 
     public function print()

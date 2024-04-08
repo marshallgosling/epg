@@ -220,12 +220,12 @@ TMP;
         $view = 'admin.program.test';
         $channel = new Channel();
         $channel->id = 0;
-        $channel->audit_status = Channel::AUDIT_EMPTY;
+        $channel->lock_status = Channel::LOCK_EMPTY;
         $channel->status = Channel::STATUS_READY;
         $channel->name = 'test';
         $channel->air_date = '2024-02-08';
 
-        if($channel->audit_status == Channel::AUDIT_PASS) {
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
         }

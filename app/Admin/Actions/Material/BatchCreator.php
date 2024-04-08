@@ -2,71 +2,81 @@
 
 namespace App\Admin\Actions\Material;
 
+use App\Console\Commands\materialTool;
 use App\Events\CategoryRelationEvent;
 use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Material;
 use App\Models\Program;
 use App\Tools\ChannelGenerator;
-use Encore\Admin\Actions\Action;
+use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Jobs\Material\MediaInfoJob;
+use App\Models\Folder;
+use App\Models\RawFiles;
 
-class BatchCreator extends Action
+class BatchCreator extends BatchAction
 {
-    public $name = '批量创建';
+    public $name = '批量建立物料信息';
     protected $selector = '.batch-creator';
-    
 
-    public function handle(Request $request)
+    public function handle(Collection $collection, Request $request)
     {
         $category = $request->get('category');
         $channel = $request->get('channel');
-        //$unique = $request->get('unique_no');
-        $group = $request->get('name');
-        $total = (int)$request->get('total');
-        $st = (int)$request->get('st');
-        $duration = $request->get('duration');
-        $frames = ChannelGenerator::parseDuration($duration) * config("FRAMES", 25);
-        $code = 'XK'.Str::random(12);
+        $group = $request->get('episodes');
+        $duration = '00:00:00:00';
+        $frames = 0;
         $status = Material::STATUS_EMPTY;
-
-        for($i=0;$i<$total;$i++)
+        $folder = false;
+        foreach($collection as $model)
         {
-            $ep = $i+$st;
-            $unique_no = Str::upper($code.$this->ep($ep));
-            $name = $group.' '.$ep;
-            Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status'));
+            if($model->status != RawFiles::STATUS_READY) continue;
+            if(!$folder) $folder = Folder::where('id', $model->folder_id)->value('path');
+            $unique_no = empty($model->unique_no) ? 'XK'.Str::upper(Str::random(12)) : $model->unique_no;
+            $name = $model->name;
+            $filepath = $folder . $model->filename;
+            $comment = '';
+            if(empty($model->unique_no)) {
+                //$filepath = str_replace('.mxf', $unique_no.'.mxf', $filepath);
+                //rename($folder . $model->filename, $filepath);
+                $comment = 'rename';
+            }
+            
+            $ep = 1;
+            if(preg_match('/(\d+)$/', $name, $matches))
+            {
+                $ep = (int) $matches[1];
+                if(!$group) {
+                    $group = preg_replace('/(\d+)$/', "", $name);
+                    $group = trim(trim($group), '_-');
+                }
+            }
+            $m = Material::where('unique_no', $unique_no)->first();
+            if(!$m) {
+                $m = new Material(compact('channel', 'group', 'name', 'unique_no', 'filepath', 'category','duration','frames','status','comment','ep'));
+                $m->save();
+            }
+            $model->delete();
+            MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
         }
         
-        return $this->response()->success(__('BatchCreator success message.'))->refresh();
-    }
-
-    private function ep($idx)
-    {
-        return $idx>99?$idx:($idx>9?'0'.$idx:'00'.$idx);
+        return $this->response()->success($this->name.'成功')->refresh();
     }
 
     public function form()
     {
-        $this->radio('channel', __('Channel'))->options(['xkc'=>'星空中国'])->default('xkc');
+        $this->select('channel', __('Channel'))->options(Channel::GROUPS)->default('xkc');
         $this->select('category', __('Category'))->options(Category::getXkcCategories())->required();
-        //$this->text('unique_no', __('Unique no'))->placeholder('首集播出编号，后续集数自动累加');
-
-        $this->text('name', __('Episodes'))->placeholder('剧集名称，电影无需批量导入')->required();
-        $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号')->required();
-        $this->text('total', __('集数'))->placeholder('连续创建的集数')->required();
-        $this->text('duration', __('Duration'))->placeholder('时长')->required();
-        //$this->file('excel', __('Excel'))->placeholder('通过文件导入');
-        //$this->text('group', __('Group'));
-
-        $this->textarea("help", "注意说明")->default('批量添加节目内容'.PHP_EOL.'优先为根据excel文件导入，也可以通过填写必要数据生成。')->disable();
+        $this->text('episodes', __('Episodes'))->placeholder('剧集名称(可选)');
+        $this->textarea("help", "注意说明")->default('批量添加物料记录'.PHP_EOL.'根据文件列表，系统自动进行识别生成(自动生成播出编号)。')->disable();
     }
 
     public function html()
     {
-        return "<a class='batch-creator btn btn-sm btn-success'><i class='fa fa-info-circle'></i>{$this->name}</a>";
+        return "<a class='batch-creator btn btn-sm btn-success'><i class='fa fa-plus'></i> {$this->name}</a>";
     }
 
 }
