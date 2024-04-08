@@ -29,7 +29,7 @@ class ToolCreator extends Action
         $category = [$request->get('category')];
         $channel = $request->get('channel');
         $unique = $request->get('code');
-        $group = $request->get('name');
+        $episodes = $request->get('name');
         $total = (int)$request->get('total');
         $st = (int)$request->get('st');
         $duration = $request->get('name', '00:15:00:00');
@@ -57,8 +57,8 @@ class ToolCreator extends Action
         {
             $ep = $i+$st;
             $unique_no = $code.$this->ep($ep);
-            $name = $group.' '.$ep;
-            $class::create(compact('name', 'unique_no', 'category', 'duration','seconds','ep','status','created_at','updated_at'));
+            $name = $episodes.' '.$ep;
+            $class::create(compact('name', 'unique_no','episodes','category', 'duration','seconds','ep','status','created_at','updated_at'));
         }
         
         return $this->response()->success(__('BatchCreator success message.'))->refresh();
@@ -79,10 +79,7 @@ class ToolCreator extends Action
         $this->text('st', __('起始集号'))->default(1)->placeholder('起始集号')->required();
         $this->text('total', __('集数'))->placeholder('连续创建的集数')->required();
         $this->hidden('channel')->default($this->group);
-        $this->text('duration', __('Duration'))->placeholder('时长: 00:15:00:00')->required();
-        //$this->file('excel', __('Excel'))->placeholder('通过文件导入');
-        //$this->textarea('filelist', __('Filepath'));
-        
+        $this->text('duration', __('Duration'))->placeholder('时长: 00:15:00:00')->inputmask(['mask' => '99:99:99:99'])->required();
 
         $this->textarea("help", "注意说明")->default('批量添加节目记录'.PHP_EOL.'系统自动创建节目播出编号。')->disable();
     }
