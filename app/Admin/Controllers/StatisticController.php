@@ -29,7 +29,7 @@ class StatisticController extends AdminController
         $grid = new Grid(new Statistic());
 
         $grid->column('id', __('Id'));
-        $grid->column('group', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
+        $grid->column('group', __('Group'))->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('model', __('Model'));
         $grid->column('column', __('Column'));
         $grid->column('type', __('Type'))->using(Statistic::TYPES)->label();
