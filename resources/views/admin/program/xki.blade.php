@@ -401,7 +401,7 @@
 
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
-        if(repo.black) {
+        if(repo.black&&repo.black>0) {
             toastr.error("该节目以上黑名单");
         }
         if(repo.category) {
