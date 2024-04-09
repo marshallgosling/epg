@@ -329,7 +329,7 @@
                 reCalculate(selectedIndex);
             }
             else {
-                if(selectedItem.black) {
+                if(selectedItem.black && selectedItem.black>0) {
                     toastr.error("该艺人以上黑名单，不能使用");
                     return;
                 }
