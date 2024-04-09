@@ -316,9 +316,13 @@ class Record extends Model
 
     public static function findUnique($no)
     {
-        return Record::where('records.unique_no', $no)
+        $item = Record::where('records.unique_no', $no)
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
             ->select("records.unique_no","records.name","records.episodes","records.black", "material.duration","material.frames")->first();
+        if(!$item) {
+            $item = Record::where('unique_no', $no)->select('unique_no', 'name', 'episodes', 'black', 'duration')->first();
+        }
+        return $item;
     }
 
     public static function getTotal($key) {

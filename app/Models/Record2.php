@@ -299,9 +299,13 @@ class Record2 extends Model
 
     public static function findUnique($no)
     {
-        return Record2::where('record2.unique_no', $no)
-            ->join('material', 'record2.unique_no', '=', 'material.unique_no')
-            ->select("record2.unique_no","record2.name","record2.episodes","material.duration","material.frames")->first();
+        $item = Record2::where('record2.unique_no', $no)
+                    ->join('material', 'record2.unique_no', '=', 'material.unique_no')
+                    ->select("record2.unique_no","record2.name","record2.episodes","material.duration","material.frames")->first();
+        if(!$item) {
+            $item = Record2::where('unique_no', $no)->select('unique_no', 'name', 'episodes', 'black', 'duration')->first();
+        }
+        return $item;  
     }
 
     public static function getTotal($key) {
