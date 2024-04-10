@@ -155,7 +155,7 @@ class TempController extends AdminController
 
             $filter->equal('group_id', __('Air date'))->select(
                 DB::table('channel')->whereIn('name', ['xkc','xki'])
-                    ->selectRaw("concat(name, ' ', air_date) as name, id")
+                    ->selectRaw("concat(name, ' ', air_date) as name, id")->orderBy('id', 'desc')->limit(50)
                     ->pluck('name', 'id')->toArray()
             );
             //$filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
