@@ -342,7 +342,7 @@
                     {
                         item = items[i];
                         tr = '';
-                        if(item.black) tr = ' danger';
+                        if(item.black&&item.black>0) tr = ' danger';
                         if(item.artist==null) item.artist='';
                         html += '<tr class="search-item'+tr+'" onclick="selectProgram('+idx+')"><td>'+(idx+1)+'</'+'td><td>'+item.unique_no+'</'+'td><td>'+item.name+'</'+'td><td>'+item.artist+'</'+'td><td>'+item.duration+'</'+'td><td>'+item.category+'</'+'td></tr>';
                         idx ++;
@@ -488,7 +488,7 @@
 
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
-        if(repo.black) {
+        if(repo.black&&repo.black>0) {
             toastr.error("该节目已上黑名单");
         }
         if(repo.category) {
