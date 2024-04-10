@@ -241,9 +241,9 @@ class Record2 extends Model
 
         self::$bumper = [];
         self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('records.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 120)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 120)->where('seconds','<=', 300)->select('records.unique_no')->pluck('unique_no')->toArray();
         self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('records.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('records.unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function findBumper($key) {
@@ -259,7 +259,7 @@ class Record2 extends Model
 
         $program = Record2::where('record2.unique_no', $id)
             ->join('material', 'record2.unique_no', '=', 'material.unique_no')
-            ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.black", "material.duration", "material.frames")->first();
+            ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.category", "record2.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findBumper($key);
         else return $program;
@@ -299,9 +299,13 @@ class Record2 extends Model
 
     public static function findUnique($no)
     {
-        return Record2::where('record2.unique_no', $no)
-            ->join('material', 'record2.unique_no', '=', 'material.unique_no')
-            ->select("record2.unique_no","record2.name","record2.episodes","material.duration","material.frames")->first();
+        $item = Record2::where('record2.unique_no', $no)
+                    ->join('material', 'record2.unique_no', '=', 'material.unique_no')
+                    ->select("record2.unique_no","record2.name","record2.episodes","material.duration","material.frames")->first();
+        if(!$item) {
+            $item = Record2::where('unique_no', $no)->select('unique_no', 'name', 'episodes', 'black', 'duration')->first();
+        }
+        return $item;  
     }
 
     public static function getTotal($key) {

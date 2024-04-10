@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\CompareLink;
 use App\Admin\Actions\Program\BatchModify;
+use App\Admin\Actions\Program\BatchModifyEpisodes;
 use App\Events\CategoryRelationEvent;
 use App\Models\Record2 as Record;
 use App\Models\Category;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use App\Admin\Actions\Program\Record2Material;
 use App\Admin\Actions\Program\BatchRecord2Delete;
+use App\Admin\Actions\Program\ToolCreator;
 
 class XkiProgramController extends AdminController
 {
@@ -43,7 +45,7 @@ class XkiProgramController extends AdminController
         
         $grid->model()->orderBy('id', 'desc');
         //$grid->column('id', __('Id'));
-        $grid->column('unique_no', __('Unique no'))->width(200)->modal(Record2Material::class);
+        $grid->column('unique_no', __('Unique no'))->width(200)->modal('素材信息', Record2Material::class);
         $grid->column('status', __('Status'))->display(function($status) {
             return $status == Record::STATUS_READY ? '<i class="fa fa-check text-green"></i>':'<i class="fa fa-close text-red"></i> ';
         });
@@ -93,7 +95,9 @@ class XkiProgramController extends AdminController
 
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new BatchModify);
+            $tools->append(new BatchModifyEpisodes);
             $tools->append(new CompareLink('xki'));
+            $tools->append(new ToolCreator('xki'));
         });
 
         return $grid;

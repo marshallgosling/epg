@@ -3,12 +3,13 @@
 namespace App\Admin\Actions\Channel;
 
 use App\Jobs\ExcelJob;
+use App\Models\Channel;
 use App\Models\ExportList;
 use App\Models\TemplatePrograms;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 
-class ToolExporter extends Action
+class ToolEPGExporter extends Action
 {
     protected $selector = '.export-channels';
     public $name = '批量导出';
@@ -28,7 +29,7 @@ class ToolExporter extends Action
         $end_at = $request->get('export_end_at', $start_at);
         $name = $request->get('export_name', "{$start_at}-{$end_at}");
         $group = $request->get('export_group', 'xkc');
-        $type = $request->get('export_type', 0);
+        $type = $request->get('export_type', 1);
         $s = strtotime($start_at);
         $e = strtotime($end_at);
 
@@ -52,11 +53,12 @@ class ToolExporter extends Action
 
     public function form()
     {
-        $this->date('export_start_at', '开始日期')->required();
-        $this->date('export_end_at', '结束日期');
+        $this->select('export_group', '频道')->options(Channel::GROUPS);
+        $this->datetime('export_start_at', '开始日期时间')->required();
+        $this->datetime('export_end_at', '结束日期时间');
         $this->text('export_name', '别名');
-        $this->radio('export_type', '类型')->options(ExportList::TYPES)->default($this->type);
-        $this->hidden('export_group', '分组')->default($this->group);
+        $this->radio('export_type', '类型')->options([1=>'EPG'])->default($this->type);
+        
         $this->textarea('comment', '说明及注意事项')->default('只会导出的状态为正常的节目单。')->disable();
     }
 

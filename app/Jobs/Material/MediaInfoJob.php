@@ -79,39 +79,58 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
 
         $is_today = $channel->air_dat == date('Y-m-d');
 
-        if($channel->status == Channel::STATUS_READY && $channel->lock_status == Channel::LOCK_ENABLE)
+        if($channel->lock_status != Channel::LOCK_ENABLE)
         {
-            $air = date('Y-m-d', strtotime($channel->air_date));
-            if(!Storage::disk('xml')->exists($channel->name.'_'.$air.'.xml'))
-                return;
-            $file = Storage::disk('xml')->get($channel->name.'_'.$air.'.xml');
-            $items = XmlReader::parseXml($file);
-            
-            $fail = config('IGNORE_MATERIAL_CHECK', 'false') == 'true' ? false : DB::table('material')->whereIn('unique_no', array_unique($items))
-                        ->where('status', '<>', Material::STATUS_READY)->select(['name','unique_no'])
-                        ->pluck('name', 'unique_no')->toArray();
-                if($fail)
-                {
-                    Notify::fireNotify($channel->name, Notification::TYPE_XML, '分发格非串联单错误', 
-                        '串联单'.$channel->air_date.'存在物料状态不可用的节目内容，'.implode(',', array_values($fail)),
-                        Notification::LEVEL_ERROR);
-                    //$this->warn("error {$ch->name} {$air}");
-                }
-                else
-                {
-                    $channel->distribution_date = date('Y-m-d H:i:s');
-                    $channel->save();
-                    //$this->info("save distribution date {$ch->name} {$air}");
+            Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单失败', 
+                '串联单'.$channel->air_date.'为“未锁定”状态', Notification::LEVEL_ERROR);
+            return;
+        }
 
-                    if($is_today) {
-                        $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
-                        if($path) file_put_contents($path, $file);
-                    }
-                    $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$air.'.xml': false; 
-                    
-                    if($path)
-                        file_put_contents($path, $file);
+        if($channel->status == Channel::STATUS_READY || $channel->status == Channel::STATUS_DISTRIBUTE)
+        {
+            $ignore = config('IGNORE_DISTRIBUTION_CHECK', 'false');
+            
+            $result = $ignore == 'false' ? BvtExporter::checkXml($channel) : 'equal';
+            if($result != 'equal')
+            {
+                if(strpos($channel->comment, "分发串联单失败。") == FALSE)
+                {
+                    $channel->comment = "分发串联单失败。".$channel->comment;
+                    $channel->save();
                 }
+
+                Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单错误', 
+                    "分发串联单失败。原因：校对失败，存在数据差异。可重新尝试加“锁”。", Notification::LEVEL_ERROR);
+            }
+            else
+            {
+                $file = Storage::disk('xml')->get($channel->name.'_'.$channel->air_date.'.xml');
+                if($is_today) {
+                    $path = config('BVT_LIVE_PATH', false) ? config('BVT_LIVE_PATH').'\\'.BvtExporter::NAMES[$channel->name].'\\'.BvtExporter::NAMES[$channel->name].'.xml' : false;
+                    if($path) file_put_contents($path, $file);
+                }
+                $path = config('BVT_XML_PATH', false) ? config('BVT_XML_PATH').'\\'.BvtExporter::NAMES[$channel->name].'_'.$channel->air_date.'.xml': false; 
+                    
+                if($path && file_put_contents($path, $file)) {
+                    $channel->distribution_date = date('Y-m-d H:i:s');
+                    $channel->status = Channel::STATUS_DISTRIBUTE;
+                    $channel->comment = str_replace('分发串联单失败。','',$channel->comment);
+                    $channel->save();
+
+                    Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单成功', 
+                        '串联单'.$channel->air_date.'分发成功',  Notification::LEVEL_INFO);
+                }
+                else {
+                    if(strpos($channel->comment, "分发串联单失败。") == FALSE)
+                    {
+                        $channel->comment = "分发串联单失败。".$channel->comment;
+                        $channel->save();
+                    }
+                    Notify::fireNotify($channel->name, Notification::TYPE_DISTRIBUTION, '分发格非串联单失败', 
+                        '串联单'.$channel->air_date.'无法保存: '.$path, Notification::LEVEL_ERROR);
+                }
+                        
+            }
         }
     }
 
@@ -159,7 +178,9 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
             if($folders[$largefile->target_path] == 'Y:\\MV2\\')
             {
                 $targetpath = $folders[$largefile->target_path].$unique_no.'.mxf';
+                $channel = 'xkv';
             }
+            else $channel = 'xkc';
 
             if(!$material) {
                 $material = new Material();
@@ -169,7 +190,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                 $material->status = Material::STATUS_EMPTY;
                 $group = preg_replace('/(\d+)$/', "", $names[0]);
                 $material->group = trim(trim($group), '_-');
-                $material->channel = 'xkc';
+                $material->channel = $channel;
                 $material->save();
             }
 
@@ -198,6 +219,18 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         if(!$material) return;
         $unique_no = $material->unique_no;
         $filepath = $material->filepath;
+        $comment = $material->comment;
+        if($comment == 'rename')
+        {
+            $r = rename($filepath, str_replace('.mxf', '.'.$unique_no.'.mxf', $filepath));
+            if(!$r) {
+                return;
+            }
+            
+            $material->comment = '';
+            $filepath = str_replace('.mxf', '.'.$unique_no.'.mxf', $filepath);
+        }
+
         if(empty($filepath))
         {
             $filepath = MediaInfo::scanPath($material->name.'.'.$unique_no.'.mxf');
@@ -207,7 +240,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
             $material->filepath = $filepath;
         }
 
-        if(file_exists($material->filepath)) {
+        if(file_exists($filepath)) {
 
             try{
                 $info = MediaInfo::getInfo($material);
@@ -244,7 +277,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
                 foreach(['records', 'record2', 'program'] as $table)
                     DB::table($table)->where('unique_no', $unique_no)->update(['status'=>$status]);
 
-                Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件: {$material->filepath} 不可读。");
+                Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件: {$material->filepath} 不可读。", Notification::LEVEL_ERROR);
             
             }
             
@@ -252,7 +285,7 @@ class MediaInfoJob implements ShouldQueue, ShouldBeUnique
         else {
             foreach(['records', 'record2', 'program','material'] as $table)
                 DB::table($table)->where('unique_no', $unique_no)->update(['status'=>Material::STATUS_EMPTY]);
-            Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件不存在。");
+            Notify::fireNotify($material->channel, Notification::TYPE_MATERIAL, "同步素材信息失败", "播出号:{$material->unique_no}，媒体文件不存在。", Notification::LEVEL_ERROR);
             
         }
         

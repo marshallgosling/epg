@@ -45,6 +45,13 @@ class BatchImportor extends BatchAction
                 $program->episodes = $model->group;
                 $program->ep = (int) $model->ep;
                 if($model->comment) $program->name2 = $model->comment;
+
+                if(preg_match('/(\d+)$/', $model->name, $matches))
+                {
+                    $program->ep = (int) $matches[1];
+                    //$group = preg_replace('/(\d+)$/', "", $model->name);
+                    //$group = trim(trim($group), '_-');
+                }
             }
             
             $program->name = $model->name;

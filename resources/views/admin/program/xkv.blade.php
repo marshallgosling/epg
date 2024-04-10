@@ -22,7 +22,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             @foreach($list as $item) 
-                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top">{{@substr($item->start_at, 11)}} -- {{@substr($item->end_at, 11)}} {{$item->name}}</a></li>
+                            <li class="{{$item->id == $model->id ? 'bg-info':''}}"><a href="./{{$item->id}}" target="_top">{{@substr($item->start_at, 11)}} -- {{@substr($item->end_at, 11)}} {{$item->name}} {!!abs($item->duration - 3600)>300?'<span class="label label-danger">需处理</span>':''!!}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -150,6 +150,7 @@
     var curPage = 1;
     var keyword = '';
     var loadingMore = false;
+    var end_at = {{$end_at}};
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
@@ -328,7 +329,7 @@
                 reCalculate(selectedIndex);
             }
             else {
-                if(selectedItem.black) {
+                if(selectedItem.black && selectedItem.black>0) {
                     toastr.error("该艺人以上黑名单，不能使用");
                     return;
                 }
@@ -391,7 +392,7 @@
                     {
                         item = items[i];
                         tr = '';
-                        if(item.black) tr = ' danger';
+                        if(item.black && item.black>0) tr = ' danger';
                         if(item.artist==null) item.artist='';
                         html += '<tr class="search-item'+tr+'" onclick="selectProgram('+i+')"><td>'+(i+1)+'</td><td>'+item.unique_no+'</td><td>'+item.name+'</td><td>'+item.artist+'</td><td>'+item.duration+'</td><td>'+item.category+'</td></tr>';
                     }
@@ -429,7 +430,7 @@
 
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
-        if(repo.black) {
+        if(repo.black&&repo.black>0) {
             toastr.error("该节目以上黑名单");
         }
         if(repo.category) {
@@ -490,7 +491,8 @@
 
         $('#tree-programs').html(html);
         var d = Date.parse('2000/1/1 00:00:00');
-        $('#total').html('<small>总时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
+        var end = end_at + total;
+        $('#total').html('<small>预计编单结束时间 '+ formatTime(end*1000)+', 当前栏目时长 '+ formatTime(d+total*1000) +', 共 '+dataList.length+' 条记录</'+'small>');
         $chkboxes = $('.grid-row-checkbox');
         setupMouseEvents();
     }

@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers\Media;
 
-use App\Admin\Actions\Material\BatchCreator;
+use App\Admin\Actions\Material\ToolCreator;
 use App\Admin\Actions\Material\BatchDelete;
 use App\Admin\Actions\Material\BatchImportor;
 use App\Admin\Actions\Material\BatchModify;
@@ -92,7 +92,7 @@ class MaterialController extends AdminController
         $grid->column('ep', __('Ep'))->sortable();
         
         $grid->column('duration', __('Duration'));
-        $grid->column('size', __('Size'))->hide();
+        $grid->column('filepath', __('Filepath'))->hide();
         $grid->column('md5', __('MD5'))->hide();
         $grid->column('frames', __('Frames'))->sortable();
         $grid->column('created_at', __('Created at'))->sortable()->hide();
@@ -112,7 +112,7 @@ class MaterialController extends AdminController
             $tools->append(new BatchModify);
             $tools->append(new BatchImportor);
             $tools->append(new BatchSync);
-            $tools->append(new BatchCreator);
+            $tools->append(new ToolCreator);
         });
 
         $grid->filter(function(Grid\Filter $filter){

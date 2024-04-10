@@ -2,15 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Folder;
 use App\Models\LargeFile;
 use App\Models\Material;
+use App\Models\RawFiles;
 use App\Tools\ChannelGenerator;
 use App\Tools\Material\MediaInfo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
-use function PHPSTORM_META\elementType;
 
 class fileTool extends Command
 {
@@ -272,34 +272,38 @@ class fileTool extends Command
     private function daily()
     {
         
-        $json = json_decode(Storage::get('result3.json'), true);
-
-        //$keys = array_keys($json['succ']);
-        $move = [];
-
-        foreach($json['succ'] as $k=>$v)
+        $list = Material::where('channel', 'xkv')->where('filepath', 'like', '%\\\\MV\\\\%')->get();
+        foreach($list as $m)
         {
-            $m = Material::where('unique_no', $k)->first();
-            if($m) {
-                if($m->status == Material::STATUS_READY) {
-                    $this->info("重复 ".$k);
-                    continue;
-                }
-                $m->filepath = "Y:\\MV\\".$m->name.'.'.$k.".mxf";
-                $m->status = Material::STATUS_READY;
+            $newpath = "Y:\\MV2\\".$m->unique_no.".mxf";
+            if(copy($m->filepath, $newpath))
+            {
+                $m->filepath = $newpath;
                 $m->save();
-                //$succ[$code] = "move \"{$line}\" \"Y:\\MV\\".$m->name.'.'.$info['filename'].".mxf\"";
-                $move[] = $v;
-                
+                $this->info("move file: {$newpath}");
             }
+            else {
+                $this->info("fail: {$newpath} {$m->filepath}");
+            }
+            
         }
-        Storage::put("scripts.txt", implode(PHP_EOL, $move));
         
     }
 
     private function clean()
     {
-        // Clean xml files 
+        // Clean files 
+        $id = $this->argument('path') ?? "";
+        $folder = Folder::find($id);
+        $files = $folder->rawfiles()->get();
+        foreach($files as $f)
+        {
+            $path = $folder->path . $f->filename;
+            if(file_exists($path))
+            {
+                if(unlink($path)) $this->info('unlink '.$path);
+            }
+        }
     }
 
     private function loadEml($xml)

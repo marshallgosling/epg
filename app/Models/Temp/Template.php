@@ -34,7 +34,7 @@ class Template extends Model
     ];
 
     protected $table = 'temp_template';
-    public $incrementing = false;
+    //public $incrementing = false;
 
     protected $fillable = [
         'id',

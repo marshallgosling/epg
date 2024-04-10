@@ -20,7 +20,7 @@ class PlanController extends AdminController
      *
      * @var string
      */
-    protected $title = '播出计划';
+    protected $title = '播出计划 (暂时停用）';
 
     /**
      * Make a grid builder.

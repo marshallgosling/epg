@@ -5,10 +5,7 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Material;
-use App\Models\Program;
-use App\Models\Record;
-use App\Models\Record2;
-use App\Tools\Exporter\TableGenerator;
+use App\Tools\Notify;
 use App\Tools\Statistic;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Column;
@@ -20,29 +17,119 @@ use Illuminate\Support\Arr;
 class HomeController extends Controller
 {
   
-  public const VERSION = '2.0';
+  public const VERSION = '2.1';
   
   public function index(Content $content)
   {
     return $content
-            ->title('欢迎使用编单及节目管理系统')
+            ->title('欢迎使用编单及节目管理系统 v'.self::VERSION)
             ->description('查看、管理频道编单及节目内容和素材管理')
             ->row(HomeController::links())
             ->row(HomeController::statistics())
             ->row(function (Row $row) {
-
                 $row->column(8, function (Column $column) {
-                    $column->append(HomeController::charts());
+                  $column->append(HomeController::notifyError());
                 });
-
                 $row->column(4, function (Column $column) {
-                    $column->append(HomeController::environment());
+                  $column->append(HomeController::distribution());
                 });
-
-                
+            })
+            ->row(function (Row $row) {
+              $row->column(8, function (Column $column) {
+                $column->append(HomeController::charts());
+              });
+              $row->column(4, function (Column $column) {
+                $column->append(HomeController::daily());
+              });
             });
     }
 
+    private static function distribution()
+    {
+        $list = Notify::getDistributions();
+        $data = '';
+        foreach($list as $m) {
+            $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
+            $m->message.'</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
+        }
+            
+        $html = <<<HTML
+        <div class="row" style="height:390px; overflow-y:scroll">
+        <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr><th>频道</th><th>消息</th><th>日期</th></tr>
+                {$data}
+            </table>
+        </div></div>
+      </div>
+HTML;
+        $box = new Box('分发串联单通知记录', $html);
+
+        $box->style('aqua');
+        
+        $box->solid();
+
+        return $box->render();
+    }
+
+    private static function notifyError()
+    {
+        $list = Notify::getErrorNotifications();
+        $data = '';
+        foreach($list as $m) {
+            $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
+            $m->name.'</td><td><div style="height:40px;overflow-y:scroll">'. $m->message.'</div>'.
+            '</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
+        }
+            
+        $html = <<<HTML
+        <div class="row" style="height:390px; overflow-y:scroll">
+        <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr><th>频道</th><th>标题</th><th>描述内容</th><th>日期</th></tr>
+                {$data}
+            </table>
+        </div></div>
+      </div>
+HTML;
+        $box = new Box('错误通知记录', $html);
+
+        $box->style('default');
+        
+        $box->solid();
+
+        return $box->render();
+    }
+
+    private static function daily()
+    {
+        $list = Material::where('created_at','<', date('Y-m-d H:i:s'))->orderBy('created_at', 'desc')->limit(20)->get();
+        
+        $data = '';
+        foreach($list as $m) {
+            $data .= '<tr><td>'.$m->name.'</td><td>'.substr($m->created_at, 5, 11).'</td></tr>';
+        }
+            
+        $html = <<<HTML
+        <div class="row" style="height:390px; overflow-y:scroll">
+        <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                {$data}
+            </table>
+        </div></div>
+      </div>
+HTML;
+        $box = new Box('最新添加物料记录', $html);
+
+        $box->style('default');
+        
+        $box->solid();
+
+        return $box->render();
+    }
    
     public function supervisord(Content $content)
     {
@@ -54,19 +141,22 @@ class HomeController extends Controller
 
     public static function charts()
     {
-      $material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'总物料库');
+      //$material = Statistic::generatePieChart('materialChart', Program::STATUS, Statistic::countMaterial(),'总物料库');
+      $material = Statistic::countMaterial();
       $program = Statistic::countPrograms();
       $records = Statistic::countRecords();
       $record2 = Statistic::countRecord2();
 
-      $channels = Statistic::generateBarChart('programChart', Channel::GROUPS, [$program['1'], $records['1'], $record2['1']], "节目库（可用数）");
+      $channels = Statistic::generateBarChart('programChart', 
+        array_merge(['all'=>'总物料库'], Channel::GROUPS), 
+        [$material['1'], $program['1'], $records['1'], $record2['1']], "物料库及节目库（可用数）");
 
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
 <div class="row" style="height:390px">
-  <div class="col-md-4"><canvas id="materialChart"></canvas></div>
-  <div class="col-md-8" style="border:0px solid #eee; border-left-width:1px;">
+  
+  <div class="col-md-12" style="border:0px solid #eee; border-left-width:1px;">
     <div class="row">
       <div class="col-md-12"><canvas id="programChart"></canvas></div>
     </div>
@@ -77,17 +167,18 @@ class HomeController extends Controller
 
 <script>
   const colors=[
+    'rgb(75, 192, 192)',
     'rgb(54, 162, 235)',
-    'rgb(255, 99, 132)',
-    'rgb(75, 192, 192)'
+    'rgb(54, 162, 235)',
+    'rgb(54, 162, 235)'
   ];
   const bcolors=[
+    'rgba(75, 192, 192, 0.3)',
     'rgba(54, 162, 235, 0.3)',
-    'rgba(255, 99, 132, 0.3)',
-
-    'rgba(75, 192, 192, 0.3)'
+    'rgba(54, 162, 235, 0.3)',
+    'rgba(54, 162, 235, 0.3)'
   ];
-  {$material}
+
   {$channels}
 
 </script>

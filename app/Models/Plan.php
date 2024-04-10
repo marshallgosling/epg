@@ -55,6 +55,7 @@ class Plan extends Model
 
     public static function loadPlan($channel)
     {
+        return false;
         $plans = Plan::where('status', Plan::STATUS_RUNNING)->where('group_id', $channel->name)->get();
         $begin = strtotime($channel->air_date.' '.explode(' - ',$channel->start_end)[0]);
         $end = strtotime($channel->air_date.' '.explode(' - ',$channel->start_end)[1]) + 86400;

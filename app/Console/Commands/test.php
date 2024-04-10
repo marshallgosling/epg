@@ -3,16 +3,20 @@
 namespace App\Console\Commands;
 
 use App\Events\Channel\CalculationEvent;
+use App\Jobs\ExcelJob;
 use App\Jobs\Material\ScanFolderJob;
 use App\Models\Agreement;
 use App\Models\Channel;
+use App\Models\ChannelPrograms;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
 use App\Models\Expiration;
 use App\Models\Material;
 use App\Models\Record;
+use App\Models\Record2;
 use App\Models\Template;
 use App\Tools\ChannelGenerator;
+use App\Tools\Exporter\BvtExporter;
 use App\Tools\Exporter\ExcelWriter;
 use App\Tools\Exporter\TableGenerator;
 use Illuminate\Console\Command;
@@ -44,17 +48,36 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        $job = new ScanFolderJob(8, 'apply');
-        $job->handle();
         
+        $ch = Channel::find($day);
+        $data = BvtExporter::collectEPG($ch);
+                BvtExporter::generateData($ch, $data);
+                BvtExporter::$file = false;
+                $xml = BvtExporter::exportXml($ch->name);
+                $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
+
+        $this->info($xml);
+        $this->info($str);
+        $this->info($xml==$str?"相同":"不相同");
         return;
         
-        foreach($list as $m)
+        $list = ChannelPrograms::where('channel_id', $group)->get();
+        foreach($list as $p)
         {
-            $lines[] = "copy \"{$m->filepath}\" \"Y:\\MV2\\{$m->unique_no}.mxf\"";
+            $data = json_decode($p->data);
+            if(key_exists('replicate', $data)) continue;
+            
+            foreach($data as &$item)
+            {
+                if(is_array($item->category))
+                {
+                    //$category = Record2::where('unique_no', $item->unique_no)->value('category');
+                    $item->category = $item->category[0];
+                }
+            }
+            $p->data = json_encode($data);
+            $p->save();
         }
-
-        Storage::put('mv.bat', implode(PHP_EOL, $lines));
 
         return;
         

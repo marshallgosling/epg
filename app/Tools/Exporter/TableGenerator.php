@@ -2,6 +2,7 @@
 
 namespace App\Tools\Exporter;
 
+use App\Models\Category;
 use App\Models\Epg;
 use App\Models\Record;
 use App\Models\Template;
@@ -27,6 +28,8 @@ class TableGenerator
         }
         $table .= '<th>HKT</th></tr>';
 
+        //$categories = Category::getCategories();
+
         foreach($template as $t)
         {
             $table .= '<tr><td>'.$t['label_start_at'].'<br>'.$t['label_end_at'].'</td>';
@@ -38,10 +41,18 @@ class TableGenerator
                     continue;
                 }
                 $items = $data[$day['day']];
-                $table .= '<td>';
+                // $category = "";
+                $table .= '<td><b>'.$t['name'].'</b><br />';
                 foreach($items as $item) {
-                    if($item->schedule_start_at == $t['start_at'])
+                    
+                    if($item->schedule_start_at == $t['start_at']){
+                        // if($category == '') {
+                        //     $table .= '<b>'.$categories[$item->category].'</b><br />';
+                        //     $category = $item->category;
+                        // }
                         $table .= $item->name.'<br>';
+                    }
+                        
                 }
                 $table .= '</td>';
             }
@@ -67,7 +78,7 @@ class TableGenerator
                 $start_at = date('H:i:s', $st);
                 if($start_at == '00:00:00') $start_at = '24:00:00';
                 if($end_at == '00:00:00') $end_at = '24:00:00';
-                $templates[] = ['start_at'=>$start_at, 'end_at'=>$end_at,
+                $templates[] = ['start_at'=>$start_at, 'end_at'=>$end_at, 'name'=>$item->name,
                     'duration'=>$item->duration, 'label_start_at'=>date('G:i', $st), 'label_end_at'=>date('G:i', $ed)];
 
             }
@@ -104,10 +115,10 @@ class TableGenerator
         //$category = config("EXPORT_CATEGORIES", false);
         //if(!$category) $category = array_keys(Record::XKC);
         //else $category = explode(',', $category);
-        $category = ['m1', 'XK PR'];
+        $category = explode(',', config("EXPORT_CATEGORIES", ''));
         return DB::table('epg')->join('channel_program', 'epg.program_id','=','channel_program.id')
                 ->select(['epg.name','epg.program_id','epg.start_at','epg.category','channel_program.schedule_start_at','channel_program.schedule_end_at'])
                 ->where('epg.group_id', $this->group)->where('epg.start_at', '>', $start)->where('epg.end_at','<',$end)
-                ->whereNotIn('epg.category', $category)->orderBy('epg.start_at')->get()->toArray();
+                ->whereIn('epg.category', $category)->orderBy('epg.start_at')->get()->toArray();
     }
 }

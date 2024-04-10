@@ -97,10 +97,10 @@ class XkvController extends AdminController
             foreach($model->audit()->orderBy('id','desc')->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
-                    $item->created_at, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
+                    $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
                 ];
             }
-            $head = ['ID','审核结果','日期',''];
+            $head = ['ID','审核结果','日期','备注说明',''];
             return new Table($head, $rows);
         });
         
@@ -128,6 +128,7 @@ class XkvController extends AdminController
         $grid->filter(function($filter){
             $filter->column(6, function(Grid\Filter $filter) { 
                 $filter->date('air_date', __('Air date'));
+                $filter->equal('lock_status', __('Lock'))->radio(Channel::LOCKS);
             });
             
         });
@@ -140,7 +141,6 @@ class XkvController extends AdminController
             $tools->append(new BatchLock());
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xkv'));
-            
         });
 
         return $grid;

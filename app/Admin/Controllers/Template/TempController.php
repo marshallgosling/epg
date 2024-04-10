@@ -12,10 +12,11 @@ use App\Tools\ChannelGenerator;
 use Illuminate\Support\Facades\Storage;
 use App\Admin\Actions\Template\FixStall;
 use App\Admin\Extensions\MyTable;
+use App\Models\Channel;
 use App\Models\Epg;
 use App\Tools\Generator\XkcGenerator;
 use Encore\Admin\Layout\Content;
-
+use Illuminate\Support\Facades\DB;
 
 class TempController extends AdminController
 {
@@ -24,10 +25,10 @@ class TempController extends AdminController
      *
      * @var string
      */
-    protected $title = '【 临时 】模版';
+    protected $title = '【 历史 】模版数据';
 
     protected $description = [
-        'index'  => "用于查看 【XKC】 自动编单问题，保存临时状态",
+        'index'  => "用于回退和重新生成自动编单（保存模版临时状态）",
 //        'show'   => 'Show',
 //        'edit'   => 'Edit',
 //        'create' => 'Create',
@@ -100,15 +101,8 @@ class TempController extends AdminController
     {
         $grid = new Grid(new Template());
 
-        $grid->header(function () {
-            
-            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
-                return '<small>用于查看 【XKC】 自动编单问题，保存临时状态</small> <span class="label label-warning">不可修改</span>';
-            else
-                return '<small>目前自动编单没有问题</small>';
-        });
-        $grid->model()->with('records')->where('group_id', 'xkc')->orderBy('sort', 'asc');
-        //$grid->column('id', __('Id'));
+        $grid->model()->with('records')->orderBy('sort', 'asc');
+        $grid->column('group_id', __('ID'));
         $grid->column('name', __('Name'))->display(function($name) {
             return '<a href="temp/programs?template_id='.$this->id.'">'.$name.'</a>'; 
         });
@@ -124,11 +118,11 @@ class TempController extends AdminController
                     if(count($p->data['dayofweek']) == 7) $days[] = __('全天');
                     else if($p->data['dayofweek'])
                         foreach($p->data['dayofweek'] as $d) $days[] = __(TemplateRecords::DAYS[$d]);
-                    $items[] = [ $p->sort, $p->name, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['name'], $p->data['result'], '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>'];
+                    $items[] = [ $p->sort, $p->name, $p->category, TemplateRecords::TYPES[$p->type], $p->data['episodes'], $p->data['date_from'].'/'.$p->data['date_to'], implode(',', $days), $p->data['name'], $p->data['result'], '<a href="temp/programs/'.$p->id.'/edit">编辑</a>'];
                 
                 }
                 else {
-                    $items[] = [ $p->sort, $p->name, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '', '<a href="xkc/programs/'.$p->id.'/edit">编辑</a>' ];
+                    $items[] = [ $p->sort, $p->name, $p->category, TemplateRecords::TYPES[$p->type], '', '', '', '', '', '<a href="temp/programs/'.$p->id.'/edit">编辑</a>' ];
                 
                 }
             }
@@ -157,10 +151,14 @@ class TempController extends AdminController
         
         $grid->column('updated_at', __('Updated at'));
 
-        $grid->filter(function($filter){
+        $grid->filter(function(Grid\Filter $filter){
 
-            $filter->like('name', __('Name'));
-            $filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
+            $filter->equal('group_id', __('Air date'))->select(
+                DB::table('channel')->whereIn('name', ['xkc','xki'])
+                    ->selectRaw("concat(name, ' ', air_date) as name, id")->orderBy('id', 'desc')->limit(50)
+                    ->pluck('name', 'id')->toArray()
+            );
+            //$filter->equal('schedule', __('Schedule'))->radio(Template::SCHEDULES);
             $filter->in('status',  __('Status'))->checkbox(Template::STATUSES);
             
         });
@@ -169,8 +167,7 @@ class TempController extends AdminController
         $grid->disableBatchActions();
         $grid->disableActions();
         $grid->tools(function (Grid\Tools $tools) {
-            if(Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
-                $tools->append(new FixStall());
+            
         });
 
         // $grid->actions(function ($actions) {

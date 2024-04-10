@@ -210,6 +210,9 @@ TMP;
         $view = 'admin.program.xkv';
         $channel = Channel::find($model->channel_id);
 
+        $end_at = strtotime($channel->air_date . explode('-', $channel->start_end)[1]) + 86400;
+        $end_at -= $model->duration;
+
         if($channel->lock_status == Channel::LOCK_ENABLE) {
             $view = 'admin.program.lock';
             $template = str_replace('<a href="javascript:deleteProgram(idx);" class="tree_branch_delete" title="删除"><i class="fa fa-trash"></i></a>', '', $template);
@@ -223,7 +226,7 @@ TMP;
            
         return $content->title($model->start_at . ' '.$model->name.' 详细编排')
             ->description("编排调整节目内容，节目单计划播出时间 ".$model->start_at." -> ".$model->end_at)
-            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate', 'categories')));
+            ->body(view($view, compact('model', 'data', 'list', 'json', 'template', 'replicate', 'categories', 'end_at')));
     }
 
     public function open($id, Request $request) {

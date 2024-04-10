@@ -77,6 +77,8 @@ class AuditController extends AdminController
                 return new Table($head, $rows);
             }
         });
+
+        $grid->column('comment', __('Comment'));
         
         $grid->column('created_at', __('Created at'))->sortable()->hide();
         $grid->column('updated_at', __('Updated at'))->sortable();
@@ -125,7 +127,9 @@ class AuditController extends AdminController
         $show->field('channel_id', __('Channel'));
         $show->field('status', __('Status'))->using(Channel::STATUS);
         $show->field('admin', __('Reviewer'));
-        $show->field('reason', __('Comment'));
+        $show->field('comment', __('Comment'));
+        
+        $show->field('reason', __('Details'));
         
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -148,9 +152,10 @@ class AuditController extends AdminController
         
         $form->divider(__('AuditInfo'));
         $form->text('admin', __('Reviewer'));
+        $form->textarea('comment', __('Comment'));
         
         //$form->date('audit_date', __('Audit date'));
-        $form->textarea('reason', __('Comment'));
+        $form->json('reason', __('Details'));
 
 
         return $form;

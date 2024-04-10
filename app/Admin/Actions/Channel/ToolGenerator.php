@@ -42,12 +42,6 @@ class ToolGenerator extends Action
         {
             return $this->response()->error('节目单有状态为“错误”的情况，请先处理错误的节目单后才能继续。');
         }
-
-        // $last = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date', 'desc')->first();
-        // if(!$last) {
-        //     return $this->response()->error('没有节目单需要生成');
-        // }
-
         
         $start_at = $request->get('generate_start_at');
             
@@ -64,25 +58,13 @@ class ToolGenerator extends Action
 
         if($e > $max) $end_at = date('Y-m-d', $max);
 
-        // $channels = Channel::where(['status'=>Channel::STATUS_EMPTY,'name'=>$group])
-        //             ->where('air_date','>=',$start_at)->where('air_date','<=',$end_at)->get();
-        //$channels = Channel::generate($group, $s, $e);
+        if($group == 'xkc')
+            XkcGeneratorJob::dispatch(compact('s','e'))->onQueue('xkc');
+        else if($group == 'xki')
+            XkiGeneratorJob::dispatch(compact('s','e'))->onQueue('xki');
+        else
+            XkvGeneratorJob::dispatch(compact('s','e'))->onQueue('xkv');
         
-        //if($channels) {
-            // foreach($channels as $model) {
-            //     if($model->status == Channel::STATUS_EMPTY) {
-            //         $model->status = Channel::STATUS_WAITING;
-            //         $model->save();
-            //     }
-            // }
-        
-            if($group == 'xkc')
-                XkcGeneratorJob::dispatch(compact('s','e'))->onQueue('xkc');
-            else if($group == 'xki')
-                XkiGeneratorJob::dispatch(compact('s','e'))->onQueue('xki');
-            else
-                XkvGeneratorJob::dispatch(compact('s','e'))->onQueue('xkv');
-        //}
 
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

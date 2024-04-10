@@ -22,7 +22,8 @@ class Audit extends Model
         'reason',
         'status',
         'channel_id',
-        'admin'
+        'admin',
+        'comment'
     ];
 
     protected $casts = [

@@ -25,6 +25,7 @@ Route::group([
     $router->resource('/media/compare/xkc', 'Media\\XkcCompareController')->names('media.compare.xkc');
     $router->resource('/media/compare/xki', 'Media\\XkiCompareController')->names('media.compare.xki');
     $router->get('/media/folder/{id}', 'Media\\ProcessMaterialController@index')->name('media.folder');
+    $router->resource('/media/folders/files', 'Media\\RawFilesController')->names('media.folders.files');
     $router->resource('/media/folders', 'Media\\FolderController')->names('media.folders');
 
     $router->resource('/media/expiration', 'Media\\ExpirationController')->names('media.expiration');
@@ -100,6 +101,7 @@ Route::group([
     
     $router->resource('/template/temp/programs', 'Template\\TempProgramsController')->names('template.temp.programs');
     $router->get('/template/temp/programs/{program}', 'Template\\TempProgramsController@show')->name('template.temp.show');
+    $router->resource('/template/temp', 'Template\\TempController')->names('template.temp');
     $router->get('/template/help', 'HelpController@template')->name('template.help');
 
     $router->get('/export/download/{id}', 'ExportListController@download')->name('export.download');

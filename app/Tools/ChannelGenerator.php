@@ -42,6 +42,25 @@ class ChannelGenerator
         return $templates;
     }
 
+    public static function saveHistory($template, $channel)
+    {
+        $temp = $template->replicate()->toArray();
+
+        $temp['group_id'] = $channel->id;
+        $temp['created_at'] = $channel->air_date;
+        $temp['updated_at'] = date('Y-m-d H:i:s');
+        $t = new Template($temp);
+        $t->save();
+        $records = $template->records;
+
+        foreach($records as $record)
+        {
+            $r = $record->replicate()->toArray();
+            $r['template_id'] = $t->id;
+            TemplateRecords::create($r);
+        }
+    }
+
     public static function saveTemplateState($templates) 
     {
         $list = TemplateRecords::whereIn('template_id', $templates)->select('id','data')->pluck('data', 'id')->toArray();
@@ -244,9 +263,13 @@ class ChannelGenerator
      */
     public static function checkAbnormalTimespan($timestr)
     {
-        $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
-        if($perfect > $timestr) return "编单结束时间异常，请手动干预处理！";
-        return "";
+        // $perfect = strtotime(date('Y-m-d', $timestr).' 17:00:00');
+        // if($perfect > $timestr) 
+        // {
+        //     if(($perfect - $timestr) < 5)
+        //         return "编单结束时间异常，请手动干预处理！";
+        // }
+        return "";//"编单已完成，请加锁并审核！";
     }
 
 }

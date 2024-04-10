@@ -7,6 +7,7 @@ use App\Models\ChannelPrograms;
 use App\Models\Notification;
 use App\Models\Record;
 use App\Models\TemplateRecords;
+use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,8 @@ class XkcSimulator
      */
     private $duration;
 
+    public $filename;
+
     public function __construct($group, $days, $channels=false)
     {
         $this->log_channel = 'simulator';
@@ -48,6 +51,7 @@ class XkcSimulator
         $this->log_print = false;
         $this->channels = $channels ?? [];
         $this->programs = [];
+        $this->filename = false;
     }
 
     /**
@@ -100,18 +104,20 @@ class XkcSimulator
             return false;
     }
 
-    public function saveTemplate($templates)
+    public function saveTemplate($templates, $channels)
     {
         if(!$this->saveState) return;
-        $temp = ['templates'=>[], 'records'=>[]];
-        foreach($templates as $template)
-        {
-            $t = $template->toArray();
-            $items = $template->records->toArray();
-            $temp['records'][] = $items;
-            $temp['templates'][] = $t;
-        }
-        Storage::put($this->group.'_saved_template.json', json_encode($temp));
+        $temp = compact('templates', 'channels');
+        if(count($channels) == 0) return;
+        $filename = $this->group.'_'.$channels[0]->air_date.'_'.count($channels).'_template.json';
+        Storage::put($filename, json_encode($temp));
+        $this->filename = $filename;
+    }
+
+    public function saveTemplateHistory($template, $channel)
+    {
+        if(!$this->saveState) return;
+        ChannelGenerator::saveHistory($template, $channel);
     }
 
     public function handle(\Closure $callback=null)
@@ -122,13 +128,13 @@ class XkcSimulator
         $data = [];
         
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
-        $this->saveTemplate($templates);
-
+        $this->saveTemplate($templates, $this->channels);
+        
         foreach($this->channels as &$channel)
         {
             // setup $air value, for record items expiration check 
             Record::loadExpiration($channel->air_date);
-
+            
             $result = $channel->toArray();
             $result['data'] = [];
             $result['error'] = false;
@@ -138,6 +144,8 @@ class XkcSimulator
             
             foreach($templates as &$template)
             {
+                $this->saveTemplateHistory($template, $channel);
+
                 if($air == 0) $air = strtotime($channel->air_date.' '.$template->start_at);  
                 $epglist = []; 
                 $duration = 0;
@@ -156,7 +164,7 @@ class XkcSimulator
 
                 $templateresult = $template->toArray();
 
-                $templateresult['error'] = false;
+                $templateresult['error'] = '';
                 
                 if(!$template_item) {
                     //$this->info("没有找到匹配的模版: {$template->id} {$template->category}");
@@ -197,13 +205,15 @@ class XkcSimulator
                         }
                         else {
 
-                            //$this->warn(" {$item->name} 的时长为 0 （{$item->duration}）, 因此忽略.");
+                            $templateresult['error'] = "异常3，节目时长为0 {$item->name} {$item->duration} {$item->unique_no} <br/>";
+                            $result['error'] = true;
+                            $errors[] = "异常3，节目时长为0  {$item->name} {$item->duration} {$item->unique_no} ";
                             
                         }
                     }
                     if(count($epglist) == 0) {
                         //$this->error(" 异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}");
-                        $templateresult['error'] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
+                        $templateresult['error'] .= "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                         $result['error'] = true;
                         $errors[] = "异常1，没有匹配到任何节目  {$template_item->id} {$template_item->category}";
                     }
@@ -250,7 +260,7 @@ class XkcSimulator
         $items = [];
         if($template->type == TemplateRecords::TYPE_RANDOM) {
             $temps = Record::findNextAvaiable($template, $maxDuration, $air);
-            if(in_array($temps[0], ['finished', 'empty'])) {
+            if(in_array($temps[0], ['finished', 'empty', 'empty2'])) {
                 $d = $template->data;
                 $d['episodes'] = null;
                 $d['unique_no'] = '';
@@ -262,7 +272,7 @@ class XkcSimulator
             }
             $d = $template->data;
             foreach($temps as $item) {
-                if(!in_array($item, ['finished', 'empty'])) {
+                if(!in_array($item, ['finished', 'empty', 'empty2'])) {
                     $items[] = $item;
                     $d['episodes'] = $item->episodes;
                     $d['unique_no'] = $item->unique_no;

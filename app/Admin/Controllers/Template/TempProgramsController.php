@@ -26,7 +26,7 @@ class TempProgramsController extends AdminController
      *
      * @var string
      */
-    protected $title = '普通模版编排 【 XKC 】';
+    protected $title = '模版编排规则';
 
     private $group = 'xkc';
 
@@ -70,12 +70,7 @@ class TempProgramsController extends AdminController
 
         $grid->filter(function (Filter $filter) {
             
-            $filter->equal('template_id', __('Template'))->select(
-                Template::selectRaw("concat(start_at, ' ', name) as name, id")
-                    ->where('group_id', $this->group)
-                    ->orderBy('sort', 'asc')
-                    ->get()->pluck('name', 'id')
-                );
+            $filter->equal('template_id', __('Template'));
             
         });
 

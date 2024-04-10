@@ -8,6 +8,7 @@ use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
+use App\Admin\Actions\Channel\TemplateLink;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
 use App\Models\Audit;
@@ -71,16 +72,16 @@ class XkiController extends AdminController
 
         $grid->column('id', __('编单'))->display(function($id) {
             return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
-        })->width(100);
+        })->width(90);
         
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
             return '<a href="'.$this->name.'/preview/'.$air_date.'" title="预览EPG" data-toggle="tooltip" data-placement="top">'.$air_date.'</a>';
-        })->width(100);
+        })->width(90);
 
-        $grid->column('start_end', __('StartEnd'))->width(150);
+        $grid->column('start_end', __('StartEnd'))->width(140);
         $grid->column('status', __('Status'))->filter(Channel::STATUS)->width(60)
         ->using(Channel::STATUS)->label(['default','info','success','danger','warning'], 'info');
-        $grid->column('audit', __('Audit status'))->display(function () { 
+        $grid->column('audit', __('Audit status'))->width(90)->display(function () { 
             
             if($this->audit) {
                 foreach($this->audit()->orderBy('id','desc')->get() as $item) {
@@ -95,17 +96,17 @@ class XkiController extends AdminController
             foreach($model->audit()->orderBy('id','desc')->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
-                    $item->created_at, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
+                    $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
                 ];
             }
-            $head = ['ID','审核结果','日期',''];
+            $head = ['ID','审核结果','日期','备注说明',''];
             return new Table($head, $rows);
         });
         
         $grid->column('reviewer', __('Reviewer'))->hide();
         
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(80);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
@@ -114,7 +115,7 @@ class XkiController extends AdminController
 
         $grid->actions(function ($actions) {
             //$actions->add(new Generator);
-            $actions->add(new Clean);
+            $actions->add(new TemplateLink);
         });
 
         $grid->batchActions(function ($actions) {
@@ -125,8 +126,8 @@ class XkiController extends AdminController
         $grid->filter(function(Grid\Filter $filter){
 
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->equal('uuid', __('Uuid'));
                 $filter->date('air_date', __('Air date'));
+                $filter->equal('lock_status', __('Lock'))->radio(Channel::LOCKS);
             });
             
         });
@@ -138,9 +139,7 @@ class XkiController extends AdminController
             $tools->append(new BatchLock);
             $tools->append(new BatchAudit);
             $tools->append(new BatchDistributor());
-            
             $tools->append(new ToolExporter('xki'));
-            
         });
 
         return $grid;

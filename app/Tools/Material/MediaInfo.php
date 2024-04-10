@@ -35,8 +35,9 @@ class MediaInfo
             $frames = $data->media->track[0]->FrameCount;
             $duration = $data->media->track[0]->Duration;
             $size = $data->media->track[0]->FileSize;
+            $afd = key_exists('ActiveFormatDescription', $data->media->track[1]) ? $data->media->track[1]->ActiveFormatDescription : null;
 
-            return compact('frames', 'duration', 'size');
+            return compact('frames', 'duration', 'size', 'afd');
         }
         
         return false;

@@ -180,6 +180,13 @@ class Record extends Model
                     //$item = '未找到';
                     $data['result'] = '未找到';
                 }
+                else if($item == 'empty2') {
+                    if($template->type == TemplateRecords::TYPE_STATIC) {
+                        //Notify::fireNotify('xkc', Notification::TYPE_GENERATE, $template->data['episodes'].' 没有找到任何剧集', '', 'error');
+                    }
+                    //$item = '未找到';
+                    $data['result'] = '未找到';
+                }
                 else {
                     $data['episodes'] = $item->episodes;
                     $data['unique_no'] = $item->unique_no;
@@ -245,14 +252,14 @@ class Record extends Model
 
     }
 
-    public static function loadBumpers($category='m1') {
+    public static function loadBumpers($category='FILLER') {
         if(self::$bumper) return;
 
         self::$bumper = [];
         self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','<=', 60)->select('records.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 300)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 60)->where('seconds','<=', 120)->select('records.unique_no')->pluck('unique_no')->toArray();
+        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 120)->where('seconds','<=', 300)->select('records.unique_no')->pluck('unique_no')->toArray();
         self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 300)->where('seconds','<=', 600)->select('records.unique_no')->pluck('unique_no')->toArray();
-        self::$bumper[] = Record::where('records.category', 'like', '%FILLER,%')->join('material', 'records.unique_no', '=', 'material.unique_no')->where('seconds','>', 600)->where('seconds','<=', 1200)->select('records.unique_no')->pluck('unique_no')->toArray();
     }
 
     public static function checkBumperAndPr() {
@@ -309,9 +316,13 @@ class Record extends Model
 
     public static function findUnique($no)
     {
-        return Record::where('records.unique_no', $no)
+        $item = Record::where('records.unique_no', $no)
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
             ->select("records.unique_no","records.name","records.episodes","records.black", "material.duration","material.frames")->first();
+        if(!$item) {
+            $item = Record::where('unique_no', $no)->select('unique_no', 'name', 'episodes', 'black', 'duration')->first();
+        }
+        return $item;
     }
 
     public static function getTotal($key) {

@@ -209,11 +209,11 @@ class XkvGenerator implements IGenerator
                         
                     $this->info("添加节目: {$p->category} {$item->name} {$item->duration}");
 
-                    if($this->duration > $scheculeSeconds) 
-                    {
-                        $this->warn(" 节目编排时长已大于计划时长，因此跳出编单.");
-                        break;
-                    }
+                    // if($this->duration > $scheculeSeconds) 
+                    // {
+                    //     $this->warn(" 节目编排时长已大于计划时长.");
+                    //     //break;
+                    // }
                 }
                 else {
 

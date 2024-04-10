@@ -38,7 +38,8 @@ class EpgJob implements ShouldQueue, ShouldBeUnique
         $channel = Channel::find($this->id);
         if(!$channel) return;
 
-        if($channel->status == Channel::STATUS_READY && $channel->lock_status == Channel::LOCK_ENABLE)
+        if(in_array($channel->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])
+             && $channel->lock_status == Channel::LOCK_ENABLE)
         {
             ChannelDatabase::removeEpg($channel);
             ChannelDatabase::saveEpgToDatabase($channel);

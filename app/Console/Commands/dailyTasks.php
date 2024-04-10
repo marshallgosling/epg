@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Jobs\Material\MediaInfoJob;
+use App\Jobs\Material\ScanFolderJob;
 use App\Models\Channel;
+use App\Models\Folder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -96,6 +98,10 @@ class dailyTasks extends Command
 
     private function scan($args)
     {
-
+        $list = explode(',', $args);
+        foreach($list as $i)
+        {
+            ScanFolderJob::dispatch($i, 'scanandimport')->onQueue('media');
+        }
     }
 }

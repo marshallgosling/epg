@@ -31,4 +31,9 @@ class Folder extends Model
         'scaned_at'  => 'datetime:Y-m-d H:i:s',
         //'data'  => 'json'
     ];
+
+    public function rawfiles()
+    {
+        return $this->hasMany(RawFiles::class, 'folder_id', 'id');
+    }
 }

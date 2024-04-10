@@ -62,8 +62,9 @@ class XkiGenerator
         }
     }
 
-    private function saveJob($data, $file, $channels)
+    private function saveJob($file, $channels)
     {
+        if(!$file) return;
         if(count($channels)) $name = $channels[count($channels)-1]->air_date;
         else $name = 'unknow';
         $job = new EpgJob;
@@ -71,23 +72,23 @@ class XkiGenerator
         $job->file = $file;
         $job->group_id = 'xki';
         $job->save();
-        Storage::put($file, json_encode($data));
+        //Storage::put($file, json_encode($data));
 
     }
 
     public function generate($channels)
     {
-        ChannelGenerator::makeCopyTemplate($this->group);
+        //ChannelGenerator::makeCopyTemplate($this->group);
         Record::cleanCache();
         Record::loadBumpers(config('XKI_BUMPERS_TAG', 'XK FILLER'));
 
-        $days = (int)config('SIMULATOR_DAYS', 14);
+        $days = count($channels);
         //$channels = $this->channels;
         if(!$channels) return false;
         
         $simulator = new XkiSimulator($this->group, $days, $channels);
         $simulator->setSaveTemplateState(true);
-        $data = $simulator->handle();
+        $simulator->handle();
 
         $error = $simulator->getErrorMark();
 
@@ -96,7 +97,7 @@ class XkiGenerator
             return false;
         }
 
-        $this->saveJob($data, "xki_generator_{$days}_".date('YmdHis').'.json', $channels);
+        $this->saveJob($simulator->filename, $channels);
 
         $special = Template::where(['group_id'=>$this->group,'schedule'=>Template::SPECIAL,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         
@@ -150,7 +151,7 @@ class XkiGenerator
 
                 
                 $break_level = 3;
-                $schedule_end = strtotime($program->start_at) + $scheduledDuration;
+                $schedule_end = strtotime($channel->air_date.' '.$program->schedule_start_at) + $scheduledDuration;
                 while(abs($scheduledDuration - $duration) > (int)config('MAX_GENERATION_GAP', 300))
                 {
                     if($duration > $scheduledDuration) break;
@@ -180,15 +181,19 @@ class XkiGenerator
                 $program->save();
                 $sort = $program->sort + 1;
             }
-
+            $this->checkDuration($channel, $program, $air);
             $this->addSpecialPrograms($special, $air, $programs, $sort);
 
             //CalculationEvent::dispatch($channel->id);
             $channel->start_end = $start_end .' - '. date('H:i:s', $air);
             $channel->status = Channel::STATUS_READY;
-            $channel->comment = ChannelGenerator::checkAbnormalTimespan($air);
+            $channel->comment = '';//ChannelGenerator::checkAbnormalTimespan($air);
+            $channel->lock_status = Channel::LOCK_ENABLE;
             $channel->save();
 
+            \App\Jobs\StatisticJob::dispatch($channel->id);
+            \App\Jobs\EpgJob::dispatch($channel->id);
+            \App\Jobs\AuditEpgJob::dispatch($channel->id, 'System');
 
             Notify::fireNotify(
                 $channel->name,
@@ -206,6 +211,58 @@ class XkiGenerator
 
     }
 
+    public function checkDuration($channel, &$program, &$air)
+    {
+        $start = strtotime($channel->air_date.' '.$program->schedule_end_at) + 86400;
+        $end = $air;
+
+        if($start <= $end) return $air;
+
+        $seconds = $start - $end;
+
+        if($seconds > 1800)
+        {
+            return $air;
+        }
+
+        $propose = $seconds;
+
+        if($propose < 60) $propose = 60;
+
+        $data = json_decode($program->data);
+
+        $break_level = 2;
+
+        $data = json_decode($program->data, true);
+        //$logs = [];
+
+        while($propose > 0)
+        {
+            // 如果当前累加的播出时间和计划播出时间差距大于5分钟，
+            // 凑时间，凑节目数
+            $this->info("add propose: $propose, level: $break_level");
+            $res = $this->addBumperItem2($break_level, $propose, $air);
+            if(is_array($res)) {
+                $data[] = $res['line'];
+                $propose -= $res['seconds'];
+                $air += $res['seconds'];
+                $this->info("propose: $propose, ".json_encode($res, JSON_UNESCAPED_UNICODE));
+            }
+            else {
+                // 4次循环后，还是没有找到匹配的节目，则跳出循环
+                $break_level --;
+            }
+
+            if($break_level < 0) {
+                break;
+            }
+        }
+        $program->data = json_encode($data);
+        $program->save();
+
+        return compact('air', 'program');
+    
+    }
 
     public function addPRItem($air, $category='XK PR')
     {
@@ -233,11 +290,9 @@ class XkiGenerator
         $seconds = ChannelGenerator::parseDuration($item->duration);
         $category = $item->category;
         $temp_air = $air + $seconds;
-
+        if(is_array($category)) $category = array_pop($category);
         //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
         if($temp_air > ($schedule_end + (int)config('GENERATE_GAP', 300))) return false;
-
-        //$duration += $seconds;
                     
         $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
                     
@@ -245,7 +300,25 @@ class XkiGenerator
 
         $line['end_at'] = date('H:i:s', $air);
 
-        //$this->info("添加Bumper 节目: {$category} {$item->name} {$item->duration}");
+        return compact('line', 'seconds');
+    }
+
+    public function addBumperItem2($break_level, $propose, $air)
+    {
+        $item = Record::findBumper($break_level);
+
+        if(!$item) return false;
+        //$this->info("find bumper: {$item->name} {$item->duration}");
+        $seconds = ChannelGenerator::parseDuration($item->duration);
+        if($seconds > (2*$propose)) return false;
+        
+        $category = $item->category;
+        if(is_array($category)) $category = array_pop($category);
+        //$this->info("air time: ".date('Y/m/d H:i:s', $air). " {$air}, schedule: ".date('Y/m/d H:i:s', $schedule_end));
+                   
+        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
+        $air += $seconds;
+        $line['end_at'] = date('H:i:s', $air);
 
         return compact('line', 'seconds');
     }

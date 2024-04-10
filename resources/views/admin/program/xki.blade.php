@@ -300,7 +300,7 @@
                 reCalculate(selectedIndex);
             }
             else {
-                if(selectedItem.black) {
+                if(selectedItem.black && selectedItem.black>0) {
                     toastr.error("该艺人以上黑名单，不能使用");
                     return;
                 }
@@ -401,7 +401,7 @@
 
     function selectProgram (idx) {
         var repo = cachedPrograms[idx];
-        if(repo.black) {
+        if(repo.black&&repo.black>0) {
             toastr.error("该节目以上黑名单");
         }
         if(repo.category) {

@@ -163,7 +163,16 @@ ol.breadcrumb {
                   <li><b>{{ @__('Start date')}}</b></li>
                   <li class="active"> {{$begin}} </li>
                   <li><b>{{ @__('Simulate days')}}</b></li>
-                  <li>{{ $days }} </li>
+                  <li> <div class="btn-group">
+  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{ $days }}&nbsp;&nbsp;&nbsp;&nbsp; <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="./{{$group}}?days=3">3</a></li>
+    <li><a href="./{{$group}}?days=7">7</a></li>
+    <li><a href="./{{$group}}?days=14">14</a></li>
+  </ul>
+</div>  </li>
                   <li><b>垫片数</b></li>
                   @foreach($r as $pr=>$c)
                   <li><b>{{$pr}}</b></li>
@@ -204,7 +213,7 @@ ol.breadcrumb {
                           @endif
                         </li>
                         @if($program['error'])
-                        <li class="list-group-item text-danger">{{$program['error']}}</li>
+                        <li class="list-group-item text-danger">{!!$program['error']!!}</li>
                         @else
                         @foreach ($program['program']['data'] as $item)
                         <li class="list-group-item">{!!$item!!}</li>

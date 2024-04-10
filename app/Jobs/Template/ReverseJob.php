@@ -22,7 +22,7 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $group;
+    private $id;
     private $action;
 
     /**
@@ -30,9 +30,9 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct($group, $action='none')
+    public function __construct($id, $action='none')
     {
-        $this->group = $group;
+        $this->id = $id;
         $this->action = $action;
     }
 
@@ -43,112 +43,44 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-        $jobs = EpgJob::where('group_id', $this->group)->orderBy('id', 'desc')->get()->toArray();
+        $job = EpgJob::find($this->id);
+        if(!$job) return 0;
 
-        $templates = Template::with('records')->where('group_id', $this->group)->orderBy('sort', 'asc')->get();
-        $data = json_encode($templates->toArray());
-        Storage::disk('data')->put($this->group.'_reset_template_'.date('YmdHis').'.json', $data);
-
-        $job = $jobs[0];
-        if(count($jobs) == 1) {
-
-            foreach($templates as $t)
+        $json = $job->file;
+        if(Storage::exists($json))
+        {
+            $data = json_decode(Storage::get($json), true);
+            foreach($data['templates'] as $template)
             {
-                $records = $t->records;
-
-                foreach($records as $model)
+                foreach($template['records'] as $record)
                 {
-                    $data = $model->data;
-                    if(key_exists('unique_no', $data)) $data['unique_no'] = '';
-                    if(key_exists('result', $data)) $data['result'] = '';
-                    if(key_exists('name', $data)) $data['name'] = '';
-
-                    if($model->type == TemplateRecords::TYPE_RANDOM) $data['episodes'] = '';
-
-                    $model->data = $data;
-                    if($model->isDirty()) $model->save();
+                    $record['data'] = json_encode($record['data']);
+                    TemplateRecords::where('id', $record['id'])->update($record);
                 }
             }
+            Storage::delete($json);
+            $job->delete();
+            if($this->action == 'clear') $this->clearChannel($data['channels']);
         }
-        else {
-            // $json = Storage::get($job->file);
-            // $ret = $this->reverseTemplate($json);
-            // if(!$ret) {
-                    
-                $reverse = $job[1];
-                $json = Storage::get($reverse->file);
-                $this->reverseTemplate2($json);
-            // }
-        }
-
-        if($this->action == 'clear') $this->clearChannel($json);
+        
+        return 0;
 
         
     }
 
-    private function reverseTemplate($json)
+    private function clearChannel($channels)
     {
-        $job = json_decode($json, true);
         
-        if(!key_exists('template', $job)) return false;
-        
-        $template = $job['template'];
-        
-        foreach($template['records'] as $record)
+        foreach($channels as $day)
         {
-            $item = TemplateRecords::find($record['id']);
-
-            if($item) 
-            {
-                $item->data['unique_no'] = $record['data']['unique_no'];
-                $item->data['name'] = $record['data']['name'];
-                $item->data['result'] = $record['data']['result'];
-                $item->save();
-            }
-
-        }
-
-        return true;
-    }
-
-    private function reverseTemplate2($json)
-    {
-        $job = json_decode($json, true);
-        $data = $job[count($job)-1];
-        foreach($data['data'] as $template)
-        {
-            foreach($template['records'] as $record)
-            {
-                $item = ChannelPrograms::find($record['id']);
-                if($item)
-                {
-                    $item->data['unique_no'] = $record['data']['unique_no'];
-                    $item->data['name'] = $record['data']['name'];
-                    $item->data['result'] = $record['data']['result'];
-                    $item->save();
-                }
-            }
-        }
-    }
-
-    private function clearChannel($json)
-    {
-        $job = json_decode($json, true);
-        if(key_exists('data', $job)) $data = $job['data'];
-        else $data = $job;
-        foreach($data as $day)
-        {
-            $c = Channel::find($day['id']);
-            if(!$c) continue;
+            $c = Channel::where('id', $day['id'])->delete();
             ChannelPrograms::where('channel_id', $c->id)->delete();
-            $c->delete();
-
         }
     }
 
     public function uniqueId()
     {
-        return $this->group;
+        return $this->id;
     }
 
     /**
