@@ -5,10 +5,6 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Material;
-use App\Models\Program;
-use App\Models\Record;
-use App\Models\Record2;
-use App\Tools\Exporter\TableGenerator;
 use App\Tools\Notify;
 use App\Tools\Statistic;
 use Encore\Admin\Widgets\Box;
@@ -21,12 +17,12 @@ use Illuminate\Support\Arr;
 class HomeController extends Controller
 {
   
-  public const VERSION = '2.0';
+  public const VERSION = '2.1';
   
   public function index(Content $content)
   {
     return $content
-            ->title('欢迎使用编单及节目管理系统')
+            ->title('欢迎使用编单及节目管理系统 v'.self::VERSION)
             ->description('查看、管理频道编单及节目内容和素材管理')
             ->row(HomeController::links())
             ->row(HomeController::statistics())
