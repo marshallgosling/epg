@@ -48,6 +48,19 @@ class XkcController extends AdminController
         $model = Channel::where('name', $this->group)->where('air_date', $air_date)->first();
 
         $data = $model->programs()->get();
+        $list = [];
+    
+        foreach($data as &$program)
+        {
+            if(strpos($program->data, 'replicate'))
+            {
+                $replicate = json_decode($program->data);
+                $program->data = $list[$replicate->replicate];
+            }
+            else {
+                $list[$program->id] = $program->data;
+            }
+        }
         $color = 'primary';
         $miss = ChannelGenerator::checkMaterials($data);
         return $content->title(__('Preview EPG Content'))->description(__(' '))

@@ -48,6 +48,19 @@ class XkvController extends AdminController
 
         $data = $model->programs()->get();
         $color = 'info';
+        $list = [];
+    
+        foreach($data as &$program)
+        {
+            if(strpos($program->data, 'replicate'))
+            {
+                $replicate = json_decode($program->data);
+                $program->data = $list[$replicate->replicate];
+            }
+            else {
+                $list[$program->id] = $program->data;
+            }
+        }
 
         $miss = ChannelGenerator::checkMaterials($data);
           
