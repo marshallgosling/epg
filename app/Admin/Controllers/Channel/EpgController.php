@@ -71,7 +71,7 @@ class EpgController extends AdminController
 
         $grid->filter(function (Grid\Filter $filter){
             $filter->column(8, function (Grid\Filter $filter) {
-                //$filter->equal('group_id', __('Group'))->radio(Channel::GROUPS);
+                $filter->in('group_id', __('Group'))->checkbox(Channel::GROUPS);
                 $filter->between('start_at', __('TimeRange'))->datetime();
             });
         });
