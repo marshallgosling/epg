@@ -132,7 +132,12 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             
             $duration = ChannelGenerator::parseDuration($item->duration);
             $playsec = $duration-$overflow;
-            $overflow -= $duration;   
+            $overflow -= $duration;
+
+            if($overflow == 0) {
+                $item = array_pop($data);
+                $playsec = ChannelGenerator::parseDuration($item->duration);
+            }
         }
 
         if($overflow>=-5 && $overflow<0)
