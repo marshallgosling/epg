@@ -202,10 +202,17 @@ class MaterialController extends AdminController
 
         $form->saving(function(Form $form) {
 
+            if(!preg_match('/^[X|XK|VC]\w+/', $form->unique_no)) {
+                $error = new MessageBag([
+                    'title'   => '创建物料失败',
+                    'message' => __('Unique no').': '. $form->unique_no.' 不合法。'
+                ]);
+                return back()->with(compact('error'));
+            }
             if($form->isCreating()) {
                 $error = new MessageBag([
                     'title'   => '创建物料失败',
-                    'message' => '该'.__('Unique no').': '. $form->unique_no.' 已存在。'
+                    'message' => __('Unique no').': '. $form->unique_no.' 已存在。'
                 ]);
     
                 if(Material::where('unique_no', $form->unique_no)->exists())
@@ -217,7 +224,7 @@ class MaterialController extends AdminController
             if($form->isEditing()) {
                 $error = new MessageBag([
                     'title'   => '修改物料失败',
-                    'message' => '该'.__('Unique no').': '. $form->unique_no.' 已存在。'
+                    'message' => __('Unique no').': '. $form->unique_no.' 已存在。'
                 ]);
     
                 if(Material::where('unique_no', $form->air_date)->where('id','<>',$form->model()->id)->exists())
