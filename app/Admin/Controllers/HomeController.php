@@ -58,7 +58,7 @@ class HomeController extends Controller
         <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-striped">
-                <tr><th>频道</th><th>消息</th><th>日期</th></tr>
+                <tr><th>频道</th><th>消息</th><th>分发日期</th></tr>
                 {$data}
             </table>
         </div></div>
@@ -88,7 +88,7 @@ HTML;
         <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-striped">
-                <tr><th>频道</th><th>标题</th><th>描述内容</th><th>日期</th></tr>
+                <tr><th>频道</th><th>标题</th><th>描述内容</th><th>错误日期</th></tr>
                 {$data}
             </table>
         </div></div>
