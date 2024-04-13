@@ -92,8 +92,8 @@ class XkcController extends AdminController
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
         })->width(40);
 
-        $grid->column('id', __('编单'))->display(function($id) {
-            return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
+        $grid->column('show', __('编单'))->display(function($id) {
+            return '<a href="'.$this->name.'/programs?channel_id='.$this->id.'">查看编单</a>';
         })->width(90);
         
         $grid->column('air_date', __('Air date'))->display(function($air_date) {
