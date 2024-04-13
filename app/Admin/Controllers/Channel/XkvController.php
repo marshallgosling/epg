@@ -87,7 +87,7 @@ class XkvController extends AdminController
 
         $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
 
-        $grid->column('id', __('ID'))->hide();
+        $grid->column('id', 'ID')->hide();
         $grid->column('version', __('Version'))->label('default')->width(50);
         $grid->column('lock_status', __('Lock'))->display(function($lock) {
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';

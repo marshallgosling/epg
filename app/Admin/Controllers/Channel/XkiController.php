@@ -84,7 +84,7 @@ class XkiController extends AdminController
     {
         $grid = new Grid(new Channel());
 
-        $grid->column('id', __('ID'))->hide();
+        $grid->column('id', 'ID')->hide();
         $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
 
         $grid->column('version', __('Version'))->label('default')->width(50);
