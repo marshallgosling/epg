@@ -96,7 +96,7 @@ HTML;
 HTML;
         $box = new Box('错误通知记录', $html);
 
-        $box->style('default');
+        $box->style('');
         
         $box->solid();
 
@@ -124,7 +124,7 @@ HTML;
 HTML;
         $box = new Box('最新添加物料记录', $html);
 
-        $box->style('default');
+        $box->style('');
         
         $box->solid();
 
@@ -187,7 +187,7 @@ HTML;
         
         $box = new Box('图表数据', $html);
 
-        $box->style('default');
+        $box->style('');
 
         $box->solid();
 
