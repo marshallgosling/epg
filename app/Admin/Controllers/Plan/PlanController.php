@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Plan;
 
 use App\Events\PlanEvent;
 use App\Models\Category;

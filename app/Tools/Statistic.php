@@ -15,7 +15,7 @@ class Statistic
     
     public static function countChannelXml()
     {
-        return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('status', Channel::STATUS_READY)->pluck('total', 'name')->toArray();
+        return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->pluck('total', 'name')->toArray();
     }
 
     public static function countTemplate()

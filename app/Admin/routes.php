@@ -110,7 +110,9 @@ Route::group([
     
     $router->resource('/statistic/list', 'StatisticController')->names('statistic.list');
     $router->resource('/notifications', 'NotificationController')->names('notification');
-    $router->resource('/plans', 'PlanController')->names('plans');
+    $router->resource('/plan/channel', 'Plan\\ChannelPlanController')->names('plan.channel');
+    $router->resource('/plan/advertise', 'Plan\\AdvertisePlanController')->names('plan.advertise');
+    $router->resource('/plan/program', 'Plan\\PlanController')->names('plan.program');
 
     $router->resource('/epg/jobs', 'EpgJobController')->names('epg.jobs');
     $router->resource('/epg', 'Channel\\EpgController')->names('channel.epg');
