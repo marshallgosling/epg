@@ -106,7 +106,8 @@ class XkcController extends AdminController
         
         $grid->column('audit', __('Audit status'))->width(90)->display(function () { 
             if($this->audit) {
-                foreach($this->audit()->orderBy('id','desc')->get() as $item) {
+                $item = $this->audit()->orderBy('id','desc')->first();
+                if($item) {
                     return Audit::STATUS[$item->status];
                 }
             }
@@ -115,7 +116,7 @@ class XkcController extends AdminController
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";
             $rows = [];
-            foreach($model->audit()->orderBy('id','desc')->get() as $item) {
+            foreach($model->audit()->orderBy('id','desc')->limit(10)->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
                     $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'

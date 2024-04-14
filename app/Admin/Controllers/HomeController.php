@@ -49,8 +49,8 @@ class HomeController extends Controller
         $list = Notify::getDistributions();
         $data = '';
         foreach($list as $m) {
-            $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
-            $m->message.'</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
+            $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td>'.
+            $m->message.'</td><td width="90">'.substr($m->created_at, 5, 11).'</td></tr>';
         }
             
         $html = <<<HTML
@@ -198,12 +198,14 @@ HTML;
     {
       $templates = Statistic::countTemplate();
       $channels = Statistic::countChannelXml();
-      $audit = Statistic::countAudit();
+      //$audit = Statistic::countAudit();
+      $distribution = Statistic::countDistribution();
       
       foreach(['xkv','xkc','xki'] as $k) {
         if(!array_key_exists($k, $channels)) $channels[$k] = 0;
-        if(!array_key_exists($k, $audit)) $audit[$k] = 0;
+        //if(!array_key_exists($k, $audit)) $audit[$k] = 0;
         if(!array_key_exists($k, $templates)) $templates[$k] = 0;
+        if(!array_key_exists($k, $distribution)) $distribution[$k] = 0;
       }
 
       $channels =[
@@ -211,19 +213,19 @@ HTML;
           '节目库内容数量 <span class="badge">'.array_sum(Statistic::countPrograms()).'</span>' => admin_url('media/xkv'),
           '模版库数量 <span class="badge">'.$templates['xkv'].'</span>' => admin_url('template/xkv'),
           '编单数量 <span class="badge">'.$channels['xkv'].'</span>' => admin_url('channel/xkv'),
-          '已审核编单 <span class="badge">'.$audit['xkv'].'</span>' => admin_url('channel/xkv'),
+          '已分发编单 <span class="badge">'.$distribution['xkv'].'</span>' => admin_url('channel/xkv'),
         ],
         '频道 星空中国' => [
           '节目库内容数量 <span class="badge">'.array_sum(Statistic::countRecords()).'</span>' => admin_url('media/xkc'),
           '模版库数量 <span class="badge">'.$templates['xkc'].'</span>' => admin_url('template/xkc'),
           '编单数量 <span class="badge">'.$channels['xkc'].'</span>' => admin_url('channel/xkc'),
-          '已审核编单 <span class="badge">'.$audit['xkc'].'</span>' => admin_url('channel/xkc'),
+          '已分发编单 <span class="badge">'.$distribution['xkc'].'</span>' => admin_url('channel/xkc'),
         ],
         '频道 星空国际' => [
           '节目库内容数量 <span class="badge">'.array_sum(Statistic::countRecord2()).'</span>' => admin_url('media/xki'),
           '模版库数量 <span class="badge">'.$templates['xki'].'</span>' => admin_url('template/xki'),
           '编单数量 <span class="badge">'.$channels['xki'].'</span>' => admin_url('channel/xki'),
-          '已审核编单 <span class="badge">'.$audit['xki'].'</span>' => admin_url('channel/xki'),
+          '已分发编单 <span class="badge">'.$distribution['xki'].'</span>' => admin_url('channel/xki'),
         ]
       ];
 

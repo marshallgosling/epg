@@ -66,6 +66,13 @@ class Statistic
         return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('lock_status', Channel::LOCK_ENABLE)->pluck('total', 'name')->toArray();
     }
 
+    public static function countDistribution()
+    {
+        return Cache::remember("distribution_status", 300, function() {
+            return DB::table('channel')->selectRaw('name, count(name) as total')->groupBy('name')->where('status', Channel::STATUS_DISTRIBUTE)->pluck('total', 'name')->toArray();
+        });
+    }
+
     public static function generatePieChart($id, $labels, $data, $title='',$pos='top')
     {
         $label = [];
