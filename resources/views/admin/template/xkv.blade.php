@@ -196,6 +196,7 @@
     var curPage = 1;
     var keyword = '';
     var loadingMore = false;
+    var checkboxList = [];
     $(function () {
         $('#widget-form-655477f1c8f59').submit(function (e) {
             e.preventDefault();
@@ -218,11 +219,14 @@
                 toastr.error("{{__('Please save new ordered list.')}}");
                 return;
             }
-            var selected = [];
+            var selected = checkboxList;
 
-            $('.grid-row-checkbox:checked').each(function () {
-                selected.push($(this).data('id'));
-            });
+            // $('.grid-row-checkbox:checked').each(function () {
+            //     selected.push($(this).data('id'));
+            // });
+            // $('.grid-row-checkbox:checked').each(function () {
+            //     selected.push($(this).data('id'));
+            // });
 
             if (selected.length == 0) {
                 toastr.error("请先勾选需要删除的节目。");
@@ -391,8 +395,25 @@
                 item.name = '';
             }
 
-            if(selectedIndex == 'new') selectedIndex = dataList.length;
-            dataList[selectedIndex] = item;
+            var idx = 0;
+            for(;idx<$chkboxes.length;idx++)
+            {
+                let t = $chkboxes.eq(idx).html();
+                if(t!='') break;
+            }
+            if(selectedIndex == 'new') {
+                if(idx == $chkboxes.length) dataList[idx] = item;
+                else {
+                    item.sort = idx+1;
+                    dataList.splice(idx+1, 0, item);
+                    for(var i=0;i<dataList.length;i++)
+                    {
+                        dataList[i].sort = i;
+                    }
+                }
+            }
+            else
+                dataList[selectedIndex] = item;
 
             reloadTree();
             
@@ -435,7 +456,7 @@
                     $('#noitem').hide();
                     $('#totalSpan').html("共找到 " + data.total + " 条节目（每次载入 20 条）");
                     var head = ['序号','播出编号','名称','艺人','时长','标签'];
-                    var html = '<tr><th>'+head.join('</t'+'h><th>')+'</'+'th></'+'tr>';
+                    var html = '<tr><th>'+head.join('</'+'th><th>')+'</'+'th></'+'tr>';
                     if(data.total > cachedPrograms.length) $('#moreBtn').show();
                     else $('#moreBtn').hide();
                     for(i=0;i<items.length;i++)
@@ -540,13 +561,14 @@
         $('#tree-programs').html(html);
         $('#total').html('<small>共 '+dataList.length+' 条记录</'+'small>');
 
-        $chkboxes = $('.grid-row-checkbox');
+        $chkboxes = $('.chkbox');
         setupMouseEvents();
     }
 
     var $chkboxes;
     var startmove = false;
     var templist = [];
+    var maxIdx = -1;
     function setupMouseEvents()
     {
         templist = [];
@@ -556,7 +578,12 @@
             let idx = parseInt($(this).data('id'));
             startmove = true;
             let ch = $chkboxes.eq(idx);
-            ch.prop('checked', !ch.prop('checked'));
+            //ch.prop('checked', !ch.prop('checked'));
+            console.log("mousedown:"+idx);
+            let c = ch.html();
+            console.log("html:"+c);
+            if(c=='') ch.html('<i class="fa fa-check text-green"></i>');
+            else ch.html('');
             
         });
         $('.dd-item').on('mouseenter', function(e) {
@@ -566,14 +593,20 @@
                 if(templist.indexOf(idx) == -1) {
                     templist.push(idx);
                     var ch = $chkboxes.eq(idx);
-                    ch.prop('checked', !ch.prop('checked'));
+                    //ch.prop('checked', !ch.prop('checked'));
+                    let c = ch.html();
+                    if(c=='') ch.html('<i class="fa fa-check text-green"></i>');
+                    else ch.html('');
                 }
                 else {
                     let t = templist.splice(templist.indexOf(idx));
 
                     for(i=0;i<t.length;i++) {
                         var ch = $chkboxes.eq(t[i]);
-                        ch.prop('checked', !ch.prop('checked'));
+                        //ch.prop('checked', !ch.prop('checked'));
+                        let c = ch.html();
+                        if(c=='') ch.html('<i class="fa fa-check text-green"></i>');
+                        else ch.html('');
                     }
                 }
                 //console.log(templist);
