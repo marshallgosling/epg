@@ -384,7 +384,7 @@
                 category: selectedItem.category,
                 type: $('input[name=datatype]:checked').val(),
                 data: selectedItem.unique_no,
-                sort: selectedIndex,
+                sort: selectedIndex == 'new' ? dataList.length:selectedIndex,
                 ischange: 1
             };
             if(item.type == 0) {
