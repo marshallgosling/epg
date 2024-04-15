@@ -48,6 +48,27 @@ class XkiController extends AdminController
         $model = Channel::where('name', $this->group)->where('air_date', $air_date)->first();
 
         $data = $model->programs()->get();
+        $list = [];
+    
+        foreach($data as &$program)
+        {
+            if(strpos($program->data, 'replicate'))
+            {
+                $replicate = json_decode($program->data);
+                $json = json_decode($list[$replicate->replicate]);
+                $air = strtotime($program->start_at);
+                foreach($json as &$item)
+                {
+                    $item->start_at = date('H:i:s', $air);
+                    $air += ChannelGenerator::parseDuration($item->duration);
+                    $item->end_at = date('H:i:s', $air);
+                }
+                $program->data = json_encode($json);
+            }
+            else {
+                $list[$program->id] = $program->data;
+            }
+        }
         $color = 'danger';
         $miss = ChannelGenerator::checkMaterials($data);
         return $content->title(__('Preview EPG Content'))->description(__(' '))
@@ -63,6 +84,7 @@ class XkiController extends AdminController
     {
         $grid = new Grid(new Channel());
 
+        $grid->column('id', 'ID')->hide();
         $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
 
         $grid->column('version', __('Version'))->label('default')->width(50);
@@ -70,8 +92,8 @@ class XkiController extends AdminController
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
         })->width(40);
 
-        $grid->column('id', __('编单'))->display(function($id) {
-            return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
+        $grid->column('show', __('编单'))->display(function($id) {
+            return '<a href="'.$this->name.'/programs?channel_id='.$this->id.'">查看编单</a>';
         })->width(90);
         
         $grid->column('air_date', __('Air date'))->display(function($air_date) {

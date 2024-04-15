@@ -48,6 +48,27 @@ class XkvController extends AdminController
 
         $data = $model->programs()->get();
         $color = 'info';
+        $list = [];
+    
+        foreach($data as &$program)
+        {
+            if(strpos($program->data, 'replicate'))
+            {
+                $replicate = json_decode($program->data);
+                $json = json_decode($list[$replicate->replicate]);
+                $air = strtotime($program->start_at);
+                foreach($json as &$item)
+                {
+                    $item->start_at = date('H:i:s', $air);
+                    $air += ChannelGenerator::parseDuration($item->duration);
+                    $item->end_at = date('H:i:s', $air);
+                }
+                $program->data = json_encode($json);
+            }
+            else {
+                $list[$program->id] = $program->data;
+            }
+        }
 
         $miss = ChannelGenerator::checkMaterials($data);
           
@@ -66,13 +87,14 @@ class XkvController extends AdminController
 
         $grid->model()->with('audit')->where('name', $this->group)->orderBy('air_date', 'desc');
 
+        $grid->column('id', 'ID')->hide();
         $grid->column('version', __('Version'))->label('default')->width(50);
         $grid->column('lock_status', __('Lock'))->display(function($lock) {
             return $lock == Channel::LOCK_ENABLE ? '<i class="fa fa-lock text-danger"></i>':'<i class="fa fa-unlock-alt text-info"></i>';
         })->width(40);
 
-        $grid->column('id', __('编单'))->display(function($id) {
-            return '<a href="'.$this->name.'/programs?channel_id='.$id.'">查看编单</a>';
+        $grid->column('show', __('编单'))->display(function() {
+            return '<a href="'.$this->name.'/programs?channel_id='.$this->id.'">查看编单</a>';
         })->width(100);
         
         $grid->column('air_date', __('Air date'))->display(function($air_date) {

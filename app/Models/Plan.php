@@ -18,7 +18,10 @@ class Plan extends Model
 
     public const STATUS = ['未启用', '运行中', '已过期', '错误'];
 
-    public const GROUPS = ['xkv'=>'XKV', 'xkc'=>'XKC', 'xki'=>'XKI'];
+    public const TYPES = ['频道','广告','节目'];
+    public const TYPE_CHANNEL = 0;
+    public const TYPE_ADVERTISE = 1;
+    public const TYPE_PROGRAMS = 2;
 
     protected $fillable = [
         'id',
