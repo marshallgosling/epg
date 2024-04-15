@@ -96,8 +96,8 @@ class ChannelPlanController extends AdminController
         // $show->field('episodes', __('Episodes'));
 
         $show->divider('播出时间及周期');
-        // $show->field('start_at', __('Start at'));
-        // $show->field('end_at', __('End at'));
+        $show->field('start_at', __('Start at'));
+        $show->field('end_at', __('End at'));
         $show->field('date_from', __('Date from'));
         $show->field('date_to', __('Date to'));
         // $show->field('daysofweek', __('Daysofweek'))->as(function($days) {
@@ -142,7 +142,7 @@ class ChannelPlanController extends AdminController
         // $form->checkbox('daysofweek', __('Daysofweek'))->options(TemplateRecords::DAYS);
         
         $form->divider('状态及数据');
-        $form->radio('status', __('Status'))->options(Plan::STATUS)->required();
+        //$form->radio('status', __('Status'))->options(Plan::STATUS)->required();
         $form->switch('is_repeat', '是否循环')->options($states);
         
         //$form->json('data', __('Data'));

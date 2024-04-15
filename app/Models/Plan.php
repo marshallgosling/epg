@@ -21,6 +21,7 @@ class Plan extends Model
     public const TYPES = ['频道','广告','节目'];
     public const TYPE_CHANNEL = 0;
     public const TYPE_ADVERTISE = 1;
+    public const TYPE_PROGRAMS = 2;
 
     protected $fillable = [
         'id',

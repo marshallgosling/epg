@@ -31,7 +31,7 @@ class PlanController extends AdminController
     {
         $grid = new Grid(new Plan());
 
-        $grid->model()->orderBy('id', 'desc');
+        $grid->model()->where('type', Plan::TYPE_PROGRAMS)->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'))->hide();
         $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
@@ -119,17 +119,17 @@ class PlanController extends AdminController
 
         $form->radio('group_id', __('Group'))->options(Channel::GROUPS)->required();
         $form->text('name', __('Name'))->required();
-
+        $form->hidden('type','')->default(Plan::TYPE_PROGRAMS);
         $form->divider('播出节目信息');
-        $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->default(0)->when(0, function (Form $form) { 
+        // $form->radio('type', __('Type'))->options(TemplateRecords::TYPES)->default(0)->when(0, function (Form $form) { 
   
-            $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
+        //     $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
     
-        })->when(2, function (Form $form) { 
+        // })->when(2, function (Form $form) { 
     
-            $form->text('unique_no', __('Unique no'));
+        //     $form->text('unique_no', __('Unique no'));
     
-        })->required();
+        // })->required();
         $form->select('category', __('Category'))->options(Category::getFormattedCategories());
 
         $form->divider('播出时间及周期');
