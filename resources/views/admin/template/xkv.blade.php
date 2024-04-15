@@ -376,7 +376,6 @@
             $('#searchModal').modal('hide');
 
             backupData();
-            deletedItem.push({name: "empty"});
 
             var item = {
                 id: selectedIndex == 'new' ? 0 : dataList[selectedIndex].id,
