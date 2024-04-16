@@ -21,7 +21,7 @@ class AdvertisePlanController extends AdminController
      *
      * @var string
      */
-    protected $title = '广告播出计划';
+    protected $title = '广告投放';
 
     /**
      * Make a grid builder.
