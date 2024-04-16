@@ -51,8 +51,8 @@ class AdvertisePlanController extends AdminController
         $grid->column('date_from', __('Date from'));
         $grid->column('date_to', __('Date to'));
 
-        // $grid->column('start_at', __('Start at'));
-        // $grid->column('end_at', __('End at'));
+        $grid->column('start_at', __('Start at'));
+        $grid->column('end_at', __('End at'));
         
         // $grid->column('category', __('Category'))->hide();
         // $grid->column('daysofweek', __('Daysofweek'))->display(function ($days) {
