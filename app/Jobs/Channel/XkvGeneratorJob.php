@@ -118,7 +118,7 @@ class XkvGeneratorJob implements ShouldQueue, ShouldBeUnique
 
                 ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
 
-                $planer->run($channel);
+                //$planer->run($channel);
             }
         }
         if($error)
