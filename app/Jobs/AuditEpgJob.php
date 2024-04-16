@@ -102,8 +102,11 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
         }
         
-        \App\Jobs\StatisticJob::dispatch($channel->id);
-        \App\Jobs\EpgJob::dispatch($channel->id);
+        if($this->name == 'Init' || $total['modified'] || $duration['modified']) {
+            \App\Jobs\StatisticJob::dispatch($channel->id);
+            \App\Jobs\EpgJob::dispatch($channel->id);
+        }
+        
         
     }
 
@@ -188,6 +191,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $logs = [];
         $result = true;
+        $modified = false;
 
         foreach($programs as $pro)
         {
@@ -219,6 +223,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                     $log['pro'] = $pro->id;
                     $logs[] = $log;
                     $result = false;
+                    $modified = true;
                 }
             }
 
@@ -229,7 +234,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             
         }
 
-        return compact('result', 'logs');
+        return compact('result', 'logs', 'modified');
     }
 
     private function checkTotal($programs, $channel, $class=null)
@@ -238,6 +243,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $start_end = explode(' - ', $channel->start_end);
         $start = strtotime($channel->air_date.' '.$start_end[0]);
         $end = strtotime($channel->air_date.' '.$start_end[1]);
+        $modified = false;
 
         if($start <= $end) return ['result'=>true, 'reason'=>''];
         
@@ -292,6 +298,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 $propose -= $res['seconds'];
                 $air += $res['seconds'];
                 $logs[] = $res; 
+                $modified = true;
                 //$this->info("add Bumper: ".json_encode($res, JSON_UNESCAPED_UNICODE));
             }
             else {
@@ -309,7 +316,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         CalculationEvent::dispatch($channel->id);
 
-        return ['result'=>false, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs];
+        return ['result'=>false, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs, 'modified'=>$modified];
         
     }
 
