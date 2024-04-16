@@ -55,9 +55,9 @@ class AdvertisePlanController extends AdminController
         // $grid->column('date_from', __('Date from'));
         // $grid->column('date_to', __('Date to'));
         $grid->column('is_repeat', __('Type'))->using(['单个','多集']);
-        $grid->column('unique_no', __('Unique no'));
+        
 
-        $grid->column('episodes', __('Episodes'))->hide();
+        $grid->column('episodes', __('Episodes'));
 
         $grid->column('category', __('Template'))->display(function() {
             return $this->template->name;
@@ -107,7 +107,7 @@ class AdvertisePlanController extends AdminController
         $show->divider('广告节目配置');
         $show->field('category', __('Template'));
         $show->field('is_repeat', __('Type'))->using(['单个','多集']);
-        $show->field('unique_no', __('Unique no'));
+        //$show->field('unique_no', __('Unique no'));
         $show->field('episodes', __('Episodes'));
         $show->field('daysofweek', __('Daysofweek'))->as(function($days) {
             $html = []; foreach($days as $d) $html[] = TemplateRecords::DAYS[$d];
@@ -142,11 +142,8 @@ class AdvertisePlanController extends AdminController
         $form->divider('广告节目配置');
         $form->select('category', __('Template'));
 
-        $form->radio('is_repeat', __('Type'))->options(['单个','多集'])->default(0)->when(0, function (Form $form) {
-            $form->text('unique_no', __('Unique no'));
-        })->when(2, function (Form $form) { 
-            $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
-        })->required();
+        $form->radio('is_repeat', __('Type'))->options(['单个','多集'])->default(0)->required();
+        $form->select('episodes', __('Episodes'))->options('/admin/api/episodes')->required();
         $form->checkbox('daysofweek', __('Daysofweek'))->options(TemplateRecords::DAYS)->canCheckAll();
 
         return $form;
