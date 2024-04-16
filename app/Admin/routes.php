@@ -133,4 +133,5 @@ Route::group([
     $router->get('/api/episodes', 'ApiController@episodes');
     $router->get('/api/episode', 'ApiController@episode');
     $router->get('/api/mediainfo', 'ApiController@mediainfo');
+    $router->get('/api/template', 'ApiController@template');
 });

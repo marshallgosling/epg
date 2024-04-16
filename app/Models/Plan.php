@@ -46,6 +46,11 @@ class Plan extends Model
         'data' => 'array'
     ];
 
+    public function template()
+    {
+        return $this->hasOne(Template::class, 'category', 'id');
+    }
+
     public function getDaysofweekAttribute($value)
     {
         return explode(',', $value);
