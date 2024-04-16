@@ -91,12 +91,20 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $channel->audit_date = now();
         $channel->comment = $comment;
+        $channel->lock_status = $audit->status ? Channel::LOCK_ENABLE : Channel::LOCK_EMPTY;
         $channel->save();
 
-        if($audit->status)
+        if($audit->status == Audit::STATUS_PASS) {
+            if($this->name == 'Init') {
+                \App\Jobs\StatisticJob::dispatch($channel->id);
+                \App\Jobs\EpgJob::dispatch($channel->id);    
+            }
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核通过", "审核通过: {$channel->air_date}", Notification::LEVEL_INFO);
-        else
+        }
+        else {
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
+        }
+            
     }
 
     private function check5seconds($channel, $programs)
