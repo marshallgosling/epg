@@ -48,7 +48,7 @@ class Plan extends Model
 
     public function template()
     {
-        return $this->hasOne(Template::class, 'category', 'id');
+        return $this->hasOne(Template::class, 'id', 'category');
     }
 
     public function getDaysofweekAttribute($value)
