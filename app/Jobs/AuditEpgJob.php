@@ -239,19 +239,19 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
     private function checkTotal($programs, $channel, $class=null)
     {
-        if(!$class) return ['result'=>true, 'reason'=>''];
+        if(!$class) return ['result'=>true, 'reason'=>'','modified'=>false];
         $start_end = explode(' - ', $channel->start_end);
         $start = strtotime($channel->air_date.' '.$start_end[0]);
         $end = strtotime($channel->air_date.' '.$start_end[1]);
         $modified = false;
 
-        if($start <= $end) return ['result'=>true, 'reason'=>''];
+        if($start <= $end) return ['result'=>true, 'reason'=>'','modified'=>false];
         
         $seconds = $start - $end;
 
         if($seconds > 1800)
         {
-            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。','modified'=>false];
         }
 
         $propose = floor($seconds / 3);
@@ -260,7 +260,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         if($channel->name == 'xkv')
         {
-            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。','modified'=>false];
         }
 
         $program = $programs[count($programs) - 1];
