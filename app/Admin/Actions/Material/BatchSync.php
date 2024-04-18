@@ -14,10 +14,12 @@ class BatchSync extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
+        $list = [];
         foreach ($collection as $model) {
             MediaInfoJob::dispatch($model->id, 'sync')->onQueue('media');
+            $list[] = [$model->id, $model->path, $model->scan_at];
         }
-        \App\Tools\Operation::log($this->name, 'material/BatchSync', 'action', $collection->toArray());
+        \App\Tools\Operation::log($this->name, 'material/BatchSync', 'action', $list);
         return $this->response()->success(__('BatchSync Success message'))->refresh();
     }
 

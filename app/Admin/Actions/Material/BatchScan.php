@@ -15,13 +15,15 @@ class BatchScan extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
+        $list = [];
         foreach ($collection as $model) {
             if($model->status == Folder::STATUS_SCAN) continue;
             $model->status = Folder::STATUS_SCAN;
             $model->save();
             ScanFolderJob::dispatch($model->id, 'scan')->onQueue('media');
+            $list[] = [$model->id, $model->path, $model->scan_at];
         }
-        \App\Tools\Operation::log($this->name, 'material/BatchScan', 'action', $collection->toArray());
+        \App\Tools\Operation::log($this->name, 'material/BatchScan', 'action', $list);
         return $this->response()->success(__('BatchScan Success message'))->refresh();
     }
 
