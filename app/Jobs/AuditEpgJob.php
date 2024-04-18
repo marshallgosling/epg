@@ -26,6 +26,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     private $id;
     private $name;
     private $cache;
+    private $missing;
 
     /**
      * Create a new job instance.
@@ -36,6 +37,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $this->id = $id;
         $this->name = $name;
+        $this->missing = [];
+        $this->cache = [];
     }
 
     /**
@@ -177,6 +180,9 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 $m->name = '';
                 $m->status = 0;
                 $m->duration = '';
+                $logs[] = array_key_exists($k, $this->missing) ? $this->missing[$k] : $m;
+                $result = false;
+                continue;
             }
             if($m->status != Material::STATUS_READY)
             {
@@ -213,6 +219,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 }
 
                 if(!$m) {
+                    $this->missing[$unique_no] = $item;
                     continue;
                 }
 
