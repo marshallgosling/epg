@@ -26,6 +26,9 @@ class ToolCalculate extends Action
         if($id) {
             
             CalculationEvent::dispatch($id[0]);
+
+            \App\Tools\Operation::log('重新计算节目单', 'ChannelProgram/ToolCalculate', 'action', $id);
+
             return $this->response()->success('计算时间完成。')->refresh();
         }
         

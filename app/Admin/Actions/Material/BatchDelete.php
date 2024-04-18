@@ -12,6 +12,7 @@ class BatchDelete extends BatchAction
 
     public function handle(Collection $collection)
     {
+        $list = [];
         foreach ($collection as $model) {
             
             if($model->group == null) continue;
@@ -20,8 +21,9 @@ class BatchDelete extends BatchAction
             if(empty(trim($model->group))) continue;
 
             Material::where('group', $model->group)->delete();
+            $list[] = $model->group;
         }
-
+        \App\Tools\Operation::log($this->name, 'material/BatchDelete', 'action', $list);
         return $this->response()->success(__('BatchDelete Success message'))->refresh();
     }
 

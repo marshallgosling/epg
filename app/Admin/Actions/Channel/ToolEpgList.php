@@ -14,6 +14,7 @@ class ToolEpgList extends BatchAction
 
     public function handle(Collection $collection)
     {
+        $list = [];
         foreach ($collection as $model) 
         {
             if($model->lock_status != Channel::LOCK_ENABLE || $model->status != Channel::STATUS_READY) {
@@ -21,8 +22,11 @@ class ToolEpgList extends BatchAction
                 continue;
             }
             //if($model->name == 'xkc')
-                ExportJob::dispatch($model->id);
+            ExportJob::dispatch($model->id);
+            $list[] = $model->toArray();
         }
+
+        \App\Tools\Operation::log('重新生成播出编单xml', 'channel/ToolEpgList', 'action', $list);
         
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }

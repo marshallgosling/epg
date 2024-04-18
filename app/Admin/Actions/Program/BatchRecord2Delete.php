@@ -12,6 +12,7 @@ class BatchRecord2Delete extends BatchAction
 
     public function handle(Collection $collection)
     {
+        $list = [];
         foreach ($collection as $model) {
             
             if($model->episodes == null) continue;
@@ -20,7 +21,10 @@ class BatchRecord2Delete extends BatchAction
             if(empty(trim($model->episodes))) continue;
 
             Record2::where('episodes', $model->episodes)->delete();
+            $list[] = $model->episodes;
         }
+
+        \App\Tools\Operation::log($this->name, 'program/BatchRecord2Delete', 'action', $list);
 
         return $this->response()->success(__('BatchDelete Success message'))->refresh();
     }

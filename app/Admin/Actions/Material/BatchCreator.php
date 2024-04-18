@@ -31,6 +31,7 @@ class BatchCreator extends BatchAction
         $frames = 0;
         $status = Material::STATUS_EMPTY;
         $folder = false;
+        $list = [];
         foreach($collection as $model)
         {
             if($model->status != RawFiles::STATUS_READY) continue;
@@ -61,8 +62,9 @@ class BatchCreator extends BatchAction
             }
             $model->delete();
             MediaInfoJob::dispatch($m->id, 'sync')->onQueue('media');
+            $list[] = $m->toArray();
         }
-        
+        \App\Tools\Operation::log($this->name, 'material/BatchCreator', 'action', $list);
         return $this->response()->success($this->name.'成功')->refresh();
     }
 

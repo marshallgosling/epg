@@ -49,16 +49,26 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         
-        $ch = Channel::find($day);
-        $data = BvtExporter::collectEPG($ch);
-                BvtExporter::generateData($ch, $data);
-                BvtExporter::$file = false;
-                $xml = BvtExporter::exportXml($ch->name);
-                $str = Storage::disk('xml')->get($ch->name.'_'.$ch->air_date.'.xml');
-
-        $this->info($xml);
-        $this->info($str);
-        $this->info($xml==$str?"相同":"不相同");
+        $list = Record::where('episodes', $group)->orderBy('ep')
+                    ->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
+                    foreach($list as $idx=>$l)
+                    {
+                        if($day == '') {
+                            print_r($l->toArray());
+                        }
+                        if($l->unique_no == $day) {
+                            $idx ++;
+                            if($idx == count($list)) {            
+                                echo 'finished';
+                            }
+                            else {
+                                if($idx == count($list)-1) $islast = true;
+                                print_r($list[$idx]->toArray());
+                            }
+                            break;
+                        }
+                    }
+                    echo 'empty';
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();

@@ -13,6 +13,7 @@ class BatchClean extends BatchAction
 
     public function handle(Collection $collection)
     {
+        $list = [];
         foreach ($collection as $model) 
         {
             // if($model->status != Channel::STATUS_READY) {
@@ -27,7 +28,10 @@ class BatchClean extends BatchAction
             $model->status = Channel::STATUS_EMPTY;
             $model->start_end = '';
             $model->save();
+            $list[] = $model->toArray();
         }
+
+        \App\Tools\Operation::log('批量清空编单', 'channel/BatchClean', 'action', $list);
         
         return $this->response()->success(__('Clean success message.'))->refresh();
     }

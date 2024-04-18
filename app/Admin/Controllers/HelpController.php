@@ -28,4 +28,5 @@ class HelpController extends Controller
             ->description($ver)
             ->row(view('admin.help.layout', ['content'=>$content]));
     }
+
 }

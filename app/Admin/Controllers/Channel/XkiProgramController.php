@@ -273,6 +273,10 @@ TMP;
 
         CalculationEvent::dispatch($model->channel_id, $model->id);
 
+        \App\Tools\Operation::log('保存节目编单', 'channel/XkiProgramController@save', 'post', 
+            ['id'=>$model->id, 'version'=>$model->version, 'name'=>$model->name, 'start_at'=>$model->start_at, 'end_at'=>$model->end_at,'data'=>json_decode($data['data'])]);
+
+
         return response()->json($response);
     }
 

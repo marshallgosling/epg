@@ -154,11 +154,11 @@ HTML;
         $html = <<<HTML
        <script src="/vendor/laravel-admin/chartjs/chart.js"></script>
 
-<div class="row" style="height:390px">
+<div class="row">
   
   <div class="col-md-12" style="border:0px solid #eee; border-left-width:1px;">
     <div class="row">
-      <div class="col-md-12"><canvas id="programChart"></canvas></div>
+      <div class="col-md-12"><canvas id="programChart" style="height:390px"></canvas></div>
     </div>
     
   </div>

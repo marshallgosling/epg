@@ -72,11 +72,11 @@ class XkiSimulator
         return $channels;
     }
 
-    public function setErrorMark($errors)
+    public function setErrorMark($errors, $date)
     {
         if(count($errors)) {
             if(!Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
-                Storage::disk('data')->put(XkiGenerator::STALL_FILE, $errors[0]);
+                Storage::disk('data')->put(XkiGenerator::STALL_FILE, $date);
         }
         else {
             if(Storage::disk('data')->exists(XkiGenerator::STALL_FILE)) {
@@ -124,6 +124,7 @@ class XkiSimulator
         $group = $this->group;
         $errors = [];
         $data = [];
+        $lastDate = '';
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->saveTemplate($templates, $this->channels);
@@ -235,11 +236,11 @@ class XkiSimulator
                 
             }
             $data[] = $result;
-            
+            if($result['error'] && $lastDate == '') $lastDate = $channel->air_date;
             $this->programs[$channel->air_date] = $programs;
         }
 
-        $this->setErrorMark($errors);
+        $this->setErrorMark($errors, $lastDate);
         $this->errors = $errors;
         $this->templates = $templates;
 

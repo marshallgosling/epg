@@ -8,6 +8,9 @@ use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+/**
+ * @deprecated
+ */
 class ToolCreator extends Action
 {
     public $name = '批量新增';
@@ -57,6 +60,7 @@ class ToolCreator extends Action
             if($s > $e) break;
         }
 
+        \App\Tools\Operation::log('批量创建节目单', 'channel/ToolCreator', 'action', compact('group', 'start_at', 'end_at'));
         
         return $this->response()->success('批量创建节目单成功')->refresh();
     }

@@ -27,6 +27,8 @@ class BatchReplicate extends BatchAction
 
         CalculationEvent::dispatch($model->channel_id);
 
+        \App\Tools\Operation::log('批量复制节目记录', 'ChannelProgram/BatchReplicate', 'action', []);
+
         return $this->response()->success(__('BatchReplicate Success message'))->refresh();
     }
 

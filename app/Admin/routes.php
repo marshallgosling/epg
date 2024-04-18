@@ -124,6 +124,7 @@ Route::group([
     $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
     $router->resource('/channel/audit', 'AuditController')->names('audit.list');
+    $router->resource('/operation/logs', 'OperationController')->names('admin.operation.logs');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');
@@ -133,4 +134,5 @@ Route::group([
     $router->get('/api/episodes', 'ApiController@episodes');
     $router->get('/api/episode', 'ApiController@episode');
     $router->get('/api/mediainfo', 'ApiController@mediainfo');
+    $router->get('/api/template', 'ApiController@template');
 });

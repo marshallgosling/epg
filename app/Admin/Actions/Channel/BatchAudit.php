@@ -18,15 +18,15 @@ class BatchAudit extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
-        
+        $list = [];
         foreach ($collection as $model) 
-        {
-            
+        { 
             if(in_array($model->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])) {
                 AuditEpgJob::dispatch($model->id, Admin::user()->name);
+                $list[] = $model->toArray();
             }
         }
-        
+        \App\Tools\Operation::log('批量审核', 'channel/BatchAudit', 'action', $list);
         return $this->response()->success('批量审核任务已提交。')->refresh();
     }
 

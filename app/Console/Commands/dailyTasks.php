@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use App\Tools\Exporter\ZipperFiles;
+use Encore\Admin\Auth\Database\OperationLog;
 
 class dailyTasks extends Command
 {
@@ -37,7 +38,7 @@ class dailyTasks extends Command
         $action = $this->argument('action') ?? "xml";
         $args = $this->argument('args') ?? false;
 
-        if(in_array($action, ['xml', 'backup', 'scan']))
+        if(in_array($action, ['xml', 'backup', 'scan', 'clearlog']))
             $this->$action($args);
         
         return 0;
@@ -60,6 +61,13 @@ class dailyTasks extends Command
             MediaInfoJob::dispatch($model->id, 'distribute')->onQueue('media');
         }
         
+    }
+
+    private function clearlog($args)
+    {
+        if($args) {
+            OperationLog::where('id', '<', $args)->delete();
+        }
     }
 
     private function backup($args)

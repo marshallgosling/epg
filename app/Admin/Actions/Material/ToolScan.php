@@ -29,6 +29,7 @@ class ToolScan extends Action
         $model->status = Folder::STATUS_SCAN;
         $model->save();
         ScanFolderJob::dispatch($model->id, 'scan')->onQueue('media');
+        \App\Tools\Operation::log($this->name, 'material/ToolScan', 'action', $model->toArray());
         return $this->response()->success(__('扫描任务已启动'))->refresh();
     }
 

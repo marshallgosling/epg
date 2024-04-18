@@ -36,23 +36,12 @@ class ChannelPlanController extends AdminController
         $grid->column('id', __('Id'))->hide();
         $grid->column('group_id', __('Group'))->filter(Channel::GROUPS)->using(Channel::GROUPS)->dot(Channel::DOTS, 'info');
         $grid->column('name', __('Name'));
-        // $grid->column('ex', __(" "))->display(function() {
-        //     return "计划列表";
-        // })->expand(function ($model) {
-        //     $programs = json_decode($model->data);
-        //     $items = [];
-        //     if($programs && is_array($programs))foreach($programs as $p)
-        //     {            
-        //         $items[] = [ $p->start_at, $p->end_at, $p->artist, $p->name, $p->unique_no, $p->duration];
-        //     }
+        
+        $grid->column('date_from', '选取开始日期');
+        $grid->column('date_to', '选取结束日期');
 
-        //     return new Table([ '开始时间', '结束时间', '剧集', '选集', '播出编号', '时长'], $items, ['table-hover']);
-        // });
-        $grid->column('date_from', __('Date from'));
-        $grid->column('date_to', __('Date to'));
-
-        // $grid->column('start_at', __('Start at'));
-        // $grid->column('end_at', __('End at'));
+        $grid->column('start_at', '重播起始日期');
+        $grid->column('end_at', '重播结束日期');
         
         // $grid->column('category', __('Category'))->hide();
         // $grid->column('daysofweek', __('Daysofweek'))->display(function ($days) {
@@ -63,7 +52,7 @@ class ChannelPlanController extends AdminController
         $grid->column('status', __('Status'))->filter(Plan::STATUS)->using(Plan::STATUS)->label(['default','success','warning','danger']);
         
         //$grid->column('type', __('Type'))->filter(TemplateRecords::TYPES)->using(TemplateRecords::TYPES);
-        //$grid->column('is_repeat', '是否循环')->bool();
+        $grid->column('is_repeat', '是否循环')->bool();
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 

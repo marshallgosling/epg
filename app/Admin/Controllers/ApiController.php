@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Template;
 use App\Tools\Notify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -88,6 +89,12 @@ class ApiController extends Controller
 
     }
 
+    public function template(Request $request) {
+        $group_id = $request->get('q');
+
+        return Template::where('group_id', $group_id)->where('status', Template::STATUS_SYNCING)
+            ->orderBy('sort')->get(['id', DB::raw("concat(name,' ', start_at, '-', end_at)  as text")]);
+    }
 
     public function programs(Request $request) {
         $q = $request->get('q');

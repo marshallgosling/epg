@@ -8,6 +8,7 @@ use App\Jobs\Channel\XkiGeneratorJob;
 use App\Models\Channel;
 use App\Tools\Generator\XkcGenerator;
 use App\Tools\Generator\XkiGenerator;
+use App\Tools\Operation;
 use Illuminate\Support\Facades\Storage;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
@@ -28,16 +29,7 @@ class ToolGenerator extends Action
     {
         $group = $request->get('generate_group');
 
-        if($group == 'xkc' && Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
-        {
-            return $this->response()->error('您有未处理的模版编排错误，请先进入模版页面，解决模版问题，然后点击“模拟编单测试”按钮。');
-        }
-
-        if($group == 'xki' && Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
-        {
-            return $this->response()->error('您有未处理的模版编排错误，请先进入模版页面，解决模版问题，然后点击“模拟编单测试”按钮。');
-        }
-
+        
         if(Channel::where(['status'=>Channel::STATUS_ERROR,'name'=>$group])->exists())
         {
             return $this->response()->error('节目单有状态为“错误”的情况，请先处理错误的节目单后才能继续。');
@@ -58,6 +50,22 @@ class ToolGenerator extends Action
 
         if($e > $max) $end_at = date('Y-m-d', $max);
 
+        if($group == 'xkc' && Storage::disk('data')->exists(XkcGenerator::STALL_FILE))
+        {
+            $date = Storage::disk('data')->get(XkcGenerator::STALL_FILE);
+            $ts = strtotime($date);
+            if($e>=$ts)
+                return $this->response()->error('您有未处理的模版编排错误，请先进入模版页面，解决模版问题，然后点击“模拟编单测试”按钮。');
+        }
+
+        if($group == 'xki' && Storage::disk('data')->exists(XkiGenerator::STALL_FILE))
+        {
+            $date = Storage::disk('data')->get(XkiGenerator::STALL_FILE);
+            $ts = strtotime($date);
+            if($e>=$ts)
+                return $this->response()->error('您有未处理的模版编排错误，请先进入模版页面，解决模版问题，然后点击“模拟编单测试”按钮。');
+        }
+
         if($group == 'xkc')
             XkcGeneratorJob::dispatch(compact('s','e'))->onQueue('xkc');
         else if($group == 'xki')
@@ -65,7 +73,7 @@ class ToolGenerator extends Action
         else
             XkvGeneratorJob::dispatch(compact('s','e'))->onQueue('xkv');
         
-
+        Operation::log('自动生成节目编单', 'channel/ToolGenerator', 'action', compact('group', 'start_at', 'end_at'));
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }
 

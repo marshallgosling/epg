@@ -26,6 +26,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     private $id;
     private $name;
     private $cache;
+    private $missing;
 
     /**
      * Create a new job instance.
@@ -36,6 +37,8 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $this->id = $id;
         $this->name = $name;
+        $this->missing = [];
+        $this->cache = [];
     }
 
     /**
@@ -91,12 +94,23 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         $channel->audit_date = now();
         $channel->comment = $comment;
+        $channel->lock_status = $audit->status == Audit::STATUS_PASS ? Channel::LOCK_ENABLE : Channel::LOCK_EMPTY;
         $channel->save();
 
-        if($audit->status)
+        if($audit->status == Audit::STATUS_PASS) {
+            
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核通过", "审核通过: {$channel->air_date}", Notification::LEVEL_INFO);
-        else
+        }
+        else {
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
+        }
+        
+        if($this->name == 'Init' || $total['modified'] || $duration['modified']) {
+            \App\Jobs\StatisticJob::dispatch($channel->id);
+            \App\Jobs\EpgJob::dispatch($channel->id);
+        }
+        
+        
     }
 
     private function check5seconds($channel, $programs)
@@ -166,6 +180,9 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 $m->name = '';
                 $m->status = 0;
                 $m->duration = '';
+                $logs[] = array_key_exists($k, $this->missing) ? $this->missing[$k] : $m;
+                $result = false;
+                continue;
             }
             if($m->status != Material::STATUS_READY)
             {
@@ -180,6 +197,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $logs = [];
         $result = true;
+        $modified = false;
 
         foreach($programs as $pro)
         {
@@ -201,6 +219,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 }
 
                 if(!$m) {
+                    $this->missing[$unique_no] = $item;
                     continue;
                 }
 
@@ -211,6 +230,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                     $log['pro'] = $pro->id;
                     $logs[] = $log;
                     $result = false;
+                    $modified = true;
                 }
             }
 
@@ -221,23 +241,24 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             
         }
 
-        return compact('result', 'logs');
+        return compact('result', 'logs', 'modified');
     }
 
     private function checkTotal($programs, $channel, $class=null)
     {
-        if(!$class) return ['result'=>true, 'reason'=>''];
+        if(!$class) return ['result'=>true, 'reason'=>'','modified'=>false];
         $start_end = explode(' - ', $channel->start_end);
         $start = strtotime($channel->air_date.' '.$start_end[0]);
         $end = strtotime($channel->air_date.' '.$start_end[1]);
+        $modified = false;
 
-        if($start <= $end) return ['result'=>true, 'reason'=>''];
+        if($start <= $end) return ['result'=>true, 'reason'=>'','modified'=>false];
         
         $seconds = $start - $end;
 
         if($seconds > 1800)
         {
-            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。','modified'=>false];
         }
 
         $propose = floor($seconds / 3);
@@ -246,7 +267,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         if($channel->name == 'xkv')
         {
-            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。'];
+            return ['result'=>false, 'reason'=>'编单时间异常，系统无法确认播出情况，需手动分析。','modified'=>false];
         }
 
         $program = $programs[count($programs) - 1];
@@ -284,6 +305,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
                 $propose -= $res['seconds'];
                 $air += $res['seconds'];
                 $logs[] = $res; 
+                $modified = true;
                 //$this->info("add Bumper: ".json_encode($res, JSON_UNESCAPED_UNICODE));
             }
             else {
@@ -301,7 +323,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
         CalculationEvent::dispatch($channel->id);
 
-        return ['result'=>false, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs];
+        return ['result'=>false, 'reason'=>'已自动调整节目编单时长。', 'logs'=>$logs, 'modified'=>$modified];
         
     }
 
