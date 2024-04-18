@@ -43,8 +43,8 @@ class OperationController extends AdminController
             $color = Arr::get(OperationController::$methodColors, $method, 'grey');
 
             return "<span class=\"badge bg-$color\">$method</span>";
-        });
-        $grid->column('path', 'Path')->label('info');
+        })->filter(['action'=>'Action', 'post'=>'Controller']);
+        $grid->column('path', 'Path');
         //$grid->column('ip')->label('primary');
         $grid->column('input', '数据')->display(function ($input) {
             return "展开";
@@ -66,7 +66,7 @@ class OperationController extends AdminController
             $userModel = config('admin.database.users_model');
 
             $filter->equal('user_id', 'User')->select($userModel::all()->pluck('name', 'id'));
-            $filter->equal('method')->radio(['action'=>'Action', 'post'=>'Controller']);
+            $filter->in('method')->checkbox(['action'=>'Action', 'post'=>'Controller']);
             $filter->like('path');
         });
 
