@@ -8,7 +8,7 @@ class Operation {
 
     public static function log($name, $path, $method, $input)
     {
-        if(config('ENABLE_OPRATION_LOG', 'false') == 'true') {
+        if(config('ENABLE_OPERATION_LOG', 'false') == 'true') {
             $log = [
                 'user_id' => Admin::user()->id,
                 'path'    => "$name($path)",
