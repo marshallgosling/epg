@@ -124,7 +124,7 @@ Route::group([
     $router->post('/channel/test/data/{id}/save', 'Channel\\TestProgramController@save')->name('channel.test.programs.save');
 
     $router->resource('/channel/audit', 'AuditController')->names('audit.list');
-    $router->resource('/admin/operation/log', 'OperationController')->names('admin.operation.log');
+    $router->resource('/operation/logs', 'OperationController')->names('admin.operation.logs');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');
