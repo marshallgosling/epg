@@ -49,7 +49,7 @@ class OperationController extends AdminController
         $grid->column('input', '数据')->display(function ($input) {
             return "展开";
         })->expand(function ($model) {
-            return new Box('Json', view('admin.form.config', ['id'=>$model->id,'config'=>json_encode($model->input, JSON_UNESCAPED_UNICODE)]));
+            return new Box('Json', view('admin.form.config', ['id'=>$model->id,'config'=>json_encode(json_decode($model->input), JSON_UNESCAPED_UNICODE)]));
         });
 
         $grid->column('created_at', trans('admin.created_at'));
