@@ -63,11 +63,16 @@ class OperationController extends AdminController
         $grid->disableBatchActions();
 
         $grid->filter(function (Grid\Filter $filter) {
-            $userModel = config('admin.database.users_model');
+            $filter->column(6, function(Grid\Filter $filter) {
+            
+                $userModel = config('admin.database.users_model');
 
-            $filter->equal('user_id', 'User')->select($userModel::all()->pluck('name', 'id'));
-            $filter->in('method')->checkbox(['action'=>'Action', 'post'=>'Controller']);
-            $filter->like('path');
+                $filter->equal('user_id', 'User')->select($userModel::all()->pluck('name', 'id'));
+                $filter->in('method')->checkbox(['action'=>'Action', 'post'=>'Controller']);
+            });
+            $filter->column(6, function(Grid\Filter $filter) {
+                $filter->like('path');
+            });
         });
 
         return $grid;
