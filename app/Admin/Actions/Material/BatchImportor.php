@@ -32,7 +32,7 @@ class BatchImportor extends BatchAction
             $class = '\App\Models\Record2';
             $relation = 'record2';
         }
-        
+        $list = [];
         foreach($models as $model)
         {
             //if($model->status != Material::STATUS_READY) continue;
@@ -70,8 +70,10 @@ class BatchImportor extends BatchAction
                 $program->save();
                 //$cid = Category::where('no', $model->category)->value('id');
                 //DB::table('category_'.$relation)->insert(['category_id'=>$cid, 'record_id'=>$program->id]);
+                $list[] = $program->toArray();
             }
         }
+        \App\Tools\Operation::log($this->name, 'material/BatchImporter', 'action', $list);
         
         return $this->response()->success(__('Import Success message'));
     }

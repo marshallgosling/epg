@@ -19,6 +19,7 @@ class BatchProcessLargeFile extends BatchAction
             if($model->status == LargeFile::STATUS_EMPTY)
                 MediaInfoJob::dispatch($model->id, 'process')->onQueue('media');
         }
+        \App\Tools\Operation::log($this->name, 'material/BatchProcessLargeFile', 'action', $collection->toArray());
 
         return $this->response()->success(__('BatchSync Success message'))->refresh();
     }

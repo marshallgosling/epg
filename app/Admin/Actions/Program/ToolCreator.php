@@ -53,14 +53,16 @@ class ToolCreator extends Action
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
 
+        $list = [];
         for($i=0;$i<$total;$i++)
         {
             $ep = $i+$st;
             $unique_no = $code.$this->ep($ep);
             $name = $episodes.' '.$ep;
             $class::create(compact('name', 'unique_no','episodes','category', 'duration','seconds','ep','status','created_at','updated_at'));
+            $list[] = [$name, $unique_no];
         }
-        
+        \App\Tools\Operation::log($this->name, 'program/ToolCreator', 'action', compact('channel', 'unique', 'episodes' ,'total', 'st', 'duration','category','list'));
         return $this->response()->success(__('BatchCreator success message.'))->refresh();
     }
 

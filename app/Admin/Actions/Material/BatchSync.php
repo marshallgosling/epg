@@ -17,7 +17,7 @@ class BatchSync extends BatchAction
         foreach ($collection as $model) {
             MediaInfoJob::dispatch($model->id, 'sync')->onQueue('media');
         }
-
+        \App\Tools\Operation::log($this->name, 'material/BatchSync', 'action', $collection->toArray());
         return $this->response()->success(__('BatchSync Success message'))->refresh();
     }
 

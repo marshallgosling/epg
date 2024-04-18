@@ -19,9 +19,12 @@ class Replicate extends RowAction
             return $this->response()->success(__('Replicate Failed message'))->refresh();
         }
 
-        $model->replicate()->save();
+        $new = $model->replicate();
+        $new->save();
 
         CalculationEvent::dispatch($model->channel_id);
+        
+        \App\Tools\Operation::log('复制节目记录', 'ChannelProgram/Replicate', 'action', ['new'=>$new->toArray()]);
 
         return $this->response()->success(__('Replicate Success message'))->refresh();
     }

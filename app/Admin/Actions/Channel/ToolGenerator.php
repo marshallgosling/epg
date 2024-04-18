@@ -8,6 +8,7 @@ use App\Jobs\Channel\XkiGeneratorJob;
 use App\Models\Channel;
 use App\Tools\Generator\XkcGenerator;
 use App\Tools\Generator\XkiGenerator;
+use App\Tools\Operation;
 use Illuminate\Support\Facades\Storage;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class ToolGenerator extends Action
         else
             XkvGeneratorJob::dispatch(compact('s','e'))->onQueue('xkv');
         
-
+        Operation::log('自动生成节目编单', 'channel/ToolGenerator', 'action', compact('group', 'start_at', 'end_at'));
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }
 

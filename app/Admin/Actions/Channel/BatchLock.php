@@ -35,8 +35,10 @@ class BatchLock extends BatchAction
                 StatisticJob::dispatch($model->id);
                 EpgJob::dispatch($model->id);
             }
+
+            $list[] = $model->toArray();
         }
-        
+        \App\Tools\Operation::log('批量分发编单', 'channel/BatchClean', 'action', $list);
         return $this->response()->success($lock?"加锁成功":"解锁成功")->refresh();
     }
 

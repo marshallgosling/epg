@@ -16,6 +16,7 @@ class BatchReplicate extends BatchAction
     public function handle(Collection $collection)
     {
         $air = false; 
+        $list = [];
         foreach ($collection as $model) {
             if(!$air) $air = ChannelGenerator::getLatestAirDate($model->name);
             if(!$air) $air = time();
@@ -46,11 +47,13 @@ class BatchReplicate extends BatchAction
                     $pro->save();
                     $relations[$old->id] = $pro->id;
                 }
+                
             }
-
+            
             CalculationEvent::dispatch($newid);
-
+            $list[] = ['o'=>$model->toArray(),'n'=>$new->toArray()];
         }
+        \App\Tools\Operation::log('批量复制', 'channel/BatchReplicate', 'action', $list);
 
         return $this->response()->success(__('BatchReplicate Success message'))->refresh();
     }

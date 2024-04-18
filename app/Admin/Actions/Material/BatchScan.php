@@ -21,7 +21,7 @@ class BatchScan extends BatchAction
             $model->save();
             ScanFolderJob::dispatch($model->id, 'scan')->onQueue('media');
         }
-
+        \App\Tools\Operation::log($this->name, 'material/BatchScan', 'action', $collection->toArray());
         return $this->response()->success(__('BatchScan Success message'))->refresh();
     }
 

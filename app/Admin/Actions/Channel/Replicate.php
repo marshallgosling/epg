@@ -48,6 +48,8 @@ class Replicate extends RowAction
 
         CalculationEvent::dispatch($newid);
 
+        \App\Tools\Operation::log('复制', 'channel/Replicate', 'action', ['o'=>$model->toArray(),'n'=>$new->toArray()]);
+
         return $this->response()->success(__('Replicate Success message'))->refresh();
     }
 

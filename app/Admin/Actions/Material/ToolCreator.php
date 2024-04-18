@@ -54,6 +54,7 @@ class ToolCreator extends Action
                 $model = Material::create(compact('channel', 'group', 'name', 'unique_no', 'category','duration','frames','status','filepath','ep'));
             MediaInfoJob::dispatch($model->id, 'sync')->onQueue('media');
         }
+        \App\Tools\Operation::log($this->name, 'material/ToolCreator', 'action', compact('channel', 'list', 'category'));
         return $this->response()->success(__('BatchCreator success message.'))->refresh();
     }
 

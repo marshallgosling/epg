@@ -17,11 +17,13 @@ class BatchDistributor extends BatchAction
     public function handle(Collection $collection, Request $request)
     {
         $comment = '';
+        $list = [];
         foreach ($collection as $model) {
             if($model->lock_status != Channel::LOCK_ENABLE) $comment .= "日期 {$model->air_date} 未锁定\n";
             MediaInfoJob::dispatch($model->id, 'distribute')->onQueue('media');
+            $list[] = $model->toArray();
         }
-
+        \App\Tools\Operation::log('批量分发编单', 'channel/BatchClean', 'action', $list);
         return $this->response()->success(__('BatchSync Success message').$comment)->refresh();
     }
 
