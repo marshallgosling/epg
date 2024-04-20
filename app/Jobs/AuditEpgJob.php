@@ -154,9 +154,10 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             }
         }
 
-        if($overflow>=-5 && $overflow<0)
+        $max = (int)config('MAX_OVERFLOW', 10);
+        if($overflow>=(-1*$max) && $overflow<0)
         {
-            return ['result'=>false, 'reason'=>"异常：编单最后一档节目 {$item->name}({$duration}秒) 播出时间将小于5秒。"];
+            return ['result'=>false, 'reason'=>"异常：编单最后一档节目 {$item->name}({$duration}秒) 播出时间将小于{$max}秒。"];
         }
 
         if($overflow > 0) {
