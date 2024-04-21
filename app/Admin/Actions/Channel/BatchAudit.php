@@ -22,7 +22,7 @@ class BatchAudit extends BatchAction
         foreach ($collection as $model) 
         { 
             if(in_array($model->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])) {
-                AuditEpgJob::dispatch($model->id, Admin::user()->name);
+                AuditEpgJob::dispatch($model->id, Admin::user()->name)->onQueue('audit');
                 $list[] = $model->toArray();
             }
         }

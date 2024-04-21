@@ -176,20 +176,35 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         foreach($cache as $k=>$m)
         {
             if(!$m) {
-                $m = new Material();
-                $m->unique_no = $k;
-                $m->name = '';
-                $m->status = 0;
-                $m->duration = '';
-                $logs[] = array_key_exists($k, $this->missing) ? $this->missing[$k] : $m;
+                
+                $log = array_key_exists($k, $this->missing) ? $this->missing[$k] : ["unique_no"=>$k, 'name'=>'','error'=>'不存在的播出编号'];
+                $logs[] = $log;
                 $result = false;
                 continue;
             }
             if($m->status != Material::STATUS_READY)
             {
-                $logs[] = $m;
+                $log = $m->toArray();
+                $log['error'] = "素材状态不可用";
+                $logs[] = $log;
+                $result = false;
+                continue;
+            }
+            if(!file_exists($m->filepath)) {
+                $log = $m->toArray();
+                $log['error'] = "文件 {$m->filepath} 不存在。";
+                $logs[] = $log;
+                $result = false;
+                continue;
+            }
+            if(!strpos($m->filepath, "{$m->name}.{$m->unique_no}"))
+            {
+                $log = $m->toArray();
+                $log['error'] = "文件名内不包含 {$m->name}.{$m->unique_no}";
+                $logs[] = $log;
                 $result = false;
             }
+            
         }
         return compact('result', 'logs');
     }
@@ -212,7 +227,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
                 if(!array_key_exists($unique_no, $this->cache))
                 {
-                    $m = Material::where('unique_no', $unique_no)->select(['id','name','unique_no','status','duration'])->first();
+                    $m = Material::where('unique_no', $unique_no)->select(['id','name','unique_no','filepath','status','duration'])->first();
                     $this->cache[$unique_no] = $m;
                 }
                 else {
@@ -221,6 +236,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
                 if(!$m) {
                     $this->missing[$unique_no] = $item;
+                    $this->missing[$unique_no]['error'] = "物料不存在";
                     continue;
                 }
 

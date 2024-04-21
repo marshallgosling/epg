@@ -188,7 +188,7 @@ class XkcGenerator
             $channel->lock_status = Channel::LOCK_ENABLE;
             $channel->save();
 
-            \App\Jobs\AuditEpgJob::dispatch($channel->id, 'Init');
+            \App\Jobs\AuditEpgJob::dispatch($channel->id, 'Init')->onQueue('audit');
 
             Notify::fireNotify(
                 $channel->name,
