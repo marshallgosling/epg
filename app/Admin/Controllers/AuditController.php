@@ -59,7 +59,7 @@ class AuditController extends AdminController
                 else {
                     foreach($data['material']['logs'] as $item) {
                         $rows[] = [
-                            $item['name'], $item['unique_no'], $item['duration'], $item['error']
+                            $item['name'], $item['unique_no'], $item['duration'], array_key_exists('error', $item) ? $item['error'] : '缺失物料'
                         ];
                     }
                     $head = ['名称','播出编号','时长',''];
