@@ -199,6 +199,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             }
             if(!strpos($m->filepath, "{$m->name}.{$m->unique_no}"))
             {
+                if(strpos($m->filepath, '\\MV2\\')) continue;
                 $log = $m->toArray();
                 $log['error'] = "文件名内不包含 {$m->name}.{$m->unique_no}";
                 $logs[] = $log;
