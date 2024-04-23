@@ -116,7 +116,7 @@ class XkcController extends AdminController
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";
             $rows = [];
-            foreach($model->audit()->orderBy('id','desc')->limit(10)->get() as $item) {
+            foreach($model->audit()->orderBy('id','desc')->take(10)->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
                     $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
