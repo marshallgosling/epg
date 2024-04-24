@@ -324,6 +324,7 @@
                 for(var n=0;n<selectedItems.length;n++) {
                     dataList.splice(selectedIndex+n, 0, selectedItems[n]);
                     modifiedItem.push(selectedItems[n].unique_no.toString());
+                    break;
                 }
                 
                 reCalculate(selectedIndex);
