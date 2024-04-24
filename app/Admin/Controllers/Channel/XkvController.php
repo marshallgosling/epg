@@ -52,7 +52,7 @@ class XkvController extends AdminController
     
         foreach($data as &$program)
         {
-            if(strpos($program->data, 'replicate'))
+            if(strpos($program->data, '"replicate"'))
             {
                 $replicate = json_decode($program->data);
                 $json = json_decode($list[$replicate->replicate]);
