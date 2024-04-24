@@ -54,12 +54,13 @@ class XkvController extends AdminController
         {
             if(strpos($program->data, '"replicate"'))
             {
-                echo "{$program->name} {$program->id}\n";
+                //echo "{$program->name} {$program->id}\n";
                 $replicate = json_decode($program->data);
                 $json = json_decode($list[$replicate->replicate]);
                 $air = strtotime($program->start_at);
                 foreach($json as &$item)
                 {
+                    if(!$item) continue;
                     $item->start_at = date('H:i:s', $air);
                     $air += ChannelGenerator::parseDuration($item->duration);
                     $item->end_at = date('H:i:s', $air);
