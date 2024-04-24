@@ -54,6 +54,7 @@ class XkvController extends AdminController
         {
             if(strpos($program->data, '"replicate"'))
             {
+                echo "{$program->name} {$program->id}\n";
                 $replicate = json_decode($program->data);
                 $json = json_decode($list[$replicate->replicate]);
                 $air = strtotime($program->start_at);
