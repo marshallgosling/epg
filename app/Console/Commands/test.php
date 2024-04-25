@@ -11,6 +11,7 @@ use App\Models\ChannelPrograms;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
 use App\Models\Expiration;
+use App\Models\Keywords;
 use App\Models\Material;
 use App\Models\Record;
 use App\Models\Record2;
@@ -50,15 +51,19 @@ class test extends Command
         $day = $this->argument('d') ?? "2024-02-06";
         $data = Storage::disk('data')->get('list.txt');
         $list = explode("\n", $data);
+        $k = [];
         foreach($list as $line)
         {
             $items = explode("\t", $line);
             if(count($items) > 1) 
             {
+                $items[0] = trim($items[0]);
                 $items[1] = trim(explode('(', $items[1])[0]);
                 echo "{$items[0]} -> {$items[1]}\n";
+                $k[] = ['keyword'=>$items[1], 'value'=>$items[0],'language'=>'en','status'=>1];
             }
         }
+        Keywords::create($k);
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();
