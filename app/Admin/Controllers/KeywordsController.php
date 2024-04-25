@@ -31,7 +31,7 @@ class KeywordsController extends AdminController
 
         //$grid->column('id', __('Id'));
         
-        $grid->column('category', __('Category'));
+        $grid->column('category', __('Category'))->using(Keywords::CATES);
         $grid->column('keyword', __('Keyword'));
         $grid->column('status', __('Status'))->hide();
         $grid->column('value', __('翻译'));
@@ -64,7 +64,7 @@ class KeywordsController extends AdminController
 
         $show->field('id', __('Id'));
 
-        $show->field('category', __('Category'));
+        $show->field('category', __('Category'))->using(Keywords::CATES);
         $show->field('keyword', __('Keyword'));
         
         $show->field('status', __('Status'));
@@ -89,7 +89,7 @@ class KeywordsController extends AdminController
         //     return [$id => $id];
         // })->ajax('/admin/api/episode')->required();
 
-        $form->select('category', __('Category'))->options(Category::getXkcCategories())->required();
+        $form->select('category', __('Category'))->options(Keywords::CATES)->required();
         $form->text('keyword', __('Keyword'))->required();
         //$form->switch('status', __('Status'));
         $form->text('value', __('Value'))->required();
