@@ -23,8 +23,8 @@ class Keywords extends Model
         'keyword',
         'group',
         'status',
-        'data',
-        'scaned_at'
+        'value',
+        'language'
     ];
 
     protected $casts = [
