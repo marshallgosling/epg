@@ -42,7 +42,7 @@ class KeywordsController extends AdminController
         $grid->filter(function (Grid\Filter $filter) {
             $filter->column(6, function(Grid\Filter $filter) {
                 $filter->like('keyword', __('Keyword'));
-                $filter->equal('category', __('Category'))->select(Category::getXkcCategories());
+                $filter->equal('category', __('Category'))->select(Keywords::CATES);
             });
             $filter->column(6, function(Grid\Filter $filter) {
                 $filter->like('value', '翻译');
