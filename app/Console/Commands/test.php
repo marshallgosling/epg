@@ -48,27 +48,16 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        
-        $list = Record::where('episodes', $group)->orderBy('ep')
-                    ->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
-                    foreach($list as $idx=>$l)
-                    {
-                        if($day == '') {
-                            print_r($l->toArray());
-                        }
-                        if($l->unique_no == $day) {
-                            $idx ++;
-                            if($idx == count($list)) {            
-                                echo 'finished';
-                            }
-                            else {
-                                if($idx == count($list)-1) $islast = true;
-                                print_r($list[$idx]->toArray());
-                            }
-                            break;
-                        }
-                    }
-                    echo 'empty';
+        $data = Storage::disk('data')->get('list.txt');
+        $list = explode("\n", $data);
+        foreach($list as $line)
+        {
+            $items = explode("\t", $line);
+            if(count($items) > 1) 
+            {
+                echo "{$items[0]} {$items[1]}\n";
+            }
+        }
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();
