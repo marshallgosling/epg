@@ -54,8 +54,11 @@ class TableGenerator
                         //     $table .= '<b>'.$categories[$item->category].'</b><br />';
                         //     $category = $item->category;
                         // }
-                        if($item->category == 'movie')
-                            $table .= $item->name."(".$this->movie[$item->name].')<br>';
+                        if($item->category == 'movie') {
+                            $table .= array_key_exists($item->name, $this->movie) ?
+                            $item->name."(".$this->movie[$item->name].')<br>' :
+                            $item->name."(".')<br>' ;
+                        }
                         else
                             $table .= $item->name."(".str_replace($this->language['keys'], $this->language['value'], $item->name).')<br>';
                     }
@@ -104,7 +107,7 @@ class TableGenerator
         foreach($language as $lang)
         {
             if($lang->category == 'movie') {
-                $this->movie[] = [$lang->keyword => $lang->value];
+                $this->movie[$lang->keyword] = $lang->value;
             }
             else {
                 $this->language['keys'][] = $lang->keyword;
