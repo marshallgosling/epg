@@ -21,7 +21,7 @@ class Keywords extends Model
     protected $fillable = [
         'id',
         'keyword',
-        'group',
+        'category',
         'status',
         'value',
         'language'

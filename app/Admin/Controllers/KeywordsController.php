@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -26,20 +27,22 @@ class KeywordsController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Keywords());
+        $grid->model()->orderBy('id', 'desc');
 
-        $grid->column('id', __('Id'));
+        //$grid->column('id', __('Id'));
+        
+        $grid->column('category', __('Category'));
         $grid->column('keyword', __('Keyword'));
-        //$grid->column('group', __('Group'));
         $grid->column('status', __('Status'))->hide();
         $grid->column('value', __('翻译'));
-        $grid->column('language', __('Language'))->hide();
+        $grid->column('language', __('Language'));
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
         $grid->filter(function (Grid\Filter $filter) {
             $filter->column(6, function(Grid\Filter $filter) {
                 $filter->like('keyword', __('Keyword'));
-                
+                $filter->equal('category', __('Category'))->select(Category::getXkcCategories());
             });
             $filter->column(6, function(Grid\Filter $filter) {
                 $filter->like('value', '翻译');
@@ -60,8 +63,10 @@ class KeywordsController extends AdminController
         $show = new Show(Keywords::findOrFail($id));
 
         $show->field('id', __('Id'));
+
+        $show->field('category', __('Category'));
         $show->field('keyword', __('Keyword'));
-        //$show->field('group', __('Group'));
+        
         $show->field('status', __('Status'));
         $show->field('value', __('Value'));
         $show->field('language', __('Language'));
@@ -84,6 +89,7 @@ class KeywordsController extends AdminController
         //     return [$id => $id];
         // })->ajax('/admin/api/episode')->required();
 
+        $form->select('category', __('Category'))->options(Category::getXkcCategories());
         $form->text('keyword', __('Keyword'));
         //$form->switch('status', __('Status'));
         $form->text('value', __('Value'));

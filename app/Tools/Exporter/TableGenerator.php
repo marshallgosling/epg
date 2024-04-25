@@ -23,7 +23,7 @@ class TableGenerator
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
     public function export($days, $template, $data)
     {
-        $this->loadLanguage();
+        $this->loadLanguages();
         $table = '<table class="table table-bordered table-responsive"><tr><th>HKT</th>';
         foreach($days as $day)
         {
@@ -91,7 +91,7 @@ class TableGenerator
         return $templates;
     }
 
-    public function loadLanguage()
+    public function loadLanguages()
     {
         $language = Keywords::select('keyword', 'value')->pluck('value', 'keyword')->toArray();
         $this->language = ['keys'=>array_keys($language), 'value'=>array_values($language)];

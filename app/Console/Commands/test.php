@@ -50,19 +50,26 @@ class test extends Command
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
         $data = Storage::disk('data')->get('list.txt');
-        $list = explode("\n", $data);
+        // $list = explode("\n", $data);
         $k = [];
-        foreach($list as $line)
+        // foreach($list as $line)
+        // {
+        //     $items = explode("\t", $line);
+        //     if(count($items) > 1) 
+        //     {
+        //         $items[0] = trim($items[0]);
+        //         $items[1] = trim(explode('(', $items[1])[0]);
+        //         echo "{$items[0]} -> {$items[1]}\n";
+        //         $k[] = ['keyword'=>$items[1], 'value'=>$items[0],'language'=>'en','status'=>1];
+        //     }
+        // }
+
+        $items = Material::where('category', 'movie')->select('name', 'comment')->get();
+        foreach($items as $item)
         {
-            $items = explode("\t", $line);
-            if(count($items) > 1) 
-            {
-                $items[0] = trim($items[0]);
-                $items[1] = trim(explode('(', $items[1])[0]);
-                echo "{$items[0]} -> {$items[1]}\n";
-                $k[] = ['keyword'=>$items[1], 'value'=>$items[0],'language'=>'en','status'=>1];
-            }
+            $k[] = ['keyword'=>$item->name, 'value'=>$item->comment,'language'=>'en','status'=>1,'category'=>'movie'];
         }
+
         Keywords::insert($k);
         return;
         
