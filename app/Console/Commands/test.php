@@ -64,13 +64,7 @@ class test extends Command
         //     }
         // }
 
-        $items = Material::where('category', 'movie')->select('name', 'comment')->get();
-        foreach($items as $item)
-        {
-            $k[] = ['keyword'=>$item->name, 'value'=>$item->comment,'language'=>'en','status'=>1,'category'=>'movie'];
-        }
-
-        Keywords::insert($k);
+       
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();

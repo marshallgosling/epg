@@ -56,7 +56,7 @@ class TableGenerator
                         // }
                         if($item->category == 'movie') {
                             $table .= array_key_exists($item->name, $this->movie) ?
-                            $item->name."(".$this->movie[$item->name].')<br>' :
+                            $item->name."<br>(".$this->movie[$item->name].')<br>' :
                             $item->name."(".')<br>' ;
                         }
                         else

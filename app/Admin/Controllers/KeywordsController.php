@@ -89,11 +89,11 @@ class KeywordsController extends AdminController
         //     return [$id => $id];
         // })->ajax('/admin/api/episode')->required();
 
-        $form->select('category', __('Category'))->options(Category::getXkcCategories());
-        $form->text('keyword', __('Keyword'));
+        $form->select('category', __('Category'))->options(Category::getXkcCategories())->required();
+        $form->text('keyword', __('Keyword'))->required();
         //$form->switch('status', __('Status'));
-        $form->text('value', __('Value'));
-        $form->radio('language', __('Language'))->options(['en'=>'en-us']);
+        $form->text('value', __('Value'))->required();
+        $form->radio('language', __('Language'))->options(['en'=>'en-us'])->default('en');
 
         if($form->isCreating()) {
             $error = new MessageBag([
