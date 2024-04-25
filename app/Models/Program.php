@@ -50,6 +50,8 @@ class Program extends Model
 
     private static $cache = [];
     private static $blacklist = [];
+    private static $last = '';
+    private static $_count = 3;
 
     public static function loadBlackList()
     {
@@ -59,6 +61,8 @@ class Program extends Model
     public static function clearCache()
     {
         self::$cache = [];
+        self::$_count = 3;
+        self::$last = '';
     }
 
     public static function findRandom($key, $maxSeconds)
@@ -69,20 +73,36 @@ class Program extends Model
                 ->where('program.category','like',"%$key,%")
                 ->where('program.seconds','<',$maxSeconds)
                 ->where('program.status', Program::STATUS_READY)
+                ->where('program.black', 0)
                 ->pluck('unique_no')->toArray();
 
-        if(!self::$cache[$key]) return false;   
+        if(!self::$cache[$key]) {
+            self::$_count = 3;
+            return false;   
+        }
 
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
+        if($id == self::$last) {
+            return self::findRandom($key, $maxSeconds);
+        }
+
+        self::$_count --;
+        if(self::$_count < 0) { self::$_count = 3; return false; }
+        //if(!$list) { self::$_count = 3; return false; }
+
         $program = Program::where('program.unique_no', $id)
             ->join('material', 'program.unique_no', '=', 'material.unique_no')
             ->select("program.unique_no", "program.name", "program.artist", "program.black", "material.duration","material.frames")->first();
 
-        if($program->black) return self::findRandom($key, $maxSeconds);
-        else return $program;
+        // if($program->black) return self::findRandom($key, $maxSeconds);
+        // else {
+            self::$_count = 3;
+            self::$last = $id;
+            return $program;
+        // }
     }
 
     public static function loadBumpers() {

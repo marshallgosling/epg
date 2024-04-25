@@ -22,7 +22,7 @@ class TableGenerator
     }
 
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
-    public function export($days, $template, $data)
+    public function export($days, $template, $data, $lang='zh')
     {
         $this->loadLanguages();
         $table = '<table class="table table-bordered table-responsive"><tr><th>HKT</th>';
@@ -54,13 +54,18 @@ class TableGenerator
                         //     $table .= '<b>'.$categories[$item->category].'</b><br />';
                         //     $category = $item->category;
                         // }
-                        if($item->category == 'movie') {
-                            $table .= array_key_exists($item->name, $this->movie) ?
-                            $item->name."<br>(".$this->movie[$item->name].')<br>' :
-                            $item->name."(".')<br>' ;
+                        if($lang == 'zh') {
+                            $table .= $item->name.'<br/>';
                         }
-                        else
-                            $table .= $item->name."(".str_replace($this->language['keys'], $this->language['value'], $item->name).')<br>';
+                        else {
+                            if($item->category == 'movie') {
+                                $table .= array_key_exists($item->name, $this->movie) ?
+                                $this->movie[$item->name].'<br/>' :
+                                $item->name.'<br/>';
+                            }
+                            else
+                                $table .= str_replace($this->language['keys'], $this->language['value'], $item->name).'<br/>';
+                        }
                     }
                         
                 }

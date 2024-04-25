@@ -258,8 +258,13 @@ class XkcController extends AdminController
         $generator = new TableGenerator($this->group);
         $st = strtotime($request->get('start_at', ''));
         $ed = strtotime($request->get('end_at', ''));
+        $lang = $request->get('lang', 'zh');
         $label_st = '';
         $label_ed = '';
+        $zh_checked = '';
+        $en_checked = '';
+        if($lang == 'zh') $zh_checked = "checked";
+        if($lang == 'en') $en_checked = "checked";
 
         $max = (int)config('MAX_EXPORT_DAYS', 7);
 
@@ -275,7 +280,7 @@ class XkcController extends AdminController
         $days = $generator->generateDays($st, $ed);
         $data = $generator->processData($days);
         $template = $generator->loadTemplate();
-        $table = $generator->export($days, $template, $data);
+        $table = $generator->export($days, $template, $data, $lang);
         }
 
         $filter= <<<FILTER
@@ -283,12 +288,13 @@ class XkcController extends AdminController
     <form action="export" class="form-horizontal" pjax-container method="get">
 
         <div class="row">
-                        <div class="col-md-8">
+            
+            <div class="col-md-10">
                 <div class="box-body">
                     <div class="fields-group">
-                                                    <div class="form-group">
+                        <div class="form-group">
     <label class="col-sm-2 control-label">时间范围</label>
-    <div class="col-sm-8">
+    <div class="col-sm-6">
         <div class="input-group input-group-sm">
             <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
@@ -300,6 +306,29 @@ class XkcController extends AdminController
             <input type="text" class="form-control" id="start_at_end" placeholder="时间范围" name="end_at" value="{$label_ed}" autocomplete="off">
         </div>
     </div>
+
+    <div class="col-sm-2">
+    <div class="input-group input-group-sm">
+
+    <span class="icheck">
+
+        <label class="radio-inline">
+            <input type="radio" class="language" name="lang" value="zh" {$zh_checked}> 中文  
+        </label>
+
+    </span>
+
+
+    <span class="icheck">
+
+        <label class="radio-inline">
+            <input type="radio" class="language" name="lang" value="en" {$en_checked}> En  
+        </label>
+
+    </span>
+
+    </div>
+</div>
     <div class="col-sm-2">
       <div class="btn-group pull-left">
                             <button class="btn btn-info submit btn-sm"><i class="fa fa-search"></i>  搜索</button>
@@ -335,6 +364,7 @@ FILTER;
             $("#start_at_end").on("dp.change", function (e) {
                 $('#start_at_start').data("DateTimePicker").maxDate(e.date);
             });
+            $('.language').iCheck({radioClass:'iradio_minimal-blue'}); 
 DATE;
 
 }
