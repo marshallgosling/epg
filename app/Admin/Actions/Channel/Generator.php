@@ -30,6 +30,9 @@ class Generator extends RowAction
 
         XkvGeneratorJob::dispatch($model->id)->onQueue('xkv');
 
+        \App\Tools\Operation::log($this->name, 'channel/Generator', 'action', $model->toArray());
+
+
         return $this->response()->success(__('Generator start success message.'))->refresh();
     }
 
