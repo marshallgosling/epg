@@ -63,7 +63,7 @@ class test extends Command
                 $k[] = ['keyword'=>$items[1], 'value'=>$items[0],'language'=>'en','status'=>1];
             }
         }
-        Keywords::create($k);
+        Keywords::insert($k);
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();
