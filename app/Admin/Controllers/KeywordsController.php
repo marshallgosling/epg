@@ -80,10 +80,11 @@ class KeywordsController extends AdminController
     {
         $form = new Form(new Keywords());
 
-        $form->select('keyword', __('Keyword'))->options(function ($id) {
-            return [$id => $id];
-        })->ajax('/admin/api/episode')->required();
-        //$form->text('group', __('Group'));
+        // $form->select('keyword', __('Keyword'))->options(function ($id) {
+        //     return [$id => $id];
+        // })->ajax('/admin/api/episode')->required();
+
+        $form->text('keyword', __('Keyword'));
         //$form->switch('status', __('Status'));
         $form->text('value', __('Value'));
         $form->radio('language', __('Language'))->options(['en'=>'en-us']);
