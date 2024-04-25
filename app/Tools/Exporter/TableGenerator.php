@@ -4,6 +4,7 @@ namespace App\Tools\Exporter;
 
 use App\Models\Category;
 use App\Models\Epg;
+use App\Models\Keywords;
 use App\Models\Record;
 use App\Models\Template;
 use App\Models\TemplateRecords;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class TableGenerator
 {
     private $group = 'xkc';
+    private $language = false;
 
     public function __construct($group='xkc')
     {
@@ -21,6 +23,7 @@ class TableGenerator
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
     public function export($days, $template, $data)
     {
+        $this->loadLanguage();
         $table = '<table class="table table-bordered table-responsive"><tr><th>HKT</th>';
         foreach($days as $day)
         {
@@ -50,7 +53,7 @@ class TableGenerator
                         //     $table .= '<b>'.$categories[$item->category].'</b><br />';
                         //     $category = $item->category;
                         // }
-                        $table .= $item->name.'<br>';
+                        $table .= $item->name."(".str_replace($this->language['keys'], $this->language['value'], $item->name).')<br>';
                     }
                         
                 }
@@ -86,6 +89,12 @@ class TableGenerator
         }
 
         return $templates;
+    }
+
+    public function loadLanguage()
+    {
+        $language = Keywords::select('keyword', 'value')->pluck('value', 'keyword')->toArray();
+        $this->language = ['keys'=>array_keys($language), 'value'=>array_values($language)];
     }
 
     public function generateDays($st, $ed)

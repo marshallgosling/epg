@@ -16,7 +16,7 @@ class KeywordsController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Keywords';
+    protected $title = '翻译对照表';
 
     /**
      * Make a grid builder.
@@ -31,10 +31,10 @@ class KeywordsController extends AdminController
         $grid->column('keyword', __('Keyword'));
         //$grid->column('group', __('Group'));
         $grid->column('status', __('Status'))->hide();
-        $grid->column('value', __('Value'));
+        $grid->column('value', __('翻译'));
         $grid->column('language', __('Language'))->hide();
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('created_at', __('Created at'))->hide();
+        $grid->column('updated_at', __('Updated at'))->hide();
 
         return $grid;
     }
