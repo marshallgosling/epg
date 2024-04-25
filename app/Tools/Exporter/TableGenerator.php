@@ -14,6 +14,7 @@ class TableGenerator
 {
     private $group = 'xkc';
     private $language = false;
+    private $movie;
 
     public function __construct($group='xkc')
     {
@@ -53,7 +54,10 @@ class TableGenerator
                         //     $table .= '<b>'.$categories[$item->category].'</b><br />';
                         //     $category = $item->category;
                         // }
-                        $table .= $item->name."(".str_replace($this->language['keys'], $this->language['value'], $item->name).')<br>';
+                        if($item->category == 'movie')
+                            $table .= $item->name."(".$this->movie[$item->name].')<br>';
+                        else
+                            $table .= $item->name."(".str_replace($this->language['keys'], $this->language['value'], $item->name).')<br>';
                     }
                         
                 }
@@ -93,8 +97,21 @@ class TableGenerator
 
     public function loadLanguages()
     {
-        $language = Keywords::select('keyword', 'value')->pluck('value', 'keyword')->toArray();
-        $this->language = ['keys'=>array_keys($language), 'value'=>array_values($language)];
+        $language = Keywords::all();
+        $this->language = ['keys'=>[], 'value'=>[]];
+
+        $this->movie = [];
+        foreach($language as $lang)
+        {
+            if($lang->category == 'movie') {
+                $this->movie[] = [$lang->keyword => $lang->value];
+            }
+            else {
+                $this->language['keys'][] = $lang->keyword;
+                $this->language['value'][] = $lang->value;
+            }
+        }
+        
     }
 
     public function generateDays($st, $ed)
