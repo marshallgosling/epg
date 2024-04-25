@@ -55,7 +55,8 @@ class test extends Command
             $items = explode("\t", $line);
             if(count($items) > 1) 
             {
-                echo "{$items[0]} {$items[1]}\n";
+                $items[1] = explode('（', $items[1])[0];
+                echo "{$items[0]} -> {$items[1]}\n";
             }
         }
         return;
