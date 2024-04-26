@@ -202,7 +202,7 @@ class BvtExporter
         
         $channels = DB::table('channel')->whereBetween('air_date', [$start_at, $end_at])
                                         ->where('name', $group_id)
-                                        ->where('status', Channel::STATUS_READY)
+                                        //->whereIn('status', [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])
                                         // ->where('lock_status', Channel::LOCK_ENABLE)
                                         ->select('id','air_date','uuid')
                                         ->orderBy('air_date')->get();
@@ -214,6 +214,8 @@ class BvtExporter
 
         if($channels)foreach($channels as $channel)
         {
+            if(!in_array($channel->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE]))
+                continue;
             $programs = ChannelPrograms::where('channel_id', $channel->id)->orderBy('id')->get();
             //$air = strtotime($channel->air_date.' 06:00:00');
             $air = $channel->air_date;
