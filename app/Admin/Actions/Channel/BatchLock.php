@@ -38,7 +38,7 @@ class BatchLock extends BatchAction
 
             $list[] = $model->toArray();
         }
-        \App\Tools\Operation::log('批量分发编单', 'channel/BatchClean', 'action', $list);
+        \App\Tools\Operation::log($this->name, 'channel/BatchLock:'.$lock, 'action', $list);
         return $this->response()->success($lock?"加锁成功":"解锁成功")->refresh();
     }
 

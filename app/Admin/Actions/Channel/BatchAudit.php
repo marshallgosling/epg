@@ -26,7 +26,7 @@ class BatchAudit extends BatchAction
                 $list[] = $model->toArray();
             }
         }
-        \App\Tools\Operation::log('批量审核', 'channel/BatchAudit', 'action', $list);
+        \App\Tools\Operation::log($this->name, 'channel/BatchAudit', 'action', $list);
         return $this->response()->success('批量审核任务已提交。')->refresh();
     }
 
