@@ -25,7 +25,8 @@ class ChannelDatabase
             return compact('result', 'msg', 'items');
         }
 
-        $epglist = Epg::where('channel_id', $channel->id)->select('name','category','unique_no','start_at','end_at','duration')->get()->toArray();
+        $epglist = Epg::where('channel_id', $channel->id)->select('name','category','unique_no','start_at','end_at','duration')
+            ->orderBy('id')->get()->toArray();
 
         $programs = $channel->programs()->get();
 
@@ -35,9 +36,9 @@ class ChannelDatabase
         {
             //echo "Program {$p->name} air date is {$p->start_at}".PHP_EOL;
             $item = [
-                'group_id'=>$channel->name,
-                'channel_id'=>$channel->id,
-                'program_id'=>$p->id
+                // 'group_id'=>$channel->name,
+                // 'channel_id'=>$channel->id,
+                // 'program_id'=>$p->id
             ];
 
             $air = strtotime($p->start_at);
