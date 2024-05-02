@@ -25,9 +25,9 @@ class ChannelDatabase
             return compact('result', 'msg', 'items');
         }
 
-        $epglist = Epg::where('channel_id', $channel->id)->get();
+        $epglist = Epg::where('channel_id', $channel->id)->select('name','category','unique_no','start_at','end_at','duration')->get();
 
-        $programs = $channel->programs()->select('name','category','unique_no','start_at','end_at','duration')->get();
+        $programs = $channel->programs()->get();
 
         $air = 0;
         $key = 0;
