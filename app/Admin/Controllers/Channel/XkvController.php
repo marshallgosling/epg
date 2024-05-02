@@ -7,6 +7,7 @@ use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\BatchReplicate;
+use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
@@ -129,7 +130,7 @@ class XkvController extends AdminController
         });
         
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('check', __('操作'))->width(80)->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->width(80)->display(function() {return '校对';})->modal('检查播出串联单', CheckEpg::class);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));

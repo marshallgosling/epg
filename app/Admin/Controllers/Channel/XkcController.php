@@ -6,6 +6,7 @@ use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
+use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\TemplateLink;
@@ -130,7 +131,7 @@ class XkcController extends AdminController
         
         $grid->column('audit_date', __('Audit date'))->hide();
         
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(80);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckEpg::class)->width(80);
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->sortable()->hide();
