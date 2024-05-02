@@ -79,11 +79,11 @@ class ChannelDatabase
                     $items[] = $epglist[$key];
                     break;
                 }
+                $key ++;
             }
             
             if($result == false) break;
             
-            $key ++;
         }
 
         if($result && $key < count($epglist))
