@@ -69,7 +69,7 @@ class ChannelDatabase
                 break;
             }
             $st1 = implode('|',$item);
-            $st2 = implode('|',$epglist[$key]->toArray());
+            $st2 = implode('|',$epglist[$key]);
 
             if($st1 != $st2) {
                 $result = false;
