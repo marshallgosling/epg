@@ -26,7 +26,7 @@ class ChannelDatabase
         }
 
         $epglist = Epg::where('channel_id', $channel->id)->select('name','category','unique_no','start_at','end_at','duration')
-            ->orderBy('id')->get()->toArray();
+            ->orderBy('start_at')->get()->toArray();
 
         $programs = $channel->programs()->get();
 
