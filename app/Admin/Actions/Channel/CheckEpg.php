@@ -11,7 +11,7 @@ class CheckEpg implements Renderable
     public function render($key = null)
     {
         $ch = Channel::find($key);
-        $data = '';
+        $msg = '';
         $label = '';
         if(!$ch) $data = '<tr><td>播出编单不存在</td></tr>';
         else {
@@ -40,7 +40,7 @@ class CheckEpg implements Renderable
         {$label}
         <div class="table-responsive">
             <table class="table table-striped">
-                {$data}
+                {$msg}
             </table>
         </div>
 HTML;
