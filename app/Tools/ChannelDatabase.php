@@ -22,6 +22,7 @@ class ChannelDatabase
         $items = [];
 
         if(!$channel) {
+            $result = false;
             return compact('result', 'msg', 'items');
         }
 
@@ -60,25 +61,28 @@ class ChannelDatabase
                 $air += ChannelGenerator::parseDuration($d->duration);
                 $item['end_at'] = date('Y-m-d H:i:s', $air);
                 $item['duration'] = $d->duration;
+
+                if(!array_key_exists($key, $epglist)) 
+                {
+                    $result = false;
+                    $msg = "EPG key:$key 不存在，EPG串联单长度不足";
+                    $items[] = $item;
+                    break;
+                }
+                $st1 = implode('|',$item);
+                $st2 = implode('|',$epglist[$key]);
+
+                if($st1 != $st2) {
+                    $result = false;
+                    $msg = "EPG串联单数据不匹配";
+                    $items[] = $item;
+                    $items[] = $epglist[$key];
+                    break;
+                }
             }
             
-            if(!array_key_exists($key, $epglist)) 
-            {
-                $result = false;
-                $msg = "EPG key:$key 不存在，EPG串联单长度不足";
-                $items[] = $item;
-                break;
-            }
-            $st1 = implode('|',$item);
-            $st2 = implode('|',$epglist[$key]);
-
-            if($st1 != $st2) {
-                $result = false;
-                $msg = "EPG串联单数据不匹配";
-                $items[] = $item;
-                $items[] = $epglist[$key];
-                break;
-            }
+            if($result == false) break;
+            
             $key ++;
         }
 
