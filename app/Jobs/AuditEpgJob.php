@@ -50,6 +50,11 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $channel = Channel::find($this->id);
         if(!$channel) return;
+        $lock_changed = false;
+        $lock_empty_flag = false;
+        if($channel->lock_status == Channel::LOCK_EMPTY) {
+            $lock_empty_flag = true;
+        }
 
         if(! in_array($channel->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])) return;
         if($channel->name == 'xkc') $class='\App\Models\Record';
@@ -104,8 +109,12 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         else {
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
         }
+
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
+            $lock_changed = $lock_empty_flag ? true : false;
+        }
         
-        if($this->name == 'Init' || $total['modified'] || $duration['modified']) {
+        if($this->name == 'Init' || $total['modified'] || $duration['modified'] || $lock_changed) {
             \App\Jobs\StatisticJob::dispatch($channel->id);
             \App\Jobs\EpgJob::dispatch($channel->id);
         }
