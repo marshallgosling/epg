@@ -107,7 +107,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核通过", "审核通过: {$channel->air_date}", Notification::LEVEL_INFO);
         }
         else {
-            Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
+            Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单{$channel->air_date}审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
         }
 
         if($channel->lock_status == Channel::LOCK_ENABLE) {
