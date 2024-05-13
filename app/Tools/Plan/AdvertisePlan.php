@@ -40,14 +40,14 @@ class AdvertisePlan
 
     public function loadPlans()
     {
-        $this->plans = Plan::where(['group_id'=>$this->group,'status'=>Plan::STATUS_RUNNING,'type'=>TemplateRecords::TYPE_ADVERTISE])->get();
+        $this->plans = Plan::where(['group_id'=>$this->group,'status'=>Plan::STATUS_RUNNING,'type'=>Plan::TYPE_ADVERTISE])->get();
     }
 
-    private function filterPlans()
+    public function filterPlan($channel, $template)
     {
-        $air = strtotime($this->channel->air_date);
+        $air = strtotime($channel->air_date);
         $dayofweek = date('N', $air);
-        $plans = [];
+        //$plans = [];
         foreach($this->plans as $plan)
         {
             if(!in_array($dayofweek, $plan->dayofweek)) continue;
@@ -60,10 +60,11 @@ class AdvertisePlan
                 continue;
             }
 
-            $plans[] = $plan;
+            if($plan->category == $template->id)
+                return $plan;
         }
 
-        return $plans;
+        return false;
     }
 
     private function loadPlanItem($plan)
@@ -75,74 +76,18 @@ class AdvertisePlan
 
     private function scan($plan, $channel=false)
     {
-        if($channel) $this->channel = $channel;
-        $channel = $this->channel;
-
-        $programs = $channel->programs()->get();
-
-        $_channel = ["id"=>$channel->id, "date"=>$channel->air_date, "group"=>$channel->name, 'programs'=>[]];
-
-        $start = strtotime($channel->air_date. ' '.$plan->start_at);
-        $end = strtotime($channel->air_date. ' '.$plan->end_at);
-        if($end < $start) $end += 86400;
-
-        foreach($programs as $pro)
-        {
-            $air = strtotime($channel->air_date.' '.$pro->schedule_start_at);
-            
-            if($air >= $start && $air<=$end)
-                $_channel['programs'][] = $pro;
-        }
-
-        return $_channel;
+        
         
     }
 
     private function apply($plan, $data)
     {
-        if(count($data['programs']) == 0) return;
-
-        $id = rand(0, count($data['programs']));
-
-        $item = $this->loadPlanItem($plan);
-
-        if($item)
-        {
-            $programs = $data['prgrams'][$id];
-            $data = json_decode($programs->data, true);
-            $data[] = $item;
-            $programs->data = json_encode($data);
-            $programs->save();
-
-            return true;
-        }
-
-        return false;
+        
 
     }
 
     public function run($channel)
     {
-        $this->channel = $channel;
-        $plans = $this->filterPlans();
-
-        if(count($plans) == 0) return;
-
-        foreach($plans as $plan) {
-            $data = $this->scan($plan);
-
-            $ret = $this->apply($plan, $data);
-            
-            if($ret) {
-                CalculationEvent::dispatch($channel->id);
-
-                Notify::fireNotify(
-                    $channel->name,
-                    Notification::TYPE_GENERATE, 
-                    "播出计划 {$plan->name} 匹配成功", 
-                    "频道 {$channel->name} 日期 {$channel->air_date}".PHP_EOL."节目：{$data['name']}({$data['unique_no']})"
-                );
-            }
-        }
+        
     }
 }

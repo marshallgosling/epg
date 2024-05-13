@@ -59,10 +59,9 @@ class AdvertisePlanController extends AdminController
         });
         $grid->column('is_repeat', __('Type'))->using(['单个','多集']);
         
-        $grid->column('episodes', __('Episodes'))->display(function() {
+        $grid->column('episodes', __('广告节目'))->display(function() {
             return $this->is_repeat ? $this->episodes:$this->data;
         });
-
         
         $grid->column('daysofweek', __('Daysofweek'))->display(function ($days) {
             $html = []; foreach($days as $d) $html[] = TemplateRecords::DAYS[$d];
@@ -144,7 +143,7 @@ class AdvertisePlanController extends AdminController
         $form->divider('广告节目配置');
         $form->select('category', __('Template'));
 
-        $form->radio('is_repeat', __('Type'))->options(['单个','多集'])->default(0)->when(0, function (Form $form) {
+        $form->radio('is_repeat', __('Type'))->options(['单个'])->default(0)->when(0, function (Form $form) {
             $form->text('data', __('Unique no'));
         })->when(1, function (Form $form) { 
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');
