@@ -70,7 +70,7 @@ class ExpirationController extends AdminController
                 
             });
             $filter->column(6, function(Grid\Filter $filter) { 
-                $filter->equal('agreement', __('From Agreement'))->select(Agreement::pluck('name', 'id')->toArray());
+                $filter->equal('agreement_id', __('From Agreement'))->select(Agreement::pluck('name', 'id')->toArray());
                 
             });
         });
