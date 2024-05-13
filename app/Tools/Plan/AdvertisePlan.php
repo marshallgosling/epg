@@ -50,7 +50,7 @@ class AdvertisePlan
         //$plans = [];
         foreach($this->plans as $plan)
         {
-            if(!in_array($dayofweek, explode(',', $plan->daysofweek))) continue;
+            if(!in_array($dayofweek, $plan->daysofweek)) continue;
 
             $begin = $plan->start_at ? strtotime($plan->start_at) : 0;
             $end = $plan->end_at ? strtotime($plan->end_at) : 999999999999;
