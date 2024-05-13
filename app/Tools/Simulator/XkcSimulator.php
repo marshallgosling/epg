@@ -246,7 +246,7 @@ class XkcSimulator
                         $duration += $seconds;
                         $category = is_array($advertise->category) ? $advertise->category[0]:$advertise->category;
                             
-                        $line = ChannelGenerator::createItem($item, $category, date('H:i:s', $air));
+                        $line = ChannelGenerator::createItem($advertise, $category, date('H:i:s', $air));
                             
                         $air += $seconds;
 
