@@ -2,8 +2,8 @@
 
 namespace App\Admin\Controllers\Plan;
 
-use App\Events\PlanEvent;
-use App\Models\Category;
+use App\Admin\Actions\Template\BatchDisable;
+use App\Admin\Actions\Template\BatchEnable;
 use App\Models\Channel;
 use App\Models\Plan;
 use App\Models\TemplateRecords;
@@ -75,11 +75,10 @@ class AdvertisePlanController extends AdminController
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        // $grid->disableBatchActions();
-        // $grid->disableCreateButton();
-        // $grid->actions(function ($action) {
-
-        // });
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchEnable);
+            $actions->add(new BatchDisable);
+        });
 
         return $grid;
     }
