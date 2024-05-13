@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\AgreementLink;
 use App\Admin\Actions\Material\CreateAgreement;
+use App\Models\Agreement;
 use App\Models\Expiration;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -61,6 +62,17 @@ class ExpirationController extends AdminController
                 return [$id => $id];
             })->ajax('/admin/api/episode')->required();
             $create->select('status', __('Status'))->options(Expiration::STATUS)->default(Expiration::STATUS_READY);
+        });
+
+        $grid->filter(function (Grid\Filter $filter) {
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->like('name', __('Name'));
+                
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('agreement', __('From Agreement'))->select(Agreement::pluck('name', 'id')->toArray());
+                
+            });
         });
 
         return $grid;
