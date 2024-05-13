@@ -10,7 +10,7 @@ use App\Models\TemplateRecords;
 use App\Tools\ChannelGenerator;
 use App\Tools\Generator\XkiGenerator;
 use Illuminate\Support\Facades\DB;
-
+use App\Tools\Plan\AdvertisePlan;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
 use Illuminate\Support\Facades\Storage;
@@ -39,6 +39,7 @@ class XkiSimulator
      * 统计一档节目的时长，更换新节目时重新计算
      */
     private $duration;
+    private $plans;
 
     public $filename = false;
 
@@ -125,6 +126,9 @@ class XkiSimulator
         $errors = [];
         $data = [];
         $lastDate = '';
+
+        $this->plans = new AdvertisePlan($group);
+        $this->plans->loadPlans();
 
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->saveTemplate($templates, $this->channels);
@@ -226,6 +230,29 @@ class XkiSimulator
                 $program->duration = $duration;
                 $program->data = $epglist;
                 $program->end_at = date('Y-m-d H:i:s', $air);
+
+                $advertise = $this->findAvailableAdvertise($channel, $template);
+
+                if($advertise) {
+                    $seconds = ChannelGenerator::parseDuration($advertise->duration);
+                    if($seconds > 0) {
+                            
+                        $duration += $seconds;
+                        $category = is_array($advertise->category) ? $advertise->category[0]:$advertise->category;
+                            
+                        $line = ChannelGenerator::createItem($advertise, $category, date('H:i:s', $air));
+                            
+                        $air += $seconds;
+
+                        $line['end_at'] = date('H:i:s', $air);
+
+                        $epglist[] = $callback ? call_user_func($callback, $line) : $line;
+
+                        $program->duration = $duration;
+                        $program->data = $epglist;
+                        $program->end_at = date('Y-m-d H:i:s', $air);
+                    }
+                }
                 
                 $templateresult['template'] = json_decode(json_encode($template_item), true);
                 $templateresult['program'] = $program->toArray();
@@ -309,6 +336,17 @@ class XkiSimulator
         }
 
         return $items;
+    }
+
+    private function findAvailableAdvertise($channel, $template)
+    {
+        $plan = $this->plans->filterPlan($channel, $template);
+        if($plan) {
+            $unique_no = $plan->data;
+            $item = Record::findUnique($unique_no);
+            return $item;
+        }
+        return false;
     }
 
     private function findAvailableTemplateItem($channel, &$templateItems)
