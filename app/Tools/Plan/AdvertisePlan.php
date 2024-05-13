@@ -50,13 +50,13 @@ class AdvertisePlan
         //$plans = [];
         foreach($this->plans as $plan)
         {
-            if(!in_array($dayofweek, $plan->dayofweek)) continue;
+            if(!in_array($dayofweek, explode(',', $plan->daysofweek))) continue;
 
-            $begin = $plan->date_from ? strtotime($plan->date_from) : 0;
-            $end = $plan->date_to ? strtotime($plan->date_to) : 999999999999;
+            $begin = $plan->start_at ? strtotime($plan->start_at) : 0;
+            $end = $plan->end_at ? strtotime($plan->end_at) : 999999999999;
 
             if($air < $begin || $air > $end) {
-                $this->lasterror = "{$plan->id} {$plan->category} 编排设定时间 {$plan->date_from}/{$plan->date_to} 已过期";
+                //$this->lasterror = "{$plan->id} {$plan->category} 编排设定时间 {$plan->start_at}/{$plan->end_at} 已过期";
                 continue;
             }
 
