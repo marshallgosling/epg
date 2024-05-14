@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\AgreementLink;
 use App\Admin\Actions\Material\CreateAgreement;
+use App\Jobs\Material\ExpirationJob;
 use App\Models\Agreement;
 use App\Models\Expiration;
 use Encore\Admin\Controllers\AdminController;
@@ -133,6 +134,7 @@ class ExpirationController extends AdminController
                 {
                     return back()->with(compact('error'));
                 }
+
             }
 
             if($form->isEditing()) {
@@ -146,8 +148,13 @@ class ExpirationController extends AdminController
                     return back()->with(compact('error'));
                 }
             }
-
             
+        });
+
+        $form->saved(function (Form $form) {
+
+            ExpirationJob::dispatch($form->model()->id);
+        
         });
 
         return $form;
