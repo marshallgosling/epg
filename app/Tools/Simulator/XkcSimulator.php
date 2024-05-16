@@ -327,6 +327,7 @@ class XkcSimulator
                 else if($item == 'finished') {
                     if($idx == 0)
                         $d['result'] = '编排完:所有编排规则已完成';
+                    else $d['result'] = '编排完';
                 }
                 else if($item == 'empty2') {
                     $d['result'] = '错误:不是首播日，导致编排无法进行';
