@@ -236,7 +236,8 @@ HTML;
         $links = [
             '物料管理' => admin_url('media/material'),
             '黑名单' => admin_url('media/blacklist'),
-            '播出计划' => admin_url('plans'),
+            '翻译对照表' => admin_url('media/keywords'),
+            '广告投放' => admin_url('plan/advertise'),
             '串联单' => admin_url('epg'),
             '通知' => admin_url('notifications'),
             'Excel' => admin_url('export/excel')
