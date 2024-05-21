@@ -44,20 +44,23 @@ class RecognizeFileInfo
 
             if(!$m) {
                 $m = Material::where('name', $unknow)->first();
-                if($m) $name = $unknow;
+                if($m) {
+                    $unique_no = $m->unique_no;
+                }
+                $name = $unknow;
             }
             else {
                 $unique_no = $unknow;
             }
 
-            if(preg_match('/^[VC|XK|X]/', $unknow, $matches))
-            {
-                $unique_no = $unknow;
-            }
-            else
-            {
-                $name = $unknow;
-            }
+            // if(preg_match('/^[VC|XK|X]/', $unknow, $matches))
+            // {
+            //     $unique_no = $unknow;
+            // }
+            // else
+            // {
+            //     $name = $unknow;
+            // }
 
         }
 
