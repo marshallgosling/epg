@@ -55,7 +55,7 @@ class AdvertisePlanController extends AdminController
         // $grid->column('date_from', __('Date from'));
         // $grid->column('date_to', __('Date to'));
         $grid->column('category', __('Template'))->display(function() {
-            return $this->template->name;
+            return $this->template->name.'('.$this->template->start_at.' - '.$this->template->end_at.')';
         });
         $grid->column('is_repeat', __('Type'))->using(['单个','多集']);
         
