@@ -29,7 +29,7 @@ Encore\Admin\Facades\Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navba
 
 Encore\Admin\Grid::init(function (Encore\Admin\Grid $grid) {
     $grid->disableExport();
-    $grid->paginate(30);
+    $grid->paginate(50);
     $grid->filter(function (Encore\Admin\Grid\Filter $filter) {
         $filter->disableIdFilter();
         if(array_key_exists('expand', $_REQUEST))$filter->expand();
