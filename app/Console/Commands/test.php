@@ -49,20 +49,16 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        $data = Storage::disk('data')->get('list.txt');
-        // $list = explode("\n", $data);
-        $k = [];
-        // foreach($list as $line)
-        // {
-        //     $items = explode("\t", $line);
-        //     if(count($items) > 1) 
-        //     {
-        //         $items[0] = trim($items[0]);
-        //         $items[1] = trim(explode('(', $items[1])[0]);
-        //         echo "{$items[0]} -> {$items[1]}\n";
-        //         $k[] = ['keyword'=>$items[1], 'value'=>$items[0],'language'=>'en','status'=>1];
-        //     }
-        // }
+        $list = DB::table('agreement')->get();
+        foreach($list as $agreement)
+        {
+            $episodes = DB::table('expiration')->where('agreement_id', $agreement->id)->get();
+            foreach($episodes as $exp)
+            {
+                Record::where('episodes', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
+                $this->info("update records expiration date : {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
+            }
+        }
 
        
         return;
