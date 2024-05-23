@@ -56,7 +56,7 @@ class test extends Command
             foreach($episodes as $exp)
             {
                 Record::where('episodes', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
-                $this->info("update records expiration date : {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
+                $this->info("update records expiration date : {$exp->name} {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
             }
         }
 

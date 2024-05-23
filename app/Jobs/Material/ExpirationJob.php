@@ -54,7 +54,7 @@ class ExpirationJob implements ShouldQueue, ShouldBeUnique
         if($this->action == 'update')
         {
             Record::where('episodes', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
-            $this->info("update records expiration date : {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
+            $this->info("update records expiration date : {$exp->name} {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
         }
 
         if($this->action == 'daily')
@@ -64,7 +64,7 @@ class ExpirationJob implements ShouldQueue, ShouldBeUnique
             if($ex < $now)
             {
                 Record::where('episodes', $exp->name)->update(['status'=>Record::STATUS_EMPTY]);
-                $this->info("update records expiration status : {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
+                $this->info("update records expiration status : {$exp->name} {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
             }
             //Record::where('episode', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
         }

@@ -64,7 +64,15 @@ class XkcProgramController extends AdminController
             $black = $this->black ? "<span class='label label-danger'>黑名单</span>" : '';
             return $black.'&nbsp;'.join('&nbsp;', $category);
         });
-        $grid->column('episodes', __('Episodes'))->sortable();
+        $grid->column('episodes', __('Episodes'))->display(function ($episode) {
+            if ($this->expired_date) {
+                $s = substr($this->expired_date, 0, 10);
+                return "$episode <small>$s</small>";
+            }else 
+            {
+                return $episode;
+            } 
+        })->sortable();
         $grid->column('ep', __('Ep'))->sortable();
         $grid->column('duration', __('Duration'))->sortable();
         
