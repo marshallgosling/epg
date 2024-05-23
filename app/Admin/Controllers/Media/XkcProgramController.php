@@ -67,7 +67,12 @@ class XkcProgramController extends AdminController
         $grid->column('episodes', __('Episodes'))->display(function ($episode) {
             if ($this->expired_date) {
                 $s = substr($this->expired_date, 0, 10);
-                return "$episode <span title=\"过期日期\" class=\"label label-default\">$s</span>";
+                $time = strtotime($this->expired_date);
+                $span = $time - time();
+                if($span < 0) $lable = 'label-default';
+                else if($span <= 864000) $label = 'label-danger';
+                else $label = ''
+                return "$episode <span title=\"过期日期\" class=\"label $label\">$s</span>";
             }else 
             {
                 return $episode;
