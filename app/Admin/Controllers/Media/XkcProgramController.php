@@ -69,9 +69,9 @@ class XkcProgramController extends AdminController
                 $s = substr($this->expired_date, 0, 10);
                 $time = strtotime($this->expired_date);
                 $span = $time - time();
-                if($span < 0) $lable = 'label-default';
+                if($span < 0) $label = 'label-default';
                 else if($span <= 864000) $label = 'label-danger';
-                else $label = '';
+                else $label = 'label-success';
                 return "$episode <span title=\"过期日期\" class=\"label $label\">$s</span>";
             }else 
             {
