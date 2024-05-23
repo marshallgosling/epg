@@ -67,7 +67,7 @@ class XkcProgramController extends AdminController
         $grid->column('episodes', __('Episodes'))->display(function ($episode) {
             if ($this->expired_date) {
                 $s = substr($this->expired_date, 0, 10);
-                return "$episode <small>$s</small>";
+                return "$episode <span title=\"过期日期\" class=\"label\">$s</span>";
             }else 
             {
                 return $episode;
