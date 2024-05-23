@@ -71,7 +71,7 @@ class XkcProgramController extends AdminController
                 $span = $time - time();
                 if($span < 0) $lable = 'label-default';
                 else if($span <= 864000) $label = 'label-danger';
-                else $label = ''
+                else $label = '';
                 return "$episode <span title=\"过期日期\" class=\"label $label\">$s</span>";
             }else 
             {
