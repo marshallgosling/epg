@@ -9,6 +9,7 @@ use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
+use App\Admin\Actions\Channel\Lock;
 use App\Admin\Actions\Channel\TemplateLink;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
@@ -24,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use App\Tools\ChannelGenerator;
+use Encore\Admin\Grid\Displayers\ContextMenuActions;
 use Encore\Admin\Widgets\Table;
 
 class XkiController extends AdminController
@@ -137,7 +139,7 @@ class XkiController extends AdminController
         $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->actions(function ($actions) {
-            //$actions->add(new Generator);
+            $actions->add(new Lock);
             $actions->add(new TemplateLink);
         });
 
@@ -164,6 +166,8 @@ class XkiController extends AdminController
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xki'));
         });
+
+        $grid->setActionClass(ContextMenuActions::class);
 
         return $grid;
     }

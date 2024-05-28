@@ -11,6 +11,7 @@ use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
+use App\Admin\Actions\Channel\Lock;
 use App\Admin\Actions\Channel\Replicate;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
@@ -20,6 +21,7 @@ use App\Tools\ChannelGenerator;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Grid\Displayers\ContextMenuActions;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
@@ -139,6 +141,7 @@ class XkvController extends AdminController
         $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->actions(function ($actions) {
+            $actions->add(new Lock);
             $actions->add(new Generator);
             $actions->add(new Clean);
             $actions->add(new Replicate);
@@ -167,6 +170,8 @@ class XkvController extends AdminController
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xkv'));
         });
+
+        $grid->setActionClass(ContextMenuActions::class);
 
         return $grid;
     }

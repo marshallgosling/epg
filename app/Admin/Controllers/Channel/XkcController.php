@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use App\Tools\ChannelGenerator;
+use Encore\Admin\Grid\Displayers\ContextMenuActions;
 use Encore\Admin\Widgets\Table;
 
 class XkcController extends AdminController
@@ -163,6 +164,8 @@ class XkcController extends AdminController
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xkc')); 
         });
+
+        $grid->setActionClass(ContextMenuActions::class);
 
         return $grid;
     }
