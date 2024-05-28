@@ -5,6 +5,7 @@ namespace App\Jobs\Material;
 use App\Models\Agreement;
 use App\Models\Expiration;
 use App\Models\Record;
+use App\Models\Record2;
 use App\Tools\LoggerTrait;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -54,6 +55,7 @@ class ExpirationJob implements ShouldQueue, ShouldBeUnique
         if($this->action == 'update')
         {
             Record::where('episodes', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
+            Record2::where('episodes', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
             $this->info("update records expiration date : {$exp->name} {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
         }
 
@@ -64,6 +66,7 @@ class ExpirationJob implements ShouldQueue, ShouldBeUnique
             if($ex < $now)
             {
                 Record::where('episodes', $exp->name)->update(['status'=>Record::STATUS_EMPTY]);
+                Record2::where('episodes', $exp->name)->update(['status'=>Record::STATUS_EMPTY]);
                 $this->info("update records expiration status : {$exp->name} {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
             }
             //Record::where('episode', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
