@@ -9,6 +9,7 @@ use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
+use App\Admin\Actions\Channel\Lock;
 use App\Admin\Actions\Channel\TemplateLink;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
@@ -139,6 +140,7 @@ class XkcController extends AdminController
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
 
         $grid->actions(function ($actions) {
+            $actions->add(new Lock);
             $actions->add(new TemplateLink);
         });
 
