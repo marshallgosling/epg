@@ -35,6 +35,7 @@ class XkvGenerator implements IGenerator
     private $maxDuration = 0;
 
     public $errors = [];
+    private $_cache = [];
     
     public function __construct($group)
     {

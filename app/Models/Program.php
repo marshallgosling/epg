@@ -50,7 +50,7 @@ class Program extends Model
 
     private static $cache = [];
     private static $blacklist = [];
-    private static $last = '';
+    private static $last = [];
     private static $_count = 3;
 
     public static function loadBlackList()
@@ -62,7 +62,7 @@ class Program extends Model
     {
         self::$cache = [];
         self::$_count = 3;
-        self::$last = '';
+        self::$last = [];
     }
 
     public static function findRandom($key, $maxSeconds)
@@ -85,7 +85,8 @@ class Program extends Model
         $id = Arr::random(self::$cache[$key]);
         self::$cache[$key] = Arr::shuffle(self::$cache[$key]);
 
-        if($id == self::$last) {
+        //if($id == self::$last) {
+        if(in_array($id, self::$last)) {
             return self::findRandom($key, $maxSeconds);
         }
 
@@ -100,7 +101,7 @@ class Program extends Model
         // if($program->black) return self::findRandom($key, $maxSeconds);
         // else {
             self::$_count = 3;
-            self::$last = $id;
+            self::$last[] = $id;
             return $program;
         // }
     }
