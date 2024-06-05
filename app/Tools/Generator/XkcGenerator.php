@@ -199,8 +199,6 @@ class XkcGenerator
 
             ChannelGenerator::writeTextMark($channel->name, $channel->air_date);
         }
-
-        
             
         return true;
 
