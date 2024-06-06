@@ -74,7 +74,7 @@ class ExportJob implements ShouldQueue, ShouldBeUnique
         BvtExporter::exportXml($channel->name);
 
         if($channel->status == Channel::STATUS_DISTRIBUTE) {
-            MediaInfoJob::dispatch($channel->id, 'distribute')->onQueue('media');
+            //MediaInfoJob::dispatch($channel->id, 'distribute')->onQueue('media');
         }
 
         Notify::fireNotify(

@@ -15,6 +15,88 @@ class ChannelDatabase
         Epg::where('channel_id', $channel->id)->delete();
     }
 
+    public static function checkEpgWithChannel($channel)
+    {
+        $msg = 'channel is null.';
+        $result = true;
+        $items = [];
+
+        if(!$channel) {
+            $result = false;
+            return compact('result', 'msg', 'items');
+        }
+
+        $epglist = Epg::where('channel_id', $channel->id)->select('name','category','unique_no','start_at','end_at','duration')
+            ->orderBy('start_at')->get()->toArray();
+
+        $programs = $channel->programs()->get();
+
+        $air = 0;
+        $key = 0;
+        foreach($programs as $p)
+        {
+            //echo "Program {$p->name} air date is {$p->start_at}".PHP_EOL;
+            $item = [
+                // 'group_id'=>$channel->name,
+                // 'channel_id'=>$channel->id,
+                // 'program_id'=>$p->id
+            ];
+
+            $air = strtotime($p->start_at);
+            $data = json_decode($p->data);
+
+            $replicate = 0;
+
+            if(key_exists('replicate', $data)) {
+                $replicate = $data->replicate;
+                $data = ChannelPrograms::where('id', $replicate)->value('data');
+                $data = json_decode($data);
+            }
+
+            foreach($data as $d) {
+                $item['name'] = $d->name;
+                $item['category'] = $d->category;
+                $item['unique_no'] = $d->unique_no;
+                $item['start_at'] = date('Y-m-d H:i:s', $air);
+                $air += ChannelGenerator::parseDuration($d->duration);
+                $item['end_at'] = date('Y-m-d H:i:s', $air);
+                $item['duration'] = $d->duration;
+
+                if(!array_key_exists($key, $epglist)) 
+                {
+                    $result = false;
+                    $msg = "EPG key:$key 不存在，EPG串联单长度不足";
+                    $items[] = $item;
+                    break;
+                }
+                $st1 = implode('|',$item);
+                $st2 = implode('|',$epglist[$key]);
+
+                if($st1 != $st2) {
+                    $result = false;
+                    $msg = "EPG串联单数据不匹配";
+                    $items[] = $item;
+                    $items[] = $epglist[$key];
+                    break;
+                }
+                $key ++;
+            }
+            
+            if($result == false) break;
+            
+        }
+
+        if($result && $key < count($epglist))
+        {
+            $result = false;
+            $msg = "EPG串联单数据不匹配";
+            $items[] = $item;
+            $items[] = $epglist[$key];
+        }
+
+        return compact('result', 'msg', 'items');
+    }
+
     public static function saveEpgToDatabase($channel)
     {
         if(!$channel) {

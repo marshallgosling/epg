@@ -11,6 +11,7 @@ use App\Models\ChannelPrograms;
 use App\Models\TemplateRecords;
 use App\Models\Epg;
 use App\Models\Expiration;
+use App\Models\Keywords;
 use App\Models\Material;
 use App\Models\Record;
 use App\Models\Record2;
@@ -48,27 +49,18 @@ class test extends Command
     {
         $group = $this->argument('v') ?? "";
         $day = $this->argument('d') ?? "2024-02-06";
-        
-        $list = Record::where('episodes', $group)->orderBy('ep')
-                    ->select('unique_no', 'name', 'episodes', 'black', 'duration')->get();
-                    foreach($list as $idx=>$l)
-                    {
-                        if($day == '') {
-                            print_r($l->toArray());
-                        }
-                        if($l->unique_no == $day) {
-                            $idx ++;
-                            if($idx == count($list)) {            
-                                echo 'finished';
-                            }
-                            else {
-                                if($idx == count($list)-1) $islast = true;
-                                print_r($list[$idx]->toArray());
-                            }
-                            break;
-                        }
-                    }
-                    echo 'empty';
+        $list = DB::table('agreement')->get();
+        foreach($list as $agreement)
+        {
+            $episodes = DB::table('expiration')->where('agreement_id', $agreement->id)->get();
+            foreach($episodes as $exp)
+            {
+                Record2::where('episodes', $exp->name)->update(['air_date'=>$agreement->start_at, 'expired_date'=>$agreement->end_at]);
+                $this->info("update records expiration date : {$exp->name} {$agreement->name} {$agreement->start_at} - {$agreement->end_at}");
+            }
+        }
+
+       
         return;
         
         $list = ChannelPrograms::where('channel_id', $group)->get();

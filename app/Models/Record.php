@@ -295,7 +295,9 @@ class Record extends Model
             ->select("records.unique_no", "records.name", "records.episodes", "records.category", "records.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findBumper($key);
-        else return $program;
+        if(in_array($program->episodes, self::$expiration)) return self::findBumper($key);
+        
+        return $program;
     }
 
     public static function findPR($category) {
@@ -318,9 +320,9 @@ class Record extends Model
     {
         $item = Record::where('records.unique_no', $no)
             ->join('material', 'records.unique_no', '=', 'material.unique_no')
-            ->select("records.unique_no","records.name","records.episodes","records.black", "material.duration","material.frames")->first();
+            ->select("records.unique_no","records.name","records.episodes","records.black", "material.duration","material.frames","records.category")->first();
         if(!$item) {
-            $item = Record::where('unique_no', $no)->select('unique_no', 'name', 'episodes', 'black', 'duration')->first();
+            $item = Record::where('unique_no', $no)->select('unique_no', 'name', 'episodes', 'black', 'duration','category')->first();
         }
         return $item;
     }

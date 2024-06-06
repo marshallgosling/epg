@@ -44,6 +44,11 @@ class dailyTasks extends Command
         return 0;
     }
 
+    private function expiration($args)
+    {
+        
+    }
+
     private function xml($args)
     {
         $now = $args ? strtotime($args) : (time() + 7 * 86400);

@@ -125,6 +125,7 @@ Route::group([
 
     $router->resource('/channel/audit', 'AuditController')->names('audit.list');
     $router->resource('/operation/logs', 'OperationController')->names('admin.operation.logs');
+    $router->resource('/media/keywords', 'KeywordsController')->names('admin.media.keywords');
 
     $router->get('/api/notifications', 'ApiController@notifications');
     $router->get('/api/tree/programs', 'ApiController@treePrograms');

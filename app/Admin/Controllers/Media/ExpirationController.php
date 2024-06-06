@@ -4,6 +4,8 @@ namespace App\Admin\Controllers\Media;
 
 use App\Admin\Actions\Material\AgreementLink;
 use App\Admin\Actions\Material\CreateAgreement;
+use App\Jobs\Material\ExpirationJob;
+use App\Models\Agreement;
 use App\Models\Expiration;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -61,6 +63,17 @@ class ExpirationController extends AdminController
                 return [$id => $id];
             })->ajax('/admin/api/episode')->required();
             $create->select('status', __('Status'))->options(Expiration::STATUS)->default(Expiration::STATUS_READY);
+        });
+
+        $grid->filter(function (Grid\Filter $filter) {
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->like('name', __('Name'));
+                
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->equal('agreement_id', __('From Agreement'))->select(Agreement::pluck('name', 'id')->toArray());
+                
+            });
         });
 
         return $grid;
@@ -121,6 +134,7 @@ class ExpirationController extends AdminController
                 {
                     return back()->with(compact('error'));
                 }
+
             }
 
             if($form->isEditing()) {
@@ -134,8 +148,13 @@ class ExpirationController extends AdminController
                     return back()->with(compact('error'));
                 }
             }
-
             
+        });
+
+        $form->saved(function (Form $form) {
+
+            ExpirationJob::dispatch($form->model()->id);
+        
         });
 
         return $form;

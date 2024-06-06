@@ -17,10 +17,13 @@ class ToolEpgList extends BatchAction
         $list = [];
         foreach ($collection as $model) 
         {
-            if($model->lock_status != Channel::LOCK_ENABLE || $model->status != Channel::STATUS_READY) {
+            if($model->lock_status != Channel::LOCK_ENABLE ) {
                 // 空编单和停止使用的编单不能通过审核
                 continue;
             }
+
+            if(!in_array( $model->status,  [ Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE] ))
+                continue;
             //if($model->name == 'xkc')
             ExportJob::dispatch($model->id);
             $list[] = $model->toArray();

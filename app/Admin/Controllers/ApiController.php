@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Program;
 use App\Models\Template;
 use App\Tools\Notify;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class ApiController extends Controller
         $q = substr($q, 0, 20);
         $size = 20;$start = ($p-1)*$size;
 
-        $model = DB::table('program');
+        $model = DB::table('program')->where('status', Program::STATUS_READY);
 
         if($q)
             $model = $model->where('name', 'like', "$q")->orWhere('unique_no', 'like', "$q")->orWhere('artist', 'like', "$q");
@@ -64,7 +65,7 @@ class ApiController extends Controller
         $size = 20;
         $start = ($p-1)*$size;
 
-        $model = DB::table($t);
+        $model = DB::table($t)->where('status', Program::STATUS_READY);
         if($t == 'program')
             $sql = 'id, unique_no, duration, name, category, artist, 1 as ep, black';
         else
@@ -100,7 +101,7 @@ class ApiController extends Controller
         $q = $request->get('q');
             
         return DB::table('program')->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
-            ->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
+            ->where('status', Program::STATUS_READY)->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
             ->orderBy('seconds', 'desc')->paginate(15);
     }
 

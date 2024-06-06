@@ -14,17 +14,17 @@ class Keywords extends Model
     public const STATUS_SCANNED = 2;
 
     public const STATUS = ['未扫描', '扫描中', '扫描完成', '生效中'];
-    public const GROUPS = ['artist'=>'艺人','name'=>"标题",'unique_no'=>'播出编号'];
+    public const CATES = ['movie'=>'精确','other'=>"模糊"];
 
     protected $table = 'keywords';
     
     protected $fillable = [
         'id',
         'keyword',
-        'group',
+        'category',
         'status',
-        'data',
-        'scaned_at'
+        'value',
+        'language'
     ];
 
     protected $casts = [

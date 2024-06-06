@@ -4,6 +4,7 @@ namespace App\Tools\Exporter;
 
 use App\Models\Category;
 use App\Models\Epg;
+use App\Models\Keywords;
 use App\Models\Record;
 use App\Models\Template;
 use App\Models\TemplateRecords;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 class TableGenerator
 {
     private $group = 'xkc';
+    private $language = false;
+    private $movie;
 
     public function __construct($group='xkc')
     {
@@ -19,8 +22,9 @@ class TableGenerator
     }
 
     // TODO: private $this->addtypes = false; // type="string|int|float|array|null|bool"
-    public function export($days, $template, $data)
+    public function export($days, $template, $data, $lang='zh')
     {
+        $this->loadLanguages();
         $table = '<table class="table table-bordered table-responsive"><tr><th>HKT</th>';
         foreach($days as $day)
         {
@@ -50,7 +54,18 @@ class TableGenerator
                         //     $table .= '<b>'.$categories[$item->category].'</b><br />';
                         //     $category = $item->category;
                         // }
-                        $table .= $item->name.'<br>';
+                        if($lang == 'zh') {
+                            $table .= $item->name.'<br/>';
+                        }
+                        else {
+                            if($item->category == 'movie') {
+                                $table .= array_key_exists($item->name, $this->movie) ?
+                                $this->movie[$item->name].'<br/>' :
+                                $item->name.'<br/>';
+                            }
+                            else
+                                $table .= str_replace($this->language['keys'], $this->language['value'], $item->name).'<br/>';
+                        }
                     }
                         
                 }
@@ -86,6 +101,25 @@ class TableGenerator
         }
 
         return $templates;
+    }
+
+    public function loadLanguages()
+    {
+        $language = Keywords::all();
+        $this->language = ['keys'=>[], 'value'=>[]];
+
+        $this->movie = [];
+        foreach($language as $lang)
+        {
+            if($lang->category == 'movie') {
+                $this->movie[$lang->keyword] = $lang->value;
+            }
+            else {
+                $this->language['keys'][] = $lang->keyword;
+                $this->language['value'][] = $lang->value;
+            }
+        }
+        
     }
 
     public function generateDays($st, $ed)

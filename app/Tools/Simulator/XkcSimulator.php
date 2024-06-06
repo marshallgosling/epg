@@ -11,9 +11,10 @@ use App\Tools\ChannelDatabase;
 use App\Tools\ChannelGenerator;
 use App\Tools\Generator\XkcGenerator;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Plan;
 use App\Tools\LoggerTrait;
 use App\Tools\Notify;
+use App\Tools\Plan\AdvertisePlan;
 use Illuminate\Support\Facades\Storage;
 
 class XkcSimulator
@@ -40,6 +41,8 @@ class XkcSimulator
      * 统计一档节目的时长，更换新节目时重新计算
      */
     private $duration;
+
+    private $plans;
 
     public $filename;
 
@@ -127,6 +130,9 @@ class XkcSimulator
         $errors = [];
         $data = [];
         $lastDate = '';
+
+        $this->plans = new AdvertisePlan($group);
+        $this->plans->loadPlans();
         
         $templates = Template::with('records')->where(['group_id'=>$group,'schedule'=>Template::DAILY,'status'=>Template::STATUS_SYNCING])->orderBy('sort', 'asc')->get();
         $this->saveTemplate($templates, $this->channels);
@@ -230,6 +236,29 @@ class XkcSimulator
                 $program->duration = $duration;
                 $program->data = $epglist;
                 $program->end_at = date('Y-m-d H:i:s', $air);
+
+                $advertise = $this->findAvailableAdvertise($channel, $template);
+
+                if($advertise) {
+                    $seconds = ChannelGenerator::parseDuration($advertise->duration);
+                    if($seconds > 0) {
+                            
+                        $duration += $seconds;
+                        $category = is_array($advertise->category) ? $advertise->category[0]:$advertise->category;
+                            
+                        $line = ChannelGenerator::createItem($advertise, $category, date('H:i:s', $air));
+                            
+                        $air += $seconds;
+
+                        $line['end_at'] = date('H:i:s', $air);
+
+                        $epglist[] = $callback ? call_user_func($callback, $line) : $line;
+
+                        $program->duration = $duration;
+                        $program->data = $epglist;
+                        $program->end_at = date('Y-m-d H:i:s', $air);
+                    }
+                }
                 
                 $templateresult['template'] = json_decode(json_encode($template_item), true);
                 $templateresult['program'] = $program->toArray();
@@ -237,8 +266,6 @@ class XkcSimulator
                 if($this->saveState) $template_item->save();
                 $result['data'][] = $templateresult;
                 $programs[] = $program;
-
-                
                 
             }
             $data[] = $result;
@@ -293,12 +320,14 @@ class XkcSimulator
             $items = [];
 
             $d = $template->data;
-            foreach($temps as $item) {
+            foreach($temps as $idx=>$item) {
                 if($item == 'empty') {
                     $d['result'] = '错误:找不到匹配的节目';
                 }
                 else if($item == 'finished') {
-                    $d['result'] = '编排完:所有编排规则已完成';
+                    if($idx == 0)
+                        $d['result'] = '编排完:所有编排规则已完成';
+                    else $d['result'] = '编排完';
                 }
                 else if($item == 'empty2') {
                     $d['result'] = '错误:不是首播日，导致编排无法进行';
@@ -316,6 +345,17 @@ class XkcSimulator
         }
 
         return $items;
+    }
+
+    private function findAvailableAdvertise($channel, $template)
+    {
+        $plan = $this->plans->filterPlan($channel, $template);
+        if($plan) {
+            $unique_no = $plan->data;
+            $item = Record::findUnique($unique_no);
+            return $item;
+        }
+        return false;
     }
 
     private function findAvailableTemplateItem($channel, &$templateItems)

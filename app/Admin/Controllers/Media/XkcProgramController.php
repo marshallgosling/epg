@@ -64,12 +64,27 @@ class XkcProgramController extends AdminController
             $black = $this->black ? "<span class='label label-danger'>黑名单</span>" : '';
             return $black.'&nbsp;'.join('&nbsp;', $category);
         });
-        $grid->column('episodes', __('Episodes'))->sortable();
+        $grid->column('episodes', __('Episodes'))
+        // ->display(function ($episode) {
+        //     if ($this->expired_date) {
+        //         $s = substr($this->expired_date, 0, 10);
+        //         $time = strtotime($this->expired_date);
+        //         $span = $time - time();
+        //         if($span < 0) $label = 'label-default';
+        //         else if($span <= 864000) $label = 'label-danger';
+        //         else $label = 'label-success';
+        //         return "$episode <span title=\"过期日期\" class=\"label $label\">$s</span>";
+        //     }else 
+        //     {
+        //         return $episode;
+        //     } 
+        // })
+        ->sortable();
         $grid->column('ep', __('Ep'))->sortable();
         $grid->column('duration', __('Duration'))->sortable();
         
-        $grid->column('air_date', __('Air date'))->hide();
-        $grid->column('expired_date', __('Expired date'))->hide();
+        $grid->column('air_date', __('Start date'))->substr(0,10)->hide();
+        $grid->column('expired_date', __('Expired date'))->substr(0,10);
 
         $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();

@@ -7,9 +7,11 @@ use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
 use App\Admin\Actions\Channel\BatchReplicate;
+use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
 use App\Admin\Actions\Channel\Generator;
+use App\Admin\Actions\Channel\Lock;
 use App\Admin\Actions\Channel\Replicate;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
@@ -19,6 +21,7 @@ use App\Tools\ChannelGenerator;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Grid\Displayers\ContextMenuActions;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
@@ -52,13 +55,15 @@ class XkvController extends AdminController
     
         foreach($data as &$program)
         {
-            if(strpos($program->data, 'replicate'))
+            if(strpos($program->data, '"replicate"'))
             {
+                //echo "{$program->name} {$program->id}\n";
                 $replicate = json_decode($program->data);
                 $json = json_decode($list[$replicate->replicate]);
                 $air = strtotime($program->start_at);
                 foreach($json as &$item)
                 {
+                    if(!$item) continue;
                     $item->start_at = date('H:i:s', $air);
                     $air += ChannelGenerator::parseDuration($item->duration);
                     $item->end_at = date('H:i:s', $air);
@@ -116,7 +121,7 @@ class XkvController extends AdminController
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";
             $rows = [];
-            foreach($model->audit()->orderBy('id','desc')->get() as $item) {
+            foreach($model->audit()->orderBy('id','desc')->take(10)->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
                     $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
@@ -127,7 +132,7 @@ class XkvController extends AdminController
         });
         
         $grid->column('audit_date', __('Audit date'))->hide();
-        $grid->column('check', __('操作'))->width(80)->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class);
+        $grid->column('check', __('操作'))->width(80)->display(function() {return '校对';})->modal('检查播出串联单', CheckEpg::class);
 
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
@@ -136,6 +141,7 @@ class XkvController extends AdminController
         $grid->column('updated_at', __('Updated at'))->sortable();
 
         $grid->actions(function ($actions) {
+            $actions->add(new Lock);
             $actions->add(new Generator);
             $actions->add(new Clean);
             $actions->add(new Replicate);
@@ -164,6 +170,8 @@ class XkvController extends AdminController
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xkv'));
         });
+
+        $grid->setActionClass(ContextMenuActions::class);
 
         return $grid;
     }
@@ -254,8 +262,6 @@ class XkvController extends AdminController
                     return back()->with(compact('error'));
                 }
             }
-
-            //return $form;
             
         });
 

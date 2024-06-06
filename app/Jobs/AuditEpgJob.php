@@ -50,6 +50,11 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
     {
         $channel = Channel::find($this->id);
         if(!$channel) return;
+        $lock_changed = false;
+        $lock_empty_flag = false;
+        if($channel->lock_status == Channel::LOCK_EMPTY) {
+            $lock_empty_flag = true;
+        }
 
         if(! in_array($channel->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])) return;
         if($channel->name == 'xkc') $class='\App\Models\Record';
@@ -102,10 +107,14 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
             Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核通过", "审核通过: {$channel->air_date}", Notification::LEVEL_INFO);
         }
         else {
-            Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
+            Notify::fireNotify($channel->name, Notification::TYPE_AUDIT, "编单{$channel->air_date}审核不通过", "描述:".$comment, Notification::LEVEL_ERROR);
+        }
+
+        if($channel->lock_status == Channel::LOCK_ENABLE) {
+            $lock_changed = $lock_empty_flag ? true : false;
         }
         
-        if($this->name == 'Init' || $total['modified'] || $duration['modified']) {
+        if($this->name == 'Init' || $total['modified'] || $duration['modified'] || $lock_changed) {
             \App\Jobs\StatisticJob::dispatch($channel->id);
             \App\Jobs\EpgJob::dispatch($channel->id);
         }
@@ -157,7 +166,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         $max = (int)config('MAX_OVERFLOW', 10);
         if($overflow>=(-1*$max) && $overflow<0)
         {
-            return ['result'=>false, 'reason'=>"异常：编单最后一档节目 {$item->name}({$duration}秒) 播出时间将小于{$max}秒。"];
+            return ['result'=>false, 'reason'=>"异常：编单最后一档节目 {$item->name}({$duration}秒) 该节目将播出 $playsec 秒。"];
         }
 
         if($overflow > 0) {
@@ -165,7 +174,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         }
 
         
-        return $item ? ['result'=>true, 'reason'=>"最后一档播出节目为：{$item->name}({$duration}秒), 该节目将播出 $playsec 秒"] 
+        return $item ? ['result'=>true, 'reason'=>"最后一档播出节目为：{$item->name}({$duration}秒), 该节目将播出 $playsec 秒。"] 
             : ['result'=>true, 'reason'=>"时长完全匹配"];
     }
 
@@ -176,20 +185,36 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
         foreach($cache as $k=>$m)
         {
             if(!$m) {
-                $m = new Material();
-                $m->unique_no = $k;
-                $m->name = '';
-                $m->status = 0;
-                $m->duration = '';
-                $logs[] = array_key_exists($k, $this->missing) ? $this->missing[$k] : $m;
+                
+                $log = array_key_exists($k, $this->missing) ? $this->missing[$k] : ["unique_no"=>$k, 'name'=>'','error'=>'不存在的播出编号'];
+                $logs[] = $log;
                 $result = false;
                 continue;
             }
             if($m->status != Material::STATUS_READY)
             {
-                $logs[] = $m;
+                $log = $m->toArray();
+                $log['error'] = "素材状态不可用";
+                $logs[] = $log;
+                $result = false;
+                continue;
+            }
+            if(!file_exists($m->filepath)) {
+                $log = $m->toArray();
+                $log['error'] = "文件 {$m->filepath} 不存在。";
+                $logs[] = $log;
+                $result = false;
+                continue;
+            }
+            if(!strpos($m->filepath, "{$m->name}.{$m->unique_no}"))
+            {
+                if(strpos($m->filepath, '\\MV2\\')) continue;
+                $log = $m->toArray();
+                $log['error'] = "文件名内不包含 {$m->name}.{$m->unique_no}";
+                $logs[] = $log;
                 $result = false;
             }
+            
         }
         return compact('result', 'logs');
     }
@@ -212,7 +237,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
                 if(!array_key_exists($unique_no, $this->cache))
                 {
-                    $m = Material::where('unique_no', $unique_no)->select(['id','name','unique_no','status','duration'])->first();
+                    $m = Material::where('unique_no', $unique_no)->select(['id','name','unique_no','filepath','status','duration'])->first();
                     $this->cache[$unique_no] = $m;
                 }
                 else {
@@ -221,6 +246,7 @@ class AuditEpgJob implements ShouldQueue, ShouldBeUnique
 
                 if(!$m) {
                     $this->missing[$unique_no] = $item;
+                    $this->missing[$unique_no]['error'] = "物料不存在";
                     continue;
                 }
 

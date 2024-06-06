@@ -262,7 +262,8 @@ class Record2 extends Model
             ->select("record2.unique_no", "record2.name", "record2.episodes", "record2.category", "record2.black", "material.duration", "material.frames")->first();
 
         if($program && $program->black) return self::findBumper($key);
-        else return $program;
+        if(in_array($program->episodes, self::$expiration)) return self::findBumper($key);
+        return $program;
     }
 
     public static function checkBumperAndPr() {

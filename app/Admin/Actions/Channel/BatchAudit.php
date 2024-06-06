@@ -22,11 +22,11 @@ class BatchAudit extends BatchAction
         foreach ($collection as $model) 
         { 
             if(in_array($model->status, [Channel::STATUS_READY, Channel::STATUS_DISTRIBUTE])) {
-                AuditEpgJob::dispatch($model->id, Admin::user()->name);
+                AuditEpgJob::dispatch($model->id, Admin::user()->name)->onQueue('audit');
                 $list[] = $model->toArray();
             }
         }
-        \App\Tools\Operation::log('批量审核', 'channel/BatchAudit', 'action', $list);
+        \App\Tools\Operation::log($this->name, 'channel/BatchAudit', 'action', $list);
         return $this->response()->success('批量审核任务已提交。')->refresh();
     }
 

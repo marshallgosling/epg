@@ -16,7 +16,7 @@ class Plan extends Model
     public const STATUS_EXPIRED = 2;
     public const STATUS_ERROR = 3;
 
-    public const STATUS = ['未启用', '运行中', '已过期', '错误'];
+    public const STATUS = ['未启用', '运行中', '已停用', '错误'];
 
     public const TYPES = ['频道','广告','节目'];
     public const TYPE_CHANNEL = 0;

@@ -73,8 +73,12 @@ class ReverseJob implements ShouldQueue, ShouldBeUnique
         
         foreach($channels as $day)
         {
-            $c = Channel::where('id', $day['id'])->delete();
-            ChannelPrograms::where('channel_id', $c->id)->delete();
+            $c = Channel::find($day['id']);
+            if($c) {
+                ChannelPrograms::where('channel_id', $c->id)->delete();
+                $c->delete();
+            }
+            
         }
     }
 

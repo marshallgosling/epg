@@ -2,8 +2,8 @@
 
 namespace App\Admin\Controllers\Plan;
 
-use App\Events\PlanEvent;
-use App\Models\Category;
+use App\Admin\Actions\Template\BatchDisable;
+use App\Admin\Actions\Template\BatchEnable;
 use App\Models\Channel;
 use App\Models\Plan;
 use App\Models\TemplateRecords;
@@ -55,14 +55,13 @@ class AdvertisePlanController extends AdminController
         // $grid->column('date_from', __('Date from'));
         // $grid->column('date_to', __('Date to'));
         $grid->column('category', __('Template'))->display(function() {
-            return $this->template->name;
+            return $this->template->name.'('.$this->template->start_at.' - '.$this->template->end_at.')';
         });
         $grid->column('is_repeat', __('Type'))->using(['单个','多集']);
         
-        $grid->column('episodes', __('Episodes'))->display(function() {
+        $grid->column('episodes', __('广告节目'))->display(function() {
             return $this->is_repeat ? $this->episodes:$this->data;
         });
-
         
         $grid->column('daysofweek', __('Daysofweek'))->display(function ($days) {
             $html = []; foreach($days as $d) $html[] = TemplateRecords::DAYS[$d];
@@ -76,11 +75,10 @@ class AdvertisePlanController extends AdminController
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'))->hide();
 
-        // $grid->disableBatchActions();
-        // $grid->disableCreateButton();
-        // $grid->actions(function ($action) {
-
-        // });
+        $grid->batchActions(function ($actions) {
+            $actions->add(new BatchEnable);
+            $actions->add(new BatchDisable);
+        });
 
         return $grid;
     }
@@ -144,7 +142,7 @@ class AdvertisePlanController extends AdminController
         $form->divider('广告节目配置');
         $form->select('category', __('Template'));
 
-        $form->radio('is_repeat', __('Type'))->options(['单个','多集'])->default(0)->when(0, function (Form $form) {
+        $form->radio('is_repeat', __('Type'))->options(['单个'])->default(0)->when(0, function (Form $form) {
             $form->text('data', __('Unique no'));
         })->when(1, function (Form $form) { 
             $form->select('episodes', __('Episodes'))->options('/admin/api/episodes');

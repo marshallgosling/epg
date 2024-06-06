@@ -68,8 +68,8 @@ class XkiProgramController extends AdminController
         $grid->column('ep', __('Ep'))->sortable();
         $grid->column('duration', __('Duration'))->sortable();
         
-        $grid->column('air_date', __('Air date'))->hide();
-        $grid->column('expired_date', __('Expired date'))->hide();
+        $grid->column('air_date', __('Start date'))->substr(0,10)->hide();
+        $grid->column('expired_date', __('Expired date'))->substr(0,10);
 
         $grid->column('created_at', __('Created at'))->hide()->sortable();
         $grid->column('updated_at', __('Updated at'))->sortable();

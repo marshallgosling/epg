@@ -193,7 +193,7 @@ class XkiGenerator
 
             // \App\Jobs\StatisticJob::dispatch($channel->id);
             // \App\Jobs\EpgJob::dispatch($channel->id);
-            \App\Jobs\AuditEpgJob::dispatch($channel->id, 'Init');
+            \App\Jobs\AuditEpgJob::dispatch($channel->id, 'Init')->onQueue('audit');
 
             Notify::fireNotify(
                 $channel->name,

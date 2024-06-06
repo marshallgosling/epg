@@ -8,7 +8,6 @@ use App\Models\Channel;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Encore\Admin\Facades\Admin;
 
 class BatchLock extends BatchAction
 {
@@ -27,8 +26,7 @@ class BatchLock extends BatchAction
             }
             $model->lock_status = $lock;
             if($model->comment == '编单已完成，请加锁并审核！') $model->comment = '';
-            $model->reviewer = Admin::user()->name;
-            //$model->audit_date = now();
+
             $model->save();
             
             if($lock == Channel::LOCK_ENABLE) {
@@ -38,7 +36,7 @@ class BatchLock extends BatchAction
 
             $list[] = $model->toArray();
         }
-        \App\Tools\Operation::log('批量分发编单', 'channel/BatchClean', 'action', $list);
+        \App\Tools\Operation::log($this->name, 'channel/BatchLock:'.$lock, 'action', $list);
         return $this->response()->success($lock?"加锁成功":"解锁成功")->refresh();
     }
 

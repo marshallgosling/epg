@@ -6,8 +6,10 @@ use App\Admin\Actions\Channel\BatchAudit;
 use App\Admin\Actions\Channel\BatchLock;
 use App\Admin\Actions\Channel\BatchClean;
 use App\Admin\Actions\Channel\BatchDistributor;
+use App\Admin\Actions\Channel\CheckEpg;
 use App\Admin\Actions\Channel\CheckXml;
 use App\Admin\Actions\Channel\Clean;
+use App\Admin\Actions\Channel\Lock;
 use App\Admin\Actions\Channel\TemplateLink;
 use App\Admin\Actions\Channel\ToolExporter;
 use App\Admin\Actions\Channel\ToolGenerator;
@@ -23,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use App\Tools\ChannelGenerator;
+use Encore\Admin\Grid\Displayers\ContextMenuActions;
 use Encore\Admin\Widgets\Table;
 
 class XkcController extends AdminController
@@ -116,7 +119,7 @@ class XkcController extends AdminController
             $labels = ['warning', 'success', 'danger'];
             if(!$model->audit) return "<p>无审核记录</p>";
             $rows = [];
-            foreach($model->audit()->orderBy('id','desc')->limit(10)->get() as $item) {
+            foreach($model->audit()->orderBy('id','desc')->take(10)->get() as $item) {
                 $rows[] = [
                     $item->id, '<span class="label label-'.$labels[$item->status].'">'.Audit::STATUS[$item->status].'</span>', 
                     $item->created_at, $item->comment, '<a href="./audit?channel_id='.$model->id.'">查看详细</a>'
@@ -130,13 +133,14 @@ class XkcController extends AdminController
         
         $grid->column('audit_date', __('Audit date'))->hide();
         
-        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckXml::class)->width(80);
+        $grid->column('check', __('操作'))->display(function() {return '校对';})->modal('检查播出串联单', CheckEpg::class)->width(80);
         $grid->column('distribution_date', __('Distribution date'))->sortable();
         $grid->column('comment', __('Comment'));
         $grid->column('created_at', __('Created at'))->sortable()->hide();
         $grid->column('updated_at', __('Updated at'))->sortable()->hide();
 
         $grid->actions(function ($actions) {
+            $actions->add(new Lock);
             $actions->add(new TemplateLink);
         });
 
@@ -162,6 +166,8 @@ class XkcController extends AdminController
             $tools->append(new BatchDistributor());
             $tools->append(new ToolExporter('xkc')); 
         });
+
+        $grid->setActionClass(ContextMenuActions::class);
 
         return $grid;
     }
@@ -258,8 +264,13 @@ class XkcController extends AdminController
         $generator = new TableGenerator($this->group);
         $st = strtotime($request->get('start_at', ''));
         $ed = strtotime($request->get('end_at', ''));
+        $lang = $request->get('lang', 'zh');
         $label_st = '';
         $label_ed = '';
+        $zh_checked = '';
+        $en_checked = '';
+        if($lang == 'zh') $zh_checked = "checked";
+        if($lang == 'en') $en_checked = "checked";
 
         $max = (int)config('MAX_EXPORT_DAYS', 7);
 
@@ -275,7 +286,7 @@ class XkcController extends AdminController
         $days = $generator->generateDays($st, $ed);
         $data = $generator->processData($days);
         $template = $generator->loadTemplate();
-        $table = $generator->export($days, $template, $data);
+        $table = $generator->export($days, $template, $data, $lang);
         }
 
         $filter= <<<FILTER
@@ -283,12 +294,13 @@ class XkcController extends AdminController
     <form action="export" class="form-horizontal" pjax-container method="get">
 
         <div class="row">
-                        <div class="col-md-8">
+            
+            <div class="col-md-10">
                 <div class="box-body">
                     <div class="fields-group">
-                                                    <div class="form-group">
+                        <div class="form-group">
     <label class="col-sm-2 control-label">时间范围</label>
-    <div class="col-sm-8">
+    <div class="col-sm-6">
         <div class="input-group input-group-sm">
             <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
@@ -300,6 +312,29 @@ class XkcController extends AdminController
             <input type="text" class="form-control" id="start_at_end" placeholder="时间范围" name="end_at" value="{$label_ed}" autocomplete="off">
         </div>
     </div>
+
+    <div class="col-sm-2">
+    <div class="input-group input-group-sm">
+
+    <span class="icheck">
+
+        <label class="radio-inline">
+            <input type="radio" class="language" name="lang" value="zh" {$zh_checked}> 中文  
+        </label>
+
+    </span>
+
+
+    <span class="icheck">
+
+        <label class="radio-inline">
+            <input type="radio" class="language" name="lang" value="en" {$en_checked}> En  
+        </label>
+
+    </span>
+
+    </div>
+</div>
     <div class="col-sm-2">
       <div class="btn-group pull-left">
                             <button class="btn btn-info submit btn-sm"><i class="fa fa-search"></i>  搜索</button>
@@ -335,6 +370,7 @@ FILTER;
             $("#start_at_end").on("dp.change", function (e) {
                 $('#start_at_start').data("DateTimePicker").maxDate(e.date);
             });
+            $('.language').iCheck({radioClass:'iradio_minimal-blue'}); 
 DATE;
 
 }

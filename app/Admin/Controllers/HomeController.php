@@ -78,9 +78,9 @@ HTML;
         $list = Notify::getErrorNotifications();
         $data = '';
         foreach($list as $m) {
-            $data .= '<tr><td width="80">'.Channel::GROUPS[$m->group_id].'</td><td width="160">'.
+            $data .= '<tr><td>'.Channel::GROUPS[$m->group_id].'</td><td>'.
             $m->name.'</td><td><div style="height:40px;overflow-y:scroll">'. $m->message.'</div>'.
-            '</td><td width="100">'.substr($m->created_at, 5, 11).'</td></tr>';
+            '</td><td>'.substr($m->created_at, 5, 11).'</td></tr>';
         }
             
         $html = <<<HTML
@@ -88,7 +88,7 @@ HTML;
         <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-striped">
-                <tr><th>频道</th><th>标题</th><th>描述内容</th><th>错误日期</th></tr>
+                <tr><th width="100">频道</th><th width="160">标题</th><th>描述内容</th><th width="100">错误日期</th></tr>
                 {$data}
             </table>
         </div></div>
@@ -236,7 +236,8 @@ HTML;
         $links = [
             '物料管理' => admin_url('media/material'),
             '黑名单' => admin_url('media/blacklist'),
-            '播出计划' => admin_url('plans'),
+            '翻译对照表' => admin_url('media/keywords'),
+            '广告投放' => admin_url('plan/advertise'),
             '串联单' => admin_url('epg'),
             '通知' => admin_url('notifications'),
             'Excel' => admin_url('export/excel')
