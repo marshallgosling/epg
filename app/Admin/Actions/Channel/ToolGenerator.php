@@ -80,14 +80,12 @@ class ToolGenerator extends Action
     public function form()
     {
         $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$this->group])->orderBy('air_date','desc')->first();
-        if($channel) {
-            $c = strtotime($channel->air_date) + 86400;
+        if(!$channel) {
+            $channel = Channel::where(['status'=>Channel::STATUS_DISTRIBUTED,'name'=>$this->group])->orderBy('air_date','desc')->first();
+        }
+        $c = strtotime($channel->air_date) + 86400;
             $this->text('info', '开始日期')->default(date('Y-m-d', $c))->disable();
             $this->hidden('generate_start_at', '开始日期')->default(date('Y-m-d', $c));
-        }
-        else {
-            $this->date('generate_start_at', '开始日期')->default(config('START_DATE','2024-01-01'));
-        }
         
         $this->date('generate_end_at', '结束日期')->placeholder('不填则自动结束');
         $this->hidden('generate_group', '分组')->default($this->group);
