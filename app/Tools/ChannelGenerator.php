@@ -246,7 +246,7 @@ class ChannelGenerator
 
     public static function getLatestAirDate($group)
     {
-        $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$group])->orderBy('air_date','desc')->first();
+        $channel = Channel::where(['name'=>$group])->orderBy('air_date','desc')->first();
         if($channel) {
             $c = strtotime($channel->air_date) + 86400;
             return $c;

@@ -43,7 +43,7 @@ class XkiProgramController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ChannelPrograms());
-
+$grid->model()->orderBy('start_at');
         //$grid->column('id', __('Id'));
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {
@@ -155,7 +155,7 @@ class XkiProgramController extends AdminController
         $form->text('name', __('Name'));
         $form->text('schedule_start_at', __('Schedule start at'));
         $form->text('schedule_end_at', __('Schedule end at'));
-        $form->text('start_at', __('Start at'))->disable();
+        $form->text('start_at', __('Start at'));
         $form->text('end_at', __('End at'))->disable();
         $form->text('duration', __('Duration'))->disable();
         $form->display('version', __('Version'));

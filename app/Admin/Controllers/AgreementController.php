@@ -35,6 +35,17 @@ class AgreementController extends AdminController
         $grid->column('created_at', __('Created at'))->hide();
         $grid->column('updated_at', __('Updated at'));
 
+        $grid->filter(function(Grid\Filter $filter){
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->in('status',  __('Status'))->checkbox(Agreement::STATUS);
+                $filter->like('name', __('Name'));
+            });
+            $filter->column(6, function(Grid\Filter $filter) { 
+                $filter->date('start_at', __('Start at'));
+                $filter->date('end_at', __('End at'));
+            });
+        });
+
         return $grid;
     }
 

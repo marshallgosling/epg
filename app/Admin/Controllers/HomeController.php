@@ -17,7 +17,7 @@ use Illuminate\Support\Arr;
 class HomeController extends Controller
 {
   
-  public const VERSION = '2.2';
+  public const VERSION = '2.3';
   
   public function index(Content $content)
   {

@@ -43,7 +43,7 @@ class XkcProgramController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ChannelPrograms());
-
+$grid->model()->orderBy('start_at');
         //$grid->column('id', __('Id'));
         $grid->column('sort', __('Sort'));
         $grid->column('name', __('Name'))->display(function($name) {

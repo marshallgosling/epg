@@ -17,7 +17,7 @@ class ToolGenerator extends Action
 {
     protected $selector = '.generate-epg';
     public $name = '自动生成串联单';
-    public $group = '';
+    public $group = 'xkc';
 
     public function __construct($group='')
     {
@@ -29,7 +29,8 @@ class ToolGenerator extends Action
     {
         $group = $request->get('generate_group');
 
-        
+        //return $this->response()->error('test '.$group);
+
         if(Channel::where(['status'=>Channel::STATUS_ERROR,'name'=>$group])->exists())
         {
             return $this->response()->error('节目单有状态为“错误”的情况，请先处理错误的节目单后才能继续。');
@@ -81,11 +82,13 @@ class ToolGenerator extends Action
     {
         $channel = Channel::where(['status'=>Channel::STATUS_READY,'name'=>$this->group])->orderBy('air_date','desc')->first();
         if(!$channel) {
-            $channel = Channel::where(['status'=>Channel::STATUS_DISTRIBUTE,'name'=>$this->group])->orderBy('air_date','desc')->first();
+           $channel = Channel::where(['status'=>Channel::STATUS_DISTRIBUTE,'name'=>$this->group])->orderBy('air_date','desc')->first();
         }
-        $c = strtotime($channel->air_date) + 86400;
-        $this->text('info', '开始日期')->default(date('Y-m-d', $c))->disable();
-        $this->hidden('generate_start_at', '开始日期')->default(date('Y-m-d', $c));
+
+       $c = $channel ? strtotime($channel->air_date) + 86400 : time();
+
+       $this->text('info', '开始日期')->default(date('Y-m-d', $c))->disable();
+       $this->hidden('generate_start_at', '开始日期')->default(date('Y-m-d', $c));
         
         $this->date('generate_end_at', '结束日期')->placeholder('不填则自动结束');
         $this->hidden('generate_group', '分组')->default($this->group);

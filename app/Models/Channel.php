@@ -72,7 +72,7 @@ class Channel extends Model
 
     public function programs()
     {
-        return $this->hasMany(ChannelPrograms::class, 'channel_id', 'id');
+        return $this->hasMany(ChannelPrograms::class, 'channel_id', 'id')->orderBy('start_at');
     }
 
     public static function generate($group, $start, $end)

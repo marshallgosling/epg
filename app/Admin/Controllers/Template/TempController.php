@@ -109,7 +109,7 @@ class TempController extends AdminController
         $grid->column('ex', __(" "))->display(function() {
             return "编排";
         })->expand(function ($model) {
-            $programs = $model->records()->take(10)->get();
+            $programs = $model->records()->get();
             $items = [];
             if($programs)foreach($programs as $p)
             {

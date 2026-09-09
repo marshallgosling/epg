@@ -100,8 +100,10 @@ class ApiController extends Controller
     public function programs(Request $request) {
         $q = $request->get('q');
             
-        return DB::table('program')->where('name', 'like', "%$q%")->orWhere('unique_no', 'like', "$q%")->orWhere('artist', 'like', "%$q%")
-            ->where('status', Program::STATUS_READY)->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
+        return DB::table('program')->where('status', Program::STATUS_READY)
+            ->where('unique_no', 'like', "$q%")
+            //->orWhere('name', 'like', "%$q%")->orWhere('artist', 'like', "%$q%")
+            ->select(DB::raw('`unique_no` as id, concat(unique_no, " ", name, " ", artist) as text'))
             ->orderBy('seconds', 'desc')->paginate(15);
     }
 

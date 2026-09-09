@@ -27,7 +27,7 @@ class ChannelPrograms extends Model
     ];
 
     protected $casts = [
-        'start_at' => 'datetime:H:i:s',
+        'start_at' => 'datetime:Y-m-d H:i:s',
         'end_at' => 'datetime:H:i:s',
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s'
